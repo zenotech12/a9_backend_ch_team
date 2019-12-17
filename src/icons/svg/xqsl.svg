@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="48" height="48"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD-Copy" transform="translate(-493.000000, -137.000000)">
+            <g id="Group-4" transform="translate(193.000000, 100.000000)">
+                <g id="Group_export" transform="translate(300.000000, 37.000000)">
+                    <g id="Group">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Mask"></g>
+                        <g mask="url(#mask-2)" fill="#FFFFFF">
+                            <g transform="translate(3.000000, 3.000000)">
+                                <polygon id="Fill-1" points="21 27.0304896 28.2528259 27.0304896 21.3343663 35.0362391 21.3343663 36.0340846 29.4111942 36.0340846 29.4111942 42 33.5332841 42 33.5332841 36.0340846 41.5543656 36.0340846 41.5543656 35.0003486 35.3240824 27.0304896 42 27.0304896 42 26.2514213 31.7378777 13.5483871 21 26.2890288"></polygon>
+                                <polygon id="Fill-2" points="4.74193548 41.3225806 4.68377833 10.8387097 4.04164919 10.8387097 0 13.2964345 0 41.3225806"></polygon>
+                                <path d="M28.3286847,42 L6.77419355,42 L6.77419355,0.644756842 C6.77419355,0.245168606 7.33386843,0 7.74305462,0 L28.7308915,0 C29.1400777,0 29.1290031,0.245168606 29.1290031,0.644756842 L29.1290031,13.9631262 L17.351374,27.0387477 L17.351374,28.2356546 L24.2865435,28.2356546 L18.4840479,36.3009417 L18.5250588,37.4985805 L28.3286847,37.4985805 L28.3286847,42 Z M9.91865157,7.19838672 L25.984545,7.19838672 L25.984545,4.18526174 L9.91865157,4.18526174 L9.91865157,7.19838672 Z M9.91865157,13.001705 L25.984545,13.001705 L25.984545,9.93267816 L9.91865157,9.93267816 L9.91865157,13.001705 Z" id="Combined-Shape"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

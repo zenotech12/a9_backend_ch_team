@@ -1,0 +1,27 @@
+// 通用操作按钮
+export default {
+  add: 'Add',
+  edit: 'Edit',
+  new: 'New',
+  delete: 'Delete',
+  confirm: 'Confirm',
+  cancel: 'Cancel',
+  opt: 'Operation',
+  search: 'Search',
+  prompt: 'Prompt',
+  inventory: 'Inventory',
+  check: 'edit',
+  modify: 'Modify',
+  bulkImport: 'Bulk Import',
+  save: 'Save',
+  enterComplete: 'Please Enter Complete',
+  deleteSuccess: 'Delete The Success',
+  addSuccess: 'Add A Success',
+  modifySuccess: 'Modify the success',
+  successfulImport: 'Successful Import:',
+  data: 'Data',
+  pleaseChoose: 'Please Choose',
+  willDeleteRecord: 'This operation will delete the record, will it continue?',
+  saveSuccess: 'Save Success',
+  loading: 'Loading'
+}

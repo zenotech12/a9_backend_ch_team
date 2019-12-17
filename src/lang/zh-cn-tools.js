@@ -1,0 +1,27 @@
+// 通用操作按钮
+export default {
+  add: '添加',
+  edit: '编辑',
+  new: '新增',
+  delete: '删除',
+  confirm: '确定',
+  cancel: '取消',
+  opt: '操作',
+  prompt: '提示',
+  search: '查询',
+  inventory: '库存',
+  check: '查看',
+  modify: '修改',
+  bulkImport: '批量导入',
+  save: '保存',
+  enterComplete: '请输入完整',
+  deleteSuccess: '删除成功',
+  addSuccess: '添加成功',
+  modifySuccess: '修改成功',
+  successfulImport: '成功导入：',
+  data: '条数据',
+  pleaseChoose: '请选择',
+  willDeleteRecord: '此操作将删除该记录, 是否继续?',
+  saveSuccess: '保存成功',
+  loading: '加载中'
+}

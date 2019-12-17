@@ -1,0 +1,31 @@
+// 全局菜单
+export default {
+  home: '首页',
+  logout: '退出',
+  account: '账户名',
+  mobile: '手机号',
+  password: '密码',
+  login: '登录',
+  shopMgr: '商店管理',
+  shopList: '商店列表',
+  trayMgr: '设备管理',
+  trayList: '设备列表',
+  userMgr: '用户管理',
+  userFeedbackList: '反馈列表',
+  system: '设置',
+  systemPrice: '基础设置',
+  adminList: '管理员列表',
+  userList: '用户列表',
+  userOrderList: '充电宝订单列表',
+  userBalanceRecord: '余额记录',
+  appDownloadAddress: 'app管理',
+  couponConfigure: '优惠券配置',
+  couponList: '优惠券列表',
+  activityMgr: '活动管理',
+  withdrawalList: '提现列表',
+  withdrawalMgr: '提现管理',
+  robotMgr: '客服机器人',
+  goodsMgr: '商品管理',
+  goodsList: '商品列表'
+
+}

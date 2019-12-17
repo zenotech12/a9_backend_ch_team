@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>登陆/icon_nbp_export</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="16" height="16"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD-Copy-2" transform="translate(-1046.000000, -473.000000)">
+            <g id="Group" transform="translate(1034.000000, 382.000000)">
+                <g id="登陆/icon_nbp_export_export" transform="translate(12.000000, 91.000000)">
+                    <g id="登陆/icon_nbp_export">
+                        <g id="登陆/icon_nbp">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <g id="Mask"></g>
+                            <rect id="Rectangle-2" stroke-opacity="0.4" stroke="#FFFFFF" mask="url(#mask-2)" x="1.5" y="0.5" width="13" height="15"></rect>
+                            <path d="M3.5,14.5 L12.5,14.5 L12.5,4.5 L3.5,4.5 L3.5,14.5 Z" id="Rectangle" stroke-opacity="0.4" stroke="#FFFFFF" mask="url(#mask-2)"></path>
+                            <rect id="Rectangle-3" fill-opacity="0.4" fill="#FFFFFF" mask="url(#mask-2)" x="6" y="2" width="4" height="1"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
