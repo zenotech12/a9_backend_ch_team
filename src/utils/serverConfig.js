@@ -9,6 +9,7 @@ if (process.env.NODE_ENV === 'production') {
   serverConfig.api_url = '/data'
 }
 export const fileUploadUrl = serverConfig.api_url + '/file/upload'
+export const imgGetUrl = serverConfig.api_url + '/file/get'
 export const fileUrl = serverConfig.api_url + '/file/'
 export const fileUrlApk = serverConfig.api_url + '/admin/v1/big-file/upload'
 export default serverConfig

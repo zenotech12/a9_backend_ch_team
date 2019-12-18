@@ -84,7 +84,7 @@
 </template>
 
 <script>
-  import { adminAccountsUpsert, adminAccountsList, adminAccountsDel, adminAccountsModify, adminAccountsInfo } from '@/api/system'
+  import { adminAccountsUpsert, adminAccountsList, adminAccountsDel, adminAccountsModify } from '@/api/system'
   export default {
     data() {
       return {
@@ -220,15 +220,6 @@
         this.editTitle = this.$t('lang.editAdmin')
         this.dialogFormVisible = true
         this.form = JSON.parse(JSON.stringify(data))
-        // adminAccountsInfo(data.id).then(res => {
-        //   if (res.meta === 0) {
-        //     this.form.real_name = res.item.real_name
-        //     this.form.login_name = res.item.login_name
-        //     this.form.mobile = res.item.mobile
-        //     this.form.status = res.item.status
-        //     this.form.comment = res.item.comment
-        //   }
-        // })
         this.currentId = data.id
         this.type = 'modify'
       },

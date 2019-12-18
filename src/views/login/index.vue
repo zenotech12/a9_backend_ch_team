@@ -2,7 +2,7 @@
   <div class="login-container">
       <div class="login-header">
                 <div style="width: 1000px;margin: 0 auto;padding: 10px;position: relative">
-                  <span class="login_title1">{{$t('login.merchantSystem')}}</span>
+                  <span class="login_title1">商户平台</span>
                 </div>
       </div>
       <div class="login-content">
