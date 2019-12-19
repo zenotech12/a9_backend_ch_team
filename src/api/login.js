@@ -1,13 +1,10 @@
 import request from '@/utils/request'
 
-export function login(mobile, code) {
+export function login(data) {
   return request({
     url: 'login',
     method: 'post',
-    data: {
-      mobile: mobile,
-      code: code
-    }
+    data: data
   })
 }
 

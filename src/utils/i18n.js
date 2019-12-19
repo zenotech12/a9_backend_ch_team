@@ -13,6 +13,8 @@ import enLogin from '@/lang/en-login'
 import zhLogin from '@/lang/zh-cn-login'
 import enLang from '@/lang/en-lang'
 import zhLang from '@/lang/zh-cn-lang'
+import zhGoods from '@/lang/zh-cn-goods'
+import zhSys from '@/lang/zh-cn-sys'
 
 const messages = {
   en: {
@@ -42,6 +44,12 @@ const messages = {
     },
     lang: {
       ...zhLang
+    },
+    goods: {
+      ...zhGoods
+    },
+    sys: {
+      ...zhSys
     },
     ...zhElement
   }

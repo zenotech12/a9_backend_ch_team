@@ -11,6 +11,11 @@ const system = [{
     path: 'adminList',
     meta: { title: 'adminList', icon: 'permission' },
     component: () => import('@/views/system/adminList')
+  }, {
+    name: 'postage',
+    path: 'postage',
+    meta: { title: 'postageRule', icon: 'permission' },
+    component: () => import('@/views/system/postage')
   }]
 }]
 export default system

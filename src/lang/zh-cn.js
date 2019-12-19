@@ -26,6 +26,6 @@ export default {
   withdrawalMgr: '提现管理',
   robotMgr: '客服机器人',
   goodsMgr: '商品管理',
-  goodsList: '商品列表'
-
+  goodsList: '商品列表',
+  postageRule: '邮费规则'
 }

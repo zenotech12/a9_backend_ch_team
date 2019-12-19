@@ -29,21 +29,21 @@
               </el-tree>
             </div>
           </div>
-          <el-dialog title="商品分类" :visible.sync="FormVisible" @close="cancel1" center width="500px" :close-on-click-modal="false">
+          <el-dialog :title="$t('goods.typeEdit')" :visible.sync="FormVisible" @close="cancel1" center width="500px" :close-on-click-modal="false">
             <el-form :model="forms" :rules="formRules" ref="forms" label-width="80px">
-              <el-form-item label="父分类:" v-if="isShowType"  label-width="80px">
-                <el-cascader :disabled="cascaderDisabled" :options="typeData" :props="typeProps" v-model="parentType" change-on-select clearable></el-cascader>
+              <el-form-item :label="$t('goods.parentType')" v-if="isShowType"  label-width="80px">
+                <el-cascader :disabled="cascaderDisabled" :options="typeData" :props="typeProps" v-model="parentType" clearable></el-cascader>
               </el-form-item>
-              <el-form-item label="名称:" prop="name" label-width="80px">
+              <el-form-item :label="$t('goods.name')" prop="name" label-width="80px">
                 <el-input v-model="forms.name" auto-complete="off" clearable></el-input>
               </el-form-item>
-              <el-form-item label="备注:" label-width="80px">
+              <el-form-item :label="$t('goods.note')" label-width="80px">
                 <el-input type="textarea" :rows="2" v-model="forms.desc" auto-complete="off" clearable></el-input>
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
               <confirm-button @confirmButton="editType('form')"></confirm-button>
-              <el-button @click="cancel1" size="small" style="margin-right: 24px;margin-left: 10px;">关闭</el-button>
+              <el-button @click="cancel1" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
             </div>
           </el-dialog>
         </el-col>
@@ -205,7 +205,7 @@
 </template>
 
 <script>
-  import { spusAdd, spusInfo, spusList, spusDel, spuTypesUpsert, spuTypesList, spuTypesDel } from '@/api/goods'
+  import { spusAdd, spusInfo, spusList, spusDel, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel } from '@/api/goods'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
   import service from '@/utils/request'
@@ -235,7 +235,7 @@
         cascaderDisabled: false,
         goodsTypeData: [],
         FormVisible: false,
-        typeProps: { value: 'id', label: 'name', children: 'items' },
+        typeProps: { value: 'id', label: 'name', children: 'items', checkStrictly: true },
         typeProp: { value: 'tree_code', label: 'name', children: 'items' },
         defaultProps: {
           children: 'items',
@@ -352,7 +352,7 @@
     },
     methods: {
       getTypeList() {
-        spuTypesList().then(response => {
+        spuTypesList({ type: 2 }).then(response => {
           if (response.meta === 0) {
             this.typeData = []
             this.goodsTypeData = []
@@ -417,7 +417,7 @@
       },
       showEditDataFunc(row) {
         this.parentType = []
-        getPathById(row.parent, this.typeData, (res) => {
+        getPathById(row.parent_id, this.typeData, (res) => {
           this.parentType = res
         })
         this.resetForms()
@@ -445,7 +445,7 @@
           console.log(res)
         })
         this.resetForms()
-        this.forms.parent = row.id
+        this.forms.parent_id = row.id
         this.cascaderDisabled = true
         this.FormVisible = true
       },
@@ -461,11 +461,19 @@
       editType() {
         this.$refs.forms.validate(res => {
           if (res) {
-            spuTypesUpsert(this.forms).then(res => {
-              this.FormVisible = false
-              // console.log(res)
-              this.getTypeList()
-            })
+            if (this.forms.id !== '') {
+              spuTypesmodify(this.forms.id, this.forms).then(res => {
+                this.FormVisible = false
+                // console.log(res)
+                this.getTypeList()
+              })
+            } else {
+              spuTypesUpsert(this.forms).then(res => {
+                this.FormVisible = false
+                // console.log(res)
+                this.getTypeList()
+              })
+            }
           }
         })
       },

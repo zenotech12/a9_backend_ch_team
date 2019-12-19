@@ -13,4 +13,4 @@ export const imgGetUrl = serverConfig.api_url + '/file/get'
 export const fileUrl = serverConfig.api_url + '/file/'
 export const fileUrlApk = serverConfig.api_url + '/admin/v1/big-file/upload'
 export default serverConfig
-export const appKey = 'kkj23jjjfsn38jngjnzm@njioeworrewrkl#213'
+export const appKey = 'jnvcnkmk3323219jfd#ljkfkdsmer*#ty31erf'

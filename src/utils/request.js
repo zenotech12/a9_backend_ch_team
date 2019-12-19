@@ -32,7 +32,7 @@ function GetUrlRelativePath(baseUrl, pUrl) {
   return relUrl
 }
 
-service.defaults.baseURL = serverConfig.api_url + '/admin/v1/'
+service.defaults.baseURL = serverConfig.api_url + '/app/v1/merchant/'
 // request拦截器
 service.interceptors.request.use(config => {
   if (store.getters.token) {

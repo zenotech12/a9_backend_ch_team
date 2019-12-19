@@ -42,3 +42,37 @@ export function adminAccountsDel(id) {
   })
 }
 
+// 邮费设置.添加
+export function postagesAdd(data) {
+  return request({
+    url: 'postages',
+    method: 'post',
+    data: data
+  })
+}
+
+// 邮费设置.修改
+export function postagesModify(id, data) {
+  return request({
+    url: 'postages/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+// 邮费设置.查.列表
+export function postagesList(id) {
+  return request({
+    url: 'postages',
+    method: 'get'
+  })
+}
+
+// 管理账户.删
+export function postagesDel(id) {
+  return request({
+    url: 'postages/' + id,
+    method: 'delete'
+  })
+}
+

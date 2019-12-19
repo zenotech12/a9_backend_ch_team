@@ -5,6 +5,7 @@ export default {
   new: '新增',
   delete: '删除',
   confirm: '确定',
+  close: '关闭',
   cancel: '取消',
   opt: '操作',
   prompt: '提示',

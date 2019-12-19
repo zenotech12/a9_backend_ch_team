@@ -8,7 +8,7 @@
       <div class="login-content">
           <div class="login-content-box" style="width: 1000px;margin: 0 auto;padding: 10px;position: relative">
               <div style="z-index: 999;color: #fff;font-size: 24px;display: inline-block;position: absolute;top: 100px;line-height: 1.4;left: 0;">
-                    <p class="login-content-title">{{$t('login.sharedChargTreasure')}}</p>
+                    <p class="login-content-title">{{$t('login.slogan')}}</p>
                     <!--<p style="color:#FFFFFF;font-size: 20px;margin-top: 0;">Pioneer of Intelligent Pallet Material Linkage</p>-->
               </div>
           </div>
@@ -16,7 +16,7 @@
                    class="card-box login-form">
               <div class="login-form-loginName">{{$t('login.login')}}</div>
               <div class="login-form-comName">
-                {{$t('login.shenzhenRfid')}}
+                {{$t('login.title')}}
               </div>
             <!--<el-form-item prop="username">-->
               <!--<span class="svg-container svg-container_login">-->
@@ -32,20 +32,18 @@
                         <!--:placeholder="$t('login.pleaseEnterPassword')"></el-input>-->
               <!--<span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>-->
             <!--</el-form-item>-->
-            <el-form-item prop="mobile">
+            <el-form-item prop="login_name">
               <span class="svg-container svg-container_login">
                 <div class="usernameBg"></div>
               </span>
-              <el-input name="username" class="inputText" type="text" v-model="mobile" clearable  placeholder="请输入手机号" />
+              <el-input name="login_name" class="inputText" type="text" v-model="loginForm.login_name" clearable  :placeholder="$t('login.pleaseEnterAccount')" />
             </el-form-item>
-            <el-form-item prop="code">
+            <el-form-item prop="pass_word">
               <span class="svg-container">
                 <div class="passwordBg"></div>
               </span>
-              <el-input @keyup.enter.native="handleLogin" v-model="loginForm.code"
-                        placeholder="请输入验证码"></el-input>
-              <el-button size="mini" class="show-pwd1" v-if="show" :disabled="disabled" @click="getVerificationCode">发送验证码</el-button>
-              <span class="show-pwd" v-if="!show">已发送({{count}}s)</span>
+              <el-input @keyup.enter.native="handleLogin" v-model="loginForm.pass_word"
+                        :placeholder="$t('login.pleaseEnterPassword')"></el-input>
             </el-form-item>
             <el-form-item class="form-btn">
               <el-button type="primary" class="form-btn-login" :loading="loading" @click.native.prevent="handleLogin">
@@ -56,7 +54,7 @@
       </div>
       <div class="login-footer">
           <div style="width: 1000px;margin: 0 auto;padding: 10px 0 0 0 ;position: relative;overflow: hidden">
-            <div class="login-footer-title">{{$t('login.shenzhenRfid')}} {{$t('login.copyright')}} | 粤ICP备18114860号</div>
+            <div class="login-footer-title">{{$t('login.title')}} {{$t('login.copyright')}} | 粤ICP备18114860号</div>
           </div>
       </div>
 
@@ -64,26 +62,28 @@
 </template>
 
 <script>
-import { adminCode } from '@/api/login'
+// import { login } from '@/api/login'
 export default {
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
       // var reg = /^((\d2,3)|(\d{3}\-))?13\d{9}$/
       if (value.length < 11) {
-        callback(new Error('请输入正确的手机号'))
+        callback(new Error(this.$t('login.accountCheck')))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        mobile: '',
-        code: ''
+        login_name: '',
+        nation_code: '86',
+        pass_word: '',
+        merchant: true
       },
       loginRules: {
-        mobile: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        code: [{ required: true, trigger: 'blur', message: '请输入验证码' }]
+        login_name: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        pass_word: [{ required: true, trigger: 'blur', message: this.$t('login.passwordCheck') }]
       },
       loading: false,
       pwdType: 'password',
@@ -110,27 +110,6 @@ export default {
         this.pwdType = ''
       } else {
         this.pwdType = 'password'
-      }
-    },
-    getVerificationCode() {
-      const timeCount = 60
-      if (!this.timer) {
-        this.count = timeCount
-        this.show = false
-        adminCode({ 'mobile': this.loginForm.mobile, 'type': 'login' }).then(res => {
-          if (res.meta === 0) {
-            // console.log('res', res)
-          }
-        })
-        this.timer = setInterval(() => {
-          if (this.count > 0 && this.count <= timeCount) {
-            this.count--
-          } else {
-            this.show = true
-            clearInterval(this.timer)
-            this.timer = null
-          }
-        }, 1000)
       }
     },
     handleLogin() {

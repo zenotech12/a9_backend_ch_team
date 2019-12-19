@@ -35,9 +35,9 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const mobile = userInfo.mobile.trim()
+      userInfo.login_name = userInfo.login_name.trim()
       return new Promise((resolve, reject) => {
-        login(mobile, userInfo.code).then(response => {
+        login(userInfo).then(response => {
           const data = response
           setToken(data.token)
           setVersion(version())
