@@ -9,6 +9,7 @@ import DeleteButton from './DeleteButton'
 import ConfirmButton from './ConfirmButton'
 import photosList from './photosList'
 import filterFile from './filterFile'
+import imageUpload from './imageUpload'
 
 // 形成组件库
 const components = [
@@ -19,7 +20,8 @@ const components = [
   DeleteButton,
   ConfirmButton,
   photosList,
-  filterFile
+  filterFile,
+  imageUpload
 ]
 
 // 注册全局组件

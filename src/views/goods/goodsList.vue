@@ -83,7 +83,7 @@
               </el-col>
               <el-col :span="4" style="text-align: right;padding: 10px 15px">
                 <div class="boxFuncBtn">
-                  <el-button type="primary" size="mini" icon="el-icon-plus" @click="importShow1">添加</el-button>
+                  <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsEditor">添加</el-button>
                 </div>
               </el-col>
             </el-row>
@@ -110,7 +110,7 @@
                   <el-table-column prop="user_info" label="上传人"></el-table-column>
                   <el-table-column label="操作" width = "230">
                     <template slot-scope="scope">
-                      <el-button type="text" @click="editResource(scope.row.id)" size="small">编辑</el-button>
+                      <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">编辑</el-button>
                       <span class="xiexian">/</span>
                       <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
                     </template>
@@ -130,71 +130,92 @@
                 </template>
               </el-col>
             </el-row>
-            <el-dialog title="资源上传" width="500px" @close="cancelShow" :visible.sync="importShow" :close-on-click-modal="false" center>
-              <el-form :model="importPara" label-width="100px">
-                <el-form-item label="分类">
-                  <el-cascader :options="typeData" :props="typeProp" v-model="formType" change-on-select clearable></el-cascader>
-                </el-form-item>
-                <el-form-item label="公司:" prop="name" label-width="100px">
-                  <el-select v-model="importPara.partner_id" clearable>
-                    <el-option :label="item.name || item.short_name" :value="item.id" :key="item.id" v-for="item in partnList"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="文件" v-if="showUplodBtn">
-                  <el-table :data="tableFile">
-                    <el-table-column prop="name" label="名字"></el-table-column>
-                    <el-table-column label="可修改为">
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.changeName"></el-input>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="操作">
-                      <template slot-scope="scope">
-                        <el-button type="text" @click="delFile(scope.row.uid)">删除</el-button>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </el-form-item>
+            <el-dialog :title="$t('goods.edit')" width="800px" @close="cancelGoodsEdit" :visible.sync="goodsEditorShow" :close-on-click-modal="false" center>
+              <el-steps :active="goodsEditStep" style="margin-bottom: 20px">
+                <el-step title="第一步" description="设置商品类别、属性"></el-step>
+                <el-step title="第二步" description="选择分类以及商品展示图"></el-step>
+                <el-step title="第三步" description="设置商品详细介绍"></el-step>
+                <el-step title="第四步" description="设置商品规格、库存、价格"></el-step>
+              </el-steps>
+              <el-form :model="goodsData" label-width="100px">
+                <template v-if="goodsEditStep === 1">
+                  <el-form-item label="类别">
+                    <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange"></el-cascader>
+                  </el-form-item>
+                  <el-form-item v-for="(v,k) in goodsSysTypeFields" :key="k" :label="v.name">
+                    <el-input v-if="v.type==='string' || v.type === 'number'" v-model="goodsData.fields[v.code]" auto-complete="off" clearable></el-input>
+                    <el-select v-if="v.type==='mulitselect' || v.type === 'select'" :multiple="v.type==='mulitselect'" v-model="goodsData.fields[v.code]" placeholder="请选择" >
+                      <el-option
+                        v-for="item in v.param"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </template>
+                <template v-else-if="goodsEditStep === 2">
+                  <el-form-item label="品名">
+                    <el-input v-model="goodsData.name" auto-complete="off" clearable></el-input>
+                  </el-form-item>
+                  <el-form-item label="分类">
+                    <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp" @change="goodsTypeChange"></el-cascader>
+                  </el-form-item>
+                  <el-form-item label="商品图">
+                    <template>
+                      <el-carousel :interval="4000" type="card" height="200px">
+                        <el-carousel-item v-for="(image,ik) in goodsData.images" :key="ik">
+                          <image :src="imageUrlPre + '?md5=' + image"></image>
+                        </el-carousel-item>
+                      </el-carousel>
+                    </template>
+                    <image-upload @uploadSuccess="imageUploadSuccess"></image-upload>
+                  </el-form-item>
+                </template>
+                <template v-else-if="goodsEditStep === 3">
+                  <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
+                </template>
+                <template v-else-if="goodsEditStep === 4">
+                  <el-form-item label="规格、属性">
+                    <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
+                      <el-input v-model="goodsProps[k].name" class="prop-name" placeholder="规格名"></el-input>：
+                      <el-tag :key="tag" v-for="tag in goodsProps[k].items" closable :disable-transitions="false"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
+                      <el-input class="input-new-tag"  placeholder="属性名" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
+                      <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">+ New Tag</el-button>
+                    </div>
+                    <a @click="addGoodsProp" class="add-prop-btn">+增加属性</a>
+                  </el-form-item>
+                  <el-form-item label="价格、库存">
+                    <el-table :data="goodsInventoryTable"  style="width: 100%">
+                      <el-table-column label="规格、属性">
+                        <template  slot-scope="scope">
+                          {{scope.row.title}}
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="库存">
+                        <template  slot-scope="scope">
+                          <el-input v-model.number="scope.row.inventory"></el-input>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="价格">
+                        <template  slot-scope="scope">
+                          <el-input v-model.number="scope.row.price"></el-input>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="图片">
+                        <template  slot-scope="scope">
+                          图片
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </el-form-item>
+                </template>
               </el-form>
               <div slot="footer" class="dialog-footer">
-                <confirm-button @confirmButton="submitUpload" :disabled="disabled"></confirm-button>
-                <el-button @click="cancelShow" size="small" style="margin-right: 24px;margin-left: 10px;">关闭</el-button>
-              </div>
-            </el-dialog>
-            <el-dialog title="资源修改" width="500px" @close="cancelShowEdit" :visible.sync="editResourceDialog" :close-on-click-modal="false" center>
-              <el-form :model="form" :rules="formRule" ref="form" label-width="80px">
-                <el-form-item label="分类">
-                  <el-cascader :options="typeData" :props="typeProp" v-model="selectedFuncType" change-on-select clearable></el-cascader>
-                </el-form-item>
-                <el-form-item label="公司:">
-                  <el-select v-model="form.partner_id" clearable>
-                    <el-option :label="item.name || item.short_name" :value="item.id" :key="item.id" v-for="item in partnList"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="名称:" prop="name" label-width="80px">
-                  <el-input v-model="form.name" auto-complete="off" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="md5:" label-width="80px">
-                  <el-input v-model="showForm.md5" :disabled="true" auto-complete="off" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="大小:" label-width="80px">
-                  <el-input v-model="showForm.size" :disabled="true" auto-complete="off" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="path:" label-width="80px">
-                  <el-input v-model="showForm.path" :disabled="true" auto-complete="off" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="状态:" label-width="80px">
-                  <el-switch
-                    v-model="showForm.status"
-                    active-text="未发布"
-                    inactive-text="发布"
-                    disabled>
-                  </el-switch>
-                </el-form-item>
-              </el-form>
-              <div slot="footer" class="dialog-footer">
-                <confirm-button @confirmButton="submitEditResource('form')" :disabled="disabled"></confirm-button>
-                <el-button @click="cancelShowEdit" size="small" style="margin-right: 24px;margin-left: 10px;">关闭</el-button>
+                <el-button v-if = "goodsEditStep > 1" size="small" type="primary" @click="editNextFunc(-1)" >{{$t('goods.pre')}}</el-button>
+                <confirm-button v-if="goodsEditStep === 3" @confirmButton="updateGoodsFunc" :disabled="disabled"></confirm-button>
+                <el-button v-else size="small" type="primary" @click="editNextFunc(1)" >{{$t('goods.next')}}</el-button>
+                <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">关闭</el-button>
               </div>
             </el-dialog>
           </div>
@@ -205,18 +226,19 @@
 </template>
 
 <script>
-  import { spusAdd, spusInfo, spusList, spusDel, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel } from '@/api/goods'
+  import { spusAdd, spusInfo, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify } from '@/api/goods'
+  import { imgGetUrl } from '@/utils/serverConfig'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
   import service from '@/utils/request'
+  import llEditor from '@/components/LLEditor'
   export default {
     components: {
+      llEditor
     },
     data() {
       return {
-        proxyFile: [],
-        formType: [],
-        selectedFuncType: [],
+        imageUrlPre: imgGetUrl,
         formRules: {
           name: [
             { required: true, message: '请输入商品分类的名称', trigger: 'blur' }
@@ -236,7 +258,7 @@
         goodsTypeData: [],
         FormVisible: false,
         typeProps: { value: 'id', label: 'name', children: 'items', checkStrictly: true },
-        typeProp: { value: 'tree_code', label: 'name', children: 'items' },
+        typeProp: { value: 'id', label: 'name', children: 'items' },
         defaultProps: {
           children: 'items',
           label: 'name'
@@ -298,10 +320,7 @@
         edit: true,
         fileUploadUrl: service.defaults.baseURL + '/resources/upload',
         fileUploadHeader: { 'X-Access-Token': store.state.user.token },
-        importShow: false,
-        importPara: { 'type_code': '', 'name': '', partner_id: '' },
         fileList: [],
-        showUplodBtn: false,
         releaseForm: {
           resources_id: '',
           status: true
@@ -309,7 +328,23 @@
         editResourceDialog: false,
         showForm: {},
         partnList: [],
-        tableFile: []
+        sysTypes: [],
+        goodsEditStep: 1,
+        goodsEditorShow: false,
+        goodsData: {
+          id: '',
+          default_type_id: '',
+          fields: {},
+          merchant_type_id: '',
+          name: '',
+          images: [],
+          desc: ''
+        },
+        goodsSysTypes: [],
+        goodsSysTypeFields: [],
+        goodsTypes: [],
+        goodsProps: [],
+        goodsInventoryTable: []
       }
     },
     created() {
@@ -319,6 +354,7 @@
     mounted() {
       this.getTableData()
       this.getTypeList()
+      this.getSysType()
       // this.getPartner()
     },
     watch: {
@@ -340,17 +376,51 @@
           this.forms.parent_id = val[val.length - 1]
         }
       },
-      formType(val) {
-        if (val.length !== 0) {
-          this.showUplodBtn = true
-        }
-        this.importPara.type_code = Array.isArray(val) ? val[val.length - 1] : val
-      },
-      selectedFuncType(val) {
-        this.form.type_code = Array.isArray(val) ? val[val.length - 1] : val
+      goodsProps: {
+        handler(val) {
+          // val.forEach((item) => {
+          //   this.goodsInventoryTable.push()
+          // })
+          this.goodsInventoryTable = []
+          const skus = this.getTreePath(0)
+          skus.forEach(item => {
+            const tableItem = { specifications: item, price: 0, inventory: 0, images: [] }
+            let str = ''
+            val.forEach(gi => {
+              if (gi.name !== '' && gi.items.length > 0) {
+                str += gi.name + '：' + item[gi.name] + '；'
+              }
+            })
+            tableItem['title'] = str
+            this.goodsInventoryTable.push(tableItem)
+          })
+        },
+        deep: true
       }
     },
     methods: {
+      getTreePath(k) {
+        const path = []
+        if (k > this.goodsProps.length - 1 || !this.goodsProps[k] || !this.goodsProps[k].items || this.goodsProps[k].items < 1) {
+          return path
+        }
+        for (let i = 0; i < this.goodsProps[k].items.length; i++) {
+          const child = this.getTreePath(k + 1)
+          if (child.length < 1) {
+            const item = {}
+            item[this.goodsProps[k].name] = this.goodsProps[k].items[i]
+            path.push(item)
+            // this.getTreePath(k++)
+          } else {
+            for (let j = 0; j < child.length; j++) {
+              const ni = JSON.parse(JSON.stringify(child[j]))
+              ni[this.goodsProps[k].name] = this.goodsProps[k].items[i]
+              path.push(ni)
+            }
+          }
+        }
+        return path
+      },
       getTypeList() {
         spuTypesList({ type: 2 }).then(response => {
           if (response.meta === 0) {
@@ -366,26 +436,43 @@
           }
         })
       },
-      getPathByCode(code, items, callback) {
-        var temppath = []
-        function getNodePath(nodes) {
-          nodes.forEach(node => {
-            temppath.push(node.tree_code)
-            if (node.tree_code === code) {
-              throw new Error('GOT IT!')
-            }
-            if (node.items !== null && node.items.length > 0) {
-              getNodePath(node.items)
-            } else {
-              temppath.pop()
-            }
-          })
-          temppath.pop()
+      getSysType() {
+        spuTypesList({ type: 1 }).then(response => {
+          if (response.meta === 0) {
+            this.sysTypes = response.items
+          }
+        })
+      },
+      sysTypeChange(data) {
+        if (data.length < 1) {
+          return
         }
-        try {
-          getNodePath(items)
-        } catch (e) {
-          callback(temppath)
+        this.goodsData.default_type_id = data[data.length - 1]
+        const nodes = this.$refs.sysGoodsTypeSelector.getCheckedNodes()
+        this.goodsData.fields = {}
+        this.goodsSysTypeFields = []
+        const currentNode = nodes[nodes.length - 1]
+        currentNode.data.fields && currentNode.data.fields.length > 0 && currentNode.data.fields.forEach(item => {
+          if (item.type === 'string' || item.type === 'number') {
+            this.goodsSysTypeFields.push({ code: item.code, name: item.name, type: item.type })
+            this.$set(this.goodsData.fields, item.code, '')
+          } else if (item.type === 'select' || item.type === 'mulitselect') {
+            this.goodsSysTypeFields.push({ code: item.code, name: item.name, type: item.type, param: JSON.parse(item.param) })
+            if (item.type === 'mulitselect') {
+              this.$set(this.goodsData.fields, item.code, [])
+            } else {
+              this.$set(this.goodsData.fields, item.code, '')
+            }
+          }
+        })
+        console.log(currentNode)
+        // console.log(data)
+      },
+      goodsTypeChange(data) {
+        if (data.length < 1) {
+          this.goodsData.merchant_type_id = ''
+        } else {
+          this.goodsData.merchant_type_id = data[data.length - 1]
         }
       },
       renderContent(h, { node, data, store }) {
@@ -440,9 +527,9 @@
       showAddChildFunc(row) {
         this.parentType = []
         console.log('this.typeData', this.typeData)
-        getPathById(row.id, this.typeData, (res) => {
+        getPathById(row.id, this.typeData, (res, node) => {
           this.parentType = res
-          console.log(res)
+          console.log(res, node)
         })
         this.resetForms()
         this.forms.parent_id = row.id
@@ -512,87 +599,131 @@
       search() {
         this.getTableData()
       },
-      editResource(id) {
-        this.selectedFuncType = []
-        spusInfo(id).then(res => {
-          if (res.meta === 0) {
-            // console.log(res)
-            this.showForm = res.item
-            this.form.name = res.item.name
-            this.form.partner_id = res.item.partner_id
-            this.form.resources_id = res.item.id
-            this.editResourceDialog = true
-            if (this.showForm.type_code !== '') {
-              this.getPathByCode(this.showForm.type_code, this.typeData, res => {
-                this.selectedFuncType = res
-              })
-            }
-          }
-        })
-      },
-      submitEditResource() {
-        this.$refs.form.validate(res => {
-          if (res) {
-            spusAdd(this.form).then(res => {
-              this.editResourceDialog = false
-              // console.log(res)
-              this.$message.success('修改成功')
-              this.getTableData()
+      showGoodsEditor(data) {
+        this.goodsEditorShow = true
+        this.goodsEditStep = 1
+        if (data) {
+          this.goodsSysTypes = []
+          this.goodsSysTypeFields = []
+          getPathById(data.default_type_id, this.sysTypes, (res, node) => {
+            this.goodsSysTypes = res
+            const fields = node.data.fields
+            fields.forEach(fi => {
+              const fitem = { code: fi.code, name: fi.name, type: fi.type }
+              if (fitem.type === 'select' || fitem.type === 'mulitselect') {
+                fitem['param'] = JSON.parse(fi.param)
+              }
+              this.goodsSysTypeFields.push(fitem)
             })
+          })
+          const fieldsData = {}
+          this.goodsSysTypeFields.forEach(fi => {
+            if (fi.type === 'mulitselect') {
+              fieldsData[fi.code] = JSON.parse(data.fields[fi.code])
+            } else {
+              fieldsData[fi.code] = data.fields[fi.code]
+            }
+          })
+
+          this.goodsTypes = []
+          getPathById(data.merchant_type_id, this.typeData, (res) => {
+            this.goodsTypes = res
+          })
+          this.goodsData = {
+            id: data.id,
+            default_type_id: data.default_type_id,
+            fields: fieldsData,
+            merchant_type_id: data.merchant_type_id,
+            name: data.name,
+            images: data.images,
+            desc: data.desc
           }
-        })
-      },
-      cancelShowEdit() {
-        this.editResourceDialog = false
-        this.$refs['form'].resetFields()
-      },
-      importShow1() {
-        this.proxyFile = []
-        this.tableFile = []
-        this.importShow = true
-        this.showUplodBtn = false
-        this.formType = []
-        this.importPara = { 'type_code': '', 'name': '', partner_id: '' }
-        // this.$refs.fileUploader.clearFiles()
-      },
-      fileChange(file, fileList) {
-        if (fileList.length !== 1) {
-          fileList.splice(0, 1)
+        } else {
+          this.goodsData = {
+            id: '',
+            default_type_id: '',
+            fields: {},
+            merchant_type_id: '',
+            name: '',
+            images: [],
+            desc: ''
+          }
         }
       },
-      cancelShow() {
-        this.importShow = false
+      cancelGoodsEdit() {
+        this.goodsEditorShow = false
         // this.$refs.upload.clearFiles()
       },
-      // 导入后的确定
-      submitUpload() {
-        this.$refs.upload.submit()
-      },
-      delFile(index) {
-        const ind = this.proxyFile.findIndex(res => res.uid === index)
-        const inds = this.tableFile.findIndex(res => res.uid === index)
-        if (ind !== -1) {
-          this.proxyFile.splice(ind, 1)
-        }
-        if (inds !== -1) {
-          this.tableFile.splice(ind, 1)
+      editNextFunc(opt) {
+        if (opt === 1 && this.goodsEditStep === 4) {
+          this.updateGoodsSku()
+        } else {
+          opt === 1 ? this.goodsEditStep++ : this.goodsEditStep--
         }
       },
-      importUploadFunc(res, files) {
-        this.importShow = false
-        // if (res.meta === 0) {
-        // console.log('res', res)
-        this.$message.success('上传成功')
-        this.getTableData()
-        this.$refs.upload.clearFiles()
-        // }
+      imageUploadSuccess(data) {
+        this.goodsData.images.push(data.md5)
       },
-      beforeCertificateUpload(file) {
-        // const isLt2M = file.size / 1024 / 1024 < 300
-        // if (!isLt2M) {
-        //   this.$message.error('上传的文件不大于300MB')
-        // }
-        return true
+      contentChangeFunc(data) {
+        this.goodsData.desc = data
+      },
+      updateGoodsFunc() {
+        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_id: this.goodsData.merchant_type_id, name: this.goodsData.name, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc}
+        const filedItem = {}
+        for (const key in this.goodsData.fields) {
+          if (Array.isArray(this.goodsData.fields[key])) {
+            filedItem[key] = JSON.stringify(this.goodsData.fields[key])
+          } else {
+            filedItem[key] = this.goodsData.fields[key]
+          }
+        }
+        goodsItem['fields'] = JSON.stringify(filedItem)
+        if (this.goodsData.id !== '') {
+          this.disabled = true
+          spusModify(this.goodsData.id, goodsItem).then(res => {
+            this.goodsData.id = res.error
+            this.goodsEditStep = 4
+            this.disabled = false
+          }).catch(() => {
+            this.disabled = false
+          })
+        } else {
+          this.disabled = true
+          spusAdd(goodsItem).then(res => {
+            this.goodsData.id = res.error
+            this.goodsEditStep = 4
+            this.disabled = false
+          }).catch(() => {
+            this.disabled = false
+          })
+        }
+      },
+      handleInputConfirm(k) {
+        if (this.goodsProps[k].newTag) {
+          this.goodsProps[k].items.push(this.goodsProps[k].newTag)
+        }
+        this.goodsProps[k].isInput = false
+        this.goodsProps[k].newTag = ''
+      },
+      handleClose(k, tag) {
+        this.goodsProps[k].items.splice(this.goodsProps[k].items.indexOf(tag), 1)
+      },
+      showInput(k) {
+        this.$set(this.goodsProps[k], 'isInput', true)
+        this.$nextTick(_ => {
+          this.$refs['saveTagInput' + k].$refs.input.focus()
+        })
+      },
+      addGoodsProp() {
+        const pi = { name: '', items: [], newTag: '', isInput: true }
+        this.goodsProps.push(pi)
+        console.log(this.goodsProps)
+      },
+      updateGoodsSku() {
+        const data = { skus: JSON.stringify(this.goodsInventoryTable), spectification_options: JSON.stringify(this.goodsProps) }
+        spusSkusModify(this.goodsData.id, data).then(res => {
+          console.log(res)
+        })
       }
     }
   }
@@ -611,6 +742,19 @@
       margin: 0;
       padding: 6px 10px;
       line-height: 43px;
+    }
+  }
+  .prop-item{
+    padding: 5px 0px;
+    border-bottom: 1px solid #e4e4e4;
+    .prop-name{
+      width: 100px;
+    }
+    .input-new-tag{
+      width: 100px;
+    }
+    .add-prop-btn {
+
     }
   }
 </style>

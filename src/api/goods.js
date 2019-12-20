@@ -112,9 +112,9 @@ export function spusSkusInventory(goodsId, skusId, data) {
 }
 
 // 商品规格.改
-export function spusSkusModify(goodsId, skusId, data) {
+export function spusSkusModify(goodsId, data) {
   return request({
-    url: 'spus/' + goodsId + '/skus' + skusId,
+    url: 'spus/' + goodsId + '/skus',
     method: 'put',
     data: data
   })

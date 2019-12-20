@@ -24,5 +24,7 @@ export default {
   pleaseChoose: '请选择',
   willDeleteRecord: '此操作将删除该记录, 是否继续?',
   saveSuccess: '保存成功',
-  loading: '加载中'
+  loading: '加载中',
+  imageFormatTip: '上传图片只能是 JPG、png 格式!',
+  imageSizeTip: '超过了文件大小限制'
 }

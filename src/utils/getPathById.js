@@ -28,7 +28,9 @@ export default (id, items, callback) => {
     nodes.forEach(node => {
       temppath.push(node.id)
       if (node.id === id) {
-        throw new Error('GOT IT!')
+        const err = new Error()
+        err.data = node
+        throw err
       }
       if (node.items != null && node.items.length > 0) {
         getNodePath(node.items)
@@ -42,7 +44,7 @@ export default (id, items, callback) => {
     getNodePath(items)
   }
   catch (e) {
-    callback(temppath)
+    callback(temppath, e)
   }
 }
 
