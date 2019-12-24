@@ -253,7 +253,7 @@
 </template>
 
 <script>
-  import { spusAdd, spusInfo, spusShelf, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify, spusSkusList } from '@/api/goods'
+  import { spusAdd, spusShelf, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify, spusSkusList } from '@/api/goods'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
   import service from '@/utils/request'
@@ -744,7 +744,7 @@
         this.goodsData.desc = data
       },
       updateGoodsFunc() {
-        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_id: this.goodsData.merchant_type_id, name: this.goodsData.name, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc}
+        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_id: this.goodsData.merchant_type_id, name: this.goodsData.name, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
         const filedItem = {}
         for (const key in this.goodsData.fields) {
           if (Array.isArray(this.goodsData.fields[key])) {

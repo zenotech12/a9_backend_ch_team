@@ -5,19 +5,6 @@ import 'nprogress/nprogress.css'// Progress 进度条样式
 // import { Message } from 'element-ui'
 import { getToken, getVersion } from '@/utils/auth' // 验权
 import { version } from '@/utils/static'
-// import { constantRouterMap } from '@/router'
-// import { limited } from '@/api/login'
-import goods from '@/router/goods'
-// import shopStaffMgr from '@/router/shopStaffMgr'
-// import userMgr from '@/router/userMgr'
-import system from '@/router/system'
-// import shareCou from '@/router/shareCou'
-// import withdrawal from '@/router/withdrawal'
-
-function getRooterArr() {
-  var rooterArr = goods.concat(system)
-  return rooterArr
-}
 
 const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
@@ -32,8 +19,7 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
     } else {
       next()
-      var rooterArr = getRooterArr()
-      store.dispatch('setRouter', rooterArr).then(() => {
+      store.dispatch('setRouter', router.options.routes).then(() => {
         next()
       })
       // next()

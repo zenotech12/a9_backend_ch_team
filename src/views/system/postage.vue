@@ -130,36 +130,14 @@
   import i18n from '../../utils/i18n'
   import service from '@/utils/request'
   import store from '@/store'
-  import { serverBaseUrl } from '@/utils/serverConfig'
   // 公司设置
-  import { postagesAdd, postageModify, postagesList, postagesDel } from '@/api/system'
+  import { postagesAdd, postagesModify, postagesList, postagesDel } from '@/api/system'
   import { mapGetters } from 'vuex'
   import area from '@/utils/area'
   export default {
     components: {
     },
     data() {
-      var telValidata = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error(this.$t('global.import') + ' ' + this.$t('global.tel')))
-        } else {
-          var re = /^1(?:3\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\d|9\d)\d{8}$/
-          if (re.test(value)) {
-            callback()
-          } else {
-            callback(new Error(this.$t('global.telTips')))
-          }
-        }
-      }
-      const validatePass = (rule, value, callback) => {
-        if (value.length === 0) {
-          callback(new Error(this.$t('global.import') + ' ' + this.$t('global.password')))
-        } else if (value.length < 6 && value.length > 0) {
-          callback(new Error(this.$t('global.passLengthThan6')))
-        } else {
-          callback()
-        }
-      }
       return {
         hasRadio: 0,
         postageData: {
@@ -190,19 +168,8 @@
           index: ''
         },
         bannerDialog: false,
-        typeList: [
-          {
-            value: 0,
-            label: this.$t('global.good')
-          },
-          {
-            value: 1,
-            label: this.$t('global.extranet')
-          }
-        ],
         bannerList: [],
         currentShow: 1,
-        systemFuncList: [this.$t('global.adminSet'), this.$t('global.setInfo'), this.$t('global.CompanySettings')],
         // 管理员
         dialogFormVisible: false,
         title: '新增管理员',
@@ -222,21 +189,6 @@
           mobile: '',
           email: '',
           pass: ''
-        },
-        rules: {
-          name: [
-            { required: true, message: this.$t('global.import') + ' ' + this.$t('global.fieldName'), trigger: 'blur' }
-          ],
-          pass: [
-            // { required: true, message: this.$t('global.select') + ' ' + this.$t('global.fieldType'), trigger: 'blur' },
-            { required: true, trigger: 'blur', validator: validatePass }
-          ],
-          email: [
-            { required: true, message: this.$t('global.import') + ' ' + this.$t('global.email'), trigger: 'blur' }
-          ],
-          mobile: [
-            { validator: telValidata, trigger: 'blur' }
-          ]
         },
         currentPage: 0,
         itemCount: 0,
@@ -261,42 +213,13 @@
           show_style: 0
         },
         catchData: {},
-        rule: {
-          title: [
-            { required: true, message: this.$t('global.import') + this.$t('global.siteTile'), trigger: 'blur' }
-          ],
-          company: [
-            { required: true, message: this.$t('global.import') + this.$t('global.siteTile'), trigger: 'blur' }
-          ],
-          footer_info: [
-            { required: true, message: this.$t('global.import') + this.$t('global.siteTile'), trigger: 'blur' }
-          ]
-        },
         // 公司设置
         defaultTabCompany: 'zh',
         langArrCompany: {},
-        imgPreUrl: serverBaseUrl + '/file/',
         addFormCompany: {
           title: '',
           logo: '',
           banners: ''
-        },
-        rulesCompany: {
-          name: [
-            { required: true, message: this.$t('global.import') + ' ' + this.$t('global.company'), trigger: 'blur' }
-          ],
-          address: [
-            { required: true, message: this.$t('global.import') + ' ' + this.$t('global.address'), trigger: 'blur' }
-          ],
-          tel: [
-            { validator: telValidata, trigger: 'blur' }
-          ],
-          web_site: [
-            { required: true, message: this.$t('global.import') + ' ' + this.$t('global.website'), trigger: 'blur' }
-          ],
-          logo: [
-            { required: true, message: this.$t('global.pleaseUpload') + this.$t('global.companyLogo'), trigger: 'blur' }
-          ]
         },
         singleGoods: false,
         areas: this.filterChild(area),
@@ -339,10 +262,19 @@
     },
     methods: {
       delPostage(data) {
-        this.alert('是否删除该邮费规则', res => {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
           postagesDel(data).then(res => {
-            this.$message.success(this.$t('global.optSuccess'))
+            this.$message.success(res.error)
             this.postageList()
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
           })
         })
       },
@@ -388,10 +320,17 @@
           item.step = parseInt(item.step)
         })
         this.postageData.settings = JSON.stringify(this.postageData.settings)
-        postagesAdd(this.postageData).then(res => {
-          this.postageDialog = false
-          this.postageList()
-        })
+        if (this.postageData.id !== '') {
+          postagesModify(this.postageData.id, this.postageData).then(res => {
+            this.postageDialog = false
+            this.postageList()
+          })
+        } else {
+          postagesAdd(this.postageData).then(res => {
+            this.postageDialog = false
+            this.postageList()
+          })
+        }
       },
       checkClick(row, truth, value, index, source) {
         let data = row.province
@@ -537,7 +476,6 @@
       this.postageList()
     },
     created() {
-      this.getInfo()
       this.langArr = Object.keys(i18n.messages)
       this.defaultTab = this.langArr[0]
     }
