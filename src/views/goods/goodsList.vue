@@ -91,26 +91,35 @@
               <el-col :span="24" style="height: calc(100vh - 242px)">
                 <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 42px)" style="width: 100%">
                   <el-table-column prop="name" label="名称"></el-table-column>
-                  <el-table-column label="状态">
+                  <el-table-column label="审核">
                     <template  slot-scope="scope">
-                      <el-tag :type="scope.row.status ? 'success' : 'danger'">
-                        {{scope.row.status ? '发布': '未发布'}}
+                      <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
+                        {{scope.row.approve_status === 2 ? '已审' : (scope.row.approve_status === 3 ? '驳回' : '待审' )}}
                       </el-tag>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="content_type" label="文件类型"></el-table-column>
-                  <el-table-column prop="size" label="文件大小"></el-table-column>
-                  <el-table-column prop="url" label="url">
+                  <el-table-column label="上下架">
                     <template  slot-scope="scope">
-                      <el-tag>
-                        <a :href="scope.row.url" target="view_window">预览</a>
-                      </el-tag>
+                      <el-tooltip v-if="scope.row.approve_status === 2" class="item" effect="dark" content="点击可直接修改上下架架状态" placement="top">
+                        <el-tag @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
+                          {{scope.row.shelf_status === 2 ? '已上架' : '已下架'}}
+                        </el-tag>
+                      </el-tooltip>
+                      <template v-else>
+                        --
+                      </template>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="user_info" label="上传人"></el-table-column>
+                  <el-table-column label="价格">
+                    <template  slot-scope="scope">
+                      {{scope.row.min_price + (scope.row.min_price === scope.row.max_price ? '': ('-' + scope.row.max_price))}}
+                    </template>
+                  </el-table-column>
                   <el-table-column label="操作" width = "230">
                     <template slot-scope="scope">
                       <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">编辑</el-button>
+                      <span class="xiexian">/</span>
+                      <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">库存及价格</el-button>
                       <span class="xiexian">/</span>
                       <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
                     </template>
@@ -165,7 +174,7 @@
                     <template>
                       <el-carousel :interval="4000" type="card" height="200px">
                         <el-carousel-item v-for="(image,ik) in goodsData.images" :key="ik">
-                          <image :src="imageUrlPre + '?md5=' + image"></image>
+                          <img :src="getImageUrl(image,325)"></img>
                         </el-carousel-item>
                       </el-carousel>
                     </template>
@@ -178,10 +187,10 @@
                 <template v-else-if="goodsEditStep === 4">
                   <el-form-item label="规格、属性">
                     <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
-                      <el-input v-model="goodsProps[k].name" class="prop-name" placeholder="规格名"></el-input>：
+                      <el-input v-model="goodsProps[k].name" class="prop-name" placeholder="规格名"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
                       <el-tag :key="tag" v-for="tag in goodsProps[k].items" closable :disable-transitions="false"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
                       <el-input class="input-new-tag"  placeholder="属性名" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
-                      <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">+ New Tag</el-button>
+                      <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">+ 属性</el-button>
                     </div>
                     <a @click="addGoodsProp" class="add-prop-btn">+增加属性</a>
                   </el-form-item>
@@ -204,7 +213,7 @@
                       </el-table-column>
                       <el-table-column label="图片">
                         <template  slot-scope="scope">
-                          图片
+                          <i style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
                         </template>
                       </el-table-column>
                     </el-table>
@@ -213,10 +222,28 @@
               </el-form>
               <div slot="footer" class="dialog-footer">
                 <el-button v-if = "goodsEditStep > 1" size="small" type="primary" @click="editNextFunc(-1)" >{{$t('goods.pre')}}</el-button>
-                <confirm-button v-if="goodsEditStep === 3" @confirmButton="updateGoodsFunc" :disabled="disabled"></confirm-button>
-                <el-button v-else size="small" type="primary" @click="editNextFunc(1)" >{{$t('goods.next')}}</el-button>
+                <confirm-button @confirmButton="editNextFunc(1)" :disabled="disabled" :confirmButtonInfor="goodsEditStep === 4 ? this.$t('tools.confirm') : $t('goods.next')"></confirm-button>
+                <!--<el-button v-else size="small" type="primary" @click="editNextFunc(1)" >{{$t('goods.next')}}</el-button>-->
                 <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">关闭</el-button>
               </div>
+              <el-dialog :title="$t('goods.edit')" width="400px" @close="showPropsImageDialog=false" :visible.sync="showPropsImageDialog" :close-on-click-modal="false" center append-to-body>
+                <template>
+                  <div class="prop-image__preview" v-if="goodsInventoryTable.length > 0">
+                    <div class="pitem"  v-for="(img,imgk) in goodsInventoryTable[propsImageEditIndex].images" :key="imgk">
+                    <el-image
+                      style="width: 100px; height: 100px"
+                      :src="getImageUrl(img)"
+                      :preview-src-list="propPreviewImages">
+                    </el-image>
+                      <i class="el-icon-delete delbtn" @click="delPropImage(imgk)"></i>
+                    </div>
+                  </div>
+                </template>
+                <image-upload @uploadSuccess="propImageUploadSuccess"></image-upload>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="showPropsImageDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
+                </div>
+              </el-dialog>
             </el-dialog>
           </div>
         </el-col>
@@ -226,8 +253,7 @@
 </template>
 
 <script>
-  import { spusAdd, spusInfo, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify } from '@/api/goods'
-  import { imgGetUrl } from '@/utils/serverConfig'
+  import { spusAdd, spusInfo, spusShelf, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify, spusSkusList } from '@/api/goods'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
   import service from '@/utils/request'
@@ -238,7 +264,6 @@
     },
     data() {
       return {
-        imageUrlPre: imgGetUrl,
         formRules: {
           name: [
             { required: true, message: '请输入商品分类的名称', trigger: 'blur' }
@@ -344,12 +369,15 @@
         goodsSysTypeFields: [],
         goodsTypes: [],
         goodsProps: [],
-        goodsInventoryTable: []
+        goodsInventoryTable: [],
+        goodsInventoryData: [],
+        showPropsImageDialog: false,
+        propsImageEditIndex: 0
       }
     },
     created() {
-      this.$store.state.user.funcListName = '资源列表'
-      this.$store.state.user.pathRouter = false
+      // this.$store.state.user.funcListName = '资源列表'
+      // this.$store.state.user.pathRouter = false
     },
     mounted() {
       this.getTableData()
@@ -392,10 +420,36 @@
               }
             })
             tableItem['title'] = str
+            for (let i = 0; i < this.goodsInventoryData.length; i++) {
+              const keys = Object.keys(item)
+              let isEque = true
+              for (let j = 0; j < keys.length; j++) {
+                if (this.goodsInventoryData[i].specifications[keys[j]] !== item[keys[j]]) {
+                  isEque = false
+                  break
+                }
+              }
+              if (isEque) {
+                tableItem.inventory = this.goodsInventoryData[i].inventory
+                tableItem.price = this.goodsInventoryData[i].price
+                tableItem.images = this.goodsInventoryData[i].images
+              }
+            }
             this.goodsInventoryTable.push(tableItem)
           })
         },
         deep: true
+      }
+    },
+    computed: {
+      propPreviewImages() {
+        const result = []
+        if (this.goodsInventoryTable.length > 0 && this.goodsInventoryTable[this.propsImageEditIndex] && this.goodsInventoryTable[this.propsImageEditIndex].images) {
+          this.goodsInventoryTable[this.propsImageEditIndex].images.forEach(img => {
+            result.push(this.getImageUrl(img))
+          })
+        }
+        return result
       }
     },
     methods: {
@@ -429,7 +483,7 @@
             if (response.items !== null) {
               this.isShowType = true
               this.typeData = response.items
-              this.goodsTypeData = [{ name: '全部', code: '' }, ...response.items]
+              this.goodsTypeData = [{ name: '全部', code: '', id: '' }, ...response.items]
             } else {
               this.isShowType = false
             }
@@ -599,9 +653,13 @@
       search() {
         this.getTableData()
       },
-      showGoodsEditor(data) {
+      showGoodsEditor(data, step) {
+        this.goodsProps = []
         this.goodsEditorShow = true
         this.goodsEditStep = 1
+        if (step) {
+          this.goodsEditStep = step
+        }
         if (data) {
           this.goodsSysTypes = []
           this.goodsSysTypeFields = []
@@ -638,6 +696,12 @@
             images: data.images,
             desc: data.desc
           }
+          spusSkusList(data.id, { skip: 0, limit: -1 }).then(res => {
+            this.goodsInventoryData = res.items
+            data.specification_options && data.specification_options.forEach((op) => {
+              this.goodsProps.push({ name: op.name, items: op.items, isInput: false, newTag: '' })
+            })
+          })
         } else {
           this.goodsData = {
             id: '',
@@ -654,9 +718,21 @@
         this.goodsEditorShow = false
         // this.$refs.upload.clearFiles()
       },
+      editorProppImageFunc(k) {
+        this.propsImageEditIndex = k
+        this.showPropsImageDialog = true
+      },
+      propImageUploadSuccess(data) {
+        this.goodsInventoryTable[this.propsImageEditIndex].images.push(data.md5)
+      },
+      delPropImage(index) {
+        this.goodsInventoryTable[this.propsImageEditIndex].images.splice(index, 1)
+      },
       editNextFunc(opt) {
         if (opt === 1 && this.goodsEditStep === 4) {
           this.updateGoodsSku()
+        } else if (opt === 1 && this.goodsEditStep === 3) {
+          this.updateGoodsFunc()
         } else {
           opt === 1 ? this.goodsEditStep++ : this.goodsEditStep--
         }
@@ -719,10 +795,27 @@
         this.goodsProps.push(pi)
         console.log(this.goodsProps)
       },
+      deleteProps(k) {
+        this.goodsProps.splice(k, 1)
+      },
       updateGoodsSku() {
         const data = { skus: JSON.stringify(this.goodsInventoryTable), spectification_options: JSON.stringify(this.goodsProps) }
+        this.disabled = true
         spusSkusModify(this.goodsData.id, data).then(res => {
-          console.log(res)
+          this.disabled = false
+          this.$message.success(res.error)
+          this.goodsEditorShow = false
+        }).catch(() => {
+          this.disabled = false
+        })
+      },
+      goodsShelfModify(row) {
+        if (row.approve_status !== 2) {
+          this.$message.error('商品尚未审核通过')
+          return
+        }
+        spusShelf(row.id, { shelf_status: row.shelf_status === 2 ? 1 : 2 }).then(res => {
+          this.getTableData()
         })
       }
     }
@@ -765,6 +858,18 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+    }
+  }
+  .prop-image__preview{
+    .pitem{
+      display: inline-block;
+      position: relative;
+      .delbtn{
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
     }
   }
 </style>

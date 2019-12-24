@@ -19,6 +19,7 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import './components/platformCom/install'
 import '@/assets/css/override-element-ui.scss'
+import { imgGetUrl } from '@/utils/serverConfig'
 import echarts from 'echarts'
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
@@ -27,6 +28,18 @@ Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
 
 Vue.config.productionTip = false
+
+Vue.mixin({
+  methods: {
+    getImageUrl(val, width) {
+      let imgUrl = imgGetUrl + '?md5=' + val
+      if (width) {
+        imgUrl += '&width=' + width
+      }
+      return imgUrl
+    }
+  }
+})
 
 new Vue({
   el: '#app',

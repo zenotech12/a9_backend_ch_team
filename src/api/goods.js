@@ -123,8 +123,9 @@ export function spusSkusModify(goodsId, data) {
 // 商品规格.查.列表
 export function spusSkusList(id, data) {
   return request({
-    url: `spus/${id}/skus?skip=${data.skip}&limit=${data.limit}`,
-    method: 'get'
+    url: `spus/${id}/skus`,
+    method: 'get',
+    params: data
   })
 }
 
