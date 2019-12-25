@@ -6,13 +6,13 @@
         <el-col :span="4" class="funcTree">
           <el-row>
             <el-col :span="24" class="funcBoxTitle">
-              <div class="small_title">商品分类</div>
+              <div class="small_title">{{$t('goods.type')}}</div>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24" class="funcBoxTitle2">
               <i class="el-icon-circle-plus-outline" @click="showTypeEditForm"></i>
-              <span @click="showTypeEditForm" >创建分类</span>
+              <span @click="showTypeEditForm" >{{$t('goods.addType')}}</span>
             </el-col>
           </el-row>
           <div class="custom-tree-container">
@@ -54,7 +54,7 @@
               <el-col :span="20" style="padding: 6px 15px ">
                 <el-form :inline="true" :model="searchForm">
                   <el-form-item>
-                    <el-select v-model="searchForm.approve_status" @change="search" placeholder="请选择审批状态">
+                    <el-select v-model="searchForm.approve_status" @change="search" :placeholder="$t('goods.checkSelectorHolder')">
                       <el-option
                         v-for="item in approveStatus"
                         :key="item.value"
@@ -64,7 +64,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item>
-                    <el-select v-model="searchForm.shelf_status" @change="search" placeholder="请选择上架状态">
+                    <el-select v-model="searchForm.shelf_status" @change="search" :placeholder="$t('goods.displaySelectorHolder')">
                       <el-option
                         v-for="item in shelfStatus"
                         :key="item.value"
@@ -74,7 +74,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item>
-                    <el-input v-model="searchForm.key" placeholder="请输入关键字" clearable></el-input>
+                    <el-input v-model="searchForm.key" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
                   </el-form-item>
                   <el-form-item class="searchBtn">
                     <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
@@ -90,19 +90,19 @@
             <el-row>
               <el-col :span="24" style="height: calc(100vh - 242px)">
                 <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 42px)" style="width: 100%">
-                  <el-table-column prop="name" label="名称"></el-table-column>
-                  <el-table-column label="审核">
+                  <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
+                  <el-table-column :label="$t('goods.checkStatus')">
                     <template  slot-scope="scope">
                       <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
-                        {{scope.row.approve_status === 2 ? '已审' : (scope.row.approve_status === 3 ? '驳回' : '待审' )}}
+                        {{scope.row.approve_status === 2 ? $t('goods.checkStatusB') : (scope.row.approve_status === 3 ?  $t('goods.checkStatusC') :  $t('goods.checkStatusA') )}}
                       </el-tag>
                     </template>
                   </el-table-column>
-                  <el-table-column label="上下架">
+                  <el-table-column :label="$t('goods.putaway')">
                     <template  slot-scope="scope">
-                      <el-tooltip v-if="scope.row.approve_status === 2" class="item" effect="dark" content="点击可直接修改上下架架状态" placement="top">
+                      <el-tooltip v-if="scope.row.approve_status === 2" class="item" effect="dark" :content="$t('goods.putawayTip')" placement="top">
                         <el-tag @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
-                          {{scope.row.shelf_status === 2 ? '已上架' : '已下架'}}
+                          {{scope.row.shelf_status === 2 ?$t('goods.putawayA') : $t('goods.putawayB')}}
                         </el-tag>
                       </el-tooltip>
                       <template v-else>
@@ -110,16 +110,18 @@
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column label="价格">
+                  <el-table-column :label="$t('goods.price')">
                     <template  slot-scope="scope">
-                      {{scope.row.min_price + (scope.row.min_price === scope.row.max_price ? '': ('-' + scope.row.max_price))}}
+                      {{scope.row.min_price + (scope.row.min_price === scope.row.max_price ? '': ('/' + scope.row.max_price))}}
                     </template>
                   </el-table-column>
-                  <el-table-column label="操作" width = "230">
+                  <el-table-column prop="inventory"  :label="$t('goods.inventory')">
+                  </el-table-column>
+                  <el-table-column :label="$t('tools.opt')" width = "230">
                     <template slot-scope="scope">
-                      <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">编辑</el-button>
+                      <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                       <span class="xiexian">/</span>
-                      <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">库存及价格</el-button>
+                      <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">{{$t('goods.piEdit')}}</el-button>
                       <span class="xiexian">/</span>
                       <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
                     </template>
@@ -141,19 +143,19 @@
             </el-row>
             <el-dialog :title="$t('goods.edit')" width="800px" @close="cancelGoodsEdit" :visible.sync="goodsEditorShow" :close-on-click-modal="false" center>
               <el-steps :active="goodsEditStep" style="margin-bottom: 20px">
-                <el-step title="第一步" description="设置商品类别、属性"></el-step>
-                <el-step title="第二步" description="选择分类以及商品展示图"></el-step>
-                <el-step title="第三步" description="设置商品详细介绍"></el-step>
-                <el-step title="第四步" description="设置商品规格、库存、价格"></el-step>
+                <el-step :title="$t('goods.step1')" :description="$t('goods.step1Tip')"></el-step>
+                <el-step :title="$t('goods.step2')" :description="$t('goods.step2Tip')"></el-step>
+                <el-step :title="$t('goods.step3')" :description="$t('goods.step3Tip')"></el-step>
+                <el-step :title="$t('goods.step4')" :description="$t('goods.step4Tip')"></el-step>
               </el-steps>
               <el-form :model="goodsData" label-width="100px">
                 <template v-if="goodsEditStep === 1">
-                  <el-form-item label="类别">
+                  <el-form-item :label="$t('goods.sysType')">
                     <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange"></el-cascader>
                   </el-form-item>
                   <el-form-item v-for="(v,k) in goodsSysTypeFields" :key="k" :label="v.name">
                     <el-input v-if="v.type==='string' || v.type === 'number'" v-model="goodsData.fields[v.code]" auto-complete="off" clearable></el-input>
-                    <el-select v-if="v.type==='mulitselect' || v.type === 'select'" :multiple="v.type==='mulitselect'" v-model="goodsData.fields[v.code]" placeholder="请选择" >
+                    <el-select v-if="v.type==='mulitselect' || v.type === 'select'" :multiple="v.type==='mulitselect'" v-model="goodsData.fields[v.code]" :placeholder="$t('tools.pleaseSelect')" >
                       <el-option
                         v-for="item in v.param"
                         :key="item"
@@ -164,20 +166,23 @@
                   </el-form-item>
                 </template>
                 <template v-else-if="goodsEditStep === 2">
-                  <el-form-item label="品名">
+                  <el-form-item :label="$t('goods.name')">
                     <el-input v-model="goodsData.name" auto-complete="off" clearable></el-input>
                   </el-form-item>
-                  <el-form-item label="分类">
+                  <el-form-item :label="$t('goods.type')">
                     <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp" @change="goodsTypeChange"></el-cascader>
                   </el-form-item>
-                  <el-form-item label="商品图">
-                    <template>
-                      <el-carousel :interval="4000" type="card" height="200px">
-                        <el-carousel-item v-for="(image,ik) in goodsData.images" :key="ik">
-                          <img :src="getImageUrl(image,325)"></img>
-                        </el-carousel-item>
-                      </el-carousel>
-                    </template>
+                  <el-form-item :label="$t('goods.goodsPic')">
+                    <div class="prop-image__preview" v-if="goodsData.images.length > 0">
+                      <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
+                        <el-image
+                          style="max-height: 100px"
+                          :src="getImageUrl(img,100)"
+                          :preview-src-list="goodsPreviewImages">
+                        </el-image>
+                        <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
+                      </div>
+                    </div>
                     <image-upload @uploadSuccess="imageUploadSuccess"></image-upload>
                   </el-form-item>
                 </template>
@@ -185,33 +190,33 @@
                   <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
                 </template>
                 <template v-else-if="goodsEditStep === 4">
-                  <el-form-item label="规格、属性">
+                  <el-form-item :label="$t('goods.sp')">
                     <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
-                      <el-input v-model="goodsProps[k].name" class="prop-name" placeholder="规格名"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
+                      <el-input v-model="goodsProps[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
                       <el-tag :key="tag" v-for="tag in goodsProps[k].items" closable :disable-transitions="false"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
-                      <el-input class="input-new-tag"  placeholder="属性名" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
-                      <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">+ 属性</el-button>
+                      <el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
+                      <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>
                     </div>
-                    <a @click="addGoodsProp" class="add-prop-btn">+增加属性</a>
+                    <a @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
                   </el-form-item>
-                  <el-form-item label="价格、库存">
+                  <el-form-item :label="$t('goods.piEdit')">
                     <el-table :data="goodsInventoryTable"  style="width: 100%">
-                      <el-table-column label="规格、属性">
+                      <el-table-column :label="$t('goods.sp')">
                         <template  slot-scope="scope">
                           {{scope.row.title}}
                         </template>
                       </el-table-column>
-                      <el-table-column label="库存">
+                      <el-table-column :label="$t('goods.inventory')">
                         <template  slot-scope="scope">
                           <el-input v-model.number="scope.row.inventory"></el-input>
                         </template>
                       </el-table-column>
-                      <el-table-column label="价格">
+                      <el-table-column :label="$t('goods.price')">
                         <template  slot-scope="scope">
                           <el-input v-model.number="scope.row.price"></el-input>
                         </template>
                       </el-table-column>
-                      <el-table-column label="图片">
+                      <el-table-column :label="$t('goods.goodsPic')">
                         <template  slot-scope="scope">
                           <i style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
                         </template>
@@ -224,9 +229,9 @@
                 <el-button v-if = "goodsEditStep > 1" size="small" type="primary" @click="editNextFunc(-1)" >{{$t('goods.pre')}}</el-button>
                 <confirm-button @confirmButton="editNextFunc(1)" :disabled="disabled" :confirmButtonInfor="goodsEditStep === 4 ? this.$t('tools.confirm') : $t('goods.next')"></confirm-button>
                 <!--<el-button v-else size="small" type="primary" @click="editNextFunc(1)" >{{$t('goods.next')}}</el-button>-->
-                <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">关闭</el-button>
+                <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
               </div>
-              <el-dialog :title="$t('goods.edit')" width="400px" @close="showPropsImageDialog=false" :visible.sync="showPropsImageDialog" :close-on-click-modal="false" center append-to-body>
+              <el-dialog :title="propsImageEditTitle" width="400px" @close="showPropsImageDialog=false" :visible.sync="showPropsImageDialog" :close-on-click-modal="false" center append-to-body>
                 <template>
                   <div class="prop-image__preview" v-if="goodsInventoryTable.length > 0">
                     <div class="pitem"  v-for="(img,imgk) in goodsInventoryTable[propsImageEditIndex].images" :key="imgk">
@@ -302,27 +307,27 @@
         approveStatus: [
           {
             value: 0,
-            label: '所有'
+            label: this.$t('tools.all')
           }, {
             value: 1,
-            label: '待审批'
+            label: this.$t('goods.checkStatusA')
           }, {
             value: 2,
-            label: '审批成功'
+            label: this.$t('goods.checkStatusB')
           }, {
             value: 3,
-            label: '拒绝'
+            label: this.$t('goods.checkStatusC')
           }],
         shelfStatus: [
           {
             value: 0,
-            label: '所有'
+            label: this.$t('tools.all')
           }, {
             value: 1,
-            label: '未上架'
+            label: this.$t('goods.putawayB')
           }, {
             value: 2,
-            label: '上架'
+            label: this.$t('goods.putawayA')
           }],
         form: {
           resources_id: '',
@@ -365,6 +370,7 @@
           images: [],
           desc: ''
         },
+        goodsPreviewImages: [],
         goodsSysTypes: [],
         goodsSysTypeFields: [],
         goodsTypes: [],
@@ -372,7 +378,8 @@
         goodsInventoryTable: [],
         goodsInventoryData: [],
         showPropsImageDialog: false,
-        propsImageEditIndex: 0
+        propsImageEditIndex: 0,
+        propsImageEditTitle: ''
       }
     },
     created() {
@@ -403,6 +410,14 @@
         } else {
           this.forms.parent_id = val[val.length - 1]
         }
+      },
+      'goodsData.images'(val) {
+        const result = []
+        this.goodsData.images.forEach(img => {
+          result.push(this.getImageUrl(img))
+        })
+        console.log(result)
+        this.goodsPreviewImages = result
       },
       goodsProps: {
         handler(val) {
@@ -721,12 +736,16 @@
       editorProppImageFunc(k) {
         this.propsImageEditIndex = k
         this.showPropsImageDialog = true
+        this.propsImageEditTitle = this.goodsInventoryTable[this.propsImageEditIndex].title
       },
       propImageUploadSuccess(data) {
         this.goodsInventoryTable[this.propsImageEditIndex].images.push(data.md5)
       },
       delPropImage(index) {
         this.goodsInventoryTable[this.propsImageEditIndex].images.splice(index, 1)
+      },
+      delGoodsImage(index) {
+        this.goodsData.images.splice(index, 1)
       },
       editNextFunc(opt) {
         if (opt === 1 && this.goodsEditStep === 4) {
@@ -786,9 +805,9 @@
       },
       showInput(k) {
         this.$set(this.goodsProps[k], 'isInput', true)
-        this.$nextTick(_ => {
-          this.$refs['saveTagInput' + k].$refs.input.focus()
-        })
+        // this.$nextTick(_ => {
+        //   this.$refs['saveTagInput' + k].$refs.input.focus()
+        // })
       },
       addGoodsProp() {
         const pi = { name: '', items: [], newTag: '', isInput: true }
@@ -805,6 +824,7 @@
           this.disabled = false
           this.$message.success(res.error)
           this.goodsEditorShow = false
+          this.getTableData()
         }).catch(() => {
           this.disabled = false
         })

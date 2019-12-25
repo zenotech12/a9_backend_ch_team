@@ -10,6 +10,7 @@ import Layout from '../views/layout/Layout'
 // noinspection JSAnnotator
 import goods from '@/router/goods'
 import order from '@/router/order'
+import operation from '@/router/operation'
 import system from '@/router/system'
 
 // noinspection JSAnnotator
@@ -40,7 +41,7 @@ export const constantRouterMap = [
       // meta: { title: '主页' },
       component: () => import('@/views/dashboard/index')
     }]
-  }, ...goods, ...order, ...system]
+  }, ...goods, ...order, ...operation, ...system]
 // , ...dashboard, ...fileManagement, ...user, ...borrow, ...permission]
 /*  { path: '*', redirect: '/404', hidden: true },
   ...GoodsRouter,*/

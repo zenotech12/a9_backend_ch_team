@@ -26,5 +26,8 @@ export default {
   saveSuccess: '保存成功',
   loading: '加载中',
   imageFormatTip: '上传图片只能是 JPG、png 格式!',
-  imageSizeTip: '超过了文件大小限制'
+  imageSizeTip: '超过了文件大小限制',
+  pleaseSelect: '请选择',
+  all: '全部',
+  searchKeyTip: '请输入关键字'
 }

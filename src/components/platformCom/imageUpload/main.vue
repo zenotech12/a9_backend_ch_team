@@ -2,15 +2,17 @@
   <div>
     <el-upload class="upload-demo"
       :headers="fileUploadHeader"
-      :action="fileUploadUrl" drag
+      :action="fileUploadUrl" :drag="drag"
       name="image"
       :show-file-list="true"
       :on-success="imageUploadSuccess"
       :file-list="fileList"
       :before-upload="beforeImageUpload">
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-      <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+      <slot>
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      </slot>
+      <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过{{sizeLimit/1024}}kb</div>
     </el-upload>
   </div>
 </template>
@@ -33,6 +35,12 @@
         type: Number,
         default: function() {
           return 1024 * 500
+        }
+      },
+      drag: {
+        type: Boolean,
+        default() {
+          return true
         }
       }
     },
@@ -61,3 +69,5 @@
     }
   }
 </script>
+<style lang="scss" scoped>
+</style>

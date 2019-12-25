@@ -15,6 +15,7 @@ import enLang from '@/lang/en-lang'
 import zhLang from '@/lang/zh-cn-lang'
 import zhGoods from '@/lang/zh-cn-goods'
 import zhSys from '@/lang/zh-cn-sys'
+import zhOperation from '@/lang/zh-cn-operation'
 
 const messages = {
   en: {
@@ -47,6 +48,9 @@ const messages = {
     },
     goods: {
       ...zhGoods
+    },
+    operation: {
+      ...zhOperation
     },
     sys: {
       ...zhSys
