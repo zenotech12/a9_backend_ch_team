@@ -11,6 +11,7 @@ import Layout from '../views/layout/Layout'
 import goods from '@/router/goods'
 import order from '@/router/order'
 import operation from '@/router/operation'
+import finance from '@/router/finance'
 import system from '@/router/system'
 
 // noinspection JSAnnotator
@@ -41,7 +42,7 @@ export const constantRouterMap = [
       // meta: { title: '主页' },
       component: () => import('@/views/dashboard/index')
     }]
-  }, ...goods, ...order, ...operation, ...system]
+  }, ...goods, ...order, ...operation, ...finance, ...system]
 // , ...dashboard, ...fileManagement, ...user, ...borrow, ...permission]
 /*  { path: '*', redirect: '/404', hidden: true },
   ...GoodsRouter,*/

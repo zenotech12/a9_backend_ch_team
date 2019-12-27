@@ -72,8 +72,9 @@ export function spusShelf(id, data) {
 // 商品.查.列表
 export function spusList(data) {
   return request({
-    url: `spus?approve_status=${data.approve_status}&type_id=${data.type_id}&skip=${data.skip}&limit=${data.limit}&shelf_status=${data.shelf_status}`,
-    method: 'get'
+    url: 'spus',
+    method: 'get',
+    params: data
   })
 }
 

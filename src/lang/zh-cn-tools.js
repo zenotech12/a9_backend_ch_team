@@ -29,5 +29,7 @@ export default {
   imageSizeTip: '超过了文件大小限制',
   pleaseSelect: '请选择',
   all: '全部',
-  searchKeyTip: '请输入关键字'
+  searchKeyTip: '请输入关键字',
+  startDate: '开始日期',
+  endDate: '结束日期'
 }

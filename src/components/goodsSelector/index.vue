@@ -1,87 +1,99 @@
 <template>
   <div>
-  <el-input readonly :placeholder="$t('goods.placeholder')" v-model="goodsInfo.name">
-    <el-button slot="append" icon="el-icon-search" @click="showGoodsTable"></el-button>
-  </el-input>
-  <el-dialog :title="$t('goods.selectorTitle')"  :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
-    <!-- 搜索 -->
-    <el-row>
-      <el-col :span="24" style="padding: 6px 15px ">
-        <el-form :inline="true" :model="searchForm">
-          <el-form-item>
-            <el-cascader :options="typeData" v-model="selectTypes" :props="typeProp" clearable></el-cascader>
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="searchForm.approve_status" @change="search" placeholder="请选择审批状态">
-              <el-option
-                v-for="item in approveStatus"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="searchForm.shelf_status" @change="search" placeholder="请选择上架状态">
-              <el-option
-                v-for="item in shelfStatus"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-input v-model="searchForm.key" placeholder="请输入关键字" clearable></el-input>
-          </el-form-item>
-          <el-form-item class="searchBtn">
-            <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-table stripe v-loading="tableData.loading" :data="tableData.body" style="width: 100%" highlight-current-row @current-change="selectGoodsChange">
-          <el-table-column prop="name" label="名称"></el-table-column>
-          <el-table-column label="审核">
-            <template  slot-scope="scope">
-              <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
-                {{scope.row.approve_status === 2 ? '已审' : (scope.row.approve_status === 3 ? '驳回' : '待审' )}}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="上下架">
-            <template  slot-scope="scope">
-              <el-tag v-if="scope.row.approve_status === 2" @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
-                {{scope.row.shelf_status === 2 ? '已上架' : '已下架'}}
-              </el-tag>
-              <template v-else>
-                --
+    <el-input v-if="!mulit" readonly :placeholder="$t('goods.placeholder')" v-model="goodsInfo.name">
+      <el-button slot="append" icon="el-icon-search" @click="showGoodsTable"></el-button>
+    </el-input>
+    <div v-else>
+      <el-tag :key="goods.id" v-for="(goods, k) in selectedGoods" closable :disable-transitions="false"  @close="deleteSelectedGoods(k)">{{goods.name}}</el-tag>
+      <el-button icon="el-icon-search" @click="showGoodsTable" size="mini"></el-button>
+    </div>
+    <el-dialog :title="$t('goods.selectorTitle')"  :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
+      <!-- 搜索 -->
+      <el-row>
+        <el-col :span="24" style="padding: 3px">
+          <el-form :inline="true" :model="searchForm">
+            <el-form-item>
+              <el-cascader :options="typeData" v-model="selectTypes" :props="typeProp" clearable></el-cascader>
+            </el-form-item>
+            <el-form-item style="width: 150px">
+              <el-select v-model="searchForm.approve_status" @change="search" placeholder="请选择审批状态">
+                <el-option
+                  v-for="item in approveStatus"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item style="width: 150px">
+              <el-select v-model="searchForm.shelf_status" @change="search" placeholder="请选择上架状态">
+                <el-option
+                  v-for="item in shelfStatus"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="searchForm.key" placeholder="请输入关键字" clearable></el-input>
+            </el-form-item>
+            <el-form-item class="searchBtn">
+              <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-table ref="goodsDataTable" row-key="id" stripe v-loading="tableData.loading" :data="tableData.body" style="width: 100%" highlight-current-row @current-change="selectGoodsChange">
+            <el-table-column v-if="mulit" width="55">
+              <template  slot-scope="scope">
+                <el-checkbox :checked="isSelected(scope.row)" @change="mulitSelectGoodsChange(scope.row)"></el-checkbox>
               </template>
-            </template>
-          </el-table-column>
-          <el-table-column label="价格">
-            <template  slot-scope="scope">
-              {{scope.row.min_price + (scope.row.min_price === scope.row.max_price ? '': ('-' + scope.row.max_price))}}
-            </template>
-          </el-table-column>
-        </el-table>
-        <template v-if="itemCount !== 0">
-          <div style="text-align: right;margin-top: 10px">
-            <el-pagination
-              @size-change="sizeChangeFunc"
-              @current-change="pageChangeFunc"
-              :current-page.sync="currentPage"
-              :page-size="10"
-              layout="total, prev, pager, next, jumper"
-              :total="itemCount">
-            </el-pagination>
-          </div>
-        </template>
-      </el-col>
-    </el-row>
-  </el-dialog>
+            </el-table-column>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column label="审核">
+              <template  slot-scope="scope">
+                <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
+                  {{scope.row.approve_status === 2 ? '已审' : (scope.row.approve_status === 3 ? '驳回' : '待审' )}}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="上下架">
+              <template  slot-scope="scope">
+                <el-tag v-if="scope.row.approve_status === 2" @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
+                  {{scope.row.shelf_status === 2 ? '已上架' : '已下架'}}
+                </el-tag>
+                <template v-else>
+                  --
+                </template>
+              </template>
+            </el-table-column>
+            <el-table-column label="价格">
+              <template  slot-scope="scope">
+                {{scope.row.min_price + (scope.row.min_price === scope.row.max_price ? '': ('-' + scope.row.max_price))}}
+              </template>
+            </el-table-column>
+          </el-table>
+          <template v-if="itemCount !== 0">
+            <div style="text-align: right;margin-top: 10px">
+              <el-pagination
+                @size-change="sizeChangeFunc"
+                @current-change="pageChangeFunc"
+                :current-page.sync="currentPage"
+                :page-size="10"
+                layout="total, prev, pager, next, jumper"
+                :total="itemCount">
+              </el-pagination>
+            </div>
+          </template>
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer" v-if="mulit">
+        <confirm-button @confirmButton="saveSelectedFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -135,7 +147,10 @@
         currentPage: 1,
         pageSize: 10,
         goodsInfo: { id: '', name: '' },
-        dialogFormVisible: false
+        selectedGoods: [],
+        dialogFormVisible: false,
+        submitDisabled: false,
+        selectedGoodsIds: ''
       }
     },
     model: {
@@ -147,6 +162,12 @@
         type: String,
         default: function() {
           return ''
+        }
+      },
+      mulit: {
+        type: Boolean,
+        default() {
+          return false
         }
       }
     },
@@ -182,12 +203,20 @@
       },
       goodsId: {
         handler(val) {
-          if (val !== '') {
-            if (this.goodsInfo.id !== val) {
-              this.getGoodsInfo()
+          console.log(val, 'xx')
+          if (val !== '' && val.length >= 24) {
+            if (!this.mulit) {
+              if (this.goodsInfo.id !== val) {
+                this.getGoodsInfo()
+              }
+            } else if (val !== JSON.stringify(this.selectedGoodsIds)) {
+              this.selectedGoodsIds = JSON.parse(val)
+              this.getSelectedGoods(val)
             }
           } else {
             this.goodsInfo = {}
+            this.selectedGoods = []
+            this.selectedGoodsIds = []
           }
         },
         immediate: true
@@ -231,6 +260,11 @@
           }
         })
       },
+      getSelectedGoods(gids) {
+        spusList({ spu_ids: gids, skip: 0, limit: 1000 }).then(res => {
+          this.selectedGoods = res.items
+        })
+      },
       getGoodsInfo() {
         spusInfo(this.goodsId).then((res) => {
           this.goodsInfo = res.item
@@ -240,10 +274,39 @@
         this.getTableData()
       },
       selectGoodsChange(val) {
-        this.goodsInfo = val
-        this.$emit('goodSelectedChange', this.goodsInfo.id)
-        this.$emit('selectChanged', this.goodsInfo)
+        if (!this.mulit) {
+          this.goodsInfo = val
+          this.$emit('goodSelectedChange', this.goodsInfo.id)
+          this.$emit('selectChanged', this.goodsInfo)
+          this.dialogFormVisible = false
+        }
+      },
+      isSelected(row) {
+        return this.selectedGoodsIds.includes(row.id)
+      },
+      mulitSelectGoodsChange(row) {
+        if (this.selectedGoodsIds.includes(row.id)) {
+          this.selectedGoodsIds.splice(this.selectedGoodsIds.indexOf(row.id), 1)
+          const gi = this.selectedGoods.findIndex(item => {
+            return item.id === row.id
+          })
+          this.selectedGoods.splice(gi, 1)
+        } else {
+          this.selectedGoods.push(row)
+          this.selectedGoodsIds.push(row.id)
+        }
+        this.emitGoodsIds()
+      },
+      saveSelectedFunc() {
         this.dialogFormVisible = false
+      },
+      deleteSelectedGoods(k) {
+        this.selectedGoodsIds.splice(this.selectedGoodsIds.indexOf(this.selectedGoods[k].id), 1)
+        this.selectedGoods.splice(k, 1)
+        this.emitGoodsIds()
+      },
+      emitGoodsIds() {
+        this.$emit('goodSelectedChange', JSON.stringify(this.selectedGoodsIds))
       }
     }
   }

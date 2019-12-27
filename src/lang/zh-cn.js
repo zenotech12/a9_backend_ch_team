@@ -33,5 +33,9 @@ export default {
   evaluateMgr: '评论管理',
   operationMgr: '运营管理',
   adMgr: '广告管理',
-  shopInfo: '店铺信息'
+  coupon: '优惠券',
+  shopInfo: '店铺信息',
+  financeMgr: '财务管理',
+  financeList: '账户明细',
+  redEnvelope: '红包设置'
 }

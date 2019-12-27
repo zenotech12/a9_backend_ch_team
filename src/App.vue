@@ -34,5 +34,8 @@ export default {
     .sys-search{
 
     }
+    .dialog-footer{
+      padding-right: 20px;
+    }
   }
 </style>

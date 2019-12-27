@@ -11,6 +11,16 @@ const order = [{
     meta: { title: 'adMgr', icon: 'list' },
     component: () => import('@/views/operation/ad')
   }, {
+    path: 'coupon',
+    name: 'couponInfo',
+    meta: { title: 'coupon', icon: 'list' },
+    component: () => import('@/views/operation/coupon')
+  }, {
+    path: 'red-envelope',
+    name: 'redEnvelope',
+    meta: { title: 'redEnvelope', icon: 'list' },
+    component: () => import('@/views/operation/redEnvelope')
+  }, {
     path: 'shop',
     name: 'shopInfo',
     meta: { title: 'shopInfo', icon: 'list' },
