@@ -11,6 +11,11 @@ const finance = [{
     name: 'financeList',
     meta: { title: 'financeList', icon: 'list' },
     component: () => import('@/views/finance/finance')
+  }, {
+    path: 'tixian',
+    name: 'financeTixian',
+    meta: { title: 'financeTixian', icon: 'list' },
+    component: () => import('@/views/finance/tixian')
   }]
 }]
 export default finance
