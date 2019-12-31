@@ -18,8 +18,8 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100% - 88px)">
-              <el-table stripe border :data="tableData">
+            <div style="height: calc(100vh - 200px)">
+              <el-table stripe border :data="tableData" height="calc(100% - 50px)">
                 <el-table-column  :label="$t('finance.type')">
                   <template  slot-scope="scope">
                     {{optType[scope.row.type - 2].name}}

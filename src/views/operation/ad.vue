@@ -20,8 +20,8 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100% - 88px)">
-              <el-table stripe border :data="tableData">
+            <div style="height: calc(100vh - 185px)">
+              <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column :label="$t('operation.image')">
                   <template  slot-scope="scope">
                     <el-image :src="getImageUrl(scope.row.image,200)" style="max-height: 200px"></el-image>
