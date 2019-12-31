@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <el-input v-if="!mulit" readonly :placeholder="$t('goods.placeholder')" v-model="goodsInfo.name">
+  <div class="goodsSelector">
+    <el-input v-if="!mulit" :placeholder="$t('goods.placeholder')" v-model="goodsInfo.name" clearable @clear="cancelSelect">
       <el-button slot="append" icon="el-icon-search" @click="showGoodsTable"></el-button>
     </el-input>
     <div v-else>
@@ -274,11 +274,19 @@
         this.getTableData()
       },
       selectGoodsChange(val) {
+        console.log(val, 'selected')
         if (!this.mulit) {
-          this.goodsInfo = val
+          this.goodsInfo = JSON.parse(JSON.stringify(val))
           this.$emit('goodSelectedChange', this.goodsInfo.id)
           this.$emit('selectChanged', this.goodsInfo)
           this.dialogFormVisible = false
+        }
+      },
+      cancelSelect() {
+        if (!this.mulit) {
+          this.$emit('goodSelectedChange', '')
+          this.$emit('selectChanged', {})
+          this.$refs.goodsDataTable.setCurrentRow([])
         }
       },
       isSelected(row) {
@@ -312,4 +320,9 @@
   }
 </script>
 <style lang="scss" scoped>
+  .goodsSelector{
+    div{
+      vertical-align: middle !important;
+    }
+  }
 </style>

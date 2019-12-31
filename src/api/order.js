@@ -1,0 +1,72 @@
+import request from '@/utils/request'
+
+// 统计.数量统计
+export function orderStat(data) {
+  return request({
+    url: 'statistics/count',
+    method: 'get',
+    params: data
+  })
+}
+
+// 订单.列表
+export function ordersList(data) {
+  return request({
+    url: 'orders',
+    method: 'get',
+    params: data
+  })
+}
+
+// 订单.发货
+export function ordersExpress(id, data) {
+  return request({
+    url: 'orders/' + id + '/express',
+    method: 'post',
+    data: data
+  })
+}
+
+// 评价.查.列表
+export function evalutionsList(data) {
+  return request({
+    url: 'evalutions',
+    method: 'get',
+    params: data
+  })
+}
+
+// 评价.回复
+export function evalutionsReply(id, data) {
+  return request({
+    url: 'evalutions/' + id + '/replies',
+    method: 'post',
+    data: data
+  })
+}
+
+// 评价.查.个
+export function evalutionsInfo(id) {
+  return request({
+    url: 'evalutions/' + id,
+    method: 'get'
+  })
+}
+
+// 退款/换货.列表
+export function orderAfterSales(data) {
+  return request({
+    url: 'after-sales',
+    method: 'get',
+    params: data
+  })
+}
+
+// 退款/换货.操作（批准/同意/拒绝）
+export function orderAfterSalesOpt(id, data) {
+  return request({
+    url: 'after-sales/' + id + '/status',
+    method: 'put',
+    data: data
+  })
+}

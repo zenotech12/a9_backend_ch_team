@@ -4,19 +4,61 @@
       <!-- 搜索 -->
       <div class="rightbox">
         <el-row>
-          <el-col :span="24" class="funcList">
-
+          <el-col :span ="24">
+            <el-card shadow="always" class="balance-info">
+              <span>{{$t('finance.balance')}}：<font>{{balanceDetail.balance}}</font></span>
+              <span>{{$t('finance.balance1')}}：<font>{{balanceDetail.can_withdraw_balance}}</font></span>
+              <span>{{$t('finance.totalIncome')}}：<font>{{balanceDetail.accumulated_income}}</font></span>
+              <span>{{$t('finance.toBeIncome')}}：<font>{{balanceDetail.to_be_income}}</font></span>
+              <span>{{$t('finance.tixianing')}}：<font>{{balanceDetail.withdrawing}}</font></span>
+              <span>{{$t('finance.tixianed')}}：<font>{{balanceDetail.withdrawed}}</font></span>
+              <el-button type="primary" size="mini" icon="el-icon-money" @click="addData" class="tx">提现</el-button>
+            </el-card>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <div style="height: calc(100% - 88px)">
-              <el-table stripe border :span-method="arraySpanMethod" :data="tablePostage">
-                <el-table-column prop="name" :label="$t('sys.name')"></el-table-column>
+              <el-table stripe border :data="tableData">
+                <el-table-column  :label="$t('finance.type')">
+                  <template  slot-scope="scope">
+                    {{optType[scope.row.type - 2].name}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="change"  :label="$t('finance.change')">
+                </el-table-column>
+                <el-table-column  prop="balance"  :label="$t('finance.balance')">
+                </el-table-column>
+                <el-table-column prop="gen_time" :label="$t('finance.genTime')">
+                </el-table-column>
+                <el-table-column prop="param" :label="$t('finance.param')">
+                </el-table-column>
               </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPage"
+                  :page-size="pageSize"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCount">
+                </el-pagination>
+              </div>
             </div>
           </el-col>
         </el-row>
+        <el-dialog :title="$t('finance.tixian')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+          <el-form label-width="100px" :model="form">
+            <el-form-item :label="$t('finance.balance')">
+              <el-input readonly :value="balanceDetail.can_withdraw_balance"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('finance.tixianMoney')">
+              <el-input v-model.number="tixianMoney"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <el-button @click="formEditDialog=false" size="small" style="margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -24,16 +66,22 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { balanceLogs, balanceDetail, tixianAdd } from '@/api/finance'
   export default {
     components: {
     },
     data() {
+      const pz = 10
       return {
-        searchForm: {
-          key: '',
-          skip: '',
-          limit: 20
-        }
+        optType: [{ code: 2, name: this.$t('finance.type2') }, { code: 3, name: this.$t('finance.type3') }, { code: 4, name: this.$t('finance.type4') }, { code: 5, name: this.$t('finance.type5') }, { code: 6, name: this.$t('finance.type6') }, { code: 7, name: this.$t('finance.type7') }],
+        tableData: [],
+        currentPage: 1,
+        pageSize: pz,
+        itemCount: 0,
+        formEditDialog: false,
+        submitDisabled: false,
+        balanceDetail: {},
+        tixianMoney: 0
       }
     },
     computed: {
@@ -42,16 +90,60 @@
       ])
     },
     watch: {
+      currentPage(val) {
+        this.searchForm.skip = (val - 1) * this.pageSize
+        this.searchForm.limit = this.pageSize
+        this.getDataListFun()
+      }
     },
     methods: {
+      addData() {
+        this.tixianMoney = this.balanceDetail.can_withdraw_balance
+        this.formEditDialog = true
+      },
+      saveDataFunc() {
+        this.submitDisabled = true
+        tixianAdd({ money: this.tixianMoney }).then(res => {
+          this.submitDisabled = false
+          this.getBalanceDetail()
+          this.getDataListFun()
+        }).catch(() => {
+          this.submitDisabled = false
+        })
+      },
+      getDataListFun() {
+        balanceLogs().then(res => {
+          this.tableData = res.items
+          this.itemCount = res.total
+        })
+      },
+      getBalanceDetail() {
+        balanceDetail().then(res => {
+          this.balanceDetail = res.item
+        })
+      }
     },
     mounted() {
+      this.getDataListFun()
     },
     created() {
+      this.getBalanceDetail()
     }
   }
 </script>
 
 <style lang="scss" scoped>
-
+  .balance-info{
+    margin-bottom: 10px;
+    span{
+      display: inline-block;
+      margin-right: 10px;
+      font{
+        color: #ff0000;
+      }
+    }
+    .tx{
+      float: right !important;
+    }
+  }
 </style>

@@ -31,6 +31,6 @@ export function tixianAdd(data) {
   return request({
     url: 'withdraw',
     method: 'post',
-    params: data
+    data: data
   })
 }

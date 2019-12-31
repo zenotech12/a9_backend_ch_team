@@ -1,0 +1,26 @@
+// 财务管理
+export default {
+  balance: '余额',
+  balance1: '可提现余额',
+  totalIncome: '累计收入',
+  toBeIncome: '待确定收入',
+  tixianing: '提现中',
+  tixianed: '已提现',
+  tixian: '账户提现',
+  change: '金额变化',
+  payType: '支付类型',
+  type: '操作类型',
+  type2: '用户订单',
+  type3: '用户退货',
+  type4: '商户提现',
+  type5: '红包设置',
+  type6: '红包退回',
+  type7: '提现退回',
+  genTime: '时间',
+  param: '关联',
+  tixianMoney: '提现金额',
+  txStatus: '状态',
+  txStatus1: '待支付',
+  txStatus2: '已支付',
+  txStatus3: '被取消'
+}
