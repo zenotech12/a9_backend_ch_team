@@ -173,7 +173,7 @@
                     <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp" @change="goodsTypeChange"></el-cascader>
                   </el-form-item>
                   <el-form-item :label="$t('goods.goodsPic')">
-                    <div class="prop-image__preview" v-if="goodsData.images.length > 0">
+                    <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
                       <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
                         <el-image
                           style="max-height: 100px"
@@ -413,10 +413,9 @@
       },
       'goodsData.images'(val) {
         const result = []
-        this.goodsData.images.forEach(img => {
+        this.goodsData.images && this.goodsData.images.forEach(img => {
           result.push(this.getImageUrl(img))
         })
-        console.log(result)
         this.goodsPreviewImages = result
       },
       goodsProps: {

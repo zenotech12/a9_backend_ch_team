@@ -88,7 +88,7 @@ export default {
           if (latestView) {
             this.$router.push(latestView.path)
           } else {
-            this.$router.push('/admin')
+            this.$router.push('/')
           }
         }
       })
@@ -101,7 +101,7 @@ export default {
     },
     closeAllTags() {
       this.$store.dispatch('delAllViews')
-      this.$router.push('/admin')
+      this.$router.push('/')
     },
     openMenu(tag, e) {
       this.visible = true

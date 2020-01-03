@@ -146,3 +146,12 @@ export function redEnvelopeDelete(id) {
   })
 }
 
+// 数据统计相关
+export function shopStat(data) {
+  return request({
+    url: 'statistics/count',
+    method: 'get',
+    params: data
+  })
+}
+

@@ -32,7 +32,7 @@ export default {
       let matched = this.$route.matched.filter(item => item.name)
       const first = matched[0]
       if (first && first.name !== 'admin') {
-        matched = [{ path: '/admin', meta: { title: 'home' }}].concat(matched)
+        matched = [{ path: '/', meta: { title: 'home' }}].concat(matched)
       }
       this.levelList = matched
     }

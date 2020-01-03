@@ -2,20 +2,27 @@
   <el-menu class="navbar" mode="horizontal">
     <!--<hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>-->
     <breadcrumb></breadcrumb>
-    <!--<div class="newTutorial" @click="changeNewLang()">-->
-      <!--<img :src="nowImg" alt="" class="img">-->
-      <!--<span class="newtitle">语言切换</span>-->
-    <!--</div>-->
-    <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-        <span><img :src="imgPng" class="logoImg"></span>
-      </div>
-      <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <el-dropdown-item divided>
-          <span @click="logout" style="display:block;">{{$t('login.loginOut')}}</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    <div class="right-opt">
+      <el-dropdown trigger="click" @command="changeNewLang">
+        <span class="language-select">
+          {{currentLanguage}}<i class="el-icon-caret-bottom"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="(v,k) in languages" :key="k" :command="v.code">{{v.name}}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-divider direction="vertical"></el-divider>
+      <el-dropdown trigger="click">
+        <div class="avatar-wrapper">
+          <span>{{shopInfo.user_info.nick_name}}@{{shopInfo.name}} <i class="el-icon-caret-bottom"></i></span>
+        </div>
+        <el-dropdown-menu class="user-dropdown" slot="dropdown">
+          <el-dropdown-item divided>
+            <span @click="logout" style="display:block;">{{$t('login.loginOut')}}</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </el-menu>
 </template>
 
@@ -27,6 +34,7 @@ import { getIdentity } from '@/utils/auth'
 export default {
   data() {
     return {
+      languages: [{ code: 'zh', name: this.$t('global.zh') }, { code: 'en', name: this.$t('global.en') }],
       name: '',
       imgPng: require('../../../assets/images/dl/userLogo.png'),
       zhLang: require('../../../assets/images/icon_zw.png'),
@@ -41,8 +49,14 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'userInfo', 'lang'
-    ])
+      'shopInfo', 'lang'
+    ]),
+    currentLanguage() {
+      const cl = this.languages.find((item) => {
+        return item.code === this.lang
+      })
+      return cl.name
+    }
   },
   mounted() {
     this.name = getIdentity()
@@ -56,13 +70,9 @@ export default {
     ...mapMutations({
       changeLang: 'CHANGE_LANG'
     }),
-    changeNewLang() {
-      if (this.lang === 'zh') {
-        this.nowImg = this.ehLang
-        this.changeLang('en')
-      } else {
-        this.nowImg = this.zhLang
-        this.changeLang('zh')
+    changeNewLang(lan) {
+      if (this.lang !== lan) {
+        this.changeLang(lan)
       }
     },
     toggleSideBar() {
@@ -81,9 +91,8 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .navbar {
   height: 50px;
-  /*line-height: 50px;*/
-  display: flex;
-  align-items: center;
+  line-height: 50px;
+  /*display: flex;*/
   border-radius: 0px !important;
   .hamburger-container {
     line-height: 58px;
@@ -101,26 +110,6 @@ export default {
     position: absolute;
     right: 85px;
   }
-  .newTutorial {
-    position: absolute;
-    right: 90px;
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    cursor: pointer;
-    /*margin-right: 20px;*/
-    .img {
-      display: inline-block;
-      cursor: pointer;
-      /*margin-top: 5px;*/
-    }
-    .newtitle {
-      color: #000;
-      font-size: 12px;
-      display: inline-block;
-      padding-left: 5px;
-    }
-  }
   .big_screen1 {
     position: absolute;
     right: 90px;
@@ -129,35 +118,17 @@ export default {
     position: absolute;
     right: 285px;
   }
-  .avatar-container {
+  .right-opt{
     height: 50px;
-    display: inline-block;
-    position: absolute;
-    right: 35px;
-    .avatar-wrapper {
+    float: right;
+    padding-right: 20px;
+    .language-select{
       cursor: pointer;
-      margin-top: 5px;
-      position: relative;
-      .logoImg{
-        display: inline-block;
-        height: 30px;
-        margin-top: 6px;
-
-      }
-      .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-      }
-      .el-icon-caret-bottom {
-        position: absolute;
-        right: -20px;
-        top: 25px;
-        font-size: 12px;
-      }
+      color: #409eff !important;
     }
-    .user-dropdown {
-      z-index: 99999!important;
+    .avatar-wrapper{
+      cursor: pointer;
+      color:#00946e ;
     }
   }
 }

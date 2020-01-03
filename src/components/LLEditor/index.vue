@@ -197,10 +197,10 @@
           var response = file.response
           if (response) {
             if (response.meta === 0) {
-              responseFileList.push(response.md5_code)
+              responseFileList.push(response.md5)
             }
           } else {
-            responseFileList.push(file.md5_code)
+            responseFileList.push(file.md5)
           }
         })
         this.formImagesLists = responseFileList
@@ -208,7 +208,7 @@
       submitImages() {
         if (this.formImagesLists.length !== 0) {
           this.formImagesLists.forEach(res => {
-            const imgUrl = 'https://jewelry.rfidtrace.com/data/file/' + res
+            const imgUrl = this.getImageUrl(res)
             this.addRange = this.$refs['myeditor'].quill.getSelection()
             this.$refs['myeditor'].quill.insertEmbed(this.addRange !== null ? this.addRange.index : 0, 'image', imgUrl)
           })

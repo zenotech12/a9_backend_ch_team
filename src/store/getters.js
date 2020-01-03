@@ -10,6 +10,7 @@ const getters = {
   routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
   authority: state => state.user.authority,
+  shopInfo: state => state.user.shopInfo,
   visitedViews: state => state.tagsView.visitedViews
 }
 export default getters

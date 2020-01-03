@@ -18,26 +18,17 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      next()
-      store.dispatch('setRouter', router.options.routes).then(() => {
-        next()
-      })
-      // next()
-      // if (store.getters.partnerInfo == null || store.getters.partnerInfo.name === '') {
-      //   store.dispatch('GetPartnerInfo').then(pInfo => {
-      //     var funcList = pInfo.function_list
-      //     var rooterArr = getRooterArr(funcList)
-      //     store.dispatch('setRouter', rooterArr).then(() => {
-      //       next()
-      //     })
-      //   })
-      // } else {
-      //   const funcList = store.getters.partnerInfo === undefined ? [] : store.getters.partnerInfo.function_list
-      //   var rooterArr = getRooterArr(funcList)
-      //   store.dispatch('setRouter', rooterArr).then(() => {
-      //     next()
-      //   })
-      // }
+      if (store.getters.shopInfo === null || !store.getters.shopInfo.id) {
+        store.dispatch('GetShopInfo').then(sInfo => {
+          store.dispatch('setRouter', router.options.routes).then(() => {
+            next()
+          })
+        })
+      } else {
+        store.dispatch('setRouter', router.options.routes).then(() => {
+          next()
+        })
+      }
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {

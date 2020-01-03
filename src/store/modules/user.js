@@ -1,6 +1,7 @@
 import { login } from '@/api/login'
 import { version } from '@/utils/static'
 import { getToken, setToken, removeToken, setIdentity, removeIdentity, getIdentity, removeAuthority, getAuthority, setVersion } from '@/utils/auth'
+import { shopInfo } from '@/api/operation'
 
 const user = {
   state: {
@@ -10,7 +11,8 @@ const user = {
     authority: getAuthority(),
     searchCondition: {
       goods: { key: '', code: '', skip: 0, currentPage: 1 }
-    }
+    },
+    shopInfo: {}
   },
 
   mutations: {
@@ -29,6 +31,9 @@ const user = {
     SET_SEARCHCONDITION: (state, searchCondition1) => {
       // console.log('searchCondition1', searchCondition1)
       state.searchCondition.searchCondition1 = searchCondition1
+    },
+    SET_SHOP_INFO: (state, sp) => {
+      state.shopInfo = sp
     }
   },
 
@@ -72,18 +77,18 @@ const user = {
         resolve()
         removeAuthority()
       })
+    },
+    GetShopInfo({ commit }) {
+      return new Promise((resolve, reject) => {
+        shopInfo().then(response => {
+          const data = response
+          commit('SET_SHOP_INFO', data.item)
+          resolve(data.item)
+        }).catch(error => {
+          reject(error)
+        })
+      })
     }
-    // GetPartnerInfo({ commit }) {
-    //   return new Promise((resolve, reject) => {
-    //     systemGet().then(response => {
-    //       const data = response
-    //       commit('SET_PARTNERINFO', data.item)
-    //       resolve(data.item)
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // }
   }
 }
 

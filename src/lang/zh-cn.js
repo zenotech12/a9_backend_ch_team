@@ -1,6 +1,8 @@
 // 全局菜单
 export default {
   webTitle: 'A9 商户平台',
+  zh: '中文',
+  en: '英文',
   home: '首页',
   logout: '退出',
   account: '账户名',

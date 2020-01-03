@@ -30,7 +30,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { shopInfo, shopModify } from '@/api/operation'
+  import { shopModify } from '@/api/operation'
 
   export default {
     components: {
@@ -46,23 +46,22 @@
     },
     computed: {
       ...mapGetters([
-        'userInfo'
+        'shopInfo'
       ])
     },
     watch: {
     },
     methods: {
       getShopInfo() {
-        shopInfo().then(res => {
-          this.shopForm.desc = res.item.desc
-          this.shopForm.avatar = res.item.avatar
-        })
+        this.shopForm.desc = this.shopInfo.desc
+        this.shopForm.avatar = this.shopInfo.avatar
       },
       saveInfo() {
         this.disabled = true
         shopModify(this.shopForm).then(res => {
           this.$message.success('保存成功')
           this.disabled = false
+          this.$store.dispatch('GetShopInfo').then()
         }).catch(() => {
           this.disabled = false
         })
@@ -85,6 +84,7 @@
     margin: 40px auto auto auto;
     .shop-logo{
       border: 1px dashed #d9d9d9;
+      width: 100px;
       border-radius: 6px;
       cursor: pointer;
       position: relative;

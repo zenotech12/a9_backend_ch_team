@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     jump() {
-      this.$router.push('/admin')
+      this.$router.push('/')
     },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
