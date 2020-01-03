@@ -130,6 +130,7 @@
           span{
             display: inline-block;
             padding-right: 5px;
+            color: #8d8d8d;
           }
         }
       }
