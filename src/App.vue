@@ -8,6 +8,7 @@
 export default {
   name: 'app',
   mounted() {
+    document.title = this.$t('global.webTitle')
     // console.log('this.$route.path', this.$route.path)
     // if (this.$route.path) {
     //   document.title = 'MVISION'

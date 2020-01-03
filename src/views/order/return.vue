@@ -6,11 +6,21 @@
         <el-row>
           <el-col :span ="24">
             <el-form :inline="true" :model="searchForm">
-              <el-form-item :label="$t('order.no')">
-                <el-input v-model="searchForm.no" style="width: 250px" clearable></el-input>
+              <el-form-item :label="$t('order.returnOrder')">
+                <el-input v-model="searchForm.order_no" style="width: 250px" clearable></el-input>
               </el-form-item>
-              <el-form-item :label="$t('order.status')">
-                <el-select v-model="searchForm.order_status" :placeholder="$t('order.commentType')" clearable>
+              <el-form-item :label="$t('order.returnType')">
+                <el-select v-model="searchForm.type" clearable>
+                  <el-option
+                    v-for="(item, k) in returnType"
+                    :key="k"
+                    :label="item"
+                    :value="k">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('order.returnStatus')">
+                <el-select v-model="searchForm.status" :placeholder="$t('order.commentType')" clearable>
                   <el-option
                     v-for="(item, k) in orderStatus"
                     :key="k"
@@ -29,49 +39,46 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('order.no')" width="200px"></el-table-column>
                 <el-table-column :label="$t('order.user')">
                   <template slot-scope="scope">
                     <div class="ui">{{scope.row.user_nick_name}}</div>
                     <div class="ui">{{scope.row.user_mobile}}</div>
                   </template>
                 </el-table-column>
-                <el-table-column  :label="$t('order.goods')" width="350px">
+                <el-table-column :label="$t('order.returnType')">
+                  <template slot-scope="scope">
+                    <el-tag :type="scope.row.type === 2 ? 'success': ''">{{returnType[scope.row.type]}}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column  :label="$t('order.returnGoods')" width="350px">
                   <template  slot-scope="scope">
-                    <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
-                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img)"  fit="cover"></el-image>
+                    <div class="goods-item">
+                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(scope.row.goods_item.sku_img)"  fit="cover"></el-image>
                       <div class="g-info">
-                        <p><span>{{gInfo.goods_info.spu_name}}</span></p>
+                        <p><span>{{scope.row.goods_item.spu_name}}</span></p>
                         <p>
-                          <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
+                          <span v-for="(v,k) in scope.row.goods_item.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p>{{gInfo.goods_info.price}}X {{gInfo.goods_info.count}}</p>
+                        <p>{{scope.row.goods_item.price}}X {{scope.row.goods_item.count}}</p>
                       </div>
                       <div class="clear"></div>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.price')">
-                  <template slot-scope="scope" >
-                    {{scope.row.goods_price}} + {{scope.row.postage}}
-                  </template>
+                <el-table-column prop="amount" :label="$t('order.returnPrice')">
                 </el-table-column>
-                <el-table-column :label="$t('order.address')">
-                  <template slot-scope="scope" >
-                    {{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}<br/>
-                    {{scope.row.shipping_address.address.addr}}
-                  </template>
+                <el-table-column prop="order_no" :label="$t('order.returnOrder')">
                 </el-table-column>
                 <el-table-column :label="$t('order.status')">
                   <template slot-scope="scope" >
                     <el-tag>{{orderStatus[scope.row.status]}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" :label="$t('order.genTime')">
+                <el-table-column prop="gen_time" :label="$t('order.returnTime')">
                 </el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "140">
                   <template slot-scope="scope">
-                      <el-button type="text" @click="showExpressEditor(scope.row)" size="small">{{$t('order.express')}}</el-button>
+                    <el-button type="text" @click="showExpressEditor(scope.row)" size="small">{{$t('order.express')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -114,19 +121,20 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersExpress } from '@/api/order'
+  import { orderAfterSales, orderAfterSalesOpt } from '@/api/order'
   export default {
     components: {
     },
     data() {
       const pz = 10
       return {
-        orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
-          this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8')],
+        returnType: [this.$t('tools.all'), this.$t('order.returnType1'), this.$t('order.returnType2')],
+        orderStatus: [this.$t('tools.all'), this.$t('order.returnStatus1'), this.$t('order.returnStatus2'), this.$t('order.returnStatus3'), this.$t('order.returnStatus4'), this.$t('order.returnStatus5'),
+          this.$t('order.returnStatus6')],
         searchForm: {
-          user_id: '',
-          order_status: 0,
-          no: '',
+          type: 0,
+          order_no: '',
+          status: 0,
           skip: '',
           limit: pz
         },
@@ -162,7 +170,7 @@
       },
       saveDataFunc() {
         this.submitDisabled = true
-        ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo }).then(res => {
+        orderAfterSalesOpt(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo }).then(res => {
           this.$message.success(this.$t('order.expressTip'))
           this.submitDisabled = false
           this.getDataListFun()
@@ -172,7 +180,7 @@
         })
       },
       getDataListFun() {
-        ordersList(this.searchForm).then(res => {
+        orderAfterSales(this.searchForm).then(res => {
           this.tableData = res.items
           this.itemCount = res.total
         })

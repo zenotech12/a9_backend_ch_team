@@ -1,5 +1,6 @@
 // 全局菜单
 export default {
+  webTitle: 'A9 商户平台',
   home: '首页',
   logout: '退出',
   account: '账户名',
@@ -16,7 +17,6 @@ export default {
   systemPrice: '基础设置',
   adminList: '管理员列表',
   userList: '用户列表',
-  userOrderList: '充电宝订单列表',
   userBalanceRecord: '余额记录',
   appDownloadAddress: 'app管理',
   couponConfigure: '优惠券配置',
@@ -30,6 +30,7 @@ export default {
   postageRule: '邮费规则',
   orderMgr: '订单管理',
   orderList: '订单列表',
+  returnList: '退/换货',
   evaluateMgr: '评论管理',
   operationMgr: '运营管理',
   adMgr: '广告管理',

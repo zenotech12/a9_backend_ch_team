@@ -11,6 +11,11 @@ const order = [{
     meta: { title: 'orderList', icon: 'list' },
     component: () => import('@/views/order/order')
   }, {
+    path: 'return',
+    name: 'returnList',
+    meta: { title: 'returnList', icon: 'list' },
+    component: () => import('@/views/order/return')
+  }, {
     path: 'evaluate',
     name: 'evaluateMgr',
     meta: { title: 'evaluateMgr', icon: 'list' },

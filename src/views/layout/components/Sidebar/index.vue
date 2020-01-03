@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       toggle: true,
-      imgPng: require('../../../../assets/images/dl/mvisionLogo.jpg'),
+      imgPng: require('../../../../assets/images/dl/mvisionLogo.png'),
       opened: !+Cookies.get('sidebarStatus')
     }
   },
@@ -86,7 +86,6 @@ export default {
         display: inline-block;
         height: 36px;
         margin-right: 7px;
-        border: 1px solid rgba(255,255,255,0.8);
         border-radius: 1px;
       }
     }

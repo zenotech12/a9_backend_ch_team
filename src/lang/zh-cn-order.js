@@ -1,6 +1,7 @@
 // 订单管理
 export default {
   id: '订单ID',
+  no: '单号',
   goods: '商品',
   user: '用户',
   address: '地址',
@@ -35,5 +36,19 @@ export default {
   reply: '回复',
   reply1: '回复内容',
   reply2: '请输入回复内容',
-  replyTip: '回复添加成功'
+  replyTip: '回复添加成功',
+  returnType: '退/换货',
+  returnType1: '退货',
+  returnType2: '换货',
+  returnStatus: '状态',
+  returnStatus1: '申请',
+  returnStatus2: '取消',
+  returnStatus3: '批准',
+  returnStatus4: '拒绝',
+  returnStatus5: '已同意',
+  returnStatus6: '用户已寄货',
+  returnOrder: '关联订单',
+  returnGoods: '退、换货商品',
+  returnPrice: '退款金额',
+  returnTime: '申请时间'
 }
