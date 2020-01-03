@@ -11,6 +11,73 @@
         </div>
       </el-card>
     </el-row>
+    <el-row class="liuliang">
+      <el-col :span="8">
+        <el-card shadow="always" class="stat-item">
+          <div class="sp">
+            <p>今日订单数：<span>{{statInfo.today_traffic}}</span></p>
+            <p>今日成交额：<span>{{statInfo.today_sales}}</span></p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="always"  class="stat-item">
+          <div class="sp">
+            <p>今日访客：<span>{{statInfo.today_visit}}</span></p>
+            <p>今日流量：<span>{{statInfo.today_traffic}}</span></p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="always">
+          <div class="sp">
+            <p>昨日访客：<span>{{statInfo.yesterday_visit}}</span></p>
+            <p>昨日流量：<span>{{statInfo.yesterday_traffic}}</span></p>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row class="liuliang">
+      <el-col :span="4">
+        <el-card shadow="always">
+          <div class="sp">
+            <p>待支付：<span>{{statInfo.need_pay}}</span></p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="1">&nbsp;</el-col>
+      <el-col :span="4">
+        <el-card shadow="always">
+          <div class="sp">
+            <p>待发：<span>{{statInfo.need_ship}}</span></p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="1">&nbsp;</el-col>
+      <el-col :span="4">
+        <el-card shadow="always">
+          <div class="sp">
+            <p>退款：<span>{{statInfo.refund}}</span></p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="1">&nbsp;</el-col>
+      <el-col :span="4">
+        <el-card shadow="always">
+          <div class="sp">
+            <p>待评价：<span>{{statInfo.need_evaluate}}</span></p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="1">&nbsp;</el-col>
+      <el-col :span="4">
+        <el-card shadow="always">
+          <div class="sp">
+            <p>物流异常：<span>{{statInfo.shipping_exception}}</span></p>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
     <!--<div>我的天啊</div>-->
     <!-- <div class="dashboard-text">roles:<span v-for='role in roles' :key='role'>{{role}}</span></div>-->
   </div>
@@ -64,6 +131,22 @@
             display: inline-block;
             padding-right: 5px;
           }
+        }
+      }
+      .liuliang{
+        margin-top: 20px;
+      }
+      .stat-item{
+        margin-right: 20px;
+      }
+      .sp{
+        p{
+          color: #8d8d8d;
+          span{
+            font-size:25px;
+            color: #333333
+          }
+          line-height: 30px;
         }
       }
     }
