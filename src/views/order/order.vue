@@ -108,7 +108,14 @@
               {{expressOrder.shipping_address.mobile}} {{expressOrder.shipping_address.contacter_name}}
             </el-form-item>
             <el-form-item :label="$t('order.expressCompany')">
-              <el-input v-model="expressCompany" clearable></el-input>
+              <el-select v-model="expressCompany">
+                <el-option
+                  v-for="(item, k) in expressageList"
+                  :key="k"
+                  :label="item"
+                  :value="k">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('order.expressNo')">
               <el-input v-model="expressNo" clearable></el-input>
@@ -126,6 +133,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { ordersList, ordersExpress } from '@/api/order'
+  import expressage from '@/utils/expressage'
   export default {
     components: {
     },
@@ -152,7 +160,8 @@
         expressNo: '',
         expressOrder: { shipping_address: { address: {}}},
         formEditDialog: false,
-        submitDisabled: false
+        submitDisabled: false,
+        expressageList: expressage
       }
     },
     computed: {

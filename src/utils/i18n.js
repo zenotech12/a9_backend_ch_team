@@ -18,6 +18,7 @@ import zhSys from '@/lang/zh-cn-sys'
 import zhOperation from '@/lang/zh-cn-operation'
 import zhFinance from '@/lang/zh-cn-finance'
 import zhOrder from '@/lang/zh-cn-order'
+import zhExpressage from '@/lang/zh-cn-expressage'
 
 const messages = {
   en: {
@@ -36,6 +37,9 @@ const messages = {
     ...enElement
   },
   zh: {
+    expressage: {
+      ...zhExpressage
+    },
     global: {
       ...zhLocale
     },
