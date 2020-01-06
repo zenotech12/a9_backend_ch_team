@@ -14,29 +14,29 @@
                  :on-success="videoUploadFunc">
         <el-button size="small" type="primary" id="editorVideoUploadBtn" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="插入中,请稍候">点击上传</el-button>
       </el-upload>
-      <el-dialog title="链接设置" append-to-body  :visible.sync="editorLinkFormVisible" width="400px">
+      <el-dialog :title="$t('tools.linkSet')" append-to-body  :visible.sync="editorLinkFormVisible" width="400px">
         <el-form :model="linkForm" >
-          <el-form-item label="类型" prop="name"  :label-width="linkformLabelWidth" style="margin-bottom: 22px">
-            <el-select v-model="linkForm.type" placeholder="请选择链接类型" >
+          <el-form-item :label="$t('tools.linkType')" prop="name"  :label-width="linkformLabelWidth" style="margin-bottom: 22px">
+            <el-select v-model="linkForm.type" >
               <el-option v-for="item in linkType" :label="item.label" :value="item.value" :key="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="商品" v-if="linkForm.type === '1'" :label-width="linkformLabelWidth" >
+          <el-form-item :label="$t('tools.linkType1')" v-if="linkForm.type === '1'" :label-width="linkformLabelWidth" >
             <goods-selector style="width: 220px"  v-model="linkForm.value"></goods-selector>
           </el-form-item>
-          <el-form-item label="文章" v-if="linkForm.type === '2'" :label-width="linkformLabelWidth">
+          <el-form-item :label="$t('tools.linkType2')" v-if="linkForm.type === '2'" :label-width="linkformLabelWidth">
             <articles-selector style="width: 220px"  v-model="linkForm.value"></articles-selector>
           </el-form-item>
-          <el-form-item label="地址" v-if="linkForm.type === '3'" :label-width="linkformLabelWidth">
+          <el-form-item :label="$t('tools.linkType3')" v-if="linkForm.type === '3'" :label-width="linkformLabelWidth">
             <el-input v-model="linkForm.value" type="text" clearable></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" @click="submitLinkSet">确定</el-button>
-          <el-button @click="editorLinkFormVisible = false" size="small" style="margin-right: 24px;margin-left: 10px;">取消</el-button>
+          <el-button type="primary" size="small" @click="submitLinkSet">{{$t('tools.confirm')}}</el-button>
+          <el-button @click="editorLinkFormVisible = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
         </div>
       </el-dialog>
-      <el-dialog title="图片上传" :visible.sync="imagesFormVisible" append-to-body width="515px">
+      <el-dialog :title="$t('tools.imageUpload')" :visible.sync="imagesFormVisible" append-to-body width="515px">
         <el-upload name="image" :headers="fileUploadHeader"
                    :action="fileUploadUrl"
                    list-type="picture-card"
@@ -52,8 +52,8 @@
         </el-dialog>
         <span class="fontColor" v-if="promptInfo">{{promptInfo}}</span>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" @click="submitImages">确定</el-button>
-          <el-button @click="imagesCancel" size="small" style="margin-right: 24px;margin-left: 10px;">取消</el-button>
+          <el-button type="primary" size="small" @click="submitImages">{{$t('tools.confirm')}}</el-button>
+          <el-button @click="imagesCancel" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
         </div>
       </el-dialog>
     </div>
@@ -92,7 +92,7 @@
       promptInfo: {
         type: String,
         default: function() {
-          return '上传图片只能是 JPG、Png 格式!上传图片大小不能超过500KB!'
+          return this.$t('tools.imageFormatTip1')
         }
       },
       showQuill: {
@@ -113,7 +113,7 @@
         formImagesLists: [],
         linkType: [{
           value: '1',
-          label: '商品'
+          label: this.$t('tools.linkType1')
         }],
         linkformLabelWidth: '120px',
         linkForm: { type: '1', value: '' },
@@ -151,13 +151,13 @@
           var range = quill.getSelection()
           if (range) {
             if (range.length === 0) {
-              this.$message.error('请选择您要插入链接的对象')
+              this.$message.error(this.$t('tools.qullEditorTip1'))
             } else {
               this.linkForm = { type: '1', value: '' }
               this.editorLinkFormVisible = true
             }
           } else {
-            this.$message.error('请选择您要插入链接的对象')
+            this.$message.error(this.$t('tools.qullEditorTip1'))
           }
         } else {
           quill.format('link', false)
@@ -212,7 +212,7 @@
           this.images = []
           this.imagesFormVisible = false
         } else {
-          this.$message.error('请选择图片!')
+          this.$message.error(this.$t('tools.imageTip1'))
         }
       },
       imagesCancel() {
@@ -243,10 +243,10 @@
         const isPng = file.type === 'image/png'
         const isLt2M = file.size / 1024 / 1024 < this.imageSize
         if (!isJPG && !isPng) {
-          this.$message.error('上传图片只能是 JPG、Png 格式!')
+          this.$message.error(this.$t('tools.imageFormatTip'))
         }
         if (!isLt2M) {
-          this.$message.error('上传图片大小不能超过 ' + this.imageSize * 1000 + ' KB!')
+          this.$message.error(this.$t('tools.imageFormatTip2') + this.imageSize * 1000 + ' KB!')
         }
         return (isJPG || isPng) && isLt2M
       },
@@ -266,10 +266,10 @@
         const isMp4 = file.type === 'video/mp4'
         const isLt20M = file.size / 1024 / 1024 < 20
         if (!isMp4) {
-          this.$message.error('上传视频只能是 MP4 格式!')
+          this.$message.error(this.$t('tools.qullEditorTip2'))
         }
         if (!isLt20M) {
-          this.$message.error('上传视频大小不能超过20MB!')
+          this.$message.error(this.$t('tools.qullEditorTip3'))
         }
         return isMp4 && isLt20M
       }

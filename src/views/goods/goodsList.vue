@@ -148,7 +148,7 @@
                 <el-step :title="$t('goods.step3')" :description="$t('goods.step3Tip')"></el-step>
                 <el-step :title="$t('goods.step4')" :description="$t('goods.step4Tip')"></el-step>
               </el-steps>
-              <el-form :model="goodsData" label-width="100px">
+              <el-form :model="goodsData" label-width="100px" style="min-height: 350px">
                 <template v-if="goodsEditStep === 1">
                   <el-form-item :label="$t('goods.sysType')">
                     <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange"></el-cascader>
@@ -176,8 +176,8 @@
                     <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
                       <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
                         <el-image
-                          style="max-height: 100px"
-                          :src="getImageUrl(img,100)"
+                          style="height: 100px; width: 100px" fit="contain"
+                          :src="getImageUrl(img)"
                           :preview-src-list="goodsPreviewImages">
                         </el-image>
                         <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
@@ -370,7 +370,6 @@
           images: [],
           desc: ''
         },
-        goodsPreviewImages: [],
         goodsSysTypes: [],
         goodsSysTypeFields: [],
         goodsTypes: [],
@@ -410,13 +409,6 @@
         } else {
           this.forms.parent_id = val[val.length - 1]
         }
-      },
-      'goodsData.images'(val) {
-        const result = []
-        this.goodsData.images && this.goodsData.images.forEach(img => {
-          result.push(this.getImageUrl(img))
-        })
-        this.goodsPreviewImages = result
       },
       goodsProps: {
         handler(val) {
@@ -463,6 +455,14 @@
             result.push(this.getImageUrl(img))
           })
         }
+        return result
+      },
+      goodsPreviewImages() {
+        const result = []
+        this.goodsData.images && this.goodsData.images.forEach(img => {
+          result.push(this.getImageUrl(img))
+        })
+        console.log(result)
         return result
       }
     },

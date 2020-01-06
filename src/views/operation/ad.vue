@@ -28,7 +28,7 @@
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column :label="$t('operation.image')">
                   <template  slot-scope="scope">
-                    <el-image :src="getImageUrl(scope.row.image,200)" style="height: 130px"></el-image>
+                    <el-image :src="getImageUrl(scope.row.image,200)" style="height: 130px; width:270px" fit="contain"></el-image>
                   </template>
                 </el-table-column>
                 <el-table-column prop="name" :label="$t('operation.name')"></el-table-column>
@@ -99,7 +99,7 @@
             </el-form-item>
             <el-form-item :label="$t('operation.image')">
               <image-upload :drag="false" @uploadSuccess="imageUploadSuccess">
-                <img v-if="form.image" :src="getImageUrl(form.image)" style="height: 120px">
+                <el-image v-if="form.image" :src="getImageUrl(form.image,200)" style="height: 100px; width:400px" fit="contain"></el-image>
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </image-upload>
             </el-form-item>
