@@ -32,6 +32,9 @@ Vue.config.productionTip = false
 Vue.mixin({
   methods: {
     getImageUrl(val, width) {
+      if (!val) {
+        return ''
+      }
       const cd = new Date()
       let imgUrl = imgGetUrl + '?md5=' + val + '&t=' + cd.getMilliseconds()
       if (width) {

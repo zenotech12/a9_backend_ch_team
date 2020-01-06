@@ -16,6 +16,7 @@ export default {
   url: '链接地址',
   to: '至',
   valid: '生效中',
+  sortNo: '展现顺序',
   all: '所有',
   couponEdit: '优惠券设置',
   rangeType: '适用范围',

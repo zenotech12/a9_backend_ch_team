@@ -19,6 +19,17 @@
                   </el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item :label="$t('order.orderTime')">
+                <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
+                  v-model="orderTimes"
+                  type="daterange"
+                  align="right"
+                  unlink-panels
+                  :range-separator="$t('tools.to')"
+                  :start-placeholder="$t('tools.startDate')"
+                  :end-placeholder="$t('tools.endDate')">
+                </el-date-picker>
+              </el-form-item>
               <el-form-item class="searchBtn">
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
               </el-form-item>
@@ -45,7 +56,7 @@
                         <p>
                           <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p>{{gInfo.goods_info.price}}X {{gInfo.goods_info.count}}</p>
+                        <p>{{$t('order.price3')}}：<span>{{gInfo.goods_info.price}}</span>；{{$t('order.number')}}：<span>{{gInfo.goods_info.count}}</span></p>
                       </div>
                       <div class="clear"></div>
                     </div>
@@ -128,8 +139,11 @@
           order_status: 0,
           no: '',
           skip: '',
-          limit: pz
+          limit: pz,
+          bt: '',
+          et: ''
         },
+        orderTimes: [],
         tableData: [],
         currentPage: 1,
         pageSize: pz,
@@ -151,6 +165,15 @@
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
+      },
+      orderTimes(val) {
+        if (val.length === 2) {
+          this.searchForm.bt = val[0]
+          this.searchForm.et = val[1]
+        } else {
+          this.searchForm.bt = ''
+          this.searchForm.et = ''
+        }
       }
     },
     methods: {
@@ -182,6 +205,8 @@
       }
     },
     mounted() {
+      console.log(this.$route)
+      this.searchForm.order_status = this.$route.params.order_status ? this.$route.params.order_status : 0
       this.getDataListFun()
     },
     created() {

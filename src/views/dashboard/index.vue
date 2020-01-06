@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <el-row>
       <el-card shadow="always">
-        <div class="star-info">
+        <div class="star-info cp" @click="gotoUrl('/order/evaluate')">
           <span class="title">{{shopInfo.name}}</span>
           <div class="rate-item"><span>{{$t('order.star')}}</span><el-rate class="rate" :value="shopInfo.star_score" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
           <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="shopInfo.description_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
@@ -14,7 +14,7 @@
     <el-row class="liuliang">
       <el-col :span="8">
         <el-card shadow="always" class="stat-item">
-          <div class="sp">
+          <div class="sp cp" @click="gotoUrl('/order/list')">
             <p>今日订单数：<span>{{statInfo.today_traffic}}</span></p>
             <p>今日成交额：<span>{{statInfo.today_sales}}</span></p>
           </div>
@@ -40,7 +40,7 @@
     <el-row class="liuliang">
       <el-col :span="4">
         <el-card shadow="always">
-          <div class="sp">
+          <div class="sp cp" @click="gotoUrl('orderList', { order_status: 2})">
             <p>待支付：<span>{{statInfo.need_pay}}</span></p>
           </div>
         </el-card>
@@ -48,7 +48,7 @@
       <el-col :span="1">&nbsp;</el-col>
       <el-col :span="4">
         <el-card shadow="always">
-          <div class="sp">
+          <div class="sp cp" @click="gotoUrl('orderList', { order_status: 5})">
             <p>待发：<span>{{statInfo.need_ship}}</span></p>
           </div>
         </el-card>
@@ -56,7 +56,7 @@
       <el-col :span="1">&nbsp;</el-col>
       <el-col :span="4">
         <el-card shadow="always">
-          <div class="sp">
+          <div class="sp cp" @click="gotoUrl('/order/return')">
             <p>退款：<span>{{statInfo.refund}}</span></p>
           </div>
         </el-card>
@@ -105,6 +105,15 @@
         shopStat({ categories: JSON.stringify(items) }).then(res => {
           this.statInfo = res.item
         })
+      },
+      gotoUrl(url, params) {
+        let pushUrl = {}
+        if (params) {
+          pushUrl = { name: 'orderList', params: params }
+        } else {
+          pushUrl = { path: url }
+        }
+        this.$router.push(pushUrl)
       }
     },
     mounted() {
@@ -117,6 +126,9 @@
   .dashboard {
     &-container {
       margin: 30px;
+      .cp{
+        cursor: pointer;
+      }
       .star-info{
         .title{
           font-size: 20px;

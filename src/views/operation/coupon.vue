@@ -5,11 +5,10 @@
       <div class="rightbox">
         <el-row>
           <el-col :span ="14">
-            <el-switch style="margin-top: 10px"
-                       v-model="timeValidSwitch"
-                       :active-text="$t('operation.valid')"
-                       :inactive-text="$t('operation.all')">
-            </el-switch>
+            <el-radio-group v-model="selectedType" size="small">
+              <el-radio-button :label="$t('tools.all')"></el-radio-button>
+              <el-radio-button v-for="(v,k) in couponType" :label="v.name" :key="k"></el-radio-button>
+            </el-radio-group>
           </el-col>
           <el-col :span="10" class="funcList">
             <div class="boxFuncBtn" @click="addCoupon">
@@ -195,10 +194,11 @@
         rangeType: [{ code: 1, name: this.$t('operation.rangeTypeA') }, { code: 2, name: this.$t('operation.rangeTypeB') }, { code: 3, name: this.$t('operation.rangeTypeC') }],
         timeValidSwitch: true,
         searchForm: {
-          time_valid: 1,
+          type: 0,
           skip: '',
           limit: pz
         },
+        selectedType: this.$t('tools.all'),
         tableData: [],
         currentPage: 1,
         pageSize: pz,
@@ -245,6 +245,15 @@
       },
       timeValidSwitch(val) {
         this.searchForm.time_valid = val ? 1 : 0
+        this.getCouponListFun()
+      },
+      selectedType(val) {
+        if (val === this.$t('tools.all')) {
+          this.searchForm.type = 0
+        } else {
+          const result = this.couponType.find(item => { return item.name === val })
+          this.searchForm.type = result.code
+        }
         this.getCouponListFun()
       }
     },

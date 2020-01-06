@@ -8,6 +8,8 @@ export default {
   price: '金额',
   price1: '商品金额',
   price2: '运费',
+  price3: '单价',
+  number: '数量',
   status: '状态',
   status1: '待审核',
   status2: '待支付',
@@ -50,5 +52,6 @@ export default {
   returnOrder: '关联订单',
   returnGoods: '退、换货商品',
   returnPrice: '退款金额',
-  returnTime: '申请时间'
+  returnTime: '申请时间',
+  orderTime: '下单时段'
 }

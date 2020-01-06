@@ -31,5 +31,6 @@ export default {
   all: '全部',
   searchKeyTip: '请输入关键字',
   startDate: '开始日期',
-  endDate: '结束日期'
+  endDate: '结束日期',
+  to: '至'
 }

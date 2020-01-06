@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="line-height: 20px;">
-      <quill-editor ref="myeditor"
+      <quill-editor ref="myeditor" height="500px"
                     :content="content"
                     :options="editorConfig"
                     @change="onEditorChange($event)"
@@ -14,7 +14,7 @@
                  :on-success="videoUploadFunc">
         <el-button size="small" type="primary" id="editorVideoUploadBtn" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="插入中,请稍候">点击上传</el-button>
       </el-upload>
-      <el-dialog title="链接设置" append-to-body  :visible.sync="editorLinkFormVisible">
+      <el-dialog title="链接设置" append-to-body  :visible.sync="editorLinkFormVisible" width="400px">
         <el-form :model="linkForm" >
           <el-form-item label="类型" prop="name"  :label-width="linkformLabelWidth" style="margin-bottom: 22px">
             <el-select v-model="linkForm.type" placeholder="请选择链接类型" >
@@ -36,7 +36,7 @@
           <el-button @click="editorLinkFormVisible = false" size="small" style="margin-right: 24px;margin-left: 10px;">取消</el-button>
         </div>
       </el-dialog>
-      <el-dialog title="图片上传" :visible.sync="imagesFormVisible" append-to-body width="980px">
+      <el-dialog title="图片上传" :visible.sync="imagesFormVisible" append-to-body width="515px">
         <el-upload name="image" :headers="fileUploadHeader"
                    :action="fileUploadUrl"
                    list-type="picture-card"
@@ -69,10 +69,12 @@
   import 'quill/dist/quill.core.css'
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
+  import goodsSelector from '@/components/goodsSelector'
   export default {
     name: 'LLEditor',
     components: {
-      quillEditor
+      quillEditor,
+      goodsSelector
     },
     props: {
       content: {
@@ -112,15 +114,9 @@
         linkType: [{
           value: '1',
           label: '商品'
-        }, {
-          value: '2',
-          label: '文章'
-        }, {
-          value: '3',
-          label: '外链'
         }],
         linkformLabelWidth: '120px',
-        linkForm: { type: '', value: '' },
+        linkForm: { type: '1', value: '' },
         editorConfig: {},
         fileUploadUrl: fileUploadUrl,
         videoUploadUrl: fileUploadUrl,
@@ -141,7 +137,7 @@
         const quill = this.$refs['myeditor'].quill
         let val = this.linkForm.value
         if (this.linkForm.type === '1') {
-          val = 'http://goodsId/' + val
+          val = 'https://a9app.idesum.com/goods/info?id=' + val
         } else if (this.linkForm.type === '2') {
           val = 'http://articleId/' + val
         }
@@ -157,7 +153,7 @@
             if (range.length === 0) {
               this.$message.error('请选择您要插入链接的对象')
             } else {
-              this.linkForm = { type: '', value: '' }
+              this.linkForm = { type: '1', value: '' }
               this.editorLinkFormVisible = true
             }
           } else {
@@ -258,7 +254,7 @@
       videoUploadFunc(res) {
         if (res.meta === 0) {
           // console.log(res)
-          const videoUrl = res.md5
+          const videoUrl = this.getImageUrl(res.md5)
           this.addRange = this.$refs['myeditor'].quill.getSelection()
           this.$refs['myeditor'].quill.insertEmbed(this.addRange !== null ? this.addRange.index : 0, 'video', videoUrl)
         } else {
@@ -284,6 +280,9 @@
 <style lang="scss">
   el-form-item{
     margin-bottom: 22px;
+  }
+  .ql-container{
+    height: 340px;
   }
   .ql-editor{
     min-height: 300px;

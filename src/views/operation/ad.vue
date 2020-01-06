@@ -5,7 +5,11 @@
       <div class="rightbox">
         <el-row>
           <el-col :span ="14">
-            <el-switch style="margin-top: 10px"
+            <el-radio-group v-model="selectedPosition" size="small">
+              <el-radio-button :label="$t('tools.all')"></el-radio-button>
+              <el-radio-button v-for="(v,k) in adPosition" :label="v.name" :key="k"></el-radio-button>
+            </el-radio-group>
+            <el-switch style="margin-top: 2px; margin-left: 10px"
               v-model="timeValidSwitch"
               :active-text="$t('operation.valid')"
               :inactive-text="$t('operation.all')">
@@ -24,7 +28,7 @@
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column :label="$t('operation.image')">
                   <template  slot-scope="scope">
-                    <el-image :src="getImageUrl(scope.row.image,200)" style="max-height: 200px"></el-image>
+                    <el-image :src="getImageUrl(scope.row.image,200)" style="height: 130px"></el-image>
                   </template>
                 </el-table-column>
                 <el-table-column prop="name" :label="$t('operation.name')"></el-table-column>
@@ -95,7 +99,7 @@
             </el-form-item>
             <el-form-item :label="$t('operation.image')">
               <image-upload :drag="false" @uploadSuccess="imageUploadSuccess">
-                <img v-if="form.image" :src="getImageUrl(form.image)" style="max-width: 500px">
+                <img v-if="form.image" :src="getImageUrl(form.image)" style="height: 120px">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </image-upload>
             </el-form-item>
@@ -109,6 +113,9 @@
                 end-placeholder="结束日期"
                 align="right">
               </el-date-picker>
+            </el-form-item>
+            <el-form-item :label="$t('operation.sortNo')">
+              <el-input v-model.number="form.sort_no"></el-input>
             </el-form-item>
             <el-form-item :label="$t('operation.desc')">
               <el-input type="textarea" maxlength="200" rows="3" v-model="form.desc"></el-input>
@@ -137,8 +144,10 @@
       return {
         adPosition: [{ code: 10001, name: this.$t('operation.positionA') }, { code: 10002, name: this.$t('operation.positionB') }],
         adType: [{ code: 1, name: this.$t('operation.goods') }, { code: 2, name: this.$t('operation.link') }],
+        selectedPosition: this.$t('tools.all'),
         timeValidSwitch: true,
         searchForm: {
+          code: 0,
           time_valid: 1,
           skip: '',
           limit: pz
@@ -173,6 +182,15 @@
       timeValidSwitch(val) {
         this.searchForm.time_valid = val ? 1 : 0
         this.getAdListFunc()
+      },
+      selectedPosition(val) {
+        if (val === this.$t('tools.all')) {
+          this.searchForm.code = 0
+        } else {
+          const result = this.adPosition.find(item => { return item.name === val })
+          this.searchForm.code = result.code
+        }
+        this.getAdListFunc()
       }
     },
     methods: {
@@ -192,6 +210,7 @@
             et: data.et,
             type: data.type,
             para: data.para,
+            sort_no: data.sort_no,
             desc: data.desc
           }
         } else {
@@ -205,6 +224,7 @@
             et: '',
             type: 1,
             para: '',
+            sort_no: 0,
             desc: ''
           }
         }
