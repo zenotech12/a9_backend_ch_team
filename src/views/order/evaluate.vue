@@ -29,7 +29,21 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="content" :label="$t('order.comment')"></el-table-column>
+                <el-table-column :label="$t('order.user')" align="left" width="120">
+                  <template slot-scope="scope">
+                    {{scope.row.user_nick_name}}<br/>
+                    {{scope.row.user_mobile}}<br/>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.comment')">
+                  <template slot-scope="scope">
+                    {{scope.row.content}}
+                    <div>
+                      <el-image v-for="(img, k) in scope.row.imgs" style="width: 80px; height: 80px" :key="k" fit="contain" :src="getImageUrl(img,50)" :preview-src-list="previewList(scope.row.imgs)">
+                      </el-image>
+                    </div>
+                  </template>
+                </el-table-column>
                 <el-table-column  :label="$t('order.commentStar')" width="220">
                   <template  slot-scope="scope">
                     <div><el-tag size="mini" :type="scope.row.comprehensive_lv===3 ? '':(scope.row.comprehensive_lv===2? 'success': 'info')">{{commentLevel[scope.row.comprehensive_lv]}}</el-tag></div>
@@ -52,7 +66,7 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="order_id" :label="$t('order.order')" width="200">
+                <el-table-column prop="order_no" :label="$t('order.order')" width="200">
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('order.evaluateTime')" width="160">
                 </el-table-column>
@@ -138,6 +152,13 @@
       }
     },
     methods: {
+      previewList(imgs) {
+        const result = []
+        imgs.forEach(img => {
+          result.push(this.getImageUrl(img))
+        })
+        return result
+      },
       showReplyEditor(data) {
         this.replyData = data
         this.replyContent = ''
