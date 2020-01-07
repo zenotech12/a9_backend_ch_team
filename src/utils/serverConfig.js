@@ -2,8 +2,8 @@
 const serverConfig = {
   // api_url: 'http://120.77.219.198:8912',
   // qr_prefix: 'http://120.77.219.198:8912/admin/v1/qr/'
-  api_url: 'http://192.168.31.194:8915',
-  // api_url: 'https://a9partner.idesum.com/data',
+  // api_url: 'http://192.168.31.194:8915',
+  api_url: 'https://a9partner.idesum.com/data',
   qr_prefix: 'http://192.168.31.194:8915/admin/v1'
 }
 if (process.env.NODE_ENV === 'production') {

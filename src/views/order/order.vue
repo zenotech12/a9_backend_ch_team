@@ -41,48 +41,63 @@
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column prop="no" :label="$t('order.no')" width="200px"></el-table-column>
-                <el-table-column :label="$t('order.user')">
+                <el-table-column :label="$t('order.user')" width="130">
                   <template slot-scope="scope">
                     <div class="ui">{{scope.row.user_nick_name}}</div>
                     <div class="ui">{{scope.row.user_mobile}}</div>
                   </template>
                 </el-table-column>
-                <el-table-column  :label="$t('order.goods')" width="350px">
+                <el-table-column  :label="$t('order.goods')">
                   <template  slot-scope="scope">
                     <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
-                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img)"  fit="cover"></el-image>
+                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
                       <div class="g-info">
-                        <p><span>{{gInfo.goods_info.spu_name}}</span></p>
+                        <p>{{gInfo.goods_info.spu_name}}</p>
                         <p>
                           <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p>{{$t('order.price3')}}：<span>{{gInfo.goods_info.price}}</span>；{{$t('order.number')}}：<span>{{gInfo.goods_info.count}}</span></p>
+                        <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                       </div>
                       <div class="clear"></div>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.price')">
+                <el-table-column :label="$t('order.price')" width="130">
                   <template slot-scope="scope" >
-                    {{scope.row.goods_price}} + {{scope.row.postage}}
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')"> {{scope.row.pay_price}}；{{scope.row.goods_price}} + {{scope.row.postage}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.address')">
+                <el-table-column :label="$t('order.address')" style="text-align: left">
                   <template slot-scope="scope" >
-                    {{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}<br/>
-                    {{scope.row.shipping_address.address.addr}}
+                    <div class="ui"><span>{{$t('order.expressAddr')}}：</span>{{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}{{scope.row.shipping_address.address.addr}}</div>
+                    <div class="ui"><span>{{$t('order.expressUser')}}：</span>{{scope.row.shipping_address.contacter_name}}&nbsp;&nbsp;{{scope.row.shipping_address.mobile}}</div>
+                    <div class="ui" v-if="scope.row.express.novar"><span>{{$t('order.expressNo')}}：</span><a target="_blank" :href="getKuaidi100Url(scope.row.express.company, scope.row.express.novar)">{{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}<i class="el-icon-arrow-right"></i> </a></div>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.status')">
+                <el-table-column :label="$t('order.status')" width="90">
                   <template slot-scope="scope" >
                     <el-tag>{{orderStatus[scope.row.status]}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" :label="$t('order.genTime')">
+                <el-table-column :label="$t('order.genTime')" width="180">
+                  <template slot-scope="scope" >
+                    <el-popover placement="left" width="300" trigger="click">
+                      <el-timeline style="margin-top: 10px">
+                        <el-timeline-item
+                          v-for="(record, index) in scope.row.operation_records"
+                          :key="index"
+                          :timestamp="record.time">
+                          <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
+                        </el-timeline-item>
+                      </el-timeline>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.gen_time}}</a>
+                    </el-popover>
+                  </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140">
+                <el-table-column :label="$t('tools.opt')" width = "60">
                   <template slot-scope="scope">
-                      <el-button type="text" @click="showExpressEditor(scope.row)" size="small">{{$t('order.express')}}</el-button>
+                      <el-button v-if="scope.row.status === 4 || scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">{{$t('order.express')}}</el-button>
+                      <el-button v-else-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">{{$t('order.modifyPrice')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -97,29 +112,60 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('order.express')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="dialogTitle" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px">
             <el-form-item :label="$t('order.no')">
               {{expressOrder.no}}
             </el-form-item>
+            <el-form-item :label="$t('order.user')">
+              {{expressOrder.user_nick_name}}&nbsp;{{expressOrder.user_mobile}}
+            </el-form-item>
+            <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
+              <div class="goods-item" v-for="(gInfo,k) in expressOrder.merchant_item.goods_items" :key="k">
+                <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                <div class="g-info">
+                  <p>{{gInfo.goods_info.spu_name}}</p>
+                  <p>
+                    <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
+                  </p>
+                  <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                </div>
+                <div class="clear"></div>
+              </div>
+            </el-form-item>
+            <el-form-item :label="$t('order.price')">
+              {{expressOrder.pay_price}}（{{$t('order.price1') + '：' + expressOrder.goods_price}}；{{$t('order.price2') + '：' + expressOrder.postage}}）
+            </el-form-item>
             <el-form-item :label="$t('order.address')">
-              {{expressOrder.shipping_address.address.province + expressOrder.shipping_address.address.city + expressOrder.shipping_address.address.district}}<br/>
-              {{expressOrder.shipping_address.address.addr}}<br/>
-              {{expressOrder.shipping_address.mobile}} {{expressOrder.shipping_address.contacter_name}}
+              {{expressOrder.shipping_address.address.province + expressOrder.shipping_address.address.city + expressOrder.shipping_address.address.district}}&nbsp;{{expressOrder.shipping_address.address.addr}}
+              <br/>
+              {{expressOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{expressOrder.shipping_address.mobile}}
             </el-form-item>
-            <el-form-item :label="$t('order.expressCompany')">
-              <el-select v-model="expressCompany">
-                <el-option
-                  v-for="(item, k) in expressageList"
-                  :key="k"
-                  :label="item"
-                  :value="k">
-                </el-option>
-              </el-select>
+            <el-form-item :label="$t('order.expressInfo')" v-if="optType === 1">
+              <el-row :gutter="20">
+                <el-col :span="8">
+                  <el-select v-model="expressCompany" :placeholder="$t('order.expressCompany')">
+                    <el-option
+                      v-for="(item, k) in expressageList"
+                      :key="k"
+                      :label="item"
+                      :value="k">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="14">
+                  <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.expressNo')">
-              <el-input v-model="expressNo" clearable></el-input>
-            </el-form-item>
+            <template v-if="optType === 2">
+              <el-form-item :label="$t('order.price4')" >
+                <el-input v-model="payPrice" clearable :placeholder="$t('order.price4')" style="width: 200px"></el-input><span style="color: #8c939d">{{$t('order.price4Tip')}}</span>
+              </el-form-item>
+              <el-form-item :label="$t('order.price4Note')" >
+                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.price4Note')"></el-input>
+              </el-form-item>
+            </template>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -132,7 +178,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersExpress } from '@/api/order'
+  import { ordersList, ordersExpress, ordersPriceModify } from '@/api/order'
   import expressage from '@/utils/expressage'
   export default {
     components: {
@@ -140,6 +186,7 @@
     data() {
       const pz = 10
       return {
+        optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8')],
         searchForm: {
@@ -158,10 +205,15 @@
         itemCount: 0,
         expressCompany: '',
         expressNo: '',
+        editorTitle: '',
+        optType: 1,
+        dialogTitle: this.$t('order.express'),
         expressOrder: { shipping_address: { address: {}}},
         formEditDialog: false,
         submitDisabled: false,
-        expressageList: expressage
+        expressageList: expressage,
+        payPrice: 0,
+        comment: ''
       }
     },
     computed: {
@@ -186,22 +238,44 @@
       }
     },
     methods: {
-      showExpressEditor(data) {
+      getKuaidi100Url(com, nu) {
+        return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
+      },
+      showExpressEditor(data, ot) {
         this.expressOrder = data
-        this.expressCompany = ''
-        this.expressNo = ''
+        this.optType = ot
+        if (ot === 1) {
+          this.dialogTitle = this.$t('order.express')
+          this.expressCompany = data.express.company
+          this.expressNo = data.express.novar
+        } else if (ot === 2) {
+          this.dialogTitle = this.$t('order.modifyPrice')
+          this.payPrice = data.pay_price
+          this.comment = ''
+        }
         this.formEditDialog = true
       },
       saveDataFunc() {
         this.submitDisabled = true
-        ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo }).then(res => {
-          this.$message.success(this.$t('order.expressTip'))
-          this.submitDisabled = false
-          this.getDataListFun()
-          this.formEditDialog = false
-        }).catch(() => {
-          this.submitDisabled = false
-        })
+        if (this.optType === 1) {
+          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo }).then(res => {
+            this.$message.success(this.$t('order.expressTip'))
+            this.submitDisabled = false
+            this.getDataListFun()
+            this.formEditDialog = false
+          }).catch(() => {
+            this.submitDisabled = false
+          })
+        } else if (this.optType === 2) {
+          ordersPriceModify(this.expressOrder.id, { pay_price: this.payPrice, comment: this.comment }).then(res => {
+            this.$message.success(this.$t('order.price4Tip1'))
+            this.submitDisabled = false
+            this.getDataListFun()
+            this.formEditDialog = false
+          }).catch(() => {
+            this.submitDisabled = false
+          })
+        }
       },
       getDataListFun() {
         ordersList(this.searchForm).then(res => {
@@ -254,6 +328,12 @@
       p{
         margin: 0px;
         padding: 3px 0px;
+        span{
+          color: #8c939d;
+          font{
+            color: #606266;
+          }
+        }
       }
     }
     .clear{
@@ -263,5 +343,16 @@
   .ui{
     text-align: left;
     line-height: 25px;
+    span{
+      display: inline-block;
+      padding-right: 5px;
+      color: #8c939d;
+    }
+    a{
+      color: #1E88E5;
+    }
+  }
+  .gt{
+    color: #1E88E5;
   }
 </style>

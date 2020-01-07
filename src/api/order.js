@@ -27,6 +27,15 @@ export function ordersExpress(id, data) {
   })
 }
 
+// 订单.改价
+export function ordersPriceModify(id, data) {
+  return request({
+    url: 'orders/' + id + '/pay-price',
+    method: 'put',
+    data: data
+  })
+}
+
 // 评价.查.列表
 export function evalutionsList(data) {
   return request({
