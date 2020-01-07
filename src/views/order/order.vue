@@ -99,8 +99,8 @@
         </el-row>
         <el-dialog :title="$t('order.express')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px">
-            <el-form-item :label="$t('order.id')">
-              {{expressOrder.id}}
+            <el-form-item :label="$t('order.no')">
+              {{expressOrder.no}}
             </el-form-item>
             <el-form-item :label="$t('order.address')">
               {{expressOrder.shipping_address.address.province + expressOrder.shipping_address.address.city + expressOrder.shipping_address.address.district}}<br/>
@@ -176,7 +176,7 @@
         this.getDataListFun()
       },
       orderTimes(val) {
-        if (val.length === 2) {
+        if (val && val.length === 2) {
           this.searchForm.bt = val[0]
           this.searchForm.et = val[1]
         } else {
@@ -216,6 +216,9 @@
     mounted() {
       console.log(this.$route)
       this.searchForm.order_status = this.$route.params.order_status ? this.$route.params.order_status : 0
+      if (this.$route.params.bt || this.$route.params.et) {
+        this.orderTimes = [this.$route.params.bt, this.$route.params.et]
+      }
       this.getDataListFun()
     },
     created() {

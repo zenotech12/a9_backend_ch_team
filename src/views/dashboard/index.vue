@@ -14,8 +14,8 @@
     <el-row class="liuliang">
       <el-col :span="8">
         <el-card shadow="always" class="stat-item">
-          <div class="sp cp" @click="gotoUrl('/order/list')">
-            <p>今日订单数：<span>{{statInfo.today_traffic}}</span></p>
+          <div class="sp cp" @click="gotoUrl('orderList',{ bt: $moment(new Date().getTime()).format('YYYY-MM-DD'), et: $moment(new Date().getTime()).format('YYYY-MM-DD') })">
+            <p>今日订单数：<span>{{statInfo.today_order}}</span></p>
             <p>今日成交额：<span>{{statInfo.today_sales}}</span></p>
           </div>
         </el-card>
@@ -109,7 +109,7 @@
       gotoUrl(url, params) {
         let pushUrl = {}
         if (params) {
-          pushUrl = { name: 'orderList', params: params }
+          pushUrl = { name: url, params: params }
         } else {
           pushUrl = { path: url }
         }

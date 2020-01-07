@@ -21,8 +21,10 @@ import './components/platformCom/install'
 import '@/assets/css/override-element-ui.scss'
 import { imgGetUrl } from '@/utils/serverConfig'
 import echarts from 'echarts'
+import moment from 'moment'
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
+Vue.prototype.$moment = moment
 
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
