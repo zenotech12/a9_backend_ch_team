@@ -43,6 +43,7 @@ export default {
   star2: '服务态度',
   star3: '快递',
   genTime: '下单时间',
+  evaluateTime: '评论时间',
   reply: '回复',
   reply1: '回复内容',
   reply2: '请输入回复内容',

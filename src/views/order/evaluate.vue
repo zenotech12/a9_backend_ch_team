@@ -30,7 +30,7 @@
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column prop="content" :label="$t('order.comment')"></el-table-column>
-                <el-table-column  :label="$t('order.commentStar')">
+                <el-table-column  :label="$t('order.commentStar')" width="220">
                   <template  slot-scope="scope">
                     <div><el-tag size="mini" :type="scope.row.comprehensive_lv===3 ? '':(scope.row.comprehensive_lv===2? 'success': 'info')">{{commentLevel[scope.row.comprehensive_lv]}}</el-tag></div>
                     <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="scope.row.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
@@ -43,20 +43,20 @@
                     <div class="goods-item">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(scope.row.sku_goods_item.sku_img)"  fit="cover"></el-image>
                       <div class="g-info">
-                        <p><span>{{scope.row.sku_goods_item.spu_name}}</span></p>
+                        <p>{{scope.row.sku_goods_item.spu_name}}</p>
                         <p>
-                          <span v-for="(v,k) in scope.row.sku_goods_item.specifications"> {{v}}<font>{{k}}</font></span>
+                          <span v-for="(v,k) in scope.row.sku_goods_item.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p>{{scope.row.sku_goods_item.price}}X {{scope.row.sku_goods_item.count}}</p>
+                        <p><span>{{$t('order.price3')}}：</span>{{scope.row.sku_goods_item.price}}；<span>{{$t('order.number')}}：</span>{{scope.row.sku_goods_item.count}}</p>
                       </div>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="order_id" :label="$t('order.order')">
+                <el-table-column prop="order_id" :label="$t('order.order')" width="200">
                 </el-table-column>
-                <el-table-column prop="gen_time" :label="$t('order.genTime')">
+                <el-table-column prop="gen_time" :label="$t('order.evaluateTime')" width="160">
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140">
+                <el-table-column :label="$t('tools.opt')" width = "70">
                   <template slot-scope="scope">
                     <el-badge :value="scope.row.replies.length" class="item" style="margin: 10px 0px !important;">
                       <el-button type="text" @click="showReplyEditor(scope.row)" size="small">{{$t('order.reply')}}</el-button>
@@ -193,6 +193,12 @@
       p{
         margin: 0px;
         padding: 3px 0px;
+        span{
+          color: #8c939d;
+          font{
+            color: #606266;
+          }
+        }
       }
     }
   }
