@@ -38,7 +38,7 @@ export default {
 }
 #app .sidebar-container {
   width: 210px !important;
-  background-color: #00946E;
+  background-color: #9ac338;
 }
 #app .main-container {
   margin-left: 210px;

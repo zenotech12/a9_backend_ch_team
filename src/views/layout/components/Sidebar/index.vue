@@ -68,7 +68,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .logoTitle {
-    background-color: #00946E;
+    background-color: #9ac338;
     text-align: center;
     height: 122px;
     .comName {
@@ -102,7 +102,7 @@ export default {
   .guide {
     width:170px;
     height:28px;
-    background-color: #00654C;
+    background-color: #798633;
     margin: 0 auto 20px auto;
     display: flex;
     align-items: center;
@@ -129,7 +129,7 @@ export default {
   }
 
   .guide:hover {
-    background:#00654C;
+    background:#6f7a89;
   }
 
   .mini-guide {

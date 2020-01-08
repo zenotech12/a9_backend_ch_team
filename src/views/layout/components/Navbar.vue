@@ -128,7 +128,7 @@ export default {
     }
     .avatar-wrapper{
       cursor: pointer;
-      color:#00946e ;
+      color:#9ac338 ;
     }
   }
 }

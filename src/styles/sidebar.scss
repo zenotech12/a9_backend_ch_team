@@ -93,7 +93,7 @@
   }
   .el-menu-item.is-active {
     color: #fff!important;
-    background-color: #008462!important;
+    background-color: $menuHover !important;
     .itemCurrent,.itemCurrent1 {
       background-color: #F99426;
     }
@@ -114,7 +114,7 @@
     position: absolute;
     left: 0;
     top: 13px;
-    background-color: #00946E;
+    background-color: $menuHover;
     display: inline-block;
     width: 4px;
     height: 30px;

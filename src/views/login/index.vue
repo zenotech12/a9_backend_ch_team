@@ -135,7 +135,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  $bg:#2d3a4b;
+  $bg:#9ac338;
   $dark_gray:#889aa4;
   $light_gray:#eee;
   .login-footer{
@@ -204,7 +204,7 @@ export default {
   }
 }
   .login-container {
-    background-color: #00946E;
+    background-color: #9ac338;
     overflow: hidden;
     position: fixed;
     height: 100%;
@@ -292,7 +292,7 @@ export default {
         font-size:16px;
         font-family:PingFangSC-Medium;
         font-weight:500;
-        color:#00946E;
+        color:#9ac338;
         line-height:22px;
         margin: 22px 0 36px 0;
       }

@@ -50,9 +50,9 @@ export default {
 </script>
 <style lang="scss">
   .el-menu-item {
-    background-color: #00946E !important;
+    background-color: #9ac338 !important;
   }
   .el-submenu__title {
-    background-color: #00946E !important;
+    background-color: #9ac338 !important;
   }
 </style>
