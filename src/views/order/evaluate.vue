@@ -91,14 +91,27 @@
         </el-row>
         <el-dialog :title="$t('order.reply')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px">
-            <div><el-tag size="mini" :type="replyData.comprehensive_lv===3 ? '':(replyData.comprehensive_lv===2? 'success': 'info')">{{commentLevel[replyData.comprehensive_lv]}}</el-tag></div>
-            <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="replyData.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
-            <div class="rate-item"><span>{{$t('order.star2')}}</span><el-rate class="rate" :value="replyData.service_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
-            <div class="rate-item"><span>{{$t('order.star3')}}</span><el-rate class="rate" :value="replyData.express_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
-            <div>{{replyData.content}}</div>
+            <el-form-item :label="$t('order.user')">
+              {{replyData.user_nick_name}}&nbsp;{{replyData.user_mobile}}
+            </el-form-item>
+            <el-form-item :label="$t('order.commentLevel')">
+              <el-tag size="mini" :type="replyData.comprehensive_lv===3 ? '':(replyData.comprehensive_lv===2? 'success': 'info')">{{commentLevel[replyData.comprehensive_lv]}}</el-tag>
+            </el-form-item>
+            <el-form-item :label="$t('order.commentStar')">
+              <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="replyData.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
+              <div class="rate-item"><span>{{$t('order.star2')}}</span><el-rate class="rate" :value="replyData.service_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
+              <div class="rate-item"><span>{{$t('order.star3')}}</span><el-rate class="rate" :value="replyData.express_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
+            </el-form-item>
+            <el-form-item :label="$t('order.comment')">
+              <div>{{replyData.content}}</div>
+              <div>
+                <el-image v-for="(img, k) in replyData.imgs" style="width: 80px; height: 80px" :key="k" fit="contain" :src="getImageUrl(img,50)" :preview-src-list="previewList(replyData.imgs)">
+                </el-image>
+              </div>
+            </el-form-item>
             <el-divider content-position="left">{{$t('order.reply1')}}</el-divider>
-            <div v-for="v in replyData.replies">{{v}}</div>
-            <el-input type="textarea"  :rows="2" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
+            <div class="reply-item" v-for="v in replyData.replies">{{v}}</div>
+            <el-input style="margin-top: 10px" type="textarea"  :rows="2" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -203,6 +216,10 @@
     .rate{
       display: inline-block !important;
     }
+  }
+  .reply-item{
+    margin-top: 10px;
+    line-height: 20px;
   }
   .goods-item{
     .image{

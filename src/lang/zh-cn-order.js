@@ -34,6 +34,7 @@ export default {
   order: '订单',
   comment: '评价内容',
   commentStar: '评论分数',
+  commentLevel: '评论等级',
   commentStar1: '差评',
   commentStar2: '中评',
   commentStar3: '好评',

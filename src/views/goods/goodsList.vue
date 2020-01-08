@@ -884,6 +884,7 @@
     .pitem{
       display: inline-block;
       position: relative;
+      margin-right: 5px;
       .delbtn{
         cursor: pointer;
         position: absolute;
