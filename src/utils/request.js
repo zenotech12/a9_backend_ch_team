@@ -16,7 +16,7 @@ const service = axios.create({
 
 function getSign(data, path, method) {
   const signStr = 'local_time=' + data['local_time'] + '&method=' + method.toLowerCase() + '&nonce_str=' + data['nonce_str'] + '&path=' + path + '&' + appKey
-  console.log('signStr', signStr)
+  // console.log('signStr', signStr)
   return md5(signStr).toUpperCase()
 }
 

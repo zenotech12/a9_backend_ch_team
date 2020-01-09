@@ -22,7 +22,7 @@ import '@/assets/css/override-element-ui.scss'
 import { imgGetUrl } from '@/utils/serverConfig'
 import echarts from 'echarts'
 import moment from 'moment'
-import * as filters from './utils/filers'
+import * as filters from './utils/filters'
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
 Vue.prototype.$moment = moment
