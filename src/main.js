@@ -37,8 +37,8 @@ Vue.mixin({
       if (!val) {
         return ''
       }
-      const cd = new Date()
-      let imgUrl = imgGetUrl + '?md5=' + val + '&t=' + cd.getMilliseconds()
+      // const cd = new Date()
+      let imgUrl = imgGetUrl + '?md5=' + val
       if (width) {
         imgUrl += '&width=' + width
       }
