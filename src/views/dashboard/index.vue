@@ -16,7 +16,7 @@
         <el-card shadow="always" class="stat-item">
           <div class="sp cp" @click="gotoUrl('orderList',{ bt: $moment(new Date().getTime()).format('YYYY-MM-DD'), et: $moment(new Date().getTime()).format('YYYY-MM-DD') })">
             <p>今日订单数：<span>{{statInfo.today_order}}</span></p>
-            <p>今日成交额：<span>{{statInfo.today_sales}}</span></p>
+            <p>今日成交额：<span>{{statInfo.today_sales | price}}</span></p>
           </div>
         </el-card>
       </el-col>

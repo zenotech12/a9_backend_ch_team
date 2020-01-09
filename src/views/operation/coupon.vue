@@ -25,13 +25,13 @@
                 <el-table-column :label="$t('operation.couponType')">
                   <template  slot-scope="scope">
                     {{couponType[scope.row.type-1].name}}
-                    <template v-if="scope.row.type === 1">[{{scope.row.quantity_discount_value}}]</template>
-                    <template v-else-if="scope.row.type === 2">[{{scope.row.percentage_discount_value}}]</template>
+                    <template v-if="scope.row.type === 1">[{{scope.row.quantity_discount_value | price}}]</template>
+                    <template v-else-if="scope.row.type === 2">[{{scope.row.percentage_discount_value}}%]</template>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('operation.couponCond')">
                   <template  slot-scope="scope">
-                    {{$t('operation.couponCondA') + scope.row.threshold + $t('operation.couponCondB')}}
+                    {{$t('operation.couponCondA')}} {{scope.row.threshold | price}} {{$t('operation.couponCondB')}}
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('operation.rangeType')">
@@ -84,7 +84,7 @@
               </el-select>
             </el-form-item>
             <el-form-item v-if="form.type === 1" :label="$t('operation.couponMoney')">
-              <el-input v-model.number="form.quantity_discount_value"></el-input>
+              <price-input v-model="form.quantity_discount_value"></price-input>
             </el-form-item>
             <el-form-item v-else-if="form.type === 2" :label="$t('operation.couponDiscount')">
               <el-input v-model.number="form.percentage_discount_value">
@@ -95,10 +95,10 @@
               <goods-selector :mulit="true"  v-model="form.exchange_goods_ids"></goods-selector>
             </el-form-item>
             <el-form-item :label="$t('operation.couponCond')">
-              <el-input v-model.number="form.threshold">
-                <template slot="prepend">{{$t('operation.couponCondA')}}</template>
+              <price-input v-model="form.threshold">
+                <template slot="prepend">{{$t('operation.couponCondA')}}$</template>
                 <template slot="append">{{$t('operation.couponCondB')}}</template>
-              </el-input>
+              </price-input>
             </el-form-item>
             <el-form-item :label="$t('operation.rangeType')">
               <el-select v-model="form.range_type" :placeholder="$t('tools.pleaseSelect')">
@@ -261,14 +261,15 @@
       setForm(data) {
         if (data) {
           this.grantTime = [data.grant_bt, data.grant_et]
-          data.goods_spu_ids = data.goods_spu_ids ? JSON.stringify(data.goods_spu_ids) : ''
-          data.exchange_goods_ids = data.exchange_goods_ids ? JSON.stringify(data.exchange_goods_ids) : ''
-          if (data.valid_day_count > 0) {
+          const temp = JSON.parse(JSON.stringify(data))
+          temp.goods_spu_ids = temp.goods_spu_ids ? JSON.stringify(temp.goods_spu_ids) : ''
+          temp.exchange_goods_ids = temp.exchange_goods_ids ? (Array.isArray(temp.exchange_goods_ids) ? JSON.stringify(temp.exchange_goods_ids) : temp.exchange_goods_ids) : ''
+          if (temp.valid_day_count > 0) {
             this.validType = true
           } else {
             this.validTime = [data.bt, data.et]
           }
-          return data
+          return temp
         } else {
           this.grantTime = []
           this.validTime = []

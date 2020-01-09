@@ -25,7 +25,7 @@
                 <el-table-column prop="name" :label="$t('operation.name')"></el-table-column>
                 <el-table-column  :label="$t('operation.totalMoney')">
                   <template  slot-scope="scope">
-                    {{scope.row.used_money + '/' + scope.row.total_money}}
+                    {{scope.row.used_money | price}} /  {{scope.row.total_money | price}}
                   </template>
                 </el-table-column>
                 <el-table-column  :label="$t('operation.totalCount')">
@@ -84,7 +84,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item :label="$t('operation.totalMoney')">
-              <el-input v-model.number="form.total_money"></el-input>
+              <price-input v-model="form.total_money"></price-input>
             </el-form-item>
             <el-form-item :label="$t('operation.totalNum')">
               <el-input v-model.number="form.total_count"></el-input>

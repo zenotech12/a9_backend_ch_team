@@ -112,7 +112,8 @@
                   </el-table-column>
                   <el-table-column :label="$t('goods.price')">
                     <template  slot-scope="scope">
-                      {{scope.row.min_price + (scope.row.min_price === scope.row.max_price ? '': ('/' + scope.row.max_price))}}
+                      <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
+                      <span v-else>{{scope.row.min_price | price}}</span>
                     </template>
                   </el-table-column>
                   <el-table-column prop="inventory"  :label="$t('goods.inventory')">
@@ -213,7 +214,8 @@
                       </el-table-column>
                       <el-table-column :label="$t('goods.price')">
                         <template  slot-scope="scope">
-                          <el-input v-model.number="scope.row.price"></el-input>
+                          <price-input v-model="scope.row.price"></price-input>
+                          <!--<el-input v-model.number="scope.row.price"></el-input>-->
                         </template>
                       </el-table-column>
                       <el-table-column :label="$t('goods.goodsPic')">

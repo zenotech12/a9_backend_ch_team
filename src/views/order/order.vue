@@ -56,7 +56,7 @@
                         <p>
                           <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                        <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price | price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                       </div>
                       <div class="clear"></div>
                     </div>
@@ -64,7 +64,7 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.price')" width="130">
                   <template slot-scope="scope" >
-                    <span :title="$t('order.price1') + '+' + $t('order.price2')"> {{scope.row.pay_price}}；{{scope.row.goods_price}} + {{scope.row.postage}}</span>
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')"> {{scope.row.pay_price | price}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.address')" style="text-align: left">
@@ -128,13 +128,13 @@
                   <p>
                     <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
                   </p>
-                  <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                  <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price | price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                 </div>
                 <div class="clear"></div>
               </div>
             </el-form-item>
             <el-form-item :label="$t('order.price')">
-              {{expressOrder.pay_price}}（{{$t('order.price1') + '：' + expressOrder.goods_price}}；{{$t('order.price2') + '：' + expressOrder.postage}}）
+              {{expressOrder.pay_price | price}}（{{$t('order.price1') + '：' }}{{expressOrder.goods_price | price}}；{{$t('order.price2') + '：'}}{{expressOrder.postage | price}}）
             </el-form-item>
             <el-form-item :label="$t('order.address')">
               {{expressOrder.shipping_address.address.province + expressOrder.shipping_address.address.city + expressOrder.shipping_address.address.district}}&nbsp;{{expressOrder.shipping_address.address.addr}}
@@ -160,7 +160,7 @@
             </el-form-item>
             <template v-if="optType === 2">
               <el-form-item :label="$t('order.price4')" >
-                <el-input v-model="payPrice" clearable :placeholder="$t('order.price4')" style="width: 200px"></el-input><span style="color: #8c939d">{{$t('order.price4Tip')}}</span>
+                <price-input v-model="payPrice" :placeholder="$t('order.price4')" style="width: 200px"></price-input> <span style="color: #8c939d">{{$t('order.price4Tip')}}</span>
               </el-form-item>
               <el-form-item :label="$t('order.price4Note')" >
                 <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.price4Note')"></el-input>

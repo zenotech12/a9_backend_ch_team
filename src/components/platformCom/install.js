@@ -10,6 +10,7 @@ import ConfirmButton from './ConfirmButton'
 import photosList from './photosList'
 import filterFile from './filterFile'
 import imageUpload from './imageUpload'
+import priceInput from './priceInput'
 
 // 形成组件库
 const components = [
@@ -21,7 +22,8 @@ const components = [
   ConfirmButton,
   photosList,
   filterFile,
-  imageUpload
+  imageUpload,
+  priceInput
 ]
 
 // 注册全局组件

@@ -44,5 +44,6 @@ export default {
   linkType3: '地址',
   qullEditorTip1: '请选择您要插入链接的对象',
   qullEditorTip2: '上传视频只能是 MP4 格式!',
-  qullEditorTip3: '上传视频大小不能超过20MB!'
+  qullEditorTip3: '上传视频大小不能超过20MB!',
+  priceTip: '请正确输入价格，保留小数点后2位'
 }

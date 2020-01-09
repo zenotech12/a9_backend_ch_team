@@ -61,7 +61,7 @@
                         <p>
                           <span v-for="(v,k) in scope.row.sku_goods_item.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p><span>{{$t('order.price3')}}：</span>{{scope.row.sku_goods_item.price}}；<span>{{$t('order.number')}}：</span>{{scope.row.sku_goods_item.count}}</p>
+                        <p><span>{{$t('order.price3')}}：</span>{{scope.row.sku_goods_item.price | price}}；<span>{{$t('order.number')}}：</span>{{scope.row.sku_goods_item.count}}</p>
                       </div>
                     </div>
                   </template>

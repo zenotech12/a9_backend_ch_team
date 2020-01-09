@@ -6,12 +6,12 @@
         <el-row>
           <el-col :span ="24">
             <el-card shadow="always" class="balance-info">
-              <span>{{$t('finance.balance')}}：<font>{{balanceDetail.balance}}</font></span>
-              <span>{{$t('finance.balance1')}}：<font>{{balanceDetail.can_withdraw_balance}}</font></span>
-              <span>{{$t('finance.totalIncome')}}：<font>{{balanceDetail.accumulated_income}}</font></span>
-              <span>{{$t('finance.toBeIncome')}}：<font>{{balanceDetail.to_be_income}}</font></span>
-              <span>{{$t('finance.tixianing')}}：<font>{{balanceDetail.withdrawing}}</font></span>
-              <span>{{$t('finance.tixianed')}}：<font>{{balanceDetail.withdrawed}}</font></span>
+              <span>{{$t('finance.balance')}}：<font>{{balanceDetail.balance | price}}</font></span>
+              <span>{{$t('finance.balance1')}}：<font>{{balanceDetail.can_withdraw_balance | price}}</font></span>
+              <span>{{$t('finance.totalIncome')}}：<font>{{balanceDetail.accumulated_income | price}}</font></span>
+              <span>{{$t('finance.toBeIncome')}}：<font>{{balanceDetail.to_be_income | price}}</font></span>
+              <span>{{$t('finance.tixianing')}}：<font>{{balanceDetail.withdrawing | price}}</font></span>
+              <span>{{$t('finance.tixianed')}}：<font>{{balanceDetail.withdrawed | price}}</font></span>
               <el-button type="primary" size="mini" icon="el-icon-money" @click="addData" class="tx">提现</el-button>
             </el-card>
           </el-col>
@@ -20,7 +20,10 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 200px)">
               <el-table stripe border :data="tableData" height="calc(100% - 50px)">
-                <el-table-column prop="money"  :label="$t('finance.tixianMoney')">
+                <el-table-column :label="$t('finance.tixianMoney')">
+                  <template  slot-scope="scope">
+                    {{scope.row.money | price}}
+                  </template>
                 </el-table-column>
                 <el-table-column   :label="$t('finance.txStatus')">
                   <template  slot-scope="scope">
@@ -42,12 +45,12 @@
           </el-col>
         </el-row>
         <el-dialog :title="$t('finance.tixian')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px" :model="form">
-            <el-form-item :label="$t('finance.balance')">
-              <el-input readonly :value="balanceDetail.can_withdraw_balance"></el-input>
+          <el-form label-width="100px">
+            <el-form-item :label="$t('finance.balance1')">
+              <span style="color: #f00; font-size: 20px">{{balanceDetail.can_withdraw_balance | price}}</span>
             </el-form-item>
             <el-form-item :label="$t('finance.tixianMoney')">
-              <el-input v-model.number="tixianMoney"></el-input>
+              <price-input v-model="tixianMoney"></price-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -103,6 +106,7 @@
           this.submitDisabled = false
           this.getBalanceDetail()
           this.getDataListFun()
+          this.formEditDialog = false
         }).catch(() => {
           this.submitDisabled = false
         })

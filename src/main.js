@@ -22,13 +22,13 @@ import '@/assets/css/override-element-ui.scss'
 import { imgGetUrl } from '@/utils/serverConfig'
 import echarts from 'echarts'
 import moment from 'moment'
+import * as filters from './utils/filers'
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
 Vue.prototype.$moment = moment
 
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
-
 Vue.config.productionTip = false
 
 Vue.mixin({
@@ -45,6 +45,10 @@ Vue.mixin({
       return imgUrl
     }
   }
+})
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
 })
 
 new Vue({

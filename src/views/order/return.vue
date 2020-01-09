@@ -59,7 +59,7 @@
                         <p>
                           <span v-for="(v,k) in scope.row.goods_item.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p>{{scope.row.goods_item.price}}X {{scope.row.goods_item.count}}</p>
+                        <p>{{scope.row.goods_item.price | price}}X {{scope.row.goods_item.count}}</p>
                       </div>
                       <div class="clear"></div>
                     </div>
