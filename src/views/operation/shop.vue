@@ -6,7 +6,17 @@
         <el-row>
           <el-col :span="24">
             <div class="page-form">
-              <el-form label-width="100px">
+              <el-form label-width="100px" v-model="shopForm">
+                <el-form-item :label="$t('operation.shopPublish')">
+                  <el-switch
+                    v-model="shopForm.published"
+                    :active-text="$t('operation.shopPublish1')"
+                    :inactive-text="$t('operation.shopPublish2')">
+                  </el-switch>
+                </el-form-item>
+                <el-form-item :label="$t('operation.shopDesc')">
+                  <el-input  v-model="shopForm.name"></el-input>
+                </el-form-item>
                 <el-form-item :label="$t('operation.shopLogo')">
                   <image-upload :drag="false" @uploadSuccess="imageUploadSuccess">
                     <img v-if="shopForm.avatar" :src="getImageUrl(shopForm.avatar)" class="shop-logo">
@@ -38,6 +48,8 @@
     data() {
       return {
         shopForm: {
+          published: false,
+          name: '',
           desc: '',
           avatar: ''
         },
@@ -53,8 +65,11 @@
     },
     methods: {
       getShopInfo() {
+        this.shopForm.published = this.shopInfo.published ? this.shopInfo.published : false
+        this.shopForm.name = this.shopInfo.name
         this.shopForm.desc = this.shopInfo.desc
         this.shopForm.avatar = this.shopInfo.avatar
+        console.log(this.shopForm)
       },
       saveInfo() {
         this.disabled = true

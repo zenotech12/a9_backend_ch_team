@@ -2,6 +2,10 @@
 export default {
   shopLogo: '店铺图标',
   shopDesc: '店铺简介',
+  shopName: '店铺名',
+  shopPublish: '发布',
+  shopPublish1: '已发布',
+  shopPublish2: '未发布',
   position: '显示位置',
   positionA: '顶部推荐',
   positionB: '首页商品展示',
