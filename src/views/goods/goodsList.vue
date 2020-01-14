@@ -89,16 +89,25 @@
             </el-row>
             <el-row>
               <el-col :span="24" style="height: calc(100vh - 242px)">
-                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 42px)" style="width: 100%">
-                  <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
-                  <el-table-column :label="$t('goods.checkStatus')">
+                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 42px)" style="width: 100%;">
+                  <el-table-column  :label="$t('goods.name')" min-width="300">
+                    <template  slot-scope="scope">
+                      <div class="goods-item">
+                        <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
+                        <div class="g-info">
+                          <p>{{scope.row.name}}</p>
+                        </div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('goods.checkStatus')" width="110">
                     <template  slot-scope="scope">
                       <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
                         {{scope.row.approve_status === 2 ? $t('goods.checkStatusB') : (scope.row.approve_status === 3 ?  $t('goods.checkStatusC') :  $t('goods.checkStatusA') )}}
                       </el-tag>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('goods.putaway')">
+                  <el-table-column :label="$t('goods.putaway')" width="90">
                     <template  slot-scope="scope">
                       <el-tooltip v-if="scope.row.approve_status === 2" class="item" effect="dark" :content="$t('goods.putawayTip')" placement="top">
                         <el-tag @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
@@ -110,15 +119,17 @@
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('goods.price')">
+                  <el-table-column :label="$t('goods.price')" width="120">
                     <template  slot-scope="scope">
                       <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
                       <span v-else>{{scope.row.min_price | price}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="inventory"  :label="$t('goods.inventory')">
+                  <el-table-column prop="inventory" width="75"  :label="$t('goods.inventory')">
                   </el-table-column>
-                  <el-table-column :label="$t('tools.opt')" width = "230">
+                  <el-table-column prop="sales" width="75"  :label="$t('goods.saled')">
+                  </el-table-column>
+                  <el-table-column :label="$t('tools.opt')" width = "190" fixed="right">
                     <template slot-scope="scope">
                       <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                       <span class="xiexian">/</span>
@@ -897,6 +908,26 @@
         position: absolute;
         top: 0px;
         right: 0px;
+      }
+    }
+  }
+  .goods-item{
+    .image{
+      float: left !important;
+      margin-right: 5px !important;
+    }
+    .g-info{
+      padding-left: 65px;
+      text-align: left;
+      p{
+        margin: 0px;
+        padding: 3px 0px;
+        span{
+          color: #8c939d;
+          font{
+            color: #606266;
+          }
+        }
       }
     }
   }

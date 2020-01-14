@@ -14,6 +14,7 @@ export default {
   putawayTip: '点击可直接修改上下架架状态',
   price: '价格',
   inventory: '库存',
+  saled: '已售',
   piEdit: '库存及价格',
   typeEdit: '商品分类编辑',
   parentType: '父分类',

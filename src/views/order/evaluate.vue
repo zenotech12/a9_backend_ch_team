@@ -29,13 +29,13 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column :label="$t('order.user')" align="left" width="120">
+                <el-table-column :label="$t('order.user')" align="left" width="120" fixed="left">
                   <template slot-scope="scope">
                     {{scope.row.user_nick_name}}<br/>
                     {{scope.row.user_mobile}}<br/>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.comment')">
+                <el-table-column :label="$t('order.comment')" min-width="400">
                   <template slot-scope="scope">
                     {{scope.row.content}}
                     <div>
@@ -52,7 +52,7 @@
                     <div class="rate-item"><span>{{$t('order.star3')}}</span><el-rate class="rate" :value="scope.row.express_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
                   </template>
                 </el-table-column>
-                <el-table-column  :label="$t('order.goods')">
+                <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
                     <div class="goods-item">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(scope.row.sku_goods_item.sku_img)"  fit="cover"></el-image>
@@ -70,7 +70,7 @@
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('order.evaluateTime')" width="160">
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "70">
+                <el-table-column :label="$t('tools.opt')" width = "70" fixed="right">
                   <template slot-scope="scope">
                     <el-badge :value="scope.row.replies.length" class="item" style="margin: 10px 0px !important;">
                       <el-button type="text" @click="showReplyEditor(scope.row)" size="small">{{$t('order.reply')}}</el-button>

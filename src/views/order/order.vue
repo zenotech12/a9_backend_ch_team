@@ -40,14 +40,14 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('order.no')" width="200px"></el-table-column>
+                <el-table-column prop="no" :label="$t('order.no')" width="200px" fixed="left"></el-table-column>
                 <el-table-column :label="$t('order.user')" width="130">
                   <template slot-scope="scope">
                     <div class="ui">{{scope.row.user_nick_name}}</div>
                     <div class="ui">{{scope.row.user_mobile}}</div>
                   </template>
                 </el-table-column>
-                <el-table-column  :label="$t('order.goods')">
+                <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
                     <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
@@ -67,7 +67,7 @@
                     <span :title="$t('order.price1') + '+' + $t('order.price2')"> {{scope.row.pay_price | price}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.address')" style="text-align: left">
+                <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
                   <template slot-scope="scope" >
                     <div class="ui"><span>{{$t('order.expressAddr')}}：</span>{{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}{{scope.row.shipping_address.address.addr}}</div>
                     <div class="ui"><span>{{$t('order.expressUser')}}：</span>{{scope.row.shipping_address.contacter_name}}&nbsp;&nbsp;{{scope.row.shipping_address.mobile}}</div>
@@ -94,7 +94,7 @@
                     </el-popover>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "60">
+                <el-table-column :label="$t('tools.opt')" width = "60" fixed="right">
                   <template slot-scope="scope">
                       <el-button v-if="scope.row.status === 4 || scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">{{$t('order.express')}}</el-button>
                       <el-button v-else-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">{{$t('order.modifyPrice')}}</el-button>
@@ -325,6 +325,7 @@
     }
     .g-info{
       text-align: left;
+      padding-left: 110px;
       p{
         margin: 0px;
         padding: 3px 0px;
