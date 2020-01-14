@@ -1,6 +1,6 @@
 // 登录管理
 export default {
-  type: '商品分类',
+  type: '店铺分类',
   addType: '创建分类',
   checkSelectorHolder: '请选择审批状态',
   displaySelectorHolder: '请选择上架状态',

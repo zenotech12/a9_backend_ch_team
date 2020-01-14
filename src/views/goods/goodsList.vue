@@ -171,7 +171,7 @@
                     <el-input v-model="goodsData.name" auto-complete="off" clearable></el-input>
                   </el-form-item>
                   <el-form-item :label="$t('goods.type')">
-                    <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp" @change="goodsTypeChange"></el-cascader>
+                    <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
                   </el-form-item>
                   <el-form-item :label="$t('goods.goodsPic')">
                     <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
@@ -291,6 +291,7 @@
         FormVisible: false,
         typeProps: { value: 'id', label: 'name', children: 'items', checkStrictly: true },
         typeProp: { value: 'id', label: 'name', children: 'items' },
+        typeProp2: { value: 'id', label: 'name', children: 'items', multiple: true },
         defaultProps: {
           children: 'items',
           label: 'name'
@@ -367,7 +368,7 @@
           id: '',
           default_type_id: '',
           fields: {},
-          merchant_type_id: '',
+          merchant_type_ids: '',
           name: '',
           images: [],
           desc: ''
@@ -539,10 +540,11 @@
         // console.log(data)
       },
       goodsTypeChange(data) {
-        if (data.length < 1) {
-          this.goodsData.merchant_type_id = ''
-        } else {
-          this.goodsData.merchant_type_id = data[data.length - 1]
+        this.goodsData.merchant_type_ids = []
+        if (data.length > 0) {
+          data.forEach(item => {
+            this.goodsData.merchant_type_ids.push(item[item.length - 1])
+          })
         }
       },
       renderContent(h, { node, data, store }) {
@@ -700,14 +702,17 @@
           })
 
           this.goodsTypes = []
-          getPathById(data.merchant_type_id, this.typeData, (res) => {
-            this.goodsTypes = res
+          data.merchant_type_ids && data.merchant_type_ids.forEach(item => {
+            getPathById(item, this.typeData, (res) => {
+              this.goodsTypes.push(res)
+            })
           })
+
           this.goodsData = {
             id: data.id,
             default_type_id: data.default_type_id,
             fields: fieldsData,
-            merchant_type_id: data.merchant_type_id,
+            merchant_type_ids: data.merchant_type_ids,
             name: data.name,
             images: data.images,
             desc: data.desc
@@ -723,7 +728,7 @@
             id: '',
             default_type_id: '',
             fields: {},
-            merchant_type_id: '',
+            merchant_type_ids: [],
             name: '',
             images: [],
             desc: ''
@@ -765,7 +770,7 @@
         this.goodsData.desc = data
       },
       updateGoodsFunc() {
-        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_id: this.goodsData.merchant_type_id, name: this.goodsData.name, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
+        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
         const filedItem = {}
         for (const key in this.goodsData.fields) {
           if (Array.isArray(this.goodsData.fields[key])) {
