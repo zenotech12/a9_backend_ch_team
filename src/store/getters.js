@@ -11,6 +11,8 @@ const getters = {
   addRouters: state => state.permission.addRouters,
   authority: state => state.user.authority,
   shopInfo: state => state.user.shopInfo,
+  imInfo: state => state.user.imInfo,
+  // nim: state => state.im.nim,
   visitedViews: state => state.tagsView.visitedViews
 }
 export default getters

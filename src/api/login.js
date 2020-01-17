@@ -30,3 +30,10 @@ export function adminCode(data) {
     data: data
   })
 }
+
+export function imInfo() {
+  return request({
+    url: 'im-info',
+    method: 'get'
+  })
+}

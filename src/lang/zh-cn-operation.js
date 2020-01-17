@@ -73,5 +73,15 @@ export default {
   triggersCLableB: '位新用户可领取',
   useLimit: '使用限制',
   useLimitA: '无限制',
-  useLimitB: '本店可用'
+  useLimitB: '本店可用',
+  pbTime: '秒杀时段',
+  pbGoods: '秒杀商品',
+  pbSkus: '价格以及库存',
+  pbEdit: '秒杀商品设置',
+  pbSelected: '是否参与',
+  pbPirce: '秒杀价/当前价',
+  pbCount: '秒杀数量',
+  pbCount1: '已售数量/秒杀数量',
+  pbTip: '请正确设置参与秒杀的商品以及价格',
+  pbGoods1: '参与秒杀的商品规格、价格以及数量'
 }

@@ -37,9 +37,11 @@ export default {
   operationMgr: '运营管理',
   adMgr: '广告管理',
   redEnvelope: '红包设置',
+  panicBuys: '秒杀',
   coupon: '优惠券',
   shopInfo: '店铺信息',
   financeMgr: '财务管理',
   financeList: '账户明细',
-  financeTixian: '提现记录'
+  financeTixian: '提现记录',
+  address: '地址管理'
 }

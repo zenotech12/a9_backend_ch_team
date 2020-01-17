@@ -1,4 +1,4 @@
-import { login } from '@/api/login'
+import { login, imInfo } from '@/api/login'
 import { version } from '@/utils/static'
 import { getToken, setToken, removeToken, setIdentity, removeIdentity, getIdentity, removeAuthority, getAuthority, setVersion } from '@/utils/auth'
 import { shopInfo } from '@/api/operation'
@@ -12,7 +12,8 @@ const user = {
     searchCondition: {
       goods: { key: '', code: '', skip: 0, currentPage: 1 }
     },
-    shopInfo: {}
+    shopInfo: {},
+    imInfo: {}
   },
 
   mutations: {
@@ -34,6 +35,9 @@ const user = {
     },
     SET_SHOP_INFO: (state, sp) => {
       state.shopInfo = sp
+    },
+    SET_IM_INFO: (state, info) => {
+      state.imInfo = info
     }
   },
 
@@ -83,6 +87,17 @@ const user = {
         shopInfo().then(response => {
           const data = response
           commit('SET_SHOP_INFO', data.item)
+          resolve(data.item)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    GetIMInfo({ commit }) {
+      return new Promise((resolve, reject) => {
+        imInfo().then(response => {
+          const data = response
+          commit('SET_IM_INFO', data.item)
           resolve(data.item)
         }).catch(error => {
           reject(error)

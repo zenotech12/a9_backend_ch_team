@@ -76,3 +76,36 @@ export function postagesDel(id) {
   })
 }
 
+// 收货地址.查.列表
+export function shippingAddressesList() {
+  return request({
+    url: 'shipping-addresses',
+    method: 'get'
+  })
+}
+
+// 收货地址.删
+export function shippingAddressesDel(id) {
+  return request({
+    url: 'shipping-addresses/' + id,
+    method: 'delete'
+  })
+}
+
+// 收货地址.增
+export function shippingAddressesAdd(data) {
+  return request({
+    url: 'shipping-addresses',
+    method: 'post',
+    data: data
+  })
+}
+
+// 收货地址.改
+export function shippingAddressesModify(id, data) {
+  return request({
+    url: 'shipping-addresses/' + id,
+    method: 'put',
+    data: data
+  })
+}

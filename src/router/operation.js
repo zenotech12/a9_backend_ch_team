@@ -21,6 +21,11 @@ const order = [{
     meta: { title: 'redEnvelope', icon: 'list' },
     component: () => import('@/views/operation/redEnvelope')
   }, {
+    path: 'panic-buys',
+    name: 'panicBuys',
+    meta: { title: 'panicBuys', icon: 'list' },
+    component: () => import('@/views/operation/panicbuys')
+  }, {
     path: 'shop',
     name: 'shopInfo',
     meta: { title: 'shopInfo', icon: 'list' },

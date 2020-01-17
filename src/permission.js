@@ -18,6 +18,9 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
+      if (!store.getters.imInfo.accid) {
+        store.dispatch('GetIMInfo')
+      }
       if (store.getters.shopInfo === null || !store.getters.shopInfo.id) {
         store.dispatch('GetShopInfo').then(sInfo => {
           store.dispatch('setRouter', router.options.routes).then(() => {

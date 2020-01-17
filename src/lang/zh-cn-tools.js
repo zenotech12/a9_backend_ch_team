@@ -7,6 +7,9 @@ export default {
   confirm: '确定',
   close: '关闭',
   cancel: '取消',
+  agree: '同意',
+  refuse: '拒绝',
+  detail: '详情',
   opt: '操作',
   prompt: '提示',
   search: '查询',
@@ -45,5 +48,7 @@ export default {
   qullEditorTip1: '请选择您要插入链接的对象',
   qullEditorTip2: '上传视频只能是 MP4 格式!',
   qullEditorTip3: '上传视频大小不能超过20MB!',
-  priceTip: '请正确输入价格，保留小数点后2位'
+  priceTip: '请正确输入价格，保留小数点后2位',
+  yes: '是',
+  no: '否'
 }

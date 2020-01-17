@@ -14,6 +14,7 @@ const createLintingRule = () => ({
   loader: 'eslint-loader',
   enforce: 'pre',
   include: [resolve('src'), resolve('test')],
+  exclude: resolve('src/imsdk'),
   options: {
     formatter: require('eslint-friendly-formatter'),
     emitWarning: !config.dev.showEslintErrorsInOverlay
@@ -62,6 +63,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        exclude: resolve('src/imsdk'),
         include: [resolve('src'), resolve('test') ,resolve('node_modules/webpack-dev-server/client')]
       },
       {

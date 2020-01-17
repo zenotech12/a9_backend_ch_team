@@ -155,3 +155,45 @@ export function shopStat(data) {
   })
 }
 
+// 秒杀.增
+export function panicBuysAdd(data) {
+  return request({
+    url: 'panic-buys',
+    method: 'post',
+    data: data
+  })
+}
+
+// 秒杀.查.列表
+export function panicBuysList(data) {
+  return request({
+    url: 'panic-buys',
+    method: 'get',
+    params: data
+  })
+}
+
+// 秒杀.删
+export function panicBuysDelete(id) {
+  return request({
+    url: 'panic-buys/' + id,
+    method: 'delete'
+  })
+}
+
+// 秒杀.查.个
+export function panicBuysInfo(id) {
+  return request({
+    url: 'panic-buys/' + id,
+    method: 'get'
+  })
+}
+
+// 秒杀.改
+export function panicBuysModify(id, data) {
+  return request({
+    url: 'panic-buys/' + id,
+    method: 'put',
+    data: data
+  })
+}

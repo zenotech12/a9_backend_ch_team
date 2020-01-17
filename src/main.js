@@ -13,7 +13,6 @@ import router from './router'
 import store from './store'
 import 'jquery'
 import VCharts from 'v-charts'
-
 import i18n from './utils/i18n'
 import '@/icons' // icon
 import '@/permission' // permission control
