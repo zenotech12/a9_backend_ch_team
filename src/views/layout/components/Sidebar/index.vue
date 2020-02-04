@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       toggle: true,
-      imgPng: require('../../../../assets/images/dl/mvisionLogo.png'),
+      imgPng: require('../../../../assets/images/dl/logo.png'),
       opened: !+Cookies.get('sidebarStatus')
     }
   },
@@ -132,7 +132,11 @@ export default {
     background:#6f7a89;
   }
 
+
+
+
   .mini-guide {
+
     width: 60px;
     height: 60px;
     margin: 0px 10px;
