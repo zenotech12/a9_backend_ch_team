@@ -11,6 +11,11 @@ const goods = [{
     name: 'goodsList',
     meta: { title: 'goodsList', icon: 'list' },
     component: () => import('@/views/goods/goodsList')
+  }, {
+    path: 'share',
+    name: 'shareGoods',
+    meta: { title: 'shareGoods', icon: 'list' },
+    component: () => import('@/views/goods/shareGoods')
   }]
 }]
 export default goods

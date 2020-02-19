@@ -39,5 +39,12 @@ export default {
   spec: '规格名',
   spec1: '+规格',
   prop: '属性名',
-  prop1: '+属性'
+  prop1: '+属性',
+  shareTip: '您不具有分销权限，如需开通请咨询管理员',
+  commissionPercent: '佣金比例（‰）',
+  commissionMoney: '佣金（$）',
+  shareSet: '设置分销商品',
+  shareGoods: '分销商品',
+  shareAll: '所有已上架商品',
+  goodsSelect: '商品选择'
 }

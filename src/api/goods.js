@@ -137,3 +137,12 @@ export function spusSkusDel(goodsId, skusId, data) {
     method: 'delete'
   })
 }
+
+// 分销.添加/取消分销商品
+export function spuDistribution(data) {
+  return request({
+    url: 'distribution/brokerage',
+    method: 'put',
+    data: data
+  })
+}

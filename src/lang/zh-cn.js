@@ -29,6 +29,7 @@ export default {
   robotMgr: '客服机器人',
   goodsMgr: '商品管理',
   goodsList: '商品列表',
+  shareGoods: '分销商品',
   postageRule: '邮费规则',
   orderMgr: '订单管理',
   orderList: '订单列表',

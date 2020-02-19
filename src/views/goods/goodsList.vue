@@ -83,7 +83,7 @@
               </el-col>
               <el-col :span="4" style="text-align: right;padding: 10px 15px">
                 <div class="boxFuncBtn">
-                  <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsEditor(null, 1)">添加</el-button>
+                  <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsEditor(null, 1)">{{$t('gools.add')}}</el-button>
                 </div>
               </el-col>
             </el-row>

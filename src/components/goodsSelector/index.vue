@@ -16,7 +16,7 @@
               <el-cascader :options="typeData" v-model="selectTypes" :props="typeProp" clearable></el-cascader>
             </el-form-item>
             <el-form-item style="width: 150px">
-              <el-select v-model="searchForm.approve_status" @change="search" placeholder="请选择审批状态">
+              <el-select v-model="searchForm.approve_status" :disabled="approveDisable" @change="search" placeholder="请选择审批状态">
                 <el-option
                   v-for="item in approveStatus"
                   :key="item.value"
@@ -26,7 +26,7 @@
               </el-select>
             </el-form-item>
             <el-form-item style="width: 150px">
-              <el-select v-model="searchForm.shelf_status" @change="search" placeholder="请选择上架状态">
+              <el-select v-model="searchForm.shelf_status" :disabled="shelfDisable" @change="search" placeholder="请选择上架状态">
                 <el-option
                   v-for="item in shelfStatus"
                   :key="item.value"
@@ -112,8 +112,11 @@
           limit: 10,
           approve_status: 0, // 审批状态 0所有 1待审批 2审批成功 3拒绝
           type_id: '',
-          shelf_status: 0 // 上架状态 所有0 未上架1 上架2
+          shelf_status: 0, // 上架状态 所有0 未上架1 上架2
+          distribution: 0 // 0所有 1不参与分销 2参与分销
         },
+        approveDisable: false,
+        shelfDisable: false,
         approveStatus: [
           {
             value: 0,
@@ -169,6 +172,24 @@
         default() {
           return false
         }
+      },
+      approve_status: {
+        type: Number,
+        default() {
+          return 0
+        }
+      },
+      shelf_status: {
+        type: Number,
+        default() {
+          return 0
+        }
+      },
+      distribution: {
+        type: Number,
+        default() {
+          return 0
+        }
       }
     },
     created() {
@@ -218,6 +239,30 @@
             this.selectedGoods = []
             this.selectedGoodsIds = []
           }
+        },
+        immediate: true
+      },
+      approve_status: {
+        handler(val) {
+          this.searchForm.approve_status = val
+          if (val > 0) {
+            this.approveDisable = true
+          }
+        },
+        immediate: true
+      },
+      shelf_status: {
+        handler(val) {
+          this.searchForm.shelf_status = val
+          if (val > 0) {
+            this.shelfDisable = true
+          }
+        },
+        immediate: true
+      },
+      distribution: {
+        handler(val) {
+          this.searchForm.distribution = val
         },
         immediate: true
       }
