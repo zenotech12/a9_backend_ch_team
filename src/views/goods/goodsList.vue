@@ -83,7 +83,7 @@
               </el-col>
               <el-col :span="4" style="text-align: right;padding: 10px 15px">
                 <div class="boxFuncBtn">
-                  <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsEditor(null, 1)">{{$t('gools.add')}}</el-button>
+                  <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsEditor(null, 1)">{{$t('tools.add')}}</el-button>
                 </div>
               </el-col>
             </el-row>
@@ -95,7 +95,7 @@
                       <div class="goods-item">
                         <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
                         <div class="g-info">
-                          <p>{{scope.row.name}}</p>
+                          <p>{{scope.row.name}}<el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag></p>
                         </div>
                       </div>
                     </template>
@@ -184,6 +184,31 @@
                   <el-form-item :label="$t('goods.type')">
                     <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
                   </el-form-item>
+                  <el-form-item :label="$t('goods.cobuy')">
+                    <el-col :span="4">
+                      <el-checkbox v-model="goodsData.type" :true-label="2" :false-label="1">开启</el-checkbox>
+                    </el-col>
+                    <template v-if="goodsData.type===2">
+                      <el-col :span="8">
+                      <el-input v-model.number="goodsData.cobuy_person_count">
+                        <template slot="prepend">{{$t('goods.cobuyuser')}}</template>
+                      </el-input>
+                      </el-col>
+                      <el-col :span="1"></el-col>
+                      <el-col :span="8">
+                        {{$t('goods.cobuysec')}}
+                        <el-select style="width: 100px" v-model="goodsData.cobuy_group_valid_sec">
+                          <el-option
+                            v-for="item in secondArr"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                        {{$t('goods.hour')}}
+                      </el-col>
+                    </template>
+                  </el-form-item>
                   <el-form-item :label="$t('goods.goodsPic')">
                     <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
                       <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
@@ -226,6 +251,12 @@
                       <el-table-column :label="$t('goods.price')">
                         <template  slot-scope="scope">
                           <price-input v-model="scope.row.price"></price-input>
+                          <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                        </template>
+                      </el-table-column>
+                      <el-table-column v-if="goodsData.type == 2" :label="$t('goods.cobuyPrice')">
+                        <template  slot-scope="scope">
+                          <price-input v-model="scope.row.cobuy_price"></price-input>
                           <!--<el-input v-model.number="scope.row.price"></el-input>-->
                         </template>
                       </el-table-column>
@@ -307,6 +338,7 @@
           children: 'items',
           label: 'name'
         },
+        secondArr: [{ label: 0.5, value: 1800 }, { label: 1, value: 3600 }, { label: 2, value: 7200 }, { label: 5, value: 18000 }],
         editTitle: '发布资源',
         disabled: false,
         promptInfor: '确定删除当前资源？',
@@ -432,7 +464,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { specifications: item, price: 0, inventory: 0, images: [] }
+            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [] }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -452,6 +484,7 @@
               if (isEque) {
                 tableItem.inventory = this.goodsInventoryData[i].inventory
                 tableItem.price = this.goodsInventoryData[i].price
+                tableItem.cobuy_price = this.goodsInventoryData[i].cobuy_price ? this.goodsInventoryData[i].cobuy_price : 0
                 tableItem.images = this.goodsInventoryData[i].images
               }
             }
@@ -725,6 +758,9 @@
             fields: fieldsData,
             merchant_type_ids: data.merchant_type_ids,
             name: data.name,
+            type: data.type,
+            cobuy_person_count: data.cobuy ? data.cobuy.person_count : 0,
+            cobuy_group_valid_sec: data.cobuy ? data.cobuy.cobuy_group_valid_sec : 0,
             images: data.images,
             desc: data.desc
           }
@@ -741,6 +777,9 @@
             fields: {},
             merchant_type_ids: [],
             name: '',
+            type: 1,
+            cobuy_person_count: 0,
+            cobuy_group_valid_sec: 0,
             images: [],
             desc: ''
           }
@@ -770,6 +809,19 @@
         } else if (opt === 1 && this.goodsEditStep === 3) {
           this.updateGoodsFunc()
         } else {
+          if (this.goodsEditStep === 2) {
+            console.log(this.goodsData)
+            if (this.goodsData.type === 2) {
+              if (!this.goodsData.cobuy_person_count || this.goodsData.cobuy_person_count < 2) {
+                this.$message.error(this.$t('goods.conbuytip1'))
+                return
+              }
+              if (!this.goodsData.cobuy_group_valid_sec || this.goodsData.cobuy_group_valid_sec < 1800) {
+                this.$message.error(this.$t('goods.conbuytip2'))
+                return
+              }
+            }
+          }
           opt === 1 ? this.goodsEditStep++ : this.goodsEditStep--
         }
       },
@@ -781,7 +833,8 @@
         this.goodsData.desc = data
       },
       updateGoodsFunc() {
-        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
+        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name,
+          type: this.goodsData.type, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
         const filedItem = {}
         for (const key in this.goodsData.fields) {
           if (Array.isArray(this.goodsData.fields[key])) {
