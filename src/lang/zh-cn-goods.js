@@ -19,6 +19,7 @@ export default {
   typeEdit: '商品分类编辑',
   parentType: '父分类',
   name: '名称',
+  intro: '简介',
   cobuy: '团购',
   cobuyPrice: '团购价',
   cobuyuser: '拼团人数',

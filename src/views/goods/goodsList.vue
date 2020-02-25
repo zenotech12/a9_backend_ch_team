@@ -181,6 +181,9 @@
                   <el-form-item :label="$t('goods.name')">
                     <el-input v-model="goodsData.name" auto-complete="off" clearable></el-input>
                   </el-form-item>
+                  <el-form-item :label="$t('goods.intro')">
+                    <el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>
+                  </el-form-item>
                   <el-form-item :label="$t('goods.type')">
                     <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
                   </el-form-item>
@@ -758,6 +761,7 @@
             fields: fieldsData,
             merchant_type_ids: data.merchant_type_ids,
             name: data.name,
+            intro: data.intro,
             type: data.type,
             cobuy_person_count: data.cobuy ? data.cobuy.person_count : 0,
             cobuy_group_valid_sec: data.cobuy ? data.cobuy.cobuy_group_valid_sec : 0,
@@ -777,6 +781,7 @@
             fields: {},
             merchant_type_ids: [],
             name: '',
+            intro: '',
             type: 1,
             cobuy_person_count: 0,
             cobuy_group_valid_sec: 0,
@@ -833,7 +838,7 @@
         this.goodsData.desc = data
       },
       updateGoodsFunc() {
-        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name,
+        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, intro: this.goodsData.intro,
           type: this.goodsData.type, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
         const filedItem = {}
         for (const key in this.goodsData.fields) {
