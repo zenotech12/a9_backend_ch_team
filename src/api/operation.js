@@ -197,3 +197,12 @@ export function panicBuysModify(id, data) {
     data: data
   })
 }
+
+// 秒杀场次.查.列表
+export function panicBuysTimes(id, data) {
+  return request({
+    url: 'panic-buy-times',
+    method: 'get',
+    params: { skip: 0, limit: 24 }
+  })
+}

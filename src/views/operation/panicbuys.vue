@@ -5,12 +5,11 @@
       <div class="rightbox">
         <el-row>
           <el-col :span ="14">
-            <el-date-picker
-              v-model="searchForm.doing_time"
-              format = "yyyy-MM-dd HH"
-              value-format = "yyyy-MM-dd HH"
-              type="datetime">
-            </el-date-picker>
+            <el-radio-group v-model="searchType" size="small">
+              <el-radio-button :label="$t('tools.all')"></el-radio-button>
+              <el-radio-button :label="$t('operation.pbDoing')"></el-radio-button>
+              <el-radio-button :label="$t('operation.pbAfter')"></el-radio-button>
+            </el-radio-group>
           </el-col>
           <el-col :span="10" class="funcList">
             <div class="boxFuncBtn" @click="addData">
@@ -71,19 +70,29 @@
         <el-dialog :title="$t('operation.pbEdit')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
             <el-form-item :label="$t('operation.pbGoods')">
-              <goods-selector v-model="form.spu_id"></goods-selector>
+              <goods-selector v-model="form.spu_id" :approve_status="2" :shelf_status="2"></goods-selector>
             </el-form-item>
             <el-form-item :label="$t('operation.pbTime')">
               <el-date-picker
                 v-model="grantTime"
-                type="datetimerange"
-                format = "yyyy-MM-dd HH"
-                value-format = "yyyy-MM-dd HH"
+                type="daterange"
+                format = "yyyy-MM-dd"
+                value-format = "yyyy-MM-dd"
                 :range-separator="$t('operation.to')"
                 :start-placeholder="$t('tools.startDate')"
                 :end-placeholder="$t('tools.endDate')"
                 align="right">
               </el-date-picker>
+            </el-form-item>
+            <el-form-item :label="$t('operation.pbTimes')">
+              <el-select v-model="selectedTimes">
+                <el-option
+                  v-for="item in seckillTimes"
+                  :key="item.id"
+                  :label="item.hour"
+                  :value="item.hour">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-divider content-position="left">{{$t('operation.pbSkus')}}</el-divider>
             <el-table :data="goodsInventoryTable"  style="width: 100%">
@@ -127,7 +136,7 @@
   import { mapGetters } from 'vuex'
   import goodsSelector from '@/components/goodsSelector'
   import { spusSkusList } from '@/api/goods'
-  import { panicBuysList, panicBuysDelete, panicBuysAdd, panicBuysModify } from '@/api/operation'
+  import { panicBuysList, panicBuysDelete, panicBuysAdd, panicBuysModify, panicBuysTimes } from '@/api/operation'
   export default {
     components: {
       goodsSelector
@@ -137,7 +146,9 @@
       const pz = 10
       return {
         timeValidSwitch: true,
+        searchType: this.$t('tools.all'),
         searchForm: {
+          bt_after: '',
           doing_time: '',
           skip: '',
           limit: pz
@@ -151,7 +162,9 @@
         goodsInventoryTable: [],
         currentSetSkus: [],
         formEditDialog: false,
-        submitDisabled: false
+        submitDisabled: false,
+        seckillTimes: [],
+        selectedTimes: 0 // 选择的场次
       }
     },
     computed: {
@@ -163,10 +176,33 @@
       'searchForm.doing_time': function() {
         this.getDataListFun()
       },
+      searchType(val) {
+        this.skip = 0
+        switch (val) {
+          case this.$t('tools.all'):
+            this.searchForm.bt_after = ''
+            this.searchForm.doing_time = ''
+            break
+          case this.$t('operation.pbDoing'):
+            this.searchForm.bt_after = ''
+            this.searchForm.doing_time = this.$moment().format('YYYY-MM-DD HH')
+            break
+          case this.$t('operation.pbAfter'):
+            this.searchForm.bt_after = this.$moment().format('YYYY-MM-DD HH')
+            this.searchForm.doing_time = ''
+            break
+        }
+        this.getDataListFun()
+      },
       grantTime(val) {
         if (val.length > 0) {
-          this.form.bt = val[0]
-          this.form.et = val[1]
+          this.form.bt = val[0] + ' ' + (this.selectedTimes < 10 ? ('0' + this.selectedTimes) : this.selectedTimes)
+          this.form.et = val[1] + ' 23'
+        }
+      },
+      selectedTimes(val) {
+        if (this.grantTime.length > 0) {
+          this.form.bt = this.grantTime[0] + ' ' + (val < 10 ? ('0' + val) : val)
         }
       },
       currentPage(val) {
@@ -205,11 +241,12 @@
         if (data) {
           this.grantTime = [data.bt.substring(0, 13), data.et.substring(0, 13)]
           this.currentSetSkus = data.panic_buy_skus
+          this.selectedTimes = parseInt(data.bt.substring(11, 13))
           return {
             id: data.id,
             spu_id: data.spu_id,
-            bt: data.bt.substring(0, 13),
-            et: data.et.substring(0, 13)
+            bt: data.bt.substring(0, 10),
+            et: data.et.substring(0, 10)
           }
         } else {
           this.grantTime = []
@@ -278,11 +315,17 @@
           this.tableData = res.items
           this.itemCount = res.total
         })
+      },
+      getPnicBuysTimes() {
+        panicBuysTimes().then(res => {
+          this.seckillTimes = res.items
+        })
       }
     },
     mounted() {
-      this.searchForm.doing_time = this.$moment().format('YYYY-MM-DD HH')
-      // this.getDataListFun()
+      // this.searchForm.doing_time = this.$moment().format('YYYY-MM-DD HH')
+      this.getPnicBuysTimes()
+      this.getDataListFun()
     },
     created() {
     }
