@@ -239,7 +239,7 @@
     methods: {
       setForm(data) {
         if (data) {
-          this.grantTime = [data.bt.substring(0, 13), data.et.substring(0, 13)]
+          this.grantTime = [data.bt.substring(0, 10), data.et.substring(0, 10)]
           this.currentSetSkus = data.panic_buy_skus
           this.selectedTimes = parseInt(data.bt.substring(11, 13))
           return {
