@@ -95,7 +95,10 @@
                       <div class="goods-item">
                         <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
                         <div class="g-info">
-                          <p>{{scope.row.name}}<el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag></p>
+                          <p>{{scope.row.name}}
+                            <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
+                            <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                          </p>
                         </div>
                       </div>
                     </template>
@@ -121,8 +124,15 @@
                   </el-table-column>
                   <el-table-column :label="$t('goods.price')" width="120">
                     <template  slot-scope="scope">
-                      <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
-                      <span v-else>{{scope.row.min_price | price}}</span>
+                      <template v-if="scope.row.type === 3">
+                        <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                        <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>
+                        <span v-else>{{scope.row.min_price}}</span>
+                      </template>
+                      <template v-else>
+                        <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
+                        <span v-else>{{scope.row.min_price | price}}</span>
+                      </template>
                     </template>
                   </el-table-column>
                   <el-table-column prop="inventory" width="75"  :label="$t('goods.inventory')">
@@ -163,7 +173,7 @@
               <el-form :model="goodsData" label-width="100px" style="min-height: 350px">
                 <template v-if="goodsEditStep === 1">
                   <el-form-item :label="$t('goods.sysType')">
-                    <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange"></el-cascader>
+                    <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange" filterable></el-cascader>
                   </el-form-item>
                   <el-form-item v-for="(v,k) in goodsSysTypeFields" :key="k" :label="v.name">
                     <el-input v-if="v.type==='string' || v.type === 'number'" v-model="goodsData.fields[v.code]" auto-complete="off" clearable></el-input>
@@ -187,9 +197,16 @@
                   <el-form-item :label="$t('goods.type')">
                     <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
                   </el-form-item>
-                  <el-form-item :label="$t('goods.cobuy')">
+                  <el-form-item :label="$t('goods.goodsType')">
                     <el-col :span="4">
-                      <el-checkbox v-model="goodsData.type" :true-label="2" :false-label="1">开启</el-checkbox>
+                      <el-select v-model="goodsData.type">
+                        <el-option
+                          v-for="(item,k) in goodsType" v-if="k <2 || (k==2 && shopInfo.source_type===3)"
+                          :key="item"
+                          :label="item"
+                          :value="k+1">
+                        </el-option>
+                      </el-select>
                     </el-col>
                     <template v-if="goodsData.type===2">
                       <el-col :span="8">
@@ -251,10 +268,15 @@
                           <el-input v-model.number="scope.row.inventory"></el-input>
                         </template>
                       </el-table-column>
-                      <el-table-column :label="$t('goods.price')">
+                      <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
                         <template  slot-scope="scope">
                           <price-input v-model="scope.row.price"></price-input>
                           <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                        </template>
+                      </el-table-column>
+                      <el-table-column v-if="goodsData.type === 3" :label="$t('goods.needExp')">
+                        <template  slot-scope="scope">
+                          <el-input v-model.number="scope.row.price"></el-input>
                         </template>
                       </el-table-column>
                       <el-table-column v-if="goodsData.type == 2" :label="$t('goods.cobuyPrice')">
@@ -310,6 +332,7 @@
   import store from '@/store'
   import service from '@/utils/request'
   import llEditor from '@/components/LLEditor'
+  import { mapGetters } from 'vuex'
   export default {
     components: {
       llEditor
@@ -341,6 +364,7 @@
           children: 'items',
           label: 'name'
         },
+        goodsType: [this.$t('goods.goodsType1'), this.$t('goods.goodsType2'), this.$t('goods.goodsType3')],
         secondArr: [{ label: 0.5, value: 1800 }, { label: 1, value: 3600 }, { label: 2, value: 7200 }, { label: 5, value: 18000 }],
         editTitle: '发布资源',
         disabled: false,
@@ -498,6 +522,9 @@
       }
     },
     computed: {
+      ...mapGetters([
+        'shopInfo'
+      ]),
       propPreviewImages() {
         const result = []
         if (this.goodsInventoryTable.length > 0 && this.goodsInventoryTable[this.propsImageEditIndex] && this.goodsInventoryTable[this.propsImageEditIndex].images) {
@@ -719,6 +746,10 @@
         this.getTableData()
       },
       showGoodsEditor(data, step) {
+        if (this.goodsTypeData.length < 2) {
+          this.$message.error(this.$t('goods.dpTypeTip1'))
+          return
+        }
         this.goodsProps = []
         this.goodsEditorShow = true
         this.goodsEditStep = 1
@@ -814,8 +845,19 @@
         } else if (opt === 1 && this.goodsEditStep === 3) {
           this.updateGoodsFunc()
         } else {
-          if (this.goodsEditStep === 2) {
-            console.log(this.goodsData)
+          if (this.goodsEditStep === 2 && opt === 1) {
+            if (!this.goodsData.name) {
+              this.$message.error(this.$t('goods.nameTip'))
+              return
+            }
+            if (this.goodsData.merchant_type_ids.length < 1) {
+              this.$message.error(this.$t('goods.dpTypeTip2'))
+              return
+            }
+            if (this.goodsData.images.length < 2) {
+              this.$message.error(this.$t('goods.imgTip'))
+              return
+            }
             if (this.goodsData.type === 2) {
               if (!this.goodsData.cobuy_person_count || this.goodsData.cobuy_person_count < 2) {
                 this.$message.error(this.$t('goods.conbuytip1'))
@@ -825,6 +867,11 @@
                 this.$message.error(this.$t('goods.conbuytip2'))
                 return
               }
+            }
+          } else if (this.goodsEditStep === 1) {
+            if (!this.goodsData.default_type_id) {
+              this.$message.error(this.$t('goods.systip1'))
+              return
             }
           }
           opt === 1 ? this.goodsEditStep++ : this.goodsEditStep--

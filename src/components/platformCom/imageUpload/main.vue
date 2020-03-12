@@ -9,10 +9,9 @@
       :file-list="fileList"
       :before-upload="beforeImageUpload">
       <slot>
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__text">{{$t('tools.imgUploadTip1')}}<em>{{$t('tools.imgUploadTip2')}}</em>；{{$t('tools.imgUploadTip3')}}{{sizeLimit/1024}}kb</div>
       </slot>
-      <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过{{sizeLimit/1024}}kb</div>
+      <div style="display: none" class="el-upload__tip" slot="tip">{{$t('tools.imgUploadTip3')}}{{sizeLimit/1024}}kb</div>
     </el-upload>
   </div>
 </template>
@@ -70,4 +69,5 @@
   }
 </script>
 <style lang="scss" scoped>
+
 </style>

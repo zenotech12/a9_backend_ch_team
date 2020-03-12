@@ -50,5 +50,8 @@ export default {
   qullEditorTip3: '上传视频大小不能超过20MB!',
   priceTip: '请正确输入价格，保留小数点后2位',
   yes: '是',
-  no: '否'
+  no: '否',
+  imgUploadTip1: '将文件拖到此处，或',
+  imgUploadTip2: '点击上传',
+  imgUploadTip3: '只能上传jpg/png文件，且不超过'
 }

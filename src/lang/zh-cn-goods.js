@@ -20,6 +20,10 @@ export default {
   parentType: '父分类',
   name: '名称',
   intro: '简介',
+  goodsType: '商品类型',
+  goodsType1: '普通商品',
+  goodsType2: '团购商品',
+  goodsType3: '积分商品',
   cobuy: '团购',
   cobuyPrice: '团购价',
   cobuyuser: '拼团人数',
@@ -54,5 +58,12 @@ export default {
   shareSet: '设置分销商品',
   shareGoods: '分销商品',
   shareAll: '所有已上架商品',
-  goodsSelect: '商品选择'
+  goodsSelect: '商品选择',
+  systip1: '请选择商品类别',
+  dpTypeTip1: '请先设置店铺分类',
+  dpTypeTip2: '请选择商品所属店铺分类',
+  nameTip: '请设置商品名称',
+  imgTip: '请上传商品介绍图，且不少于2张',
+  needExp: '所需积分',
+  exp: '积分'
 }

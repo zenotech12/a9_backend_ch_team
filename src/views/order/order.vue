@@ -12,7 +12,7 @@
               <el-form-item :label="$t('order.status')">
                 <el-select v-model="searchForm.order_status" :placeholder="$t('order.commentType')" clearable>
                   <el-option
-                    v-for="(item, k) in orderStatus"
+                    v-for="(item, k) in orderStatus" v-if="item"
                     :key="k"
                     :label="item"
                     :value="k">
@@ -40,7 +40,12 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('order.no')" width="200px" fixed="left"></el-table-column>
+                <el-table-column :label="$t('order.no')" width="200px" fixed="left">
+                  <template slot-scope="scope">
+                    <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
+                    {{scope.row.no}}
+                  </template>
+                </el-table-column>
                 <el-table-column :label="$t('order.user')" width="130">
                   <template slot-scope="scope">
                     <div class="ui">{{scope.row.user_nick_name}}</div>
@@ -188,7 +193,7 @@
       return {
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
-          this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8')],
+          this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
         searchForm: {
           user_id: '',
           order_status: 0,

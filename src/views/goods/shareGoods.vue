@@ -2,7 +2,7 @@
   <div class="sys-body">
     <div class="sys-neiBody">
       <!-- 搜索 -->
-      <el-row  style="margin-top: 24px;" v-if="!shopInfo.distribution">
+      <el-row  style="margin-top: 24px;" v-if="shopInfo.distribution">
         <el-col :span="4" class="funcTree">
           <el-row>
             <el-col :span="24" class="funcBoxTitle">

@@ -1,6 +1,7 @@
 // 订单管理
 export default {
   id: '订单ID',
+  orderType2: '拼团',
   no: '单号',
   goods: '商品',
   user: '用户',
@@ -24,6 +25,7 @@ export default {
   status6: '未完成',
   status7: '已取消',
   status8: '已完成',
+  status10: '待成团',
   express: '发货',
   expressAddr: '收货地址',
   expressUser: '收货人',
