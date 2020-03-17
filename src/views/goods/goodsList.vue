@@ -197,6 +197,32 @@
                   <el-form-item :label="$t('goods.type')">
                     <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
                   </el-form-item>
+                  <el-form-item :label="$t('goods.putaway')">
+                    <el-col :span="4">
+                      <el-select v-model="goodsData.shelf_status">
+                        <el-option
+                          v-for="(item,k) in putAwayType"
+                          :key="item"
+                          :label="item"
+                          :value="k+1">
+                        </el-option>
+                      </el-select>
+                    </el-col>
+                    <template  v-if="goodsData.shelf_status==2">
+                      <el-col :span="4">
+                        <el-checkbox v-model="isSetShelfTime"></el-checkbox>{{$t('goods.putawayD')}}
+                      </el-col>
+                      <el-col :span="8" v-if="isSetShelfTime">
+                        <el-date-picker
+                          v-model="goodsData.shelf_time"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          type="datetime"
+                          :placeholder="$t('goods.putawayD')">
+                        </el-date-picker>
+                      </el-col>
+                    </template>
+                  </el-form-item>
                   <el-form-item :label="$t('goods.goodsType')">
                     <el-col :span="4">
                       <el-select v-model="goodsData.type">
@@ -365,6 +391,7 @@
           label: 'name'
         },
         goodsType: [this.$t('goods.goodsType1'), this.$t('goods.goodsType2'), this.$t('goods.goodsType3')],
+        putAwayType: [this.$t('goods.putawayE'), this.$t('goods.putawayC')],
         secondArr: [{ label: 0.5, value: 1800 }, { label: 1, value: 3600 }, { label: 2, value: 7200 }, { label: 5, value: 18000 }],
         editTitle: '发布资源',
         disabled: false,
@@ -438,11 +465,18 @@
           id: '',
           default_type_id: '',
           fields: {},
-          merchant_type_ids: '',
+          merchant_type_ids: [],
           name: '',
+          intro: '',
+          type: 1,
+          cobuy_person_count: 0,
+          cobuy_group_valid_sec: 0,
           images: [],
-          desc: ''
+          desc: '',
+          shelf_status: 2,
+          shelf_time: ''
         },
+        isSetShelfTime: false,
         goodsSysTypes: [],
         goodsSysTypeFields: [],
         goodsTypes: [],
@@ -797,7 +831,14 @@
             cobuy_person_count: data.cobuy ? data.cobuy.person_count : 0,
             cobuy_group_valid_sec: data.cobuy ? data.cobuy.cobuy_group_valid_sec : 0,
             images: data.images,
-            desc: data.desc
+            desc: data.desc,
+            shelf_status: data.shelf_status === 2 ? 2 : 1,
+            shelf_time: data.shelf_time !== '--' ? data.shelf_time : this.$moment().format('YYYY-MM-DD HH:mm:ss')
+          }
+          this.isSetShelfTime = false
+          console.log(this.$moment().format('YYYY-MM-DD HH:mm:ss'))
+          if (data.shelf_time !== '--' && data.shelf_time > this.$moment().format('YYYY-MM-DD HH:mm:ss')) {
+            this.isSetShelfTime = true
           }
           spusSkusList(data.id, { skip: 0, limit: -1 }).then(res => {
             this.goodsInventoryData = res.items
@@ -806,6 +847,9 @@
             })
           })
         } else {
+          this.isSetShelfTime = false
+          this.goodsSysTypes = []
+          this.goodsSysTypeFields = []
           this.goodsData = {
             id: '',
             default_type_id: '',
@@ -817,7 +861,9 @@
             cobuy_person_count: 0,
             cobuy_group_valid_sec: 0,
             images: [],
-            desc: ''
+            desc: '',
+            shelf_status: 2,
+            shelf_time: this.$moment().format('YYYY-MM-DD HH:mm:ss')
           }
         }
       },
@@ -886,7 +932,7 @@
       },
       updateGoodsFunc() {
         const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, intro: this.goodsData.intro,
-          type: this.goodsData.type, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
+          type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
         const filedItem = {}
         for (const key in this.goodsData.fields) {
           if (Array.isArray(this.goodsData.fields[key])) {
