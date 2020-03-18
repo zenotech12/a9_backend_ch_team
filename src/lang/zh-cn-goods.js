@@ -68,5 +68,6 @@ export default {
   nameTip: '请设置商品名称',
   imgTip: '请上传商品介绍图，且不少于2张',
   needExp: '所需积分',
-  exp: '积分'
+  exp: '积分',
+  whole: '全部'
 }

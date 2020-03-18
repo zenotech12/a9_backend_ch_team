@@ -16,6 +16,11 @@ const system = [{
     path: 'address',
     meta: { title: 'address', icon: 'permission' },
     component: () => import('@/views/system/address')
+  }, {
+    name: 'chatRobot',
+    path: 'chatRobot',
+    meta: { title: 'chatRobot', icon: 'permission' },
+    component: () => import('@/views/system/chatRobot')
   }]
 }]
 export default system
