@@ -109,3 +109,47 @@ export function shippingAddressesModify(id, data) {
     data: data
   })
 }
+
+// 聊天机器人/帮助中心.查.列表
+export function chatRobotReplies(param) {
+  return request({
+    url: 'chat-robot/replies',
+    method: 'get',
+    params: param
+  })
+}
+
+// 聊天机器人/帮助中心.查.个
+export function chatRobotRepliesInfo(id) {
+  return request({
+    url: 'chat-robot/replies/' + id,
+    method: 'get'
+  })
+}
+
+// 聊天机器人/帮助中心.添加消息
+export function chatRobotRepliesAdd(data) {
+  return request({
+    url: 'chat-robot/replies',
+    method: 'post',
+    data: data
+  })
+}
+
+// 聊天机器人/帮助中心.删除消息
+export function chatRobotRepliesDel(id) {
+  return request({
+    url: 'chat-robot/replies/' + id,
+    method: 'delete'
+  })
+}
+
+// 聊天机器人/帮助中心.修改消息
+export function chatRobotRepliesModify(id, data) {
+  return request({
+    url: 'chat-robot/replies/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
