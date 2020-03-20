@@ -153,3 +153,37 @@ export function chatRobotRepliesModify(id, data) {
   })
 }
 
+// 客服.查.列表
+export function customerServicesList(param) {
+  return request({
+    url: 'customer-services',
+    method: 'get',
+    params: param
+  })
+}
+
+// 客服.改
+export function customerServicesModify(id, data) {
+  return request({
+    url: 'customer-services/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+// 客服.删
+export function customerServicesDel(id) {
+  return request({
+    url: 'customer-services/' + id,
+    method: 'delete'
+  })
+}
+
+// 客服.增
+export function customerServicesAdd(data) {
+  return request({
+    url: 'customer-services',
+    method: 'post',
+    data: data
+  })
+}

@@ -16,21 +16,23 @@
         <el-row>
           <el-col :span="24">
             <el-table stripe border v-loading="tableData.loading" :data="tableData.body" style="width: 100%">
-              <el-table-column prop="login_name" :label="$t('lang.adminLoginName')"></el-table-column>
-              <el-table-column prop="real_name" :label="$t('lang.realName')"></el-table-column>
-              <el-table-column prop="mobile" :label="$t('lang.phoneNumber')"></el-table-column>
-              <el-table-column :label="$t('lang.state')">
+              <el-table-column prop="user_nick_name" :label="$t('sys.user')">
+              </el-table-column>
+              <el-table-column prop="user_login_name" :label="$t('sys.mobile')"></el-table-column>
+              <el-table-column :label="$t('sys.isService')">
                 <template slot-scope="scope">
-                  <el-tag :type="scope.row.status === 1 ? 'primary' : 'success'"
-                          close-transition>{{scope.row.status === 1?$t('lang.normal'):$t('lang.prohibit')}}</el-tag>
+                  <el-tag :type="scope.row.customer_servicer ? 'primary' : 'success'"
+                          close-transition>{{scope.row.customer_servicer?$t('tools.yes'):$t('tools.no')}}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="comment" :label="$t('lang.note')"></el-table-column>
+              <el-table-column prop="gen_time" :label="$t('sys.genTime')"></el-table-column>
               <el-table-column :label="$t('tools.opt')">
                 <template slot-scope="scope">
                   <el-button type="text" @click="editAdmin(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                  <span class="xiexian">|</span>
+                  <template v-if="!scope.row.default">
+                  <span class="xiexian">/</span>
                   <delete-button :promptInfor="promptInfor" @delData="delAdmin(scope.row)"></delete-button>
+                  </template>
                 </template>
               </el-table-column>
             </el-table>
@@ -48,29 +50,22 @@
             </template>
           </el-col>
         </el-row>
-        <el-dialog :title="editTitle" @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="600px" style="margin-top: 0vh">
-          <el-form :model="form" :rules="formRule" ref="form" label-width="90px">
-            <el-form-item :label="$t('lang.adminLoginName')" label-width="80px" prop="login_name">
-              <el-input v-model="form.login_name" auto-complete="off" clearable></el-input>
+        <el-dialog :title="editTitle" @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="400px" style="margin-top: 0vh">
+          <el-form :model="form" :rules="formRule" ref="form" label-width="120px">
+            <el-form-item :label="$t('sys.loginMobile')" prop="login_name">
+              <el-input style="width: 200px" :disabled="form.id !== ''" v-model="form.mobile" auto-complete="off" clearable></el-input>
+              <el-tooltip class="item" effect="dark" :content="$t('sys.loginMobileTip')" placement="top">
+                <i class="el-icon-info"></i>
+              </el-tooltip>
             </el-form-item>
-            <el-form-item :label="$t('lang.realName')" label-width="80px" prop="real_name">
-              <el-input v-model="form.real_name" auto-complete="off" clearable></el-input>
+            <el-form-item :label="$t('sys.user')" prop="real_name">
+              <el-input style="width: 200px" v-model="form.nick_name" auto-complete="off" clearable></el-input>
             </el-form-item>
-            <el-form-item :label="$t('lang.pass')" class="start" label-width="80px">
-              <el-input v-model="form.pass" :placeholder="$t('lang.passwordTips')" auto-complete="off" clearable @blur="checkedPwd"></el-input>
-              <div class="distpicker_error" v-if="passShow">{{$t('lang.pleaseEnterPassword')}}</div>
-            </el-form-item>
-            <el-form-item :label="$t('lang.phoneNumber')" label-width="80px" prop="mobile">
-              <el-input v-model="form.mobile" auto-complete="off" clearable></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('lang.state')" label-width="80px" prop="status">
-              <el-radio-group v-model="form.status">
-                <el-radio :label="1">{{$t('lang.normal')}}</el-radio>
-                <el-radio :label="2">{{$t('lang.prohibit')}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item :label="$t('lang.note')" label-width="80px">
-              <el-input v-model="form.comment" auto-complete="off" clearable></el-input>
+            <el-form-item :label="$t('sys.isService')"  prop="status">
+              <el-checkbox v-model="form.customer_servicer">{{$t('tools.yes')}}</el-checkbox>
+              <el-tooltip class="item" effect="dark" :content="$t('sys.serviceTip')" placement="top">
+                <i class="el-icon-info"></i>
+              </el-tooltip>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -84,7 +79,7 @@
 </template>
 
 <script>
-  import { adminAccountsUpsert, adminAccountsList, adminAccountsDel, adminAccountsModify } from '@/api/system'
+  import { customerServicesList, customerServicesDel, customerServicesModify, customerServicesAdd } from '@/api/system'
   export default {
     data() {
       return {
@@ -94,34 +89,18 @@
         enterpriseList: [],
         searchForm: {
           skip: 0,
-          limit: 10,
-          key_login_name: '',
-          key_real_name: ''
+          limit: 10
         },
         form: {
-          login_name: '',
-          pass: '',
-          real_name: '',
+          id: '',
           mobile: '',
-          status: '1', // 账号状态 1正常 2禁止
-          comment: ''
+          nick_name: '',
+          customer_servicer: true
         },
         formRule: {
-          login_name: [
-            { required: true, message: this.$t('lang.pleaseEnterLogin'), trigger: 'blur' }
-          ],
-          pass: [
-            { required: true, message: this.$t('lang.pleaseEnterPassword'), trigger: 'blur' }
-          ],
           mobile: [
             // { validator: checkMobile, trigger: 'blur' },
             { required: true, message: this.$t('lang.pleaseEnterPhoneNumber'), trigger: 'blur' }
-          ],
-          real_name: [
-            { required: true, message: this.$t('lang.pleaseEnterRealName'), trigger: 'blur' }
-          ],
-          status: [
-            { required: true, message: this.$t('lang.pleaseChooseStatus'), trigger: 'change' }
           ]
         },
         pageSize: 10,
@@ -132,10 +111,6 @@
           body: []
         },
         dialogFormVisible: false,
-        passShow: false,
-        passChecked: false,
-        currentId: '',
-        type: 'add'
       }
     },
     mounted() {
@@ -200,12 +175,10 @@
       addAdmin() {
         this.dialogFormVisible = true
         this.disabled = false
-        this.form.real_name = ''
-        this.form.login_name = ''
-        this.form.pass = ''
+        this.form.id = ''
         this.form.mobile = ''
-        this.form.status = 1
-        this.form.comment = ''
+        this.form.nick_name = ''
+        this.form.customer_servicer = true
         this.type = 'add'
         this.editTitle = this.$t('lang.addAdmin')
       },
@@ -219,12 +192,10 @@
         this.disabled = false
         this.editTitle = this.$t('lang.editAdmin')
         this.dialogFormVisible = true
-        this.form = JSON.parse(JSON.stringify(data))
-        this.currentId = data.id
-        this.type = 'modify'
+        this.form = { id: data.id, mobile: data.user_login_name, nick_name: data.user_nick_name, customer_servicer: data.customer_servicer }
       },
       getTableData() {
-        adminAccountsList(this.searchForm).then(response => {
+        customerServicesList(this.searchForm).then(response => {
           if (response.meta === 0) {
             this.tableData.loading = false
             this.itemCount = response.total
@@ -233,7 +204,7 @@
         })
       },
       delAdmin(data) {
-        adminAccountsDel(data.id).then(response => {
+        customerServicesDel(data.id).then(response => {
           if (response.meta === 0) {
             this.$message.success(this.$t('lang.successfulDel'))
             this.getTableData()
@@ -244,16 +215,20 @@
         this.getTableData()
       },
       upsertData(data) {
-        if (data === 'add') {
-          adminAccountsUpsert(this.form).then(response => {
+        if (!this.form.mobile) {
+          this.$message.error(this.$t('sys.mobileTip'))
+          return
+        }
+        if (!this.form.id) {
+          customerServicesAdd(this.form).then(response => {
             if (response.meta === 0) {
               this.$message.success(this.$t('lang.successfulPresservation'))
               this.dialogFormVisible = false
               this.getTableData()
             }
           })
-        } else if (data === 'modify') {
-          adminAccountsModify(this.currentId, this.form).then(response => {
+        } else {
+          customerServicesModify(this.form.id, this.form).then(response => {
             if (response.meta === 0) {
               this.$message.success(this.$t('lang.successfulPresservation'))
               this.dialogFormVisible = false

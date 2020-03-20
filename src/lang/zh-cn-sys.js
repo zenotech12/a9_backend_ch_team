@@ -35,5 +35,11 @@ export default {
   noChooseParentMessage: '不选择父消息为顶级消息',
   questionList: '问题列表',
   content: '内容',
-  addTime: '添加时间'
+  addTime: '添加时间',
+  user: '昵称',
+  isService: '客服',
+  genTime: '添加时间',
+  loginMobile: '注册手机号',
+  loginMobileTip: '该手机号需要先注册成为 ANINE 用户',
+  serviceTip: '设置为客户后，用户可以用过APP与该管理员沟通'
 }
