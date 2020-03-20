@@ -45,7 +45,7 @@
                     <div class="ui">{{scope.row.user_mobile}}</div>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.returnType')" width="70">
+                <el-table-column :label="$t('order.returnType')" width="120">
                   <template slot-scope="scope">
                     <el-tag :type="scope.row.type === 2 ? 'success': ''">{{returnType[scope.row.type]}}</el-tag>
                   </template>
@@ -141,7 +141,7 @@
               <br/>
               {{returnOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{returnOrder.shipping_address.mobile}}
             </el-form-item>
-            <el-form-item v-if="returnOrder.status === 1" :label="$t('order.returnAddr')">
+            <el-form-item v-if="returnOrder.status === 1 && returnOrder.type !== 3" :label="$t('order.returnAddr')">
               <el-select v-model="addressId" style="width: 300px" >
                 <el-option
                   v-for="item in addressList"
@@ -179,7 +179,8 @@
           </el-form>
           <div slot="footer" class="dialog-footer" v-if="returnOrder.status === 1 || returnOrder.status === 6">
             <template v-if="returnOrder.status ===1">
-              <confirm-button @confirmButton="saveDataFunc(3)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
+              <confirm-button v-if="returnOrder.type === 3" @confirmButton="saveDataFunc(5)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
+              <confirm-button v-else @confirmButton="saveDataFunc(3)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
               <confirm-button @confirmButton="saveDataFunc(4)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.refuse')"></confirm-button>
             </template>
             <template v-else>
@@ -203,7 +204,7 @@
     data() {
       const pz = 10
       return {
-        returnType: [this.$t('tools.all'), this.$t('order.returnType1'), this.$t('order.returnType2')],
+        returnType: [this.$t('tools.all'), this.$t('order.returnType1'), this.$t('order.returnType2'), this.$t('order.returnType3')],
         orderStatus: [this.$t('tools.all'), this.$t('order.returnStatus1'), this.$t('order.returnStatus2'), this.$t('order.returnStatus3'), this.$t('order.returnStatus4'), this.$t('order.returnStatus5'),
           this.$t('order.returnStatus6')],
         searchForm: {
