@@ -7,10 +7,15 @@ const goods = [{
   redirect: '/goods/goodsList',
   meta: { title: 'goodsMgr', icon: 'inventory' },
   children: [{
-    path: 'goodsList',
+    path: 'list',
     name: 'goodsList',
     meta: { title: 'goodsList', icon: 'list' },
     component: () => import('@/views/goods/goodsList')
+  }, {
+    path: 'publish',
+    name: 'goodsPublish',
+    meta: { title: 'goodsEdit', icon: 'list' },
+    component: () => import('@/views/goods/goodsEdit')
   }, {
     path: 'share',
     name: 'shareGoods',

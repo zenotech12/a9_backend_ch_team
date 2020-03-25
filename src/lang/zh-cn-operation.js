@@ -86,5 +86,11 @@ export default {
   pbCount: '秒杀数量',
   pbCount1: '已售数量/秒杀数量',
   pbTip: '请正确设置参与秒杀的商品以及价格',
-  pbGoods1: '参与秒杀的商品规格、价格以及数量'
+  pbGoods1: '参与秒杀的商品规格、价格以及数量',
+  tgGoods: '团购商品',
+  tgTimes: '团购时段',
+  tgPrice: '团购价格设置',
+  tgPrice1: '团购价/当前价',
+  tgTip: '请正确设置所有团购商品的价格',
+  tgTip2: '确认取消该商品团购？'
 }

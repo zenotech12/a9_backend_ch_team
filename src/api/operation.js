@@ -206,3 +206,13 @@ export function panicBuysTimes(id, data) {
     params: { skip: 0, limit: 24 }
   })
 }
+
+// 拼购.设置
+export function cobuySet(id, data) {
+  return request({
+    url: 'spus/' + id + '/cobuy',
+    method: 'put',
+    data: data
+  })
+}
+

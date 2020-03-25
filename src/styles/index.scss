@@ -57,3 +57,33 @@ a:hover {
 .app-container {
   padding: 20px;
 }
+
+.page-footer{
+  position: fixed;
+  bottom: 0px;
+  border-top: 1px solid #e5e5e5;
+  padding: 10px 0px 10px 100px;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.goods-item{
+  .image{
+    float: left !important;
+    margin-right: 5px !important;
+  }
+  .g-info{
+    padding-left: 65px;
+    text-align: left;
+    p{
+      margin: 0px;
+      padding: 3px 0px;
+      span{
+        color: #8c939d;
+        font{
+          color: #606266;
+        }
+      }
+    }
+  }
+}

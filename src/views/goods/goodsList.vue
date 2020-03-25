@@ -164,7 +164,7 @@
               </el-col>
             </el-row>
             <el-dialog :title="$t('goods.edit')" width="800px" @close="cancelGoodsEdit" :visible.sync="goodsEditorShow" :close-on-click-modal="false" center>
-              <el-steps :active="goodsEditStep" style="margin-bottom: 20px">
+              <el-steps :active="goodsEditStep" style="margin-bottom: 20px; display: none">
                 <el-step :title="$t('goods.step1')" :description="$t('goods.step1Tip')"></el-step>
                 <el-step :title="$t('goods.step2')" :description="$t('goods.step2Tip')"></el-step>
                 <el-step :title="$t('goods.step3')" :description="$t('goods.step3Tip')"></el-step>
@@ -235,13 +235,13 @@
                       </el-select>
                     </el-col>
                     <template v-if="goodsData.type===2">
-                      <el-col :span="8">
-                      <el-input v-model.number="goodsData.cobuy_person_count">
-                        <template slot="prepend">{{$t('goods.cobuyuser')}}</template>
-                      </el-input>
+                      <el-col :span="11">
+                        <el-input v-model.number="goodsData.cobuy_person_count">
+                          <template slot="prepend">{{$t('goods.cobuyuser')}}</template>
+                        </el-input>
                       </el-col>
                       <el-col :span="1"></el-col>
-                      <el-col :span="8">
+                      <el-col :span="11">
                         {{$t('goods.cobuysec')}}
                         <el-select style="width: 100px" v-model="goodsData.cobuy_group_valid_sec">
                           <el-option
@@ -321,7 +321,7 @@
                 </template>
               </el-form>
               <div slot="footer" class="dialog-footer">
-                <el-button v-if = "goodsEditStep > 1" size="small" type="primary" @click="editNextFunc(-1)" >{{$t('goods.pre')}}</el-button>
+                <!--<el-button v-if = "goodsEditStep > 1" size="small" type="primary" @click="editNextFunc(-1)" >{{$t('goods.pre')}}</el-button>-->
                 <confirm-button @confirmButton="editNextFunc(1)" :disabled="disabled" :confirmButtonInfor="goodsEditStep === 4 ? this.$t('tools.confirm') : $t('goods.next')"></confirm-button>
                 <!--<el-button v-else size="small" type="primary" @click="editNextFunc(1)" >{{$t('goods.next')}}</el-button>-->
                 <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
@@ -330,11 +330,11 @@
                 <template>
                   <div class="prop-image__preview" v-if="goodsInventoryTable.length > 0">
                     <div class="pitem"  v-for="(img,imgk) in goodsInventoryTable[propsImageEditIndex].images" :key="imgk">
-                    <el-image
-                      style="width: 100px; height: 100px"
-                      :src="getImageUrl(img)"
-                      :preview-src-list="propPreviewImages">
-                    </el-image>
+                      <el-image
+                        style="width: 100px; height: 100px"
+                        :src="getImageUrl(img)"
+                        :preview-src-list="propPreviewImages">
+                      </el-image>
                       <i class="el-icon-delete delbtn" @click="delPropImage(imgk)"></i>
                     </div>
                   </div>
@@ -658,28 +658,28 @@
       renderContent(h, { node, data, store }) {
         return (
           <span class='custom-tree-node'>
-            <span title={node.label}>{node.label}</span>
-            <span class='showHide' v-show={data.tree_code}>
-              <i class='el-icon-circle-plus-outline treeAddImg' on-click={ () => this.showAddChildFunc(data)}></i>
-              <el-popover
-                placement='bottom-end'
-                width='250'
-                visible-arrow
-                trigger='hover'>
-                <div class='labelName'>{node.label}</div>
-                <div class='funcListBox'>
-                  <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
-                    <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
-                    <span class='permissionsDel'>删除</span>
-                  </div>
-                  <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
-                    <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
-                    <span class='permissionsEdit'>编辑</span>
-                  </div>
-                </div>
-                <i class='el-icon-more imgMore' slot='reference'></i>
-              </el-popover>
-            </span>
+          <span title={node.label}>{node.label}</span>
+        <span class='showHide' v-show={data.tree_code}>
+      <i class='el-icon-circle-plus-outline treeAddImg' on-click={ () => this.showAddChildFunc(data)}></i>
+        <el-popover
+        placement='bottom-end'
+        width='250'
+        visible-arrow
+        trigger='hover'>
+          <div class='labelName'>{node.label}</div>
+        <div class='funcListBox'>
+          <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
+      <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
+          <span class='permissionsDel'>删除</span>
+          </div>
+          <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
+      <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
+          <span class='permissionsEdit'>编辑</span>
+          </div>
+          </div>
+          <i class='el-icon-more imgMore' slot='reference'></i>
+          </el-popover>
+          </span>
           </span>)
       },
       showEditDataFunc(row) {
@@ -784,6 +784,16 @@
           this.$message.error(this.$t('goods.dpTypeTip1'))
           return
         }
+
+        if (step !== 4) {
+          if (data) {
+            this.$router.push({ path: '/goods/publish?id=' + data.id })
+          } else {
+            this.$router.push({ path: '/goods/publish' })
+          }
+          return
+        }
+
         this.goodsProps = []
         this.goodsEditorShow = true
         this.goodsEditStep = 1
@@ -1059,26 +1069,6 @@
         position: absolute;
         top: 0px;
         right: 0px;
-      }
-    }
-  }
-  .goods-item{
-    .image{
-      float: left !important;
-      margin-right: 5px !important;
-    }
-    .g-info{
-      padding-left: 65px;
-      text-align: left;
-      p{
-        margin: 0px;
-        padding: 3px 0px;
-        span{
-          color: #8c939d;
-          font{
-            color: #606266;
-          }
-        }
       }
     }
   }
