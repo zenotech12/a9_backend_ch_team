@@ -226,12 +226,8 @@
                   <el-form-item :label="$t('goods.goodsType')">
                     <el-col :span="4">
                       <el-select v-model="goodsData.type">
-                        <el-option
-                          v-for="(item,k) in goodsType" v-if="k <2 || (k==2 && shopInfo.source_type===3)"
-                          :key="item"
-                          :label="item"
-                          :value="k+1">
-                        </el-option>
+                        <el-option :key="$t('goods.goodsType1')" :label="$t('goods.goodsType1')" :value="1"></el-option>
+                        <el-option v-if="shopInfo.source_type===3" :key="$t('goods.goodsType3')" :label="$t('goods.goodsType3')" :value="3"></el-option>
                       </el-select>
                     </el-col>
                     <template v-if="goodsData.type===2">
@@ -399,10 +395,10 @@
         searchForm: {
           skip: 0,
           limit: 10,
-          approve_status: 0, // 审批状态 0所有 1待审批 2审批成功 3拒绝
+          approve_status: 2, // 审批状态 0所有 1待审批 2审批成功 3拒绝
           merchant_id: '', // 商户id，不填所有，自营填000000000000000000000001
           type_id: '',
-          shelf_status: 0 // 上架状态 所有0 未上架1 上架2
+          shelf_status: 2 // 上架状态 所有0 未上架1 上架2
         },
         approveStatus: [
           {

@@ -146,23 +146,28 @@
               <br/>
               {{expressOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{expressOrder.shipping_address.mobile}}
             </el-form-item>
-            <el-form-item :label="$t('order.expressInfo')" v-if="optType === 1">
-              <el-row :gutter="20">
-                <el-col :span="8">
-                  <el-select v-model="expressCompany" :placeholder="$t('order.expressCompany')">
-                    <el-option
-                      v-for="(item, k) in expressageList"
-                      :key="k"
-                      :label="item"
-                      :value="k">
-                    </el-option>
-                  </el-select>
-                </el-col>
-                <el-col :span="14">
-                  <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
-                </el-col>
-              </el-row>
-            </el-form-item>
+            <template v-if="optType === 1">
+              <el-form-item :label="$t('order.expressInfo')" >
+                <el-row :gutter="20">
+                  <el-col :span="8">
+                    <el-select v-model="expressCompany" :placeholder="$t('order.expressCompany')">
+                      <el-option
+                        v-for="(item, k) in expressageList"
+                        :key="k"
+                        :label="item"
+                        :value="k">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="14" v-if="expressCompany !== 'noexpress'">
+                    <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+                  </el-col>
+                </el-row>
+              </el-form-item>
+              <el-form-item :label="$t('order.note')" >
+                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
+              </el-form-item>
+            </template>
             <template v-if="optType === 2">
               <el-form-item :label="$t('order.price4')" >
                 <price-input v-model="payPrice" :placeholder="$t('order.price4')" style="width: 200px"></price-input> <span style="color: #8c939d">{{$t('order.price4Tip')}}</span>
@@ -253,6 +258,7 @@
           this.dialogTitle = this.$t('order.express')
           this.expressCompany = data.express.company
           this.expressNo = data.express.novar
+          this.comment = ''
         } else if (ot === 2) {
           this.dialogTitle = this.$t('order.modifyPrice')
           this.payPrice = data.pay_price
@@ -263,7 +269,7 @@
       saveDataFunc() {
         this.submitDisabled = true
         if (this.optType === 1) {
-          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo }).then(res => {
+          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment }).then(res => {
             this.$message.success(this.$t('order.expressTip'))
             this.submitDisabled = false
             this.getDataListFun()

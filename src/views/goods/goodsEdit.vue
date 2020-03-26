@@ -28,15 +28,11 @@
             </el-col>
           </el-row>
           <el-divider content-position="left">{{$t('goods.goodsInfo2')}}</el-divider>
-          <el-form-item :label="$t('goods.goodsType')">
+          <el-form-item :label="$t('goods.goodsType')" v-if="goodsData.type !==2">
             <el-col :span="4">
               <el-select v-model="goodsData.type">
-                <el-option
-                  v-for="(item,k) in goodsType" v-if="k <2 || (k==2 && shopInfo.source_type===3)"
-                  :key="item"
-                  :label="item"
-                  :value="k+1">
-                </el-option>
+                <el-option :key="$t('goods.goodsType1')" :label="$t('goods.goodsType1')" :value="1"></el-option>
+                <el-option v-if="shopInfo.source_type===3" :key="$t('goods.goodsType3')" :label="$t('goods.goodsType3')" :value="3"></el-option>
               </el-select>
             </el-col>
             <template v-if="goodsData.type===2">

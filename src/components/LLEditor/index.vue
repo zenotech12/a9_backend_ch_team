@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="line-height: 20px;">
-      <quill-editor ref="myeditor" height="500px"
+      <quill-editor ref="myeditor"
                     :content="content"
                     :options="editorConfig"
                     @change="onEditorChange($event)"
@@ -122,7 +122,8 @@
         videoUploadUrl: fileUploadUrl,
         // videoUploadUrl: serverConfig.api_url + '/big-file/upload',
         fileUploadHeader: { 'X-Access-Token': store.state.user.token },
-        fullscreenLoading: false
+        fullscreenLoading: false,
+        imageInsertIndex: 0
       }
     },
     mounted() {
@@ -130,9 +131,25 @@
         this.$refs['myeditor'].quill.getModule('toolbar').addHandler('image', this.editerImgFunc)
         this.$refs['myeditor'].quill.getModule('toolbar').addHandler('video', this.editerVideoFunc)
         this.$refs['myeditor'].quill.getModule('toolbar').addHandler('link', this.editerLinkFunc)
+        window.addEventListener('scroll', this.getScrollPosition, false)
       }
     },
     methods: {
+      getScrollPosition() {
+        const toolbar = document.getElementsByClassName('ql-toolbar')[0]
+        const editor = document.getElementsByClassName('quill-editor')[0]
+        const top = editor.getBoundingClientRect().top
+        if (top < 0 && Math.abs(top) < editor.offsetHeight - 150 ) {
+          toolbar.style.position = 'fixed'
+          toolbar.style.top = '0px'
+          toolbar.style.width = editor.offsetWidth + 'px'
+          toolbar.style.zIndex = '999'
+          toolbar.style.backgroundColor = '#ffffff'
+        } else {
+          toolbar.style.position = ''
+        }
+        console.log()
+      },
       submitLinkSet() {
         const quill = this.$refs['myeditor'].quill
         let val = this.linkForm.value
@@ -174,17 +191,25 @@
           // const fileInput = document.getElementById('editorImgUploadBtn')
           // fileInput.click() // 加一个触发事件
           this.imagesFormVisible = true
+          this.addRange = this.$refs['myeditor'].quill.getSelection()
+          this.imageInsertIndex = this.addRange !== null ? this.addRange.index : 0
         }
       },
       handleRemove(file, fileList) {
-        this.setImages(fileList)
+        console.log(file)
+        // this.setImages(fileList)
+        this.formImagesLists.splice(this.formImagesLists.findIndex(item => {
+          return item === file.response.md5
+        }))
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url
         this.dialogVisible = true
       },
       fileUploadSuccess(response, file, fileList) {
-        this.setImages(fileList)
+        // this.setImages(fileList)
+        // console.log(response)
+        this.formImagesLists.push(response.md5)
       },
       setImages(fileList) {
         // console.log('fileList', fileList)
@@ -205,8 +230,8 @@
         if (this.formImagesLists.length !== 0) {
           this.formImagesLists.forEach(res => {
             const imgUrl = this.getImageUrl(res)
-            this.addRange = this.$refs['myeditor'].quill.getSelection()
-            this.$refs['myeditor'].quill.insertEmbed(this.addRange !== null ? this.addRange.index : 0, 'image', imgUrl)
+            this.$refs['myeditor'].quill.insertEmbed(this.imageInsertIndex, 'image', imgUrl)
+            this.imageInsertIndex ++
           })
           this.formImagesLists = []
           this.images = []
@@ -282,10 +307,15 @@
     margin-bottom: 22px;
   }
   .ql-container{
-    height: 340px;
+    /*height: 340px;*/
   }
   .ql-editor{
     min-height: 300px;
+    img{
+      display: block;
+      margin: 0 auto;
+      max-width: 640px !important;
+    }
   }
   .fontColor{
     color: red;

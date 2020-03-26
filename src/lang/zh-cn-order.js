@@ -75,6 +75,7 @@ export default {
   returnPrice: '退款金额',
   returnTime: '申请时间',
   orderTime: '下单时段',
+  note: '备注',
   opt2: '创建订单',
   opt4: '发货',
   opt5: '完成支付',
