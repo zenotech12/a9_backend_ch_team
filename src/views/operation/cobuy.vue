@@ -63,7 +63,7 @@
                 <template slot-scope="scope">
                   <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                   <span class="xiexian">/</span>
-                  <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
+                  <delete-button :promptInfor="promptInfor" @delData="deleteDataFunc(scope.row)"></delete-button>
                 </template>
               </el-table-column>
             </el-table>

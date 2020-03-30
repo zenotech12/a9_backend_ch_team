@@ -11,5 +11,6 @@ export default {
   loginOut: '登出',
   merchantSystem: 'A9 商户中心',
   slogan: '利益共享-共同发展',
-  copyright: '版权所有'
+  copyright: '版权所有',
+  forget: '忘记密码？'
 }

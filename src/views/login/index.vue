@@ -42,13 +42,15 @@
               <span class="svg-container">
                 <div class="passwordBg"></div>
               </span>
-              <el-input @keyup.enter.native="handleLogin" v-model="loginForm.pass_word"
+              <el-input type="password" @keyup.enter.native="handleLogin" v-model="loginForm.pass_word"
                         :placeholder="$t('login.pleaseEnterPassword')"></el-input>
             </el-form-item>
             <el-form-item class="form-btn">
               <el-button type="primary" class="form-btn-login" :loading="loading" @click.native.prevent="handleLogin">
                 {{$t('login.login')}}
               </el-button>
+              <div><a href="http://a9.idesum.com/forget.html?refer=https://a9partner.idesum.com/">{{$t('login.forget')}}</a>
+              </div>
             </el-form-item>
           </el-form>
       </div>
