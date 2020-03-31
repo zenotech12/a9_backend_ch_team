@@ -23,9 +23,10 @@ export function logout() {
   })
 }
 
-export function adminCode(data) {
+// 发送验证码
+export function mobileCode(data) {
   return request({
-    url: 'admin/code',
+    url: 'mobile/code',
     method: 'post',
     data: data
   })

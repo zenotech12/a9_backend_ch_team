@@ -32,27 +32,58 @@
                         <!--:placeholder="$t('login.pleaseEnterPassword')"></el-input>-->
               <!--<span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>-->
             <!--</el-form-item>-->
-            <el-form-item prop="login_name">
+            <template v-if="loginWay === 0">
+              <el-form-item prop="login_name">
               <span class="svg-container svg-container_login">
                 <div class="usernameBg"></div>
               </span>
-              <el-input name="login_name" class="inputText" type="text" v-model="loginForm.login_name" clearable  :placeholder="$t('login.pleaseEnterAccount')" />
-            </el-form-item>
-            <el-form-item prop="pass_word">
+                <el-input name="login_name" class="inputText" type="text" v-model="loginForm.login_name" clearable  :placeholder="$t('login.pleaseEnterAccount')" />
+              </el-form-item>
+              <el-form-item prop="pass_word">
               <span class="svg-container">
                 <div class="passwordBg"></div>
               </span>
-              <el-input type="password" @keyup.enter.native="handleLogin" v-model="loginForm.pass_word"
-                        :placeholder="$t('login.pleaseEnterPassword')"></el-input>
-            </el-form-item>
+                <el-input type="password" @keyup.enter.native="handleLogin" v-model="loginForm.pass_word"
+                          :placeholder="$t('login.pleaseEnterPassword')"></el-input>
+              </el-form-item>
+            </template>
+            <template v-else>
+              <el-form-item prop="login_name">
+              <span class="svg-container svg-container_login">
+                <div class="usernameBg"></div>
+              </span>
+                <el-select v-model="loginForm.nation_code" style="width: 30%">
+                  <el-option
+                    v-for="(v, k) in nationsCodes"
+                    :key="v"
+                    :label="k"
+                    :value="v">
+                  </el-option>
+                </el-select>
+                <el-input name="login_name" style="width: 55%" class="inputText1" type="text" v-model="loginForm.login_name" clearable  :placeholder="$t('login.pleaseEnterAccount')" />
+              </el-form-item>
+              <el-form-item prop="code">
+              <span class="svg-container">
+                <div class="passwordBg"></div>
+              </span>
+                <el-input @keyup.enter.native="handleLogin" v-model="loginForm.code"
+                          :placeholder="$t('login.pleaseEnterCode')"></el-input>
+                <el-button size="mini" class="show-pwd1" v-if="show" :disabled="disabled" @click="getVerificationCode">{{$t('login.sendCode')}}</el-button>
+                <span class="show-pwd" v-if="!show">{{$t('login.areadySend')}}({{count}}s)</span>
+              </el-form-item>
+            </template>
+
             <el-form-item class="form-btn">
               <el-button type="primary" class="form-btn-login" :loading="loading" @click.native.prevent="handleLogin">
                 {{$t('login.login')}}
               </el-button>
-              <div><a href="http://a9.idesum.com/forget.html?refer=https://a9partner.idesum.com/">{{$t('login.forget')}}</a>
+              <div class="opt-row"><a href="http://a9.idesum.com/forget.html?refer=https://a9partner.idesum.com/">{{$t('login.forget')}}</a>
+                <a class="wayChange" @click="changeLoginWay">{{loginWay === 0 ? $t('login.loginWay1') :$t('login.loginWay2')}}</a>
               </div>
+              <div class="rTip"><a target="_blank" href="https://a9sys.idesum.com/apk/anine-seller-release1.1.1-202003311125.apk">{{$t('login.registerTip')}}</a></div>
             </el-form-item>
           </el-form>
+
       </div>
       <div class="login-footer">
           <div style="width: 1000px;margin: 0 auto;padding: 10px 0 0 0 ;position: relative;overflow: hidden">
@@ -64,7 +95,7 @@
 </template>
 
 <script>
-// import { login } from '@/api/login'
+import { mobileCode } from '@/api/login'
 export default {
   name: 'login',
   data() {
@@ -77,36 +108,61 @@ export default {
     //   }
     // }
     return {
+      nationsCodes: { '+86': '86', '+855': '855'},
       loginForm: {
         login_name: '',
         nation_code: '86',
         pass_word: '',
+        code: '',
         merchant: true
       },
       loginRules: {
-        login_name: [{ required: true, trigger: 'blur', message: this.$t('login.accountCheck') }],
-        pass_word: [{ required: true, trigger: 'blur', message: this.$t('login.passwordCheck') }]
+        login_name: [{ required: true, trigger: 'blur', message: this.$t('login.accountCheck') }]
       },
+      loginWay: 0,
       loading: false,
       pwdType: 'password',
       disabled: true,
       timer: null,
       show: true,
-      count: '',
+      count: 0,
       mobile: ''
+
     }
   },
   watch: {
-    mobile(val) {
-      this.loginForm.mobile = val
-      if (val.length !== 11) {
-        this.disabled = true
-      } else {
-        this.disabled = false
-      }
+    'loginForm.login_name'(val) {
+      this.disabled = false
     }
   },
   methods: {
+    getVerificationCode() {
+      const timeCount = 60
+      if (!this.timer) {
+        this.count = timeCount
+        mobileCode({ 'login_name': this.loginForm.login_name, nation_code: this.loginForm.nation_code, 'type': 'login' }).then(res => {
+          if (res.meta === 0) {
+            this.show = false
+            this.timer = setInterval(() => {
+              if (this.count > 0 && this.count <= timeCount) {
+                this.count--
+              } else {
+                this.show = true
+                clearInterval(this.timer)
+                this.timer = null
+              }
+            }, 1000)
+          }
+        })
+      }
+    },
+    changeLoginWay() {
+      if (this.loginWay === 0) {
+        this.loginWay = 1
+      } else {
+        this.loginWay = 0
+      }
+    },
     showPwd() {
       if (this.pwdType === 'password') {
         this.pwdType = ''
@@ -118,7 +174,19 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then(() => {
+          const lf = { merchant: true, login_name: this.loginForm.login_name }
+          if (this.loginWay === 0) {
+            if (this.loginForm.pass_word.length < 6) {
+              this.$message.error(this.$t('login.passwordCheck'))
+              this.loading = false
+              return
+            }
+            lf['pass_word'] = this.loginForm.pass_word
+          } else {
+            lf['nation_code'] = this.loginForm.nation_code
+            lf['code'] = this.loginForm.code
+          }
+          this.$store.dispatch('Login', lf).then(() => {
             this.loading = false
             this.$router.push({ path: '/dashboard' })
           }).catch(() => {
@@ -148,6 +216,17 @@ export default {
     height: 20px;
     cursor: pointer;
     position: absolute;
+  }
+  .rTip{
+    color: #999999;
+    margin-top: 10px;
+  }
+  .opt-row{
+    display: flex;
+    justify-content: space-between;
+    .wayChange{
+      color: #999999;
+    }
   }
   .btn{
     height: 100%;

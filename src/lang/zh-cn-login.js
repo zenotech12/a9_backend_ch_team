@@ -12,5 +12,11 @@ export default {
   merchantSystem: 'A9 商户中心',
   slogan: '利益共享-共同发展',
   copyright: '版权所有',
-  forget: '忘记密码？'
+  forget: '忘记密码？',
+  loginWay1: '验证码登录',
+  loginWay2: '密码登录',
+  registerTip: '还不是商户？下载APP申请',
+  pleaseEnterCode: '请输入验证码',
+  sendCode: '获取验证码',
+  areadySend: '已发送'
 }
