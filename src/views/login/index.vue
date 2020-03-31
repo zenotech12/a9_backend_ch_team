@@ -68,14 +68,14 @@
 export default {
   name: 'login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      // var reg = /^((\d2,3)|(\d{3}\-))?13\d{9}$/
-      if (value.length < 11) {
-        callback(new Error(this.$t('login.accountCheck')))
-      } else {
-        callback()
-      }
-    }
+    // const validateUsername = (rule, value, callback) => {
+    //   // var reg = /^((\d2,3)|(\d{3}\-))?13\d{9}$/
+    //   if (value.length < 11) {
+    //     callback(new Error(this.$t('login.accountCheck')))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       loginForm: {
         login_name: '',
