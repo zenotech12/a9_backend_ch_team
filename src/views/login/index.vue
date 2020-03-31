@@ -84,7 +84,7 @@ export default {
         merchant: true
       },
       loginRules: {
-        login_name: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        login_name: [{ required: true, trigger: 'blur', message: this.$t('login.accountCheck') }],
         pass_word: [{ required: true, trigger: 'blur', message: this.$t('login.passwordCheck') }]
       },
       loading: false,
