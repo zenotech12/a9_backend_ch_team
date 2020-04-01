@@ -11,7 +11,7 @@ import { appKey } from './serverConfig'
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
   baseURL: '/api/v1', // api的base_url
-  timeout: 15000 // 请求超时时间
+  timeout: 40000 // 请求超时时间
 })
 
 function getSign(data, path, method) {
