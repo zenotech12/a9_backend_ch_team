@@ -140,7 +140,7 @@ export default {
       const timeCount = 60
       if (!this.timer) {
         this.count = timeCount
-        mobileCode({ 'login_name': this.loginForm.login_name, nation_code: this.loginForm.nation_code, 'type': 'login' }).then(res => {
+        mobileCode({ 'login_name': this.loginForm.login_name, nation_code: this.loginForm.nation_code, 'type': 'loginandreg' }).then(res => {
           if (res.meta === 0) {
             this.show = false
             this.timer = setInterval(() => {
