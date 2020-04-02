@@ -108,7 +108,7 @@ export default {
     //   }
     // }
     return {
-      nationsCodes: { '+86': '86', '+855': '855'},
+      nationsCodes: { '+86': '86', '+855': '855' },
       loginForm: {
         login_name: '',
         nation_code: '86',

@@ -58,8 +58,8 @@
           </el-form-item>
           <el-form-item :label="$t('goods.sp')" required>
             <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
-              <el-input v-model="goodsProps[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
-              <el-tag :key="tag" v-for="tag in goodsProps[k].items" closable :disable-transitions="false"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
+              <el-input size="small" v-model="goodsProps[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
+              <el-tag :key="tag" v-for="(tag,i) in goodsProps[k].items" closable :disable-transitions="false" @click="showPropEdit(k,i,tag)"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
               <el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
               <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>
             </div>
@@ -204,6 +204,12 @@
           <image-upload @uploadSuccess="propImageUploadSuccess"></image-upload>
           <div slot="footer" class="dialog-footer">
             <el-button @click="showPropsImageDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
+          </div>
+        </el-dialog>
+        <el-dialog :title="propsEditTitle" width="400px" @close="showPropsEditDialog=false" :visible.sync="showPropsEditDialog" :close-on-click-modal="false" center append-to-body>
+          <div><el-input v-model="propeditingTag"></el-input></div>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="editPropTagFunc" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
     </div>
@@ -354,7 +360,13 @@
         goodsInventoryData: [],
         showPropsImageDialog: false,
         propsImageEditIndex: 0,
-        propsImageEditTitle: ''
+        propsImageEditTitle: '',
+        propsEditTitle: '',
+        showPropsEditDialog: false,
+        propeditingTag: '',
+        propeditingTagOld: '',
+        propeditingIndex: 0,
+        propeditingTagIndex: 0
       }
     },
     created() {
@@ -442,6 +454,18 @@
       }
     },
     methods: {
+      showPropEdit(k, i, tag) {
+        this.propsEditTitle = this.goodsProps[k].name + '；' + tag
+        this.propeditingTag = tag
+        this.propeditingTagOld = tag
+        this.propeditingIndex = k
+        this.propeditingTagIndex = i
+        this.showPropsEditDialog = true
+      },
+      editPropTagFunc() {
+        this.$set(this.goodsProps[this.propeditingIndex].items, this.propeditingTagIndex, this.propeditingTag)
+        this.showPropsEditDialog = false
+      },
       getAddressListFunc() {
         shippingAddressesList().then(res => {
           this.addressList = res.items
