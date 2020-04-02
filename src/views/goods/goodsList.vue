@@ -110,7 +110,7 @@
                       </el-tag>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('goods.putaway')" width="90">
+                  <el-table-column :label="$t('goods.putawayG')" width="90">
                     <template  slot-scope="scope">
                       <el-tooltip v-if="scope.row.approve_status === 2" class="item" effect="dark" :content="$t('goods.putawayTip')" placement="top">
                         <el-tag @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
@@ -141,11 +141,16 @@
                   </el-table-column>
                   <el-table-column :label="$t('tools.opt')" width = "190" fixed="right">
                     <template slot-scope="scope">
-                      <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                      <span class="xiexian">/</span>
-                      <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">{{$t('goods.piEdit')}}</el-button>
-                      <span class="xiexian">/</span>
-                      <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
+                      <template v-if="!scope.row.deleted">
+                        <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
+                        <span class="xiexian">/</span>
+                        <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">{{$t('goods.piEdit')}}</el-button>
+                        <span class="xiexian">/</span>
+                        <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
+                      </template>
+                      <template v-else>
+                        <el-button type="text" @click="goodsRestoreFun(scope.row)" size="small">{{$t('goods.restore')}}</el-button>
+                      </template>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -349,7 +354,7 @@
 </template>
 
 <script>
-  import { spusAdd, spusShelf, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify, spusSkusList } from '@/api/goods'
+  import { spusAdd, spusShelf, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify, spusSkusList, goodsRestore } from '@/api/goods'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
   import service from '@/utils/request'
@@ -391,14 +396,15 @@
         secondArr: [{ label: 0.5, value: 1800 }, { label: 1, value: 3600 }, { label: 2, value: 7200 }, { label: 5, value: 18000 }],
         editTitle: '发布资源',
         disabled: false,
-        promptInfor: '确定删除当前资源？',
+        promptInfor: this.$t('goods.delTip'),
         searchForm: {
           skip: 0,
           limit: 10,
           approve_status: 2, // 审批状态 0所有 1待审批 2审批成功 3拒绝
           merchant_id: '', // 商户id，不填所有，自营填000000000000000000000001
           type_id: '',
-          shelf_status: 2 // 上架状态 所有0 未上架1 上架2
+          shelf_status: 2, // 上架状态 所有0 未上架1 上架2
+          deleted: false
         },
         approveStatus: [
           {
@@ -424,6 +430,9 @@
           }, {
             value: 2,
             label: this.$t('goods.putawayA')
+          }, {
+            value: 3,
+            label: this.$t('goods.putawayF')
           }],
         form: {
           resources_id: '',
@@ -756,6 +765,11 @@
         this.currentPage = val
       },
       getTableData() {
+        if (this.searchForm.shelf_status === 3) {
+          this.searchForm.deleted = true
+        } else {
+          this.searchForm.deleted = false
+        }
         spusList(this.searchForm).then(response => {
           if (response.meta === 0) {
             this.tableData.loading = false
@@ -774,6 +788,11 @@
       },
       search() {
         this.getTableData()
+      },
+      goodsRestoreFun(row) {
+        goodsRestore(row.id).then(res => {
+          this.getTableData()
+        })
       },
       showGoodsEditor(data, step) {
         if (this.goodsTypeData.length < 2) {

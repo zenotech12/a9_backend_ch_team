@@ -116,6 +116,12 @@
                 {{$t('goods.hour')}}
               </el-col>
             </el-form-item>
+            <el-form-item :label="$t('goods.xgLabel')" prop="xg">
+              <el-radio v-model="xgType" :label="1">{{$t('goods.xgLabel1')}}</el-radio>
+              <el-radio v-model="xgType" :label="2">{{$t('goods.xgLabel2')}}</el-radio>
+              <el-input style="width: 100px; display: inline-block" v-if="xgType == 2" size="small" placeholder="" v-model.number="form.buy_limit">
+              </el-input>
+            </el-form-item>
             <el-divider content-position="left">{{$t('operation.tgPrice')}}</el-divider>
             <el-table :data="goodsInventoryTable"  style="width: 100%">
               <el-table-column prop="title" :label="$t('goods.sp')">
@@ -158,6 +164,7 @@
       const formData = this.setForm()
       const pz = 10
       return {
+        xgType: 1,
         timeValidSwitch: true,
         searchForm: {
           cobuy: 2,
@@ -191,6 +198,11 @@
       'searchForm.doing_time': function() {
         this.getDataListFun()
       },
+      xgType(val) {
+        if (val === 1) {
+          this.form.buy_limit = 0
+        }
+      },
       grantTime(val) {
         if (val.length > 0) {
           this.form.start_time = val[0]
@@ -222,23 +234,27 @@
         if (data) {
           this.grantTime = [data.cobuy.start_time, data.cobuy.end_time]
           this.currentSetSkus = data.panic_buy_skus
+          this.xgType = data.buy_limit && data.buy_limit.cobuy > 0 ? 2 : 1
           return {
             spu_id: data.id,
             cobuy_person_count: data.cobuy.person_count,
             cobuy_group_valid_sec: data.cobuy.cobuy_group_valid_sec,
             start_time: data.cobuy.start_time,
-            end_time: data.cobuy.end_time
+            end_time: data.cobuy.end_time,
+            buy_limit: data.buy_limit && data.buy_limit.cobuy > 0 ? data.buy_limit.cobuy : 0
           }
         } else {
           this.grantTime = []
           this.validTime = []
           this.currentSetSkus = []
+          this.xgType = 1
           return {
             spu_id: '',
             cobuy_person_count: '',
             cobuy_group_valid_sec: '',
             start_time: '',
-            end_time: ''
+            end_time: '',
+            buy_limit: 0
           }
         }
       },
@@ -270,7 +286,7 @@
           this.submitDisabled = false
           return
         }
-        const itemData = { type: 2, cobuy_skus: JSON.stringify(skuPrice), start_time: this.form.start_time, end_time: this.form.end_time, cobuy_person_count: this.form.cobuy_person_count, cobuy_group_valid_sec: this.form.cobuy_group_valid_sec }
+        const itemData = { type: 2, cobuy_skus: JSON.stringify(skuPrice), start_time: this.form.start_time, end_time: this.form.end_time, cobuy_person_count: this.form.cobuy_person_count, cobuy_group_valid_sec: this.form.cobuy_group_valid_sec, buy_limit: this.form.buy_limit }
 
         cobuySet(this.form.spu_id, itemData).then(res => {
           this.getDataListFun()

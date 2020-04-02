@@ -9,11 +9,13 @@ export default {
   checkStatusB: '已审',
   checkStatusC: '驳回',
   putaway: '上下架',
-  putawayA: '已上架',
-  putawayB: '已下架',
+  putawayA: '出售中',
+  putawayB: '仓库中',
   putawayC: '上架',
   putawayD: '指定上架时间',
   putawayE: '下架（保存到仓库）',
+  putawayF: '回收站',
+  putawayG: '销售状态',
   putawayTip: '点击可直接修改上下架架状态',
   price: '价格',
   inventory: '库存',
@@ -86,5 +88,10 @@ export default {
   postAddr: '发货地',
   saveGoods: '保存商品信息',
   saveTip1: '商品信息保存成功,是否继续添加？',
-  saveTip2: '商品信息保存成功!'
+  saveTip2: '商品信息保存成功!',
+  xgLabel: '商品限购',
+  xgLabel1: '不限购',
+  xgLabel2: '限购',
+  delTip: '确定删除当前商品？',
+  restore: '恢复'
 }

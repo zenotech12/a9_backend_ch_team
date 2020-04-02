@@ -155,6 +155,12 @@
             </el-select>
           </el-form-item>
           <el-divider content-position="left">{{$t('goods.goodsInfo5')}}</el-divider>
+          <el-form-item :label="$t('goods.xgLabel')" prop="xg">
+            <el-radio v-model="xgType" :label="1">{{$t('goods.xgLabel1')}}</el-radio>
+            <el-radio v-model="xgType" :label="2">{{$t('goods.xgLabel2')}}</el-radio>
+            <el-input style="width: 100px; display: inline-block" v-if="xgType == 2" size="small" placeholder="" v-model.number="goodsData.buy_limit">
+            </el-input>
+          </el-form-item>
           <el-form-item :label="$t('goods.putaway')">
             <el-col :span="4">
               <el-select v-model="goodsData.shelf_status">
@@ -223,6 +229,7 @@
     },
     data() {
       return {
+        xgType: 1,
         loading: true,
         defaultAddr: '',
         addressList: [],
@@ -335,7 +342,8 @@
           shelf_time: '',
           address_id: '',
           postage_setting_id: '',
-          rider_post_support: false
+          rider_post_support: false,
+          buy_limit: 0
         },
         isSetShelfTime: false,
         goodsSysTypes: [],
@@ -356,11 +364,17 @@
     },
     mounted() {
       this.getTypeGoodsBaseInfo()
+      // this.loading = false
       this.getAddressListFunc()
       this.getPostageListFunc()
       // this.getPartner()
     },
     watch: {
+      xgType(val) {
+        if (val === 1) {
+          this.goodsData.buy_limit = 0
+        }
+      },
       tableFile: {
         handler(val) {
           this.importPara.extra = val
@@ -613,8 +627,10 @@
             shelf_time: data.shelf_time !== '--' ? data.shelf_time : this.$moment().format('YYYY-MM-DD HH:mm:ss'),
             address_id: data.address_id,
             postage_setting_id: data.postage_setting_id,
-            rider_post_support: data.rider_post_support
+            rider_post_support: data.rider_post_support,
+            buy_limit: data.buy_limit ? data.buy_limit.default : 0
           }
+          this.xgType = this.goodsData.buy_limit > 0 ? 2 : 1
           this.isSetShelfTime = false
           console.log(this.$moment().format('YYYY-MM-DD HH:mm:ss'))
           if (data.shelf_time !== '--' && data.shelf_time > this.$moment().format('YYYY-MM-DD HH:mm:ss')) {
@@ -630,6 +646,7 @@
           this.isSetShelfTime = false
           this.goodsSysTypes = []
           this.goodsSysTypeFields = []
+          this.xgType = 1
           this.goodsData = {
             id: '',
             default_type_id: '',
@@ -646,7 +663,8 @@
             shelf_time: this.$moment().format('YYYY-MM-DD HH:mm:ss'),
             address_id: '',
             postage_setting_id: '',
-            rider_post_support: false
+            rider_post_support: false,
+            buy_limit: 0
           }
         }
       },
@@ -699,7 +717,8 @@
       },
       updateGoodsFunc() {
         const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, intro: this.goodsData.intro,
-          type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images), desc: this.goodsData.desc }
+          type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images),
+          buy_limit: this.goodsData.buy_limit, desc: this.goodsData.desc }
         goodsItem['postage_setting_id'] = this.goodsData.postage_setting_id
         goodsItem['rider_post_support'] = this.goodsData.rider_post_support
         goodsItem['address_id'] = this.goodsData.address_id

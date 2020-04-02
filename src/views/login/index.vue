@@ -1,96 +1,96 @@
 <template>
   <div class="login-container">
+    <div class="layout">
       <div class="login-header">
-                <div style="width: 1000px;margin: 0 auto;padding: 10px;position: relative">
-                  <span class="login_title1">商户平台</span>
-                </div>
+        <div style="width: 1000px;margin: 0 auto;padding: 10px;position: relative">
+          <span class="login_title1">商户平台</span>
+        </div>
       </div>
       <div class="login-content">
-          <div class="login-content-box" style="width: 1000px;margin: 0 auto;padding: 10px;position: relative">
-              <div style="z-index: 999;color: #fff;font-size: 24px;display: inline-block;position: absolute;top: 100px;line-height: 1.4;left: 0;">
-                    <p class="login-content-title">{{$t('login.slogan')}}</p>
-                    <!--<p style="color:#FFFFFF;font-size: 20px;margin-top: 0;">Pioneer of Intelligent Pallet Material Linkage</p>-->
-              </div>
+        <div class="login-content-box">
+        </div>
+        <el-form autoComplete="on" style="background: #fff;z-index: 999" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
+                 class="card-box login-form">
+          <div class="login-form-comName">
+            {{$t('login.title')}}
           </div>
-          <el-form autoComplete="on" style="background: #fff;z-index: 999" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
-                   class="card-box login-form">
-              <div class="login-form-loginName">{{$t('login.login')}}</div>
-              <div class="login-form-comName">
-                {{$t('login.title')}}
-              </div>
-            <!--<el-form-item prop="username">-->
-              <!--<span class="svg-container svg-container_login">-->
-                <!--<div class="usernameBg"></div>-->
-              <!--</span>-->
-              <!--<el-input name="username" type="text" v-model="loginForm.username"  :placeholder="$t('login.pleaseEnterAccount')" />-->
-            <!--</el-form-item>-->
-            <!--<el-form-item prop="password">-->
-              <!--<span class="svg-container">-->
-                <!--<div class="passwordBg"></div>-->
-              <!--</span>-->
-              <!--<el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password"-->
-                        <!--:placeholder="$t('login.pleaseEnterPassword')"></el-input>-->
-              <!--<span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>-->
-            <!--</el-form-item>-->
-            <template v-if="loginWay === 0">
-              <el-form-item prop="login_name">
+          <template v-if="loginWay === 0">
+            <el-form-item prop="login_name">
               <span class="svg-container svg-container_login">
                 <div class="usernameBg"></div>
               </span>
-                <el-input name="login_name" class="inputText" type="text" v-model="loginForm.login_name" clearable  :placeholder="$t('login.pleaseEnterAccount')" />
-              </el-form-item>
-              <el-form-item prop="pass_word">
-              <span class="svg-container">
-                <div class="passwordBg"></div>
-              </span>
-                <el-input type="password" @keyup.enter.native="handleLogin" v-model="loginForm.pass_word"
-                          :placeholder="$t('login.pleaseEnterPassword')"></el-input>
-              </el-form-item>
-            </template>
-            <template v-else>
-              <el-form-item prop="login_name">
-              <span class="svg-container svg-container_login">
-                <div class="usernameBg"></div>
-              </span>
-                <el-select v-model="loginForm.nation_code" style="width: 30%">
-                  <el-option
-                    v-for="(v, k) in nationsCodes"
-                    :key="v"
-                    :label="k"
-                    :value="v">
-                  </el-option>
-                </el-select>
-                <el-input name="login_name" style="width: 55%" class="inputText1" type="text" v-model="loginForm.login_name" clearable  :placeholder="$t('login.pleaseEnterAccount')" />
-              </el-form-item>
-              <el-form-item prop="code">
-              <span class="svg-container">
-                <div class="passwordBg"></div>
-              </span>
-                <el-input @keyup.enter.native="handleLogin" v-model="loginForm.code"
-                          :placeholder="$t('login.pleaseEnterCode')"></el-input>
-                <el-button size="mini" class="show-pwd1" v-if="show" :disabled="disabled" @click="getVerificationCode">{{$t('login.sendCode')}}</el-button>
-                <span class="show-pwd" v-if="!show">{{$t('login.areadySend')}}({{count}}s)</span>
-              </el-form-item>
-            </template>
-
-            <el-form-item class="form-btn">
-              <el-button type="primary" class="form-btn-login" :loading="loading" @click.native.prevent="handleLogin">
-                {{$t('login.login')}}
-              </el-button>
-              <div class="opt-row"><a href="http://a9.idesum.com/forget.html?refer=https://a9partner.idesum.com/">{{$t('login.forget')}}</a>
-                <a class="wayChange" @click="changeLoginWay">{{loginWay === 0 ? $t('login.loginWay1') :$t('login.loginWay2')}}</a>
-              </div>
-              <div class="rTip"><a target="_blank" href="https://a9sys.idesum.com/apk/anine-seller-release1.1.1-202003311125.apk">{{$t('login.registerTip')}}</a></div>
+              <el-input name="login_name" class="inputText" type="text" v-model="loginForm.login_name" clearable  :placeholder="$t('login.pleaseEnterAccount')" />
             </el-form-item>
-          </el-form>
-
-      </div>
-      <div class="login-footer">
-          <div style="width: 1000px;margin: 0 auto;padding: 10px 0 0 0 ;position: relative;overflow: hidden">
-            <div class="login-footer-title">{{$t('login.title')}} {{$t('login.copyright')}} | 粤ICP备18114860号</div>
+            <el-form-item prop="pass_word">
+              <span class="svg-container">
+                <div class="passwordBg"></div>
+              </span>
+              <el-input type="password" @keyup.enter.native="handleLogin" v-model="loginForm.pass_word"
+                        :placeholder="$t('login.pleaseEnterPassword')"></el-input>
+            </el-form-item>
+          </template>
+          <template v-else>
+            <el-form-item prop="login_name">
+              <span class="svg-container svg-container_login">
+                <div class="usernameBg"></div>
+              </span>
+              <el-select v-model="loginForm.nation_code" style="width: 30%">
+                <el-option
+                  v-for="(v, k) in nationsCodes"
+                  :key="v"
+                  :label="k"
+                  :value="v">
+                </el-option>
+              </el-select>
+              <el-input name="login_name" style="width: 55%" class="inputText1" type="text" v-model="loginForm.login_name" clearable  :placeholder="$t('login.pleaseEnterAccount')" />
+            </el-form-item>
+            <el-form-item prop="code">
+              <span class="svg-container">
+                <div class="passwordBg"></div>
+              </span>
+              <el-input @keyup.enter.native="handleLogin" v-model="loginForm.code"
+                        :placeholder="$t('login.pleaseEnterCode')"></el-input>
+              <el-button size="mini" class="show-pwd1" v-if="show" :disabled="disabled" @click="getVerificationCode">{{$t('login.sendCode')}}</el-button>
+              <span class="show-pwd" v-if="!show">{{$t('login.areadySend')}}({{count}}s)</span>
+            </el-form-item>
+          </template>
+          <div class="opt-row"><a href="http://a9.idesum.com/forget.html?refer=https://a9partner.idesum.com/">{{$t('login.forget')}}</a>
+            <a class="wayChange" @click="changeLoginWay">{{loginWay === 0 ? $t('login.loginWay1') :$t('login.loginWay2')}}</a>
           </div>
-      </div>
+          <el-form-item class="form-btn">
+            <el-button type="primary" class="form-btn-login" :loading="loading" @click.native.prevent="handleLogin">
+              {{$t('login.login')}}
+            </el-button>
+            <div class="rTip">{{$t('login.registerTip1')}}<a >{{$t('login.registerTip')}}
+              <div class="qrtip">
+                <img src="https://a9app.idesum.com/data/app/v1/qrcode/conv?str=https://https://a9sys.idesum.com/apk/anine-seller-release1.1.1-202003311125.apk"/>
+              </div>
+            </a></div>
+          </el-form-item>
+        </el-form>
+        <div style="clear: both">
 
+        </div>
+      </div>
+    </div>
+     <div class="footer-container">
+      <div class="login-footer">
+        <div class="footer-menu">
+          <a>{{$t('login.footmenu1')}}</a>
+          <span>|</span>
+          <a>{{$t('login.footmenu2')}}</a>
+          <span>|</span>
+          <a>{{$t('login.footmenu3')}}</a>
+          <span>|</span>
+          <a>{{$t('login.footmenu4')}}</a>
+          <span>|</span>
+          <a>{{$t('login.footmenu5')}}</a>
+          <span>|</span>
+          <a>{{$t('login.footmenu6')}}</a>
+        </div>
+        <div class="copyright">{{$t('login.copyright')}}</div>
+      </div>
+     </div>
   </div>
 </template>
 
@@ -208,8 +208,25 @@ export default {
   $bg:#9ac338;
   $dark_gray:#889aa4;
   $light_gray:#eee;
-  .login-footer{
-      min-height: 200px;
+  .footer-container{
+    width: 100%;
+    background-color:#9BC338 ;
+    padding: 25px 0px;
+    .login-footer{
+      font-size: 12px;
+      color: #ffffff;
+        width: 1200px;
+        margin: 0 auto;
+      .footer-menu{
+        span{
+          padding: 0px 15px;
+          display: inline-block;
+        }
+      }
+      .copyright{
+        margin-top: 18px;
+      }
+    }
   }
   .svg{
     width: 20px;
@@ -219,14 +236,30 @@ export default {
   }
   .rTip{
     color: #999999;
-    margin-top: 10px;
+    margin-top: 15px;
+    a{
+      color: #333333;
+      position: relative;
+      div{
+        position: absolute;
+        top: 20px;
+        left: -5px;
+        background: url("../../assets/images/qr-bg.png");
+        width: 105px;
+        height: 116px;
+        padding: 14px 3px 3px 3px;
+        img{
+          width: 99px;
+          height: 99px;
+        }
+      }
+    }
   }
   .opt-row{
     display: flex;
     justify-content: space-between;
-    .wayChange{
-      color: #999999;
-    }
+    color: #999999;
+    font-size: 12px;
   }
   .btn{
     height: 100%;
@@ -243,49 +276,27 @@ export default {
     }
   }
 .login-header{
-    height: 189px;
-    /*首页公司系统名称*/
-    .login_title1{
-      display: inline-block;
-      color: #fff;
-      font-size: 24px;
-      font-family:PingFangSC-Medium;
-      /*font-weight:500;*/
-      margin-top: 148px;
-    }
-    .login_title2{
-      display: inline-block;
-      color: #000000;
-      font-size: 24px;
-      font-family:PingFangSC-Medium;
-      font-weight:500;
-      margin-top: 122px;
-    }
+    height: 84px;
+    background: url("../../assets/images/plogo.png") no-repeat left center;
+    margin-top: 38px;
 }
 .login-content{
+    margin-top: 50px;
+  overflow: hidden;
     position: relative;
-    height: 580px;
+    min-height: calc(100vh - 256px);
     /*background-color: #182538;*/
     background-size: 100% auto;
     .login-content-box {
-      height: 300px;
-      /*background-image: url(../../assets/images/dl/login_bac.png)*/
+      width: 488px;
+      height: 484px;
+      background: url(../../assets/images/login-bg.png) no-repeat;
+      float: left;
+      margin-left: 96px;
     }
-    .login-content-title{
-      font-size: 30px;
-      margin-top: 30px;
-      margin-bottom: 0;
-      font-family:PingFangSC-Semibold;
-    }
-  .login-content-form{
-    background: #fff;
-    position: relative;
-    top: -50px;
-    left: 0;
-  }
 }
   .login-container {
-    background-color: #9ac338;
+    background-color: #ffffff;
     overflow: hidden;
     position: fixed;
     height: 100%;
@@ -293,6 +304,11 @@ export default {
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
       -webkit-text-fill-color: $bg !important;
+    }
+    .layout{
+      width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
     }
     input {
       background: #fff;
@@ -353,13 +369,12 @@ export default {
     }
     /*登录表单界面*/
     .login-form {
-      position: absolute;
-      top: 82px;
-      right:24%;
+      float: right;
+      margin-right: 0px;
+      margin-top: 30px;
       width: 360px;
       height: 388px;
       padding: 35px 30px 15px 30px;
-      border-top: 6px solid #F99426;
       .login-form-loginName {
         text-align: center;
         font-size:18px;
@@ -369,11 +384,11 @@ export default {
         line-height:25px;
       }
       .login-form-comName {
-        text-align: center;
+        text-align: left;
         font-size:16px;
         font-family:PingFangSC-Medium;
         font-weight:500;
-        color:#9ac338;
+        color:#333333;
         line-height:22px;
         margin: 22px 0 36px 0;
       }
@@ -390,14 +405,15 @@ export default {
     .form-btn{
       height: 32px;
       border: none;
+      margin-top: 27px;
       .form-btn-login {
         height: 32px;
         padding: 0;
         line-height: 32px;
         width:100%;
         border-radius: 2px;
-        background-color: #F99426;
-        border-color: #F99426;
+        background-color: #9BC338;
+        border-color: #9BC338;
       }
     }
     .passwordRow {
@@ -433,17 +449,6 @@ export default {
       position: absolute;
       right: 35px;
       bottom: 28px;
-    }
-    .login-footer-title {
-      width:100%;
-      height:17px;
-      font-size:12px;
-      font-family:PingFangSC-Medium;
-      font-weight:500;
-      color:rgba(190,193,198,1);
-      line-height:17px;
-      margin: 30px auto;
-      text-align: center;
     }
   }
   .test {

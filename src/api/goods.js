@@ -146,3 +146,11 @@ export function spuDistribution(data) {
     data: data
   })
 }
+
+// 商品.恢复
+export function goodsRestore(id) {
+  return request({
+    url: 'spus/' + id + '/restore',
+    method: 'put'
+  })
+}

@@ -94,6 +94,12 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item :label="$t('goods.xgLabel')" prop="xg">
+              <el-radio v-model="xgType" :label="1">{{$t('goods.xgLabel1')}}</el-radio>
+              <el-radio v-model="xgType" :label="2">{{$t('goods.xgLabel2')}}</el-radio>
+              <el-input style="width: 100px; display: inline-block" v-if="xgType == 2" size="small" placeholder="" v-model.number="form.buy_limit">
+              </el-input>
+            </el-form-item>
             <el-divider content-position="left">{{$t('operation.pbSkus')}}</el-divider>
             <el-table :data="goodsInventoryTable"  style="width: 100%">
               <el-table-column :label="$t('operation.pbSelected')" width="60">
@@ -164,7 +170,8 @@
         formEditDialog: false,
         submitDisabled: false,
         seckillTimes: [],
-        selectedTimes: 0 // 选择的场次
+        selectedTimes: 0, // 选择的场次
+        xgType: 1
       }
     },
     computed: {
@@ -175,6 +182,11 @@
     watch: {
       'searchForm.doing_time': function() {
         this.getDataListFun()
+      },
+      xgType(val) {
+        if (val === 1) {
+          this.form.buy_limit = 0
+        }
       },
       searchType(val) {
         this.skip = 0
@@ -242,21 +254,25 @@
           this.grantTime = [data.bt.substring(0, 10), data.et.substring(0, 10)]
           this.currentSetSkus = data.panic_buy_skus
           this.selectedTimes = parseInt(data.bt.substring(11, 13))
+          this.xgType = data.buy_limit > 0 ? 2 : 1
           return {
             id: data.id,
             spu_id: data.spu_id,
             bt: data.bt.substring(0, 10),
-            et: data.et.substring(0, 10)
+            et: data.et.substring(0, 10),
+            buy_limit: data.buy_limit
           }
         } else {
           this.grantTime = []
           this.validTime = []
           this.currentSetSkus = []
+          this.xgType = 1
           return {
             id: '',
             spu_id: '',
             bt: '',
-            et: ''
+            et: '',
+            buy_limit: 0
           }
         }
       },
@@ -286,7 +302,7 @@
           this.submitDisabled = false
           return
         }
-        const itemData = { spu_id: this.form.spu_id, sku_prices: JSON.stringify(skuPrice), bt: this.form.bt, et: this.form.et }
+        const itemData = { spu_id: this.form.spu_id, sku_prices: JSON.stringify(skuPrice), bt: this.form.bt, et: this.form.et, buy_limit: this.form.buy_limit }
         if (this.form.id !== '') {
           panicBuysModify(this.form.id, itemData).then(res => {
             this.getDataListFun()
