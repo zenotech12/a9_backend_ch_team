@@ -28,7 +28,7 @@
             </el-col>
           </el-row>
           <el-divider content-position="left">{{$t('goods.goodsInfo2')}}</el-divider>
-          <el-form-item :label="$t('goods.goodsType')" v-if="goodsData.type !==2">
+          <el-form-item style="display: none;" :label="$t('goods.goodsType')" v-if="goodsData.type !==2">
             <el-col :span="4">
               <el-select v-model="goodsData.type">
                 <el-option :key="$t('goods.goodsType1')" :label="$t('goods.goodsType1')" :value="1"></el-option>
@@ -106,7 +106,7 @@
           <el-form-item :label="$t('goods.type')" required>
             <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
           </el-form-item>
-          <el-form-item :label="$t('goods.intro')">
+          <el-form-item :label="$t('goods.intro')" style="display: none">
             <el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>
           </el-form-item>
           <el-form-item :label="$t('goods.goodsPic')" required>
@@ -120,7 +120,7 @@
                 <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
               </div>
             </div>
-            <image-upload @uploadSuccess="imageUploadSuccess"></image-upload>
+            <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
           </el-form-item>
           <el-form-item :label="$t('goods.picdes')">
             <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>

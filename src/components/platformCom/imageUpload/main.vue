@@ -4,12 +4,13 @@
       :headers="fileUploadHeader"
       :action="fileUploadUrl" :drag="drag"
       name="image"
+       :multiple="multiple"
       :show-file-list="true"
       :on-success="imageUploadSuccess"
       :file-list="fileList"
       :before-upload="beforeImageUpload">
       <slot>
-        <div class="el-upload__text">{{$t('tools.imgUploadTip1')}}<em>{{$t('tools.imgUploadTip2')}}</em>；{{$t('tools.imgUploadTip3')}}{{sizeLimit/1024}}kb</div>
+        <div class="el-upload__text">{{$t('tools.imgUploadTip1')}}<em>{{$t('tools.imgUploadTip2')}}</em>；{{$t('tools.imgUploadTip3')}}{{sizeLimit/1024/1024}}M</div>
       </slot>
       <div style="display: none" class="el-upload__tip" slot="tip">{{$t('tools.imgUploadTip3')}}{{sizeLimit/1024}}kb</div>
     </el-upload>
@@ -33,7 +34,13 @@
       sizeLimit: {
         type: Number,
         default: function() {
-          return 1024 * 500
+          return 1024 * 1024
+        }
+      },
+      multiple: {
+        type: Boolean,
+        default() {
+          return false
         }
       },
       drag: {

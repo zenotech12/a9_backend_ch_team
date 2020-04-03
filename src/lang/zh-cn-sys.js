@@ -41,5 +41,9 @@ export default {
   genTime: '添加时间',
   loginMobile: '注册手机号',
   loginMobileTip: '该手机号需要先注册成为 ANINE 用户',
-  serviceTip: '设置为客户后，用户可以用过APP与该管理员沟通'
+  serviceTip: '设置为客户后，用户可以用过APP与该管理员沟通',
+  optUser: '操作人',
+  optTime: '操作时间',
+  optModule: '操作模块',
+  optContent: '操作内容'
 }

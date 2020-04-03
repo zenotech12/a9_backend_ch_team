@@ -52,7 +52,7 @@ export default {
   step4Tip: '设置商品规格、库存、价格',
   sysType: '商品类别',
   sysTypeProp: '类目属性',
-  goodsPic: '商品图',
+  goodsPic: '商品主图',
   picdes: '图文介绍',
   sp: '规格、属性',
   spec: '规格名',

@@ -40,6 +40,7 @@
         <el-upload name="image" :headers="fileUploadHeader"
                    :action="fileUploadUrl"
                    list-type="picture-card"
+                   :multiple="true"
                    :file-list="images"
                    :on-success="fileUploadSuccess"
                    :on-preview="handlePictureCardPreview"
@@ -86,7 +87,7 @@
       imageSize: {
         type: Number,
         default: function() {
-          return 0.5
+          return 1
         }
       },
       promptInfo: {

@@ -47,5 +47,6 @@ export default {
   financeList: '账户明细',
   financeTixian: '提现记录',
   address: '地址管理',
-  chatRobot: '聊天机器人'
+  chatRobot: '聊天机器人',
+  optLog: '操作日志'
 }

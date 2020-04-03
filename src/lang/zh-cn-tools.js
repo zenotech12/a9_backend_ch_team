@@ -31,7 +31,7 @@ export default {
   imageUpload: '图片上传',
   imageTip1: '请选择图片',
   imageFormatTip: '上传图片只能是 JPG、png 格式!',
-  imageFormatTip1: '上传图片只能是 JPG、Png 格式!上传图片大小不能超过500KB!',
+  imageFormatTip1: '上传图片只能是 JPG、Png 格式!上传图片大小不能超过1M!',
   imageFormatTip2: '上传图片大小不能超过',
   imageSizeTip: '超过了文件大小限制',
   pleaseSelect: '请选择',

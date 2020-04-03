@@ -187,3 +187,13 @@ export function customerServicesAdd(data) {
     data: data
   })
 }
+
+// 操作日志.查.列表
+export function adminOptLog(param) {
+  return request({
+    url: 'log-options',
+    method: 'get',
+    params: param
+  })
+}
+

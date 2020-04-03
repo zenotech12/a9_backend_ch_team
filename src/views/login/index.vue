@@ -2,9 +2,6 @@
   <div class="login-container">
     <div class="layout">
       <div class="login-header">
-        <div style="width: 1000px;margin: 0 auto;padding: 10px;position: relative">
-          <span class="login_title1">商户平台</span>
-        </div>
       </div>
       <div class="login-content">
         <div class="login-content-box">
@@ -286,7 +283,6 @@ export default {
     position: relative;
     min-height: calc(100vh - 256px);
     /*background-color: #182538;*/
-    background-size: 100% auto;
     .login-content-box {
       width: 488px;
       height: 484px;
@@ -299,7 +295,6 @@ export default {
     background-color: #ffffff;
     overflow: hidden;
     position: fixed;
-    height: 100%;
     width:100%;
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
@@ -454,5 +449,20 @@ export default {
   .test {
     position: absolute;
     top: 0;
+  }
+  @media only screen and (max-height: 850px) {
+    .login-header{
+      margin-top: 5px;
+    }
+    .login-content{
+      margin-top: 10px;
+      min-height: calc(100vh - 195px)
+    }
+    .login-container{
+      overflow: auto;
+      min-width: 1200px;
+      min-height: 700px;
+      position: relative;
+    }
   }
 </style>
