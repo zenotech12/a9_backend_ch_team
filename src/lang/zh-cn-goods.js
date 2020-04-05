@@ -93,5 +93,6 @@ export default {
   xgLabel1: '不限购',
   xgLabel2: '限购',
   delTip: '确定删除当前商品？',
-  restore: '恢复'
+  restore: '恢复',
+  commodityPreview: '商品预览'
 }

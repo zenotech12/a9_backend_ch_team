@@ -47,7 +47,7 @@
               </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('sys.postageRuleEdit')"  :visible.sync="postageDialog">
+        <el-dialog v-if="postageDialog" :title="$t('sys.postageRuleEdit')"  :visible.sync="postageDialog">
       <el-form label-width="100px">
         <el-form-item :label="$t('sys.name')">
           <el-input v-model="postageData.name"></el-input>
@@ -65,11 +65,11 @@
                       placement="top-start"
                       width="600"
                       trigger="click">
-                      <el-row>
+                      <el-row  style="padding: 10px">
                         <el-col v-for="(item, index) in areas" :key="index">
                           <el-col :span="4">
                             <div>
-                              {{item.value}}
+                              <el-checkbox :label="item.value" @change="selectAll($event, scope.$index, scope.row, item.value)"></el-checkbox>
                             </div>
                           </el-col>
                           <el-col :span="20">
@@ -77,6 +77,9 @@
                               <el-checkbox v-model="i.hasCheck" :disabled="i.disabled !== -1 && i.disabled !== scope.$index" :label="i.value" @change="checkClick(scope.row, i.hasCheck, i.value, scope.$index, i)"></el-checkbox>
                             </el-col>
                           </el-col>
+                        </el-col>
+                        <el-col>
+                          <el-checkbox :label="$t('tools.selectAll')" @change="selectAll($event, scope.$index, scope.row)" ></el-checkbox>
                         </el-col>
                       </el-row>
                       <el-input slot="reference" readonly :value="scope.row.province"></el-input>
@@ -87,7 +90,7 @@
               <el-table-column :label="$t('sys.firstWeight')">
                 <template slot-scope="scope">
                   <el-input style="width: 80px" v-model="scope.row.price_base"></el-input>/
-                  <el-input class="input_weight"  placeholder="请输入内容" v-model="scope.row.base">
+                  <el-input class="input_weight"  placeholder="" v-model="scope.row.base">
                     <template slot="append" style="padding: 0px 5px">g</template>
                   </el-input>
                 </template>
@@ -95,7 +98,7 @@
               <el-table-column :label="$t('sys.addWeight')">
                 <template slot-scope="scope">
                   <el-input  style="width: 80px" v-model="scope.row.price_step"></el-input>/
-                  <el-input class="input_weight" placeholder="请输入内容" v-model="scope.row.step">
+                  <el-input class="input_weight" placeholder="" v-model="scope.row.step">
                     <template slot="append" style="width: 25px">g</template>
                   </el-input>
                 </template>
@@ -319,6 +322,9 @@
           item.base = parseInt(item.base)
           item.step = parseInt(item.step)
         })
+        this.postageData.settings = this.postageData.settings.filter(item => {
+          return item.province.length > 0
+        })
         this.postageData.settings = JSON.stringify(this.postageData.settings)
         if (this.postageData.id !== '') {
           postagesModify(this.postageData.id, this.postageData).then(res => {
@@ -352,6 +358,38 @@
         }
         data = data.join(',')
         row.province = data
+      },
+      selectAll(val, i, row, ca) {
+        let data = row.province
+        if (!data) {
+          data = []
+        } else {
+          try {
+            data = data.split(',')
+          } catch (err) {
+            data = []
+          }
+        }
+        this.areas.forEach((area) => {
+          if (!ca || ca === area.value) {
+            area.items.forEach((item) => {
+              if (item.disabled === -1 || item.disabled === i) {
+                if (val) {
+                  if (item.disabled === -1) {
+                    data.push(item.value)
+                  }
+                  this.$set(item, 'hasCheck', true)
+                  this.$set(item, 'disabled', i)
+                } else {
+                  this.$set(item, 'hasCheck', false)
+                  this.$set(item, 'disabled', -1)
+                  data.splice(data.indexOf(item.value), 1)
+                }
+              }
+            })
+          }
+        })
+        row.province = data.join(',')
       },
       addPostage() {
         const obj = {

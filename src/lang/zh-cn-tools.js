@@ -53,5 +53,6 @@ export default {
   no: '否',
   imgUploadTip1: '将文件拖到此处，或',
   imgUploadTip2: '点击上传',
-  imgUploadTip3: '只能上传jpg/png文件，且不超过'
+  imgUploadTip3: '只能上传jpg/png文件，且不超过',
+  selectAll: '全选'
 }

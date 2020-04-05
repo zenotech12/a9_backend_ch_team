@@ -98,6 +98,7 @@
                           <p>{{scope.row.name}}
                             <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
                             <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                            <i @click="goodsPreview(scope.row)" style="cursor: pointer" class="el-icon-view"></i>
                           </p>
                         </div>
                       </div>
@@ -346,6 +347,12 @@
                 </div>
               </el-dialog>
             </el-dialog>
+            <el-dialog :title="$t('goods.commodityPreview')" class="currentDialogGoods" :visible.sync="commodityPreviewShow" center width="375px" height="700px" :close-on-click-modal="false">
+              <iframe height="667px" width="375px" style="border: none;" :src="currentGoods"></iframe>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="commodityPreviewShow = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+              </div>
+            </el-dialog>
           </div>
         </el-col>
       </el-row>
@@ -360,12 +367,15 @@
   import service from '@/utils/request'
   import llEditor from '@/components/LLEditor'
   import { mapGetters } from 'vuex'
+  import { appUrl } from '@/utils/serverConfig'
   export default {
     components: {
       llEditor
     },
     data() {
       return {
+        commodityPreviewShow: false,
+        currentGoods: '',
         formRules: {
           name: [
             { required: true, message: '请输入商品分类的名称', trigger: 'blur' }
@@ -583,6 +593,10 @@
       }
     },
     methods: {
+      goodsPreview(row) {
+        this.currentGoods = appUrl + '/goods/info?id=' + row.id
+        this.commodityPreviewShow = true
+      },
       getTreePath(k) {
         const path = []
         if (k > this.goodsProps.length - 1 || !this.goodsProps[k] || !this.goodsProps[k].items || this.goodsProps[k].items < 1) {
@@ -1066,6 +1080,14 @@
   }
 </style>
 <style lang="scss">
+  .currentDialogGoods {
+    .el-dialog--center .el-dialog__body {
+      padding: 0;
+    }
+    iframe::-webkit-scrollbar{
+      width: 0 !important
+    }
+  }
   .custom-tree-node{
     & > span:first-child{
       width: 100px;
