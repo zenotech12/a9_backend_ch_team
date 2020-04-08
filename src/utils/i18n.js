@@ -14,14 +14,23 @@ import zhLogin from '@/lang/zh-cn-login'
 import enLang from '@/lang/en-lang'
 import zhLang from '@/lang/zh-cn-lang'
 import zhGoods from '@/lang/zh-cn-goods'
+import enGoods from '@/lang/en-goods'
 import zhSys from '@/lang/zh-cn-sys'
+import enSys from '@/lang/en-sys'
 import zhOperation from '@/lang/zh-cn-operation'
+import enOperation from '@/lang/en-operation'
 import zhFinance from '@/lang/zh-cn-finance'
+import enFinance from '@/lang/en-finance'
 import zhOrder from '@/lang/zh-cn-order'
+import enOrder from '@/lang/en-order'
 import zhExpressage from '@/lang/zh-cn-expressage'
+import enExpressage from '@/lang/en-expressage'
 
 const messages = {
   en: {
+    expressage: {
+      ...enExpressage
+    },
     global: {
       ...enLocale
     },
@@ -33,6 +42,21 @@ const messages = {
     },
     lang: {
       ...enLang
+    },
+    goods: {
+      ...enGoods
+    },
+    order: {
+      ...enOrder
+    },
+    operation: {
+      ...enOperation
+    },
+    finance: {
+      ...enFinance
+    },
+    sys: {
+      ...enSys
     },
     ...enElement
   },

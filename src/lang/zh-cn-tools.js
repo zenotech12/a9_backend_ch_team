@@ -54,5 +54,8 @@ export default {
   imgUploadTip1: '将文件拖到此处，或',
   imgUploadTip2: '点击上传',
   imgUploadTip3: '只能上传jpg/png文件，且不超过',
-  selectAll: '全选'
+  selectAll: '全选',
+  copyLink: '复制链接',
+  copyLinkTip: '点击复制',
+  copySuccess: '复制成功'
 }

@@ -1,4 +1,29 @@
-// 登录管理
+﻿// 登录管理
 export default {
-  merchantSystem: 'A9 Merchant Center'
+  pleaseEnterPassword: 'Please enter password.',
+  pleaseEnterAccount: 'Please enter your mobile number',
+  passwordCheck: 'Please enter the password correctly',
+  accountCheck: 'Please enter the correct mobile number',
+  title: 'Log in to ANINE store',
+  passwordCannotLess: 'Password cannot be less than 6 digits',
+  welcome: 'Welcome',
+  login: 'Login',
+  loginOut: 'Logout',
+  merchantSystem: 'A9 Merchant Center',
+  slogan: 'Benefit sharing - common development',
+  copyright: 'Copyright 2000-2020 ANINE International Holdings Limited',
+  forget: 'Forget password？',
+  loginWay1: 'Verification code login',
+  loginWay2: 'Password login',
+  registerTip1: 'Not a merchant yet?',
+  registerTip: 'Download APP to apply',
+  pleaseEnterCode: 'Please enter the verification code',
+  sendCode: 'Get verification code',
+  areadySend: 'has been sent',
+  footmenu1: 'About A9',
+  footmenu2: 'Terms of use',
+  footmenu3: 'Privacy policy',
+  footmenu4: 'Investment cooperation',
+  footmenu5: 'Help center',
+  footmenu6: 'Contact us'
 }

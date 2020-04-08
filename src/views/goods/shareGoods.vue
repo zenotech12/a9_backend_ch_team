@@ -71,8 +71,10 @@
                       <span v-else>{{scope.row.min_brokerage | price}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('tools.opt')" width = "120" fixed="right">
+                  <el-table-column :label="$t('tools.opt')" width = "180" fixed="right">
                     <template slot-scope="scope">
+                      <el-button type="text" :title="$t('tools.copyLinkTip')" v-clipboard:copy="goodsShareLink(scope.row.id)" v-clipboard:success="copySuccess" v-clipboard:error="copyError"  size="small">{{$t('tools.copyLink')}}</el-button>
+                      <span class="xiexian">/</span>
                       <el-button type="text" @click="editShareGoods(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                       <span class="xiexian">/</span>
                       <delete-button @delData="deleteShareGoods(scope.row)"></delete-button>
@@ -137,6 +139,7 @@
   import { spusList, spuTypesList, spuDistribution } from '@/api/goods'
   import { mapGetters } from 'vuex'
   import goodsSelector from '@/components/goodsSelector'
+  import { appUrl } from '@/utils/serverConfig'
   export default {
     components: {
       goodsSelector
@@ -196,6 +199,15 @@
       ])
     },
     methods: {
+      goodsShareLink(id) {
+        return appUrl + '/goods/info?id=' + id
+      },
+      copySuccess() {
+        this.$message.success(this.$t('tools.copySuccess'))
+      },
+      copyError(e) {
+        this.$message.error(e)
+      },
       getTypeList() {
         spuTypesList({ type: 2 }).then(response => {
           if (response.meta === 0) {
