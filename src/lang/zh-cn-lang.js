@@ -230,6 +230,8 @@ export default {
   determineToDeleteCurrentMessage: '确定删除当前消息',
   pleaseEnterTitle: '请输入标题',
   pleaseEnterKeywords: '请输入关键词',
-  editReplyMessage: '编辑回复消息'
-
+  editReplyMessage: '编辑回复消息',
+  langZh: '中文',
+  langEn: '英文',
+  langKh: '柬文'
 }

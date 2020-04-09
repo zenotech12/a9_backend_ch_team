@@ -79,7 +79,7 @@
             </template>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('operation.pbEdit')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('operation.tgGoodsEdit')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
             <el-form-item :label="$t('operation.tgGoods')">
               <goods-selector v-model="form.spu_id" :approve_status="2" :shelf_status="2"></goods-selector>

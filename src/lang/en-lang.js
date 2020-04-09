@@ -230,5 +230,8 @@
   determineToDeleteCurrentMessage: 'Confirm to delete the current message',
   pleaseEnterTitle: 'Please enter the title',
   pleaseEnterKeywords: 'Please enter keywords',
-  editReplyMessage: 'Edit Reply messages'
+  editReplyMessage: 'Edit Reply messages',
+  langZh: 'Chinese',
+  langEn: 'English',
+  langKh: 'Cambodian'
 }

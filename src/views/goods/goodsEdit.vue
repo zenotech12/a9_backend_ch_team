@@ -187,6 +187,9 @@
               </el-col>
             </template>
           </el-form-item>
+          <el-form-item :label="$t('goods.goodsLangSet')">
+            <el-button type="text" @click="showLangSetFunc" size="small">{{$t('goods.goodsLangSetTip')}}</el-button>
+          </el-form-item>
         </el-form>
         <el-dialog :title="propsImageEditTitle" width="400px" @close="showPropsImageDialog=false" :visible.sync="showPropsImageDialog" :close-on-click-modal="false" center append-to-body>
           <template>
@@ -212,6 +215,40 @@
             <el-button @click="editPropTagFunc" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
+        <el-dialog v-if="showGoodsLangSetDialog" :title="$t('goods.goodsLang')" width="70%" @close="showGoodsLangSetDialog=false" :visible.sync="showGoodsLangSetDialog" :close-on-click-modal="false" center append-to-body >
+          <el-tabs v-model="currentLang" >
+            <el-tab-pane v-for="(lv,lk) in languages" :label="lv" :name="lk"></el-tab-pane>
+          </el-tabs>
+          <el-form v-model="langInfo"  label-width="100px">
+            <el-form-item :label="$t('goods.name')" prop="name">
+              <el-input v-model="langInfo[currentLang].name" style="max-width: 500px" clearable></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('goods.sp')" >
+              <div  v-for="(v,k) in langInfo[currentLang].spectification_options" :key="k" class="prop-item">
+                <el-input size="small" v-model="langInfo[currentLang].spectification_options[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input>：
+                <el-input :key="tag" v-for="(tag,i) in langInfo[currentLang].spectification_options[k].items" v-model="langInfo[currentLang].spectification_options[k].items[i]"  class="input-new-tag" ></el-input>
+              </div>
+            </el-form-item>
+            <el-form-item :label="$t('goods.goodsPic')" required>
+              <div class="prop-image__preview" v-if="langInfo[currentLang].images && langInfo[currentLang].images.length > 0">
+                <div class="pitem"  v-for="(img,imgk) in langInfo[currentLang].images" :key="imgk">
+                  <el-image
+                    style="height: 100px; width: 100px" fit="contain"
+                    :src="getImageUrl(img)">
+                  </el-image>
+                  <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
+                </div>
+              </div>
+              <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
+            </el-form-item>
+            <el-form-item :label="$t('goods.picdes')">
+              <ll-editor :content="langInfo[currentLang].desc" @contentChange="contentChangeFunc"></ll-editor>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="saveGoodsLangSet"  size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
+          </div>
+        </el-dialog>
     </div>
   </div>
   <div class="page-footer">
@@ -229,12 +266,17 @@
   import service from '@/utils/request'
   import llEditor from '@/components/LLEditor'
   import { mapGetters } from 'vuex'
+  import { languages } from '@/utils/languages'
   export default {
     components: {
       llEditor
     },
     data() {
       return {
+        langInfo: {},
+        currentLang: 'zh',
+        languages: languages,
+        showGoodsLangSetDialog: false,
         xgType: 1,
         loading: true,
         defaultAddr: '',
@@ -454,6 +496,49 @@
       }
     },
     methods: {
+      repaireLangSet() {
+        const lk = Object.keys(this.langInfo)
+        lk.forEach(l => {
+          this.goodsProps.forEach((v, k) => {
+            if (!this.langInfo[l].spectification_options) {
+              this.langInfo[l].spectification_options = [v]
+            } if (this.langInfo[l].spectification_options.length < k + 1) {
+              this.langInfo[l].spectification_options.push(v)
+            } else {
+              if (this.langInfo[l].spectification_options && this.langInfo[l].spectification_options[k].items.length !== v.items.length) {
+                const lLen = this.langInfo[l].spectification_options[k].items.length
+                const vLen = v.items.length
+                if (lLen > vLen) {
+                  this.langInfo[l].spectification_options[k].items.splice(vLen, lLen - vLen)
+                } else {
+                  // console.log(lLen, vLen, this.langInfo[l].spectification_options[k].items, v.items.slice(lLen, vLen))
+                  this.langInfo[l].spectification_options[k].items = this.langInfo[l].spectification_options[k].items.concat(v.items.slice(lLen, vLen))
+                }
+              }
+            }
+          })
+        })
+        console.log(this.langInfo)
+      },
+      showLangSetFunc() {
+        if (!this.goodsData.name || this.goodsProps.length < 1) {
+          this.$message.error(this.$t('goods.goodsLangSetTip1'))
+          return
+        }
+        const lk = Object.keys(this.languages)
+        lk.forEach(l => {
+          if (!this.langInfo[l]) {
+            this.$set(this.langInfo, l, { name: this.goodsData.name, spectification_options: JSON.parse(JSON.stringify(this.goodsProps)), images: JSON.parse(JSON.stringify(this.goodsData.images)), desc: this.goodsData.desc })
+          }
+        })
+        this.repaireLangSet()
+        this.showGoodsLangSetDialog = true
+      },
+      saveGoodsLangSet() {
+        // this.repaireLangSet()
+        console.log(this.langInfo)
+        this.showGoodsLangSetDialog = false
+      },
       showPropEdit(k, i, tag) {
         this.propsEditTitle = this.goodsProps[k].name + '；' + tag
         this.propeditingTag = tag
@@ -634,7 +719,7 @@
               this.goodsTypes.push(res)
             })
           })
-
+          this.langInfo = data.lang ? data.lang : {}
           this.goodsData = {
             id: data.id,
             default_type_id: data.default_type_id,
@@ -671,6 +756,7 @@
           this.goodsSysTypes = []
           this.goodsSysTypeFields = []
           this.xgType = 1
+          this.langInfo = {}
           this.goodsData = {
             id: '',
             default_type_id: '',
@@ -708,7 +794,11 @@
         this.goodsInventoryTable[this.propsImageEditIndex].images.splice(index, 1)
       },
       delGoodsImage(index) {
-        this.goodsData.images.splice(index, 1)
+        if (!this.showGoodsLangSetDialog) {
+          this.goodsData.images.splice(index, 1)
+        } else {
+          this.langInfo[this.currentLang].images.splice(index, 1)
+        }
       },
       saveFunc(opt) {
         this.$refs['goodsForm'].validate((valid) => {
@@ -733,11 +823,20 @@
         })
       },
       imageUploadSuccess(data) {
-        this.goodsData.images = this.goodsData.images ? this.goodsData.images : []
-        this.goodsData.images.push(data.md5)
+        if (!this.showGoodsLangSetDialog) {
+          this.goodsData.images = this.goodsData.images ? this.goodsData.images : []
+          this.goodsData.images.push(data.md5)
+        } else {
+          this.langInfo[this.currentLang].images = this.langInfo[this.currentLang].images ? this.langInfo[this.currentLang].images : []
+          this.langInfo[this.currentLang].images.push(data.md5)
+        }
       },
       contentChangeFunc(data) {
-        this.goodsData.desc = data
+        if (!this.showGoodsLangSetDialog) {
+          this.goodsData.desc = data
+        } else {
+          this.langInfo[this.currentLang].desc = data
+        }
       },
       updateGoodsFunc() {
         const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, intro: this.goodsData.intro,
@@ -748,6 +847,15 @@
         goodsItem['address_id'] = this.goodsData.address_id
         goodsItem['skus'] = JSON.stringify(this.goodsInventoryTable)
         goodsItem['spectification_options'] = JSON.stringify(this.goodsProps)
+        this.repaireLangSet()
+        var tempLang = JSON.parse(JSON.stringify(this.langInfo))
+        const lKys = Object.keys(tempLang)
+        lKys.forEach(lk => {
+          tempLang[lk].images = JSON.stringify(tempLang[lk].images)
+          tempLang[lk].spectification_options = JSON.stringify(tempLang[lk].spectification_options)
+          tempLang[lk].specifications_sku_ids = ''
+        })
+        goodsItem['lang'] = JSON.stringify(tempLang)
         const filedItem = {}
         for (const key in this.goodsData.fields) {
           if (Array.isArray(this.goodsData.fields[key])) {

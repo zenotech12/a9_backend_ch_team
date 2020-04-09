@@ -88,6 +88,7 @@ export default {
   pbTip: '请正确设置参与秒杀的商品以及价格',
   pbGoods1: '参与秒杀的商品规格、价格以及数量',
   tgGoods: '团购商品',
+  tgGoodsEdit: '团购商品设置',
   tgTimes: '团购时段',
   tgPrice: '团购价格设置',
   tgPrice1: '团购价/当前价',

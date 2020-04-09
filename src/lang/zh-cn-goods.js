@@ -94,5 +94,9 @@ export default {
   xgLabel2: '限购',
   delTip: '确定删除当前商品？',
   restore: '恢复',
-  commodityPreview: '商品预览'
+  commodityPreview: '商品预览',
+  goodsLang: '商品信息多语言设置',
+  goodsLangSet: '多语言内容',
+  goodsLangSetTip: '点击设置',
+  goodsLangSetTip1: '请先完成默认内容的设置'
 }
