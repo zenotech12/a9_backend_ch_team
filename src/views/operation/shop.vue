@@ -14,8 +14,8 @@
                     :inactive-text="$t('operation.shopPublish2')">
                   </el-switch>
                 </el-form-item>
-                <el-form-item :label="$t('operation.shopDesc')">
-                  <el-input  v-model="shopForm.name"></el-input>
+                <el-form-item :label="$t('operation.shopName')">
+                  <el-input  disabled v-model="shopForm.name"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('operation.shopLogo')">
                   <image-upload :drag="false" @uploadSuccess="imageUploadSuccess">
