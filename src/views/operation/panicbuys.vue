@@ -106,7 +106,7 @@
               </el-table-column>
               <el-table-column prop="title" :label="$t('goods.sp')">
               </el-table-column>
-              <el-table-column :label="$t('operation.pbCount')" width="150">
+              <el-table-column :label="$t('operation.pbCount')" width="200">
                 <template  slot-scope="scope">
                   <el-input v-model.number="scope.row.count">
                     <template slot="append">
@@ -255,7 +255,7 @@
           return {
             id: data.id,
             spu_id: data.spu_id,
-            bt: data.bt.substring(0, 10),
+            bt: data.bt.substring(0, 13),
             et: data.et.substring(0, 10),
             buy_limit: data.buy_limit
           }
