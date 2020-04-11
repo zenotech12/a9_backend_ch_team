@@ -83,5 +83,6 @@ export default {
   opt7: 'Cancellation of order',
   opt8: 'Confirm receipt',
   opt9: 'Price revision',
-  returnTip: 'Agree to return and exchange application'
+  returnTip: 'Agree to return and exchange application',
+  gift: 'gift'
 }

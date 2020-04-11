@@ -74,7 +74,7 @@ export default {
   useLimit: '使用限制',
   useLimitA: '无限制',
   useLimitB: '本店可用',
-  pbTime: '秒杀时段',
+  pbTime: '秒杀时间',
   pbAfter: '即将开始',
   pbDoing: '进行中',
   pbTimes: '场次',

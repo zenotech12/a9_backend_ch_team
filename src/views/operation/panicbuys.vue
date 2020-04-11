@@ -45,7 +45,7 @@
                 </el-table-column>
                 <el-table-column :label="$t('operation.pbTime')" width="220">
                   <template  slot-scope="scope">
-                    {{scope.row.bt.substring(0,13) + $t('operation.to') + scope.row.et.substring(0,13)}}
+                    {{scope.row.bt.substring(0,13)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "140" fixed="right">
@@ -67,20 +67,17 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('operation.pbEdit')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('operation.pbEdit')" width="900px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
             <el-form-item :label="$t('operation.pbGoods')">
               <goods-selector v-model="form.spu_id" :approve_status="2" :shelf_status="2"></goods-selector>
             </el-form-item>
             <el-form-item :label="$t('operation.pbTime')">
               <el-date-picker
-                v-model="grantTime"
-                type="daterange"
+                v-model="beginDate"
+                type="date"
                 format = "yyyy-MM-dd"
                 value-format = "yyyy-MM-dd"
-                :range-separator="$t('operation.to')"
-                :start-placeholder="$t('tools.startDate')"
-                :end-placeholder="$t('tools.endDate')"
                 align="right">
               </el-date-picker>
             </el-form-item>
@@ -89,7 +86,7 @@
                 <el-option
                   v-for="item in seckillTimes"
                   :key="item.id"
-                  :label="item.hour"
+                  :label="item.hour + ':00' "
                   :value="item.hour">
                 </el-option>
               </el-select>
@@ -164,6 +161,7 @@
         pageSize: pz,
         itemCount: 0,
         grantTime: [], // 秒杀时段
+        beginDate: '',
         form: formData,
         goodsInventoryTable: [],
         currentSetSkus: [],
@@ -206,15 +204,14 @@
         }
         this.getDataListFun()
       },
-      grantTime(val) {
+      beginDate(val) {
         if (val.length > 0) {
-          this.form.bt = val[0] + ' ' + (this.selectedTimes < 10 ? ('0' + this.selectedTimes) : this.selectedTimes)
-          this.form.et = val[1] + ' 23'
+          this.form.bt = val + ' ' + (this.selectedTimes < 10 ? ('0' + this.selectedTimes) : this.selectedTimes)
         }
       },
       selectedTimes(val) {
-        if (this.grantTime.length > 0) {
-          this.form.bt = this.grantTime[0] + ' ' + (val < 10 ? ('0' + val) : val)
+        if (this.beginDate) {
+          this.form.bt = this.beginDate + ' ' + (val < 10 ? ('0' + val) : val)
         }
       },
       currentPage(val) {
@@ -251,7 +248,7 @@
     methods: {
       setForm(data) {
         if (data) {
-          this.grantTime = [data.bt.substring(0, 10), data.et.substring(0, 10)]
+          this.beginDate = data.bt.substring(0, 10)
           this.currentSetSkus = data.panic_buy_skus
           this.selectedTimes = parseInt(data.bt.substring(11, 13))
           this.xgType = data.buy_limit > 0 ? 2 : 1
@@ -263,7 +260,7 @@
             buy_limit: data.buy_limit
           }
         } else {
-          this.grantTime = []
+          this.beginDate = ''
           this.validTime = []
           this.currentSetSkus = []
           this.xgType = 1

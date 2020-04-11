@@ -1,260 +1,270 @@
 <template>
   <div v-loading="loading">
-  <div class="sys-body">
-    <div class="sys-neiBody" style="margin-bottom: 50px">
-      <!-- 搜索 -->
-        <el-form :model="goodsData" :rules="formRules" ref="goodsForm" label-width="100px" style="min-height: 350px">
-          <el-form-item :label="$t('goods.sysType')" required>
-            <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange" filterable></el-cascader>
-          </el-form-item>
-          <el-divider content-position="left">{{$t('goods.goodsInfo1')}}</el-divider>
-          <el-form-item :label="$t('goods.name')" prop="name">
-            <el-input v-model="goodsData.name" style="max-width: 500px" auto-complete="off" clearable></el-input>
-          </el-form-item>
-          <el-row v-if="goodsSysTypeFields.length > 0">
-            <el-col :span="24" style="text-align: center">{{$t('goods.sysTypeProp')}}</el-col>
-            <el-col :span="6" v-for="(v,k) in goodsSysTypeFields" :key="k" >
-              <el-form-item :label="v.name">
-                <el-input v-if="v.type==='string' || v.type === 'number'" v-model="goodsData.fields[v.code]" auto-complete="off" clearable></el-input>
-                <el-select v-if="v.type==='mulitselect' || v.type === 'select'" :multiple="v.type==='mulitselect'" v-model="goodsData.fields[v.code]" :placeholder="$t('tools.pleaseSelect')" >
+    <div v-if="!loading && (addressList.length <1 || postagesListData.length < 1 || typeData.length< 1)">
+      <div class="sys-body base-tip" >
+        <div class="title">{{$t('goods.baseSetTip')}}</div>
+        <div v-if="addressList.length <1"><a href="/system/address">{{$t('goods.addressSetTip')}}</a></div>
+        <div v-if=" postagesListData.length < 1"><a href="/system/postage">{{$t('goods.postageSet')}}</a></div>
+        <div v-if=" typeData.length < 1"><a href="/goods/list">{{$t('goods.dpTypeSet')}}</a></div>
+      </div>
+    </div>
+    <template v-else>
+      <div class="sys-body">
+        <div class="sys-neiBody" style="margin-bottom: 50px">
+          <!-- 搜索 -->
+            <el-form :model="goodsData" :rules="formRules" ref="goodsForm" label-width="100px" style="min-height: 350px">
+              <el-form-item :label="$t('goods.sysType')" required>
+                <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange" filterable></el-cascader>
+              </el-form-item>
+              <el-divider content-position="left">{{$t('goods.goodsInfo1')}}</el-divider>
+              <el-form-item :label="$t('goods.name')" prop="name">
+                <el-input v-model="goodsData.name" style="max-width: 500px" auto-complete="off" clearable></el-input>
+              </el-form-item>
+              <el-row v-if="goodsSysTypeFields.length > 0">
+                <el-col :span="24" style="text-align: center">{{$t('goods.sysTypeProp')}}</el-col>
+                <el-col :span="6" v-for="(v,k) in goodsSysTypeFields" :key="k" >
+                  <el-form-item :label="v.name">
+                    <el-input v-if="v.type==='string' || v.type === 'number'" v-model="goodsData.fields[v.code]" auto-complete="off" clearable></el-input>
+                    <el-select v-if="v.type==='mulitselect' || v.type === 'select'" :multiple="v.type==='mulitselect'" v-model="goodsData.fields[v.code]" :placeholder="$t('tools.pleaseSelect')" >
+                      <el-option
+                        v-for="item in v.param"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-divider content-position="left">{{$t('goods.goodsInfo2')}}</el-divider>
+              <el-form-item style="display: none;" :label="$t('goods.goodsType')" v-if="goodsData.type !==2">
+                <el-col :span="4">
+                  <el-select v-model="goodsData.type">
+                    <el-option :key="$t('goods.goodsType1')" :label="$t('goods.goodsType1')" :value="1"></el-option>
+                    <el-option v-if="shopInfo.source_type===3" :key="$t('goods.goodsType3')" :label="$t('goods.goodsType3')" :value="3"></el-option>
+                  </el-select>
+                </el-col>
+                <template v-if="goodsData.type===2">
+                  <el-col :span="8">
+                    <el-input v-model.number="goodsData.cobuy_person_count">
+                      <template slot="prepend">{{$t('goods.cobuyuser')}}</template>
+                    </el-input>
+                  </el-col>
+                  <el-col :span="1"></el-col>
+                  <el-col :span="8">
+                    {{$t('goods.cobuysec')}}
+                    <el-select style="width: 100px" v-model="goodsData.cobuy_group_valid_sec">
+                      <el-option
+                        v-for="item in secondArr"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    {{$t('goods.hour')}}
+                  </el-col>
+                </template>
+              </el-form-item>
+              <el-form-item :label="$t('goods.sp')" required>
+                <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
+                  <el-input size="small" v-model="goodsProps[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
+                  <el-tag :key="tag" v-for="(tag,i) in goodsProps[k].items" closable :disable-transitions="false" @click="showPropEdit(k,i,tag)"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
+                  <el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
+                  <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>
+                </div>
+                <a @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
+              </el-form-item>
+              <el-form-item :label="$t('goods.piEdit')" required>
+                <el-table :data="goodsInventoryTable"  style="width: 100%">
+                  <el-table-column :label="$t('goods.sp')">
+                    <template  slot-scope="scope">
+                      {{scope.row.title}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('goods.inventory')">
+                    <template  slot-scope="scope">
+                      <el-input v-model.number="scope.row.inventory"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
+                    <template  slot-scope="scope">
+                      <price-input v-model="scope.row.price"></price-input>
+                      <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                    </template>
+                  </el-table-column>
+                  <el-table-column v-if="goodsData.type === 3" :label="$t('goods.needExp')">
+                    <template  slot-scope="scope">
+                      <el-input v-model.number="scope.row.price"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column v-if="goodsData.type == 2" :label="$t('goods.cobuyPrice')">
+                    <template  slot-scope="scope">
+                      <price-input v-model="scope.row.cobuy_price"></price-input>
+                      <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('goods.goodsPic')">
+                    <template  slot-scope="scope">
+                      <i style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-form-item>
+
+              <el-divider content-position="left">{{$t('goods.goodsInfo3')}}</el-divider>
+              <el-form-item :label="$t('goods.type')" required>
+                <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
+              </el-form-item>
+              <el-form-item :label="$t('goods.intro')" style="display: none">
+                <el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('goods.goodsPic')" required>
+                <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
+                  <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
+                    <el-image
+                      style="height: 100px; width: 100px" fit="contain"
+                      :src="getImageUrl(img)"
+                      :preview-src-list="goodsPreviewImages">
+                    </el-image>
+                    <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
+                  </div>
+                </div>
+                <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
+              </el-form-item>
+              <el-form-item :label="$t('goods.picdes')">
+                <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
+              </el-form-item>
+
+              <el-divider content-position="left">{{$t('goods.goodsInfo4')}}</el-divider>
+              <el-form-item :label="$t('goods.riderPost')">
+                <el-checkbox v-model="goodsData.rider_post_support">{{$t('goods.riderPostSupport')}}</el-checkbox>
+              </el-form-item>
+              <el-form-item :label="$t('goods.posageRule')" prop="postage_setting_id">
+                <el-select v-model="goodsData.postage_setting_id" style="width: 300px" >
                   <el-option
-                    v-for="item in v.param"
-                    :key="item"
-                    :label="item"
-                    :value="item">
+                    v-for="item in postagesListData"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
                   </el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-          </el-row>
-          <el-divider content-position="left">{{$t('goods.goodsInfo2')}}</el-divider>
-          <el-form-item style="display: none;" :label="$t('goods.goodsType')" v-if="goodsData.type !==2">
-            <el-col :span="4">
-              <el-select v-model="goodsData.type">
-                <el-option :key="$t('goods.goodsType1')" :label="$t('goods.goodsType1')" :value="1"></el-option>
-                <el-option v-if="shopInfo.source_type===3" :key="$t('goods.goodsType3')" :label="$t('goods.goodsType3')" :value="3"></el-option>
-              </el-select>
-            </el-col>
-            <template v-if="goodsData.type===2">
-              <el-col :span="8">
-                <el-input v-model.number="goodsData.cobuy_person_count">
-                  <template slot="prepend">{{$t('goods.cobuyuser')}}</template>
-                </el-input>
-              </el-col>
-              <el-col :span="1"></el-col>
-              <el-col :span="8">
-                {{$t('goods.cobuysec')}}
-                <el-select style="width: 100px" v-model="goodsData.cobuy_group_valid_sec">
+              <el-form-item :label="$t('goods.postAddr')" prop="address_id">
+                <el-select v-model="goodsData.address_id" style="width: 300px" >
                   <el-option
-                    v-for="item in secondArr"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    v-for="item in addressList"
+                    :key="item.id"
+                    :label="item.province + item.city + item.district"
+                    :value="item.id">
+                    <div class="address-item">
+                      <p>{{item.province + item.city + item.district + item.addr}}</p>
+                      <p>{{item.contacter_name + item.mobile}}</p>
+                    </div>
                   </el-option>
                 </el-select>
-                {{$t('goods.hour')}}
-              </el-col>
-            </template>
-          </el-form-item>
-          <el-form-item :label="$t('goods.sp')" required>
-            <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
-              <el-input size="small" v-model="goodsProps[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
-              <el-tag :key="tag" v-for="(tag,i) in goodsProps[k].items" closable :disable-transitions="false" @click="showPropEdit(k,i,tag)"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
-              <el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
-              <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>
-            </div>
-            <a @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
-          </el-form-item>
-          <el-form-item :label="$t('goods.piEdit')" required>
-            <el-table :data="goodsInventoryTable"  style="width: 100%">
-              <el-table-column :label="$t('goods.sp')">
-                <template  slot-scope="scope">
-                  {{scope.row.title}}
+              </el-form-item>
+              <el-divider content-position="left">{{$t('goods.goodsInfo5')}}</el-divider>
+              <el-form-item :label="$t('goods.xgLabel')" prop="xg">
+                <el-radio v-model="xgType" :label="1">{{$t('goods.xgLabel1')}}</el-radio>
+                <el-radio v-model="xgType" :label="2">{{$t('goods.xgLabel2')}}</el-radio>
+                <el-input style="width: 100px; display: inline-block" v-if="xgType == 2" size="small" placeholder="" v-model.number="goodsData.buy_limit">
+                </el-input>
+              </el-form-item>
+              <el-form-item :label="$t('goods.putaway')">
+                <el-col :span="4">
+                  <el-select v-model="goodsData.shelf_status">
+                    <el-option
+                      v-for="(item,k) in putAwayType"
+                      :key="item"
+                      :label="item"
+                      :value="k+1">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <template  v-if="goodsData.shelf_status==2">
+                  <el-col :span="4">
+                    <el-checkbox v-model="isSetShelfTime"></el-checkbox>{{$t('goods.putawayD')}}
+                  </el-col>
+                  <el-col :span="8" v-if="isSetShelfTime">
+                    <el-date-picker
+                      v-model="goodsData.shelf_time"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      format="yyyy-MM-dd HH:mm:ss"
+                      type="datetime"
+                      :placeholder="$t('goods.putawayD')">
+                    </el-date-picker>
+                  </el-col>
                 </template>
-              </el-table-column>
-              <el-table-column :label="$t('goods.inventory')">
-                <template  slot-scope="scope">
-                  <el-input v-model.number="scope.row.inventory"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
-                <template  slot-scope="scope">
-                  <price-input v-model="scope.row.price"></price-input>
-                  <!--<el-input v-model.number="scope.row.price"></el-input>-->
-                </template>
-              </el-table-column>
-              <el-table-column v-if="goodsData.type === 3" :label="$t('goods.needExp')">
-                <template  slot-scope="scope">
-                  <el-input v-model.number="scope.row.price"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column v-if="goodsData.type == 2" :label="$t('goods.cobuyPrice')">
-                <template  slot-scope="scope">
-                  <price-input v-model="scope.row.cobuy_price"></price-input>
-                  <!--<el-input v-model.number="scope.row.price"></el-input>-->
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('goods.goodsPic')">
-                <template  slot-scope="scope">
-                  <i style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-form-item>
-
-          <el-divider content-position="left">{{$t('goods.goodsInfo3')}}</el-divider>
-          <el-form-item :label="$t('goods.type')" required>
-            <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
-          </el-form-item>
-          <el-form-item :label="$t('goods.intro')" style="display: none">
-            <el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('goods.goodsPic')" required>
-            <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
-              <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
-                <el-image
-                  style="height: 100px; width: 100px" fit="contain"
-                  :src="getImageUrl(img)"
-                  :preview-src-list="goodsPreviewImages">
-                </el-image>
-                <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
-              </div>
-            </div>
-            <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
-          </el-form-item>
-          <el-form-item :label="$t('goods.picdes')">
-            <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
-          </el-form-item>
-
-          <el-divider content-position="left">{{$t('goods.goodsInfo4')}}</el-divider>
-          <el-form-item :label="$t('goods.riderPost')">
-            <el-checkbox v-model="goodsData.rider_post_support">{{$t('goods.riderPostSupport')}}</el-checkbox>
-          </el-form-item>
-          <el-form-item :label="$t('goods.posageRule')" prop="postage_setting_id">
-            <el-select v-model="goodsData.postage_setting_id" style="width: 300px" >
-              <el-option
-                v-for="item in postagesListData"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$t('goods.postAddr')" prop="address_id">
-            <el-select v-model="goodsData.address_id" style="width: 300px" >
-              <el-option
-                v-for="item in addressList"
-                :key="item.id"
-                :label="item.province + item.city + item.district"
-                :value="item.id">
-                <div class="address-item">
-                  <p>{{item.province + item.city + item.district + item.addr}}</p>
-                  <p>{{item.contacter_name + item.mobile}}</p>
+              </el-form-item>
+              <el-form-item :label="$t('goods.goodsLangSet')">
+                <el-button type="text" @click="showLangSetFunc" size="small">{{$t('goods.goodsLangSetTip')}}</el-button>
+              </el-form-item>
+            </el-form>
+            <el-dialog :title="propsImageEditTitle" width="400px" @close="showPropsImageDialog=false" :visible.sync="showPropsImageDialog" :close-on-click-modal="false" center append-to-body>
+              <template>
+                <div class="prop-image__preview" v-if="goodsInventoryTable.length > 0">
+                  <div class="pitem"  v-for="(img,imgk) in goodsInventoryTable[propsImageEditIndex].images" :key="imgk">
+                    <el-image
+                      style="width: 100px; height: 100px"
+                      :src="getImageUrl(img)"
+                      :preview-src-list="propPreviewImages">
+                    </el-image>
+                    <i class="el-icon-delete delbtn" @click="delPropImage(imgk)"></i>
+                  </div>
                 </div>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-divider content-position="left">{{$t('goods.goodsInfo5')}}</el-divider>
-          <el-form-item :label="$t('goods.xgLabel')" prop="xg">
-            <el-radio v-model="xgType" :label="1">{{$t('goods.xgLabel1')}}</el-radio>
-            <el-radio v-model="xgType" :label="2">{{$t('goods.xgLabel2')}}</el-radio>
-            <el-input style="width: 100px; display: inline-block" v-if="xgType == 2" size="small" placeholder="" v-model.number="goodsData.buy_limit">
-            </el-input>
-          </el-form-item>
-          <el-form-item :label="$t('goods.putaway')">
-            <el-col :span="4">
-              <el-select v-model="goodsData.shelf_status">
-                <el-option
-                  v-for="(item,k) in putAwayType"
-                  :key="item"
-                  :label="item"
-                  :value="k+1">
-                </el-option>
-              </el-select>
-            </el-col>
-            <template  v-if="goodsData.shelf_status==2">
-              <el-col :span="4">
-                <el-checkbox v-model="isSetShelfTime"></el-checkbox>{{$t('goods.putawayD')}}
-              </el-col>
-              <el-col :span="8" v-if="isSetShelfTime">
-                <el-date-picker
-                  v-model="goodsData.shelf_time"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  type="datetime"
-                  :placeholder="$t('goods.putawayD')">
-                </el-date-picker>
-              </el-col>
-            </template>
-          </el-form-item>
-          <el-form-item :label="$t('goods.goodsLangSet')">
-            <el-button type="text" @click="showLangSetFunc" size="small">{{$t('goods.goodsLangSetTip')}}</el-button>
-          </el-form-item>
-        </el-form>
-        <el-dialog :title="propsImageEditTitle" width="400px" @close="showPropsImageDialog=false" :visible.sync="showPropsImageDialog" :close-on-click-modal="false" center append-to-body>
-          <template>
-            <div class="prop-image__preview" v-if="goodsInventoryTable.length > 0">
-              <div class="pitem"  v-for="(img,imgk) in goodsInventoryTable[propsImageEditIndex].images" :key="imgk">
-                <el-image
-                  style="width: 100px; height: 100px"
-                  :src="getImageUrl(img)"
-                  :preview-src-list="propPreviewImages">
-                </el-image>
-                <i class="el-icon-delete delbtn" @click="delPropImage(imgk)"></i>
+              </template>
+              <image-upload @uploadSuccess="propImageUploadSuccess"></image-upload>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="showPropsImageDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
               </div>
-            </div>
-          </template>
-          <image-upload @uploadSuccess="propImageUploadSuccess"></image-upload>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="showPropsImageDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
-          </div>
-        </el-dialog>
-        <el-dialog :title="propsEditTitle" width="400px" @close="showPropsEditDialog=false" :visible.sync="showPropsEditDialog" :close-on-click-modal="false" center append-to-body>
-          <div><el-input v-model="propeditingTag"></el-input></div>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="editPropTagFunc" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
-          </div>
-        </el-dialog>
-        <el-dialog v-if="showGoodsLangSetDialog" :title="$t('goods.goodsLang')" width="70%" @close="showGoodsLangSetDialog=false" :visible.sync="showGoodsLangSetDialog" :close-on-click-modal="false" center append-to-body >
-          <el-tabs v-model="currentLang" >
-            <el-tab-pane v-for="(lv,lk) in languages" :label="lv" :name="lk"></el-tab-pane>
-          </el-tabs>
-          <el-form v-model="langInfo"  label-width="100px">
-            <el-form-item :label="$t('goods.name')" prop="name">
-              <el-input v-model="langInfo[currentLang].name" style="max-width: 500px" clearable></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('goods.sp')" >
-              <div  v-for="(v,k) in langInfo[currentLang].spectification_options" :key="k" class="prop-item">
-                <el-input size="small" v-model="langInfo[currentLang].spectification_options[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input>：
-                <el-input :key="tag" v-for="(tag,i) in langInfo[currentLang].spectification_options[k].items" v-model="langInfo[currentLang].spectification_options[k].items[i]"  class="input-new-tag" ></el-input>
+            </el-dialog>
+            <el-dialog :title="propsEditTitle" width="400px" @close="showPropsEditDialog=false" :visible.sync="showPropsEditDialog" :close-on-click-modal="false" center append-to-body>
+              <div><el-input v-model="propeditingTag"></el-input></div>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="editPropTagFunc" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
               </div>
-            </el-form-item>
-            <el-form-item :label="$t('goods.goodsPic')" required>
-              <div class="prop-image__preview" v-if="langInfo[currentLang].images && langInfo[currentLang].images.length > 0">
-                <div class="pitem"  v-for="(img,imgk) in langInfo[currentLang].images" :key="imgk">
-                  <el-image
-                    style="height: 100px; width: 100px" fit="contain"
-                    :src="getImageUrl(img)">
-                  </el-image>
-                  <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
-                </div>
+            </el-dialog>
+            <el-dialog v-if="showGoodsLangSetDialog" :title="$t('goods.goodsLang')" width="70%" @close="showGoodsLangSetDialog=false" :visible.sync="showGoodsLangSetDialog" :close-on-click-modal="false" center append-to-body >
+              <el-tabs v-model="currentLang" >
+                <el-tab-pane v-for="(lv,lk) in languages" :label="lv" :name="lk"></el-tab-pane>
+              </el-tabs>
+              <el-form v-model="langInfo"  label-width="100px">
+                <el-form-item :label="$t('goods.name')" prop="name">
+                  <el-input v-model="langInfo[currentLang].name" style="max-width: 500px" clearable></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('goods.sp')" >
+                  <div  v-for="(v,k) in langInfo[currentLang].spectification_options" :key="k" class="prop-item">
+                    <el-input size="small" v-model="langInfo[currentLang].spectification_options[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input>：
+                    <el-input :key="tag" v-for="(tag,i) in langInfo[currentLang].spectification_options[k].items" v-model="langInfo[currentLang].spectification_options[k].items[i]"  class="input-new-tag" ></el-input>
+                  </div>
+                </el-form-item>
+                <el-form-item :label="$t('goods.goodsPic')" required>
+                  <div class="prop-image__preview" v-if="langInfo[currentLang].images && langInfo[currentLang].images.length > 0">
+                    <div class="pitem"  v-for="(img,imgk) in langInfo[currentLang].images" :key="imgk">
+                      <el-image
+                        style="height: 100px; width: 100px" fit="contain"
+                        :src="getImageUrl(img)">
+                      </el-image>
+                      <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
+                    </div>
+                  </div>
+                  <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
+                </el-form-item>
+                <el-form-item :label="$t('goods.picdes')">
+                  <ll-editor :content="langInfo[currentLang].desc" @contentChange="contentChangeFunc"></ll-editor>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="saveGoodsLangSet"  size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
               </div>
-              <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
-            </el-form-item>
-            <el-form-item :label="$t('goods.picdes')">
-              <ll-editor :content="langInfo[currentLang].desc" @contentChange="contentChangeFunc"></ll-editor>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="saveGoodsLangSet"  size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
-          </div>
-        </el-dialog>
-    </div>
-  </div>
-  <div class="page-footer">
-    <confirm-button @confirmButton="saveFunc" :disabled="disabled" :confirmButtonInfor="$t('goods.saveGoods')"></confirm-button>
-    <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
-  </div>
+            </el-dialog>
+        </div>
+      </div>
+      <div class="page-footer">
+        <confirm-button @confirmButton="saveFunc" :disabled="disabled" :confirmButtonInfor="$t('goods.saveGoods')"></confirm-button>
+        <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -417,6 +427,7 @@
       // this.$store.state.user.pathRouter = false
     },
     mounted() {
+      // this.loading =false
       this.getTypeGoodsBaseInfo()
       // this.loading = false
       this.getAddressListFunc()
@@ -854,6 +865,7 @@
           tempLang[lk].images = JSON.stringify(tempLang[lk].images)
           tempLang[lk].spectification_options = JSON.stringify(tempLang[lk].spectification_options)
           tempLang[lk].specifications_sku_ids = ''
+          tempLang[lk].fields = ''
         })
         goodsItem['lang'] = JSON.stringify(tempLang)
         const filedItem = {}
@@ -997,6 +1009,16 @@
     p{
       margin: 0px;
       padding: 0px;
+    }
+  }
+  .base-tip {
+    padding-top: 50px;
+    text-align: center;
+    div{
+      line-height: 50px;
+      a{
+        color: #1E88E5;
+      }
     }
   }
 </style>

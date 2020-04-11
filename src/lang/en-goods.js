@@ -93,5 +93,14 @@ export default {
   xgLabel1: 'Unlimited purchase',
   xgLabel2: 'Limited purchase',
   delTip: 'Are you sure to delete the current product?',
-  restore: 'Recover'
+  restore: 'Recover',
+  commodityPreview: 'Preview',
+  goodsLang: 'Set goods languages info',
+  goodsLangSet: 'Languages content',
+  goodsLangSetTip: 'Click To Set',
+  goodsLangSetTip1: 'Please Set The Default Content Before',
+  baseSetTip: 'Plase Set The Base Info Before',
+  addressSetTip: 'Address Set',
+  postageSet: 'Postage Rule',
+  dpTypeSet: 'Goods Type'
 }

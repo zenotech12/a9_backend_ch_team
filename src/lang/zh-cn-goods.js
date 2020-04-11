@@ -98,5 +98,9 @@ export default {
   goodsLang: '商品信息多语言设置',
   goodsLangSet: '多语言内容',
   goodsLangSetTip: '点击设置',
-  goodsLangSetTip1: '请先完成默认内容的设置'
+  goodsLangSetTip1: '请先完成默认内容的设置',
+  baseSetTip: '请先完成以下基础数据设置',
+  addressSetTip: '地址设置',
+  postageSet: '邮费规则设置',
+  dpTypeSet: '店铺分类设置'
 }

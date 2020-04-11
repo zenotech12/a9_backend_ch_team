@@ -83,5 +83,6 @@ export default {
   opt7: '取消订单',
   opt8: '确认收货',
   opt9: '修改价格',
-  returnTip: '同意退换货申请'
+  returnTip: '同意退换货申请',
+  gift: '兑换'
 }

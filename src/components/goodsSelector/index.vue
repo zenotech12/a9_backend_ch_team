@@ -70,9 +70,17 @@
                 </template>
               </template>
             </el-table-column>
-            <el-table-column label="价格">
+            <el-table-column :label="$t('goods.price')">
               <template  slot-scope="scope">
-                {{scope.row.min_price + (scope.row.min_price === scope.row.max_price ? '': ('-' + scope.row.max_price))}}
+                <template v-if="scope.row.type === 3">
+                  <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                  <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>
+                  <span v-else>{{scope.row.min_price}}</span>
+                </template>
+                <template v-else>
+                  <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
+                  <span v-else>{{scope.row.min_price | price}}</span>
+                </template>
               </template>
             </el-table-column>
           </el-table>
