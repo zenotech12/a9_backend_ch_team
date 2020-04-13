@@ -169,7 +169,7 @@
                 </template>
               </el-col>
             </el-row>
-            <el-dialog :title="$t('goods.edit')" width="800px" @close="cancelGoodsEdit" :visible.sync="goodsEditorShow" :close-on-click-modal="false" center>
+            <el-dialog :title="$t('goods.edit')" width="90%" @close="cancelGoodsEdit" :visible.sync="goodsEditorShow" :close-on-click-modal="false" center>
               <el-steps :active="goodsEditStep" style="margin-bottom: 20px; display: none">
                 <el-step :title="$t('goods.step1')" :description="$t('goods.step1Tip')"></el-step>
                 <el-step :title="$t('goods.step2')" :description="$t('goods.step2Tip')"></el-step>
@@ -292,11 +292,30 @@
                         </template>
                       </el-table-column>
                       <el-table-column :label="$t('goods.inventory')">
+                        <template slot="header" slot-scope="scope">
+                          {{$t('goods.inventory')}}
+                          <el-popover placement="bottom"
+                                      width="200"
+                                      trigger="click">
+                            <el-input v-model.number="batchInventory">
+                            </el-input>
+                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                          </el-popover>
+                        </template>
                         <template  slot-scope="scope">
                           <el-input v-model.number="scope.row.inventory"></el-input>
                         </template>
                       </el-table-column>
                       <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
+                        <template slot="header" slot-scope="scope">
+                          {{$t('goods.price')}}
+                          <el-popover placement="bottom"
+                                      width="200"
+                                      trigger="click">
+                            <price-input v-model="batchPrice"></price-input>
+                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                          </el-popover>
+                        </template>
                         <template  slot-scope="scope">
                           <price-input v-model="scope.row.price"></price-input>
                           <!--<el-input v-model.number="scope.row.price"></el-input>-->
@@ -311,6 +330,22 @@
                         <template  slot-scope="scope">
                           <price-input v-model="scope.row.cobuy_price"></price-input>
                           <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                        </template>
+                      </el-table-column>
+                      <el-table-column :label="$t('goods.weight')">
+                        <template slot="header" slot-scope="scope">
+                          {{$t('goods.weight')}}
+                          <el-popover placement="bottom"
+                                      width="200"
+                                      trigger="click">
+                            <el-input v-model.number="batchWeight">
+                              <template slot="append">KG</template>
+                            </el-input>
+                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                          </el-popover>
+                        </template>
+                        <template  slot-scope="scope">
+                          <el-input v-model.number="scope.row.weight"><template slot="append">KG</template></el-input>
                         </template>
                       </el-table-column>
                       <el-table-column :label="$t('goods.goodsPic')">
@@ -374,6 +409,9 @@
     },
     data() {
       return {
+        batchWeight: 0,
+        batchInventory: 0,
+        batchPrice: 0,
         commodityPreviewShow: false,
         currentGoods: '',
         formRules: {
@@ -514,6 +552,21 @@
       // this.getPartner()
     },
     watch: {
+      batchWeight(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'weight', val)
+        })
+      },
+      batchInventory(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'inventory', val)
+        })
+      },
+      batchPrice(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'price', val)
+        })
+      },
       tableFile: {
         handler(val) {
           this.importPara.extra = val
@@ -540,7 +593,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [] }
+            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [], weight: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -559,6 +612,7 @@
               }
               if (isEque) {
                 tableItem.inventory = this.goodsInventoryData[i].inventory
+                tableItem.weight = this.goodsInventoryData[i].weight
                 tableItem.price = this.goodsInventoryData[i].price
                 tableItem.cobuy_price = this.goodsInventoryData[i].cobuy_price ? this.goodsInventoryData[i].cobuy_price : 0
                 tableItem.images = this.goodsInventoryData[i].images

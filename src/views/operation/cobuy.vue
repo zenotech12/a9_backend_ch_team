@@ -132,6 +132,15 @@
                 </template>
               </el-table-column>
               <el-table-column :label="$t('operation.tgPrice1')">
+                <template slot="header" slot-scope="scope">
+                  {{$t('operation.tgPrice1')}}
+                  <el-popover placement="bottom"
+                              width="200"
+                              trigger="click">
+                    <price-input v-model="batchPrice"></price-input>
+                    <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                  </el-popover>
+                </template>
                 <template  slot-scope="scope">
                   <price-input v-model="scope.row.cobuy_price">
                     <template slot="append">
@@ -164,6 +173,7 @@
       const formData = this.setForm()
       const pz = 10
       return {
+        batchPrice: 0,
         xgType: 1,
         timeValidSwitch: true,
         searchForm: {
@@ -195,6 +205,11 @@
       ])
     },
     watch: {
+      batchPrice(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'cobuy_price', val)
+        })
+      },
       'searchForm.doing_time': function() {
         this.getDataListFun()
       },

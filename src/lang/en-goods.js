@@ -102,5 +102,6 @@ export default {
   baseSetTip: 'Plase Set The Base Info Before',
   addressSetTip: 'Address Set',
   postageSet: 'Postage Rule',
-  dpTypeSet: 'Goods Type'
+  dpTypeSet: 'Goods Type',
+  weight: 'Weight'
 }

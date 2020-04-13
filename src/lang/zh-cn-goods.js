@@ -102,5 +102,7 @@ export default {
   baseSetTip: '请先完成以下基础数据设置',
   addressSetTip: '地址设置',
   postageSet: '邮费规则设置',
-  dpTypeSet: '店铺分类设置'
+  dpTypeSet: '店铺分类设置',
+  weight: '重量',
+  batchSet: '批量设置'
 }
