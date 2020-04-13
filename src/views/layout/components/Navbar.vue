@@ -3,6 +3,7 @@
     <!--<hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>-->
     <breadcrumb></breadcrumb>
     <div class="right-opt">
+      <a target="_blank" :href="shopInfo.user_info.im_login_url" style="padding: 0px 10px"><i class="el-icon-chat-dot-square"></i></a>
       <el-dropdown trigger="click" @command="changeNewLang">
         <span class="language-select">
           {{currentLanguage}}<i class="el-icon-caret-bottom"></i>

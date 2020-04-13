@@ -197,6 +197,9 @@ export default {
     }
   },
   mounted() {
+    if (this.$route.query.p) {
+      this.loginForm.login_name = this.$route.query.p
+    }
   }
 }
 </script>
