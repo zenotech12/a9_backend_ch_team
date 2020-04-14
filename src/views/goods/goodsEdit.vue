@@ -128,14 +128,14 @@
                       <el-popover placement="bottom"
                         width="200"
                         trigger="click">
-                        <el-input v-model.number="batchWeight">
+                        <el-input oninput="value=value.replace(/[^\d.]/g,'')"  v-model="batchWeight">
                           <template slot="append">KG</template>
                         </el-input>
                         <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
                       </el-popover>
                     </template>
                     <template  slot-scope="scope">
-                      <el-input v-model.number="scope.row.weight"><template slot="append">KG</template></el-input>
+                      <el-input oninput="value=value.replace(/[^\d.]/g,'')"  v-model="scope.row.weight"><template slot="append">KG</template></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('goods.goodsPic')">
@@ -476,7 +476,7 @@
     watch: {
       batchWeight(val) {
         this.goodsInventoryTable.forEach(item => {
-          this.$set(item, 'weight', val)
+          this.$set(item, 'weight', parseFloat(val))
         })
       },
       batchInventory(val) {
@@ -911,6 +911,9 @@
         goodsItem['postage_setting_id'] = this.goodsData.postage_setting_id
         goodsItem['rider_post_support'] = this.goodsData.rider_post_support
         goodsItem['address_id'] = this.goodsData.address_id
+        this.goodsInventoryTable.forEach((item) => {
+          item.weight = parseFloat(item.weight)
+        })
         goodsItem['skus'] = JSON.stringify(this.goodsInventoryTable)
         goodsItem['spectification_options'] = JSON.stringify(this.goodsProps)
         this.repaireLangSet()

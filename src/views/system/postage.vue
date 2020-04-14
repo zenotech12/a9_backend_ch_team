@@ -28,12 +28,12 @@
                   </el-table-column>
                   <el-table-column :label="$t('sys.firstWeight')">
                     <template slot-scope="scope">
-                      <span>{{scope.row.quote.price_base}}</span>
+                      <span>{{scope.row.quote.price_base |price}}</span>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('sys.addWeight')">
                     <template slot-scope="scope">
-                      <span>{{scope.row.quote.price_step}}</span>
+                      <span>{{scope.row.quote.price_step | price}}</span>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('tools.opt')">
@@ -80,7 +80,7 @@
               </el-table-column>
               <el-table-column :label="$t('sys.firstWeight')">
                 <template slot-scope="scope">
-                  <el-input style="width: 80px" v-model="scope.row.price_base"></el-input>/
+                  <price-input class="input_weight"  style="width: 100px" v-model="scope.row.price_base"></price-input>/
                   <el-input class="input_weight"  placeholder="" v-model="scope.row.base">
                     <template slot="append" style="padding: 0px 5px">g</template>
                   </el-input>
@@ -88,7 +88,7 @@
               </el-table-column>
               <el-table-column :label="$t('sys.addWeight')">
                 <template slot-scope="scope">
-                  <el-input  style="width: 80px" v-model="scope.row.price_step"></el-input>/
+                  <price-input class="input_weight" style="width: 100px" v-model="scope.row.price_step"></price-input>/
                   <el-input class="input_weight" placeholder="" v-model="scope.row.step">
                     <template slot="append" style="width: 25px">g</template>
                   </el-input>
@@ -766,6 +766,9 @@
   .input_weight {
     width: 90px;
     .el-input-group__append{
+      padding: 0px 5px;
+    }
+    .el-input-group__prepend{
       padding: 0px 5px;
     }
   }

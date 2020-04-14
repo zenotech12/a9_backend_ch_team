@@ -338,14 +338,14 @@
                           <el-popover placement="bottom"
                                       width="200"
                                       trigger="click">
-                            <el-input v-model.number="batchWeight">
+                            <el-input v-model="batchWeight">
                               <template slot="append">KG</template>
                             </el-input>
                             <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
                           </el-popover>
                         </template>
                         <template  slot-scope="scope">
-                          <el-input v-model.number="scope.row.weight"><template slot="append">KG</template></el-input>
+                          <el-input v-model="scope.row.weight"><template slot="append">KG</template></el-input>
                         </template>
                       </el-table-column>
                       <el-table-column :label="$t('goods.goodsPic')">
@@ -1080,6 +1080,9 @@
         this.goodsProps.splice(k, 1)
       },
       updateGoodsSku() {
+        this.goodsInventoryTable.forEach((item) => {
+          item.weight = parseFloat(item.weight)
+        })
         const data = { skus: JSON.stringify(this.goodsInventoryTable), spectification_options: JSON.stringify(this.goodsProps) }
         this.disabled = true
         spusSkusModify(this.goodsData.id, data).then(res => {
