@@ -84,7 +84,6 @@ export function exportOrder(data) {
   return request({
     url: 'orders-export',
     method: 'get',
-    params: data,
-    responseType: 'blob'
+    params: data
   })
 }

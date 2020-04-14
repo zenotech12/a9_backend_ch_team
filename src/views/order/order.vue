@@ -33,10 +33,10 @@
               <el-form-item>
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
                 <el-button type="primary" @click="exportFunc" size="small" icon="el-icon-download"></el-button>
-                <el-upload style="display: inline-block" name="excel"
+                <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
                   :action= importUrl
                   :show-file-list="false"
-                  :on-success="importSuccess">
+                  :on-success="importSuccess" on-error="importError">
                   <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
                 </el-upload>
               </el-form-item>
@@ -197,7 +197,8 @@
   import { mapGetters } from 'vuex'
   import { ordersList, ordersExpress, ordersPriceModify, exportOrder } from '@/api/order'
   import expressage from '@/utils/expressage'
-  import { serverConfig } from '@/utils/serverConfig'
+  import serverConfig from '@/utils/serverConfig'
+  import store from '@/store'
   export default {
     components: {
     },
@@ -232,7 +233,8 @@
         expressageList: expressage,
         payPrice: 0,
         comment: '',
-        importUrl: serverConfig + '/app/v1/merchant/orders-import'
+        importUrl: serverConfig.api_url + '/app/v1/merchant/orders-import',
+        fileUploadHeader: { 'X-Access-Token': store.state.user.token }
       }
     },
     computed: {
@@ -257,30 +259,21 @@
       }
     },
     methods: {
-      importSuccess() {
+      importSuccess(res) {
+        this.$message.success(res.error)
         this.getTableData()
+      },
+      importError(res) {
+        this.$message.error(res.error)
       },
       exportFunc() {
         const sf = JSON.parse(JSON.stringify(this.searchForm))
         sf.skip = 0
         sf.limit = 1000
         exportOrder(sf).then(res => {
-          console.log('xxx')
-          const content = res
-          const blob = new Blob([content])
-          const fileName = 'order-list.xls'
-          if ('download' in document.createElement('a')) { // 非IE下载
-            const elink = document.createElement('a')
-            elink.download = fileName
-            elink.style.display = 'none'
-            elink.href = URL.createObjectURL(blob)
-            document.body.appendChild(elink)
-            elink.click()
-            URL.revokeObjectURL(elink.href) // 释放URL 对象
-            document.body.removeChild(elink)
-          } else { // IE10+下载
-            navigator.msSaveBlob(blob, fileName)
-          }
+          // console.log(res)
+          // console.log(res, res.url)
+          window.location = res.url
         })
       },
       getKuaidi100Url(com, nu) {
