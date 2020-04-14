@@ -88,7 +88,7 @@ service.interceptors.response.use(
 
     const res = response.data
     if (res.meta === undefined) {
-      return Promise.reject(res)
+      return res
     } else if (res.meta !== 0) {
       Message({
         message: res.error,

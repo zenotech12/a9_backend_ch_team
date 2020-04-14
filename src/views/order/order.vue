@@ -30,8 +30,15 @@
                   :end-placeholder="$t('tools.endDate')">
                 </el-date-picker>
               </el-form-item>
-              <el-form-item class="searchBtn">
+              <el-form-item>
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                <el-button type="primary" @click="exportFunc" size="small" icon="el-icon-download"></el-button>
+                <el-upload style="display: inline-block" name="excel"
+                  :action= importUrl
+                  :show-file-list="false"
+                  :on-success="importSuccess">
+                  <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
+                </el-upload>
               </el-form-item>
             </el-form>
           </el-col>
@@ -188,8 +195,9 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersExpress, ordersPriceModify } from '@/api/order'
+  import { ordersList, ordersExpress, ordersPriceModify, exportOrder } from '@/api/order'
   import expressage from '@/utils/expressage'
+  import { serverConfig } from '@/utils/serverConfig'
   export default {
     components: {
     },
@@ -223,7 +231,8 @@
         submitDisabled: false,
         expressageList: expressage,
         payPrice: 0,
-        comment: ''
+        comment: '',
+        importUrl: serverConfig + '/app/v1/merchant/orders-import'
       }
     },
     computed: {
@@ -248,6 +257,32 @@
       }
     },
     methods: {
+      importSuccess() {
+        this.getTableData()
+      },
+      exportFunc() {
+        const sf = JSON.parse(JSON.stringify(this.searchForm))
+        sf.skip = 0
+        sf.limit = 1000
+        exportOrder(sf).then(res => {
+          console.log('xxx')
+          const content = res
+          const blob = new Blob([content])
+          const fileName = 'order-list.xls'
+          if ('download' in document.createElement('a')) { // 非IE下载
+            const elink = document.createElement('a')
+            elink.download = fileName
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+            URL.revokeObjectURL(elink.href) // 释放URL 对象
+            document.body.removeChild(elink)
+          } else { // IE10+下载
+            navigator.msSaveBlob(blob, fileName)
+          }
+        })
+      },
       getKuaidi100Url(com, nu) {
         return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
       },

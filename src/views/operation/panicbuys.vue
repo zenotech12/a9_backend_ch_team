@@ -100,6 +100,9 @@
             <el-divider content-position="left">{{$t('operation.pbSkus')}}</el-divider>
             <el-table :data="goodsInventoryTable"  style="width: 100%">
               <el-table-column :label="$t('operation.pbSelected')" width="60">
+                <template slot="header" slot-scope="scope">
+                  <el-checkbox v-model="batchSelect"></el-checkbox>
+                </template>
                 <template  slot-scope="scope">
                   <el-checkbox v-model="scope.row.selected"></el-checkbox>
                 </template>
@@ -107,6 +110,16 @@
               <el-table-column prop="title" :label="$t('goods.sp')">
               </el-table-column>
               <el-table-column :label="$t('operation.pbCount')" width="200">
+                <template slot="header" slot-scope="scope">
+                  {{$t('operation.pbCount')}}
+                  <el-popover placement="bottom"
+                              width="200"
+                              trigger="click">
+                    <el-input v-model.number="batchCount">
+                    </el-input>
+                    <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                  </el-popover>
+                </template>
                 <template  slot-scope="scope">
                   <el-input v-model.number="scope.row.count">
                     <template slot="append">
@@ -116,6 +129,15 @@
                 </template>
               </el-table-column>
               <el-table-column :label="$t('operation.pbPirce')">
+                <template slot="header" slot-scope="scope">
+                  {{$t('operation.pbPirce')}}
+                  <el-popover placement="bottom"
+                              width="200"
+                              trigger="click">
+                    <price-input v-model="batchPrice"></price-input>
+                    <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                  </el-popover>
+                </template>
                 <template  slot-scope="scope">
                   <price-input v-model="scope.row.sale_price">
                     <template slot="append">
@@ -148,6 +170,9 @@
       const formData = this.setForm()
       const pz = 10
       return {
+        batchPrice: 0,
+        batchCount: 0,
+        batchSelect: false,
         timeValidSwitch: true,
         searchType: this.$t('tools.all'),
         searchForm: {
@@ -178,6 +203,25 @@
       ])
     },
     watch: {
+      batchPrice(val) {
+        this.goodsInventoryTable.forEach(item => {
+          if (item.selected) {
+            this.$set(item, 'sale_price', val)
+          }
+        })
+      },
+      batchCount(val) {
+        this.goodsInventoryTable.forEach(item => {
+          if (item.selected) {
+            this.$set(item, 'count', val <= item.inventory ? val : item.inventory)
+          }
+        })
+      },
+      batchSelect(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'selected', val)
+        })
+      },
       'searchForm.doing_time': function() {
         this.getDataListFun()
       },

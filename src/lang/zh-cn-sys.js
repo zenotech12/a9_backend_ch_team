@@ -45,5 +45,6 @@ export default {
   optUser: '操作人',
   optTime: '操作时间',
   optModule: '操作模块',
-  optContent: '操作内容'
+  optContent: '操作内容',
+  postageDelTip: '确认删除该邮费规则？'
 }

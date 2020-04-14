@@ -79,3 +79,12 @@ export function orderAfterSalesOpt(id, data) {
     data: data
   })
 }
+
+export function exportOrder(data) {
+  return request({
+    url: 'orders-export',
+    method: 'get',
+    params: data,
+    responseType: 'blob'
+  })
+}

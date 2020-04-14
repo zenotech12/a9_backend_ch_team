@@ -66,23 +66,14 @@
                       width="600"
                       trigger="click">
                       <el-row  style="padding: 10px">
-                        <el-col v-for="(item, index) in areas" :key="index">
-                          <el-col :span="4">
-                            <div>
-                              <el-checkbox :label="item.value" @change="selectAll($event, scope.$index, scope.row, item.value)"></el-checkbox>
-                            </div>
-                          </el-col>
-                          <el-col :span="20">
-                            <el-col v-for="(i, j) in item.items" :span="4" :key="j">
-                              <el-checkbox v-model="i.hasCheck" :disabled="i.disabled !== -1 && i.disabled !== scope.$index" :label="i.value" @change="checkClick(scope.row, i.hasCheck, i.value, scope.$index, i)"></el-checkbox>
-                            </el-col>
-                          </el-col>
+                        <el-col v-for="(i, j) in provinces" :span="6" :key="j">
+                          <el-checkbox v-model="i.checked" :disabled="i.index !== -1 && i.index !== scope.$index" :label="i.name" @change="checkClick(scope.row, i.checked, i.name, scope.$index, i)"></el-checkbox>
                         </el-col>
                         <el-col>
                           <el-checkbox :label="$t('tools.selectAll')" @change="selectAll($event, scope.$index, scope.row)" ></el-checkbox>
                         </el-col>
                       </el-row>
-                      <el-input slot="reference" readonly :value="scope.row.province"></el-input>
+                      <el-input slot="reference"  readonly :value="scope.row.province"></el-input>
                     </el-popover>
                   </div>
                 </template>
@@ -110,8 +101,8 @@
               </el-table-column>
               <el-table-column :label="$t('tools.opt')" width="80px">
                 <template slot-scope="scope">
-                  <el-button @click="del(scope.row)" v-if="scope.$index + 1 !== postageData.setting.length">{{$t('tools.delete')}}</el-button>
-                  <el-button @click="addPostage" v-else>{{$t('tools.add')}}</el-button>
+                  <el-button size="mini" @click="del(scope.row)" v-if="scope.$index + 1 !== postageData.setting.length">{{$t('tools.delete')}}</el-button>
+                  <el-button size="mini" @click="addPostage" v-else>{{$t('tools.add')}}</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -133,6 +124,7 @@
   import i18n from '../../utils/i18n'
   import service from '@/utils/request'
   import store from '@/store'
+  import areaInfo from '@/utils/areaInfo'
   // 公司设置
   import { postagesAdd, postagesModify, postagesList, postagesDel } from '@/api/system'
   import { mapGetters } from 'vuex'
@@ -141,7 +133,9 @@
     components: {
     },
     data() {
+      const provinces = this.resetProvinces(null)
       return {
+        provinces: provinces,
         hasRadio: 0,
         postageData: {
           id: '',
@@ -264,10 +258,31 @@
       }
     },
     methods: {
+      resetProvinces(data) {
+        const provinces = []
+        if (data) {
+          areaInfo.forEach(item => {
+            console.log(data)
+            const pi = { name: item.provinceInfo.name, index: -1, checked: false }
+            data.settings.forEach((si, sk) => {
+              if (si.province.indexOf(item.provinceInfo.name) >= 0) {
+                pi.index = sk
+                pi.checked = true
+              }
+            })
+            provinces.push(pi)
+          })
+        } else {
+          areaInfo.forEach(item => {
+            provinces.push({ name: item.provinceInfo.name, index: -1, checked: false })
+          })
+        }
+        return provinces
+      },
       delPostage(data) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        this.$confirm(this.$t('sys.postageDelTip'), this.$t('tools.prompt'), {
+          confirmButtonText: this.$t('tools.confirm'),
+          cancelButtonText: this.$t('tools.cancel'),
           type: 'warning'
         }).then(() => {
           postagesDel(data).then(res => {
@@ -282,7 +297,6 @@
         })
       },
       resetPostage() {
-        this.filterChild(this.areas)
         this.postageData.name = ''
         this.postageData.id = ''
         this.postageData.default = ''
@@ -299,6 +313,7 @@
         ]
       },
       editPostage(data, index) {
+        this.provinces = this.resetProvinces(data)
         this.resetPostage()
         this.postageDialog = true
         const obj = JSON.parse(JSON.stringify(data))
@@ -350,16 +365,17 @@
           }
         }
         if (truth) {
-          source.disabled = index
+          source.index = index
           data.push(value)
         } else {
-          source.disabled = -1
+          source.index = -1
           data.splice(data.indexOf(value), 1)
         }
+        console.log(data)
         data = data.join(',')
         row.province = data
       },
-      selectAll(val, i, row, ca) {
+      selectAll(val, i, row) {
         let data = row.province
         if (!data) {
           data = []
@@ -370,25 +386,22 @@
             data = []
           }
         }
-        this.areas.forEach((area) => {
-          if (!ca || ca === area.value) {
-            area.items.forEach((item) => {
-              if (item.disabled === -1 || item.disabled === i) {
-                if (val) {
-                  if (item.disabled === -1) {
-                    data.push(item.value)
-                  }
-                  this.$set(item, 'hasCheck', true)
-                  this.$set(item, 'disabled', i)
-                } else {
-                  this.$set(item, 'hasCheck', false)
-                  this.$set(item, 'disabled', -1)
-                  data.splice(data.indexOf(item.value), 1)
-                }
+        this.provinces.forEach((item) => {
+          if (item.index === -1 || item.index === i) {
+            if (val) {
+              if (item.index === -1) {
+                data.push(item.name)
               }
-            })
+              this.$set(item, 'checked', true)
+              this.$set(item, 'index', i)
+            } else {
+              this.$set(item, 'checked', false)
+              this.$set(item, 'index', -1)
+              data.splice(data.indexOf(item.value), 1)
+            }
           }
         })
+        console.log(row)
         row.province = data.join(',')
       },
       addPostage() {
@@ -436,6 +449,7 @@
         return data
       },
       addNewsPostage() {
+        this.provinces = this.resetProvinces()
         this.resetPostage()
         this.postageDialog = true
       },
@@ -514,6 +528,7 @@
       this.postageList()
     },
     created() {
+      console.log(this.provinces)
       this.langArr = Object.keys(i18n.messages)
       this.defaultTab = this.langArr[0]
     }
