@@ -261,7 +261,7 @@
     methods: {
       importSuccess(res) {
         this.$message.success(res.error)
-        this.getTableData()
+        this.getDataListFun()
       },
       importError(res) {
         this.$message.error(res.error)
