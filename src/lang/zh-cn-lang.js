@@ -233,5 +233,16 @@ export default {
   editReplyMessage: '编辑回复消息',
   langZh: '中文',
   langEn: '英文',
-  langKh: '柬文'
+  langKh: '柬文',
+  todayOrder: '今日订单数',
+  todayMoney: '今日成交额',
+  todayUser: '今日访客',
+  todayPV: '今日流量',
+  yesterdayUser: '昨日访客',
+  yesterdayPV: '昨日流量',
+  orderStat1: '待支付',
+  orderStat2: '待发',
+  orderStat3: '退款',
+  orderStat4: '待评价',
+  orderStat5: '物流异常'
 }

@@ -233,5 +233,16 @@
   editReplyMessage: 'Edit Reply messages',
   langZh: 'Chinese',
   langEn: 'English',
-  langKh: 'Cambodian'
+  langKh: 'Cambodian',
+  todayOrder: 'Orders today',
+  todayMoney: 'Today\'s turnover',
+  todayUser: 'Visitors today',
+  todayPV: 'Hits today',
+  yesterdayUser: 'Visitors yesterday',
+  yesterdayPV: 'Hits yesterday',
+  orderStat1: 'To be paid',
+  orderStat2: 'To be shipped',
+  orderStat3: 'Drawback',
+  orderStat4: 'To be evaluated',
+  orderStat5: 'Logistics anomaly'
 }

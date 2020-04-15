@@ -682,7 +682,7 @@
             if (response.items !== null) {
               this.isShowType = true
               this.typeData = response.items
-              this.goodsTypeData = [{ name: '全部', code: '', id: '' }, ...response.items]
+              this.goodsTypeData = [{ name: this.$t('tools.all'), code: '', id: '' }, ...response.items]
             } else {
               this.isShowType = false
             }

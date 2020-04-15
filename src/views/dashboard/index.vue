@@ -15,24 +15,24 @@
       <el-col :span="8">
         <el-card shadow="always" class="stat-item">
           <div class="sp cp" @click="gotoUrl('orderList',{ bt: $moment(new Date().getTime()).format('YYYY-MM-DD'), et: $moment(new Date().getTime()).format('YYYY-MM-DD') })">
-            <p>今日订单数：<span>{{statInfo.today_order}}</span></p>
-            <p>今日成交额：<span>{{statInfo.today_sales | price}}</span></p>
+            <p>{{$t('lang.todayOrder')}}：<span>{{statInfo.today_order}}</span></p>
+            <p>{{$t('lang.todayMoney')}}：<span>{{statInfo.today_sales | price}}</span></p>
           </div>
         </el-card>
       </el-col>
       <el-col :span="8">
         <el-card shadow="always"  class="stat-item">
           <div class="sp">
-            <p>今日访客：<span>{{statInfo.today_visit}}</span></p>
-            <p>今日流量：<span>{{statInfo.today_traffic}}</span></p>
+            <p>{{$t('lang.todayUser')}}：<span>{{statInfo.today_visit}}</span></p>
+            <p>{{$t('lang.todayPV')}}：<span>{{statInfo.today_traffic}}</span></p>
           </div>
         </el-card>
       </el-col>
       <el-col :span="8">
         <el-card shadow="always">
           <div class="sp">
-            <p>昨日访客：<span>{{statInfo.yesterday_visit}}</span></p>
-            <p>昨日流量：<span>{{statInfo.yesterday_traffic}}</span></p>
+            <p>{{$t('lang.yesterdayUser')}}：<span>{{statInfo.yesterday_visit}}</span></p>
+            <p>{{$t('lang.yesterdayPV')}}：<span>{{statInfo.yesterday_traffic}}</span></p>
           </div>
         </el-card>
       </el-col>
@@ -41,7 +41,7 @@
       <el-col :span="4">
         <el-card shadow="always">
           <div class="sp cp" @click="gotoUrl('orderList', { order_status: 2})">
-            <p>待支付：<span>{{statInfo.need_pay}}</span></p>
+            <p>{{$t('lang.orderStat1')}}：<span>{{statInfo.need_pay}}</span></p>
           </div>
         </el-card>
       </el-col>
@@ -49,7 +49,7 @@
       <el-col :span="4">
         <el-card shadow="always">
           <div class="sp cp" @click="gotoUrl('orderList', { order_status: 5})">
-            <p>待发：<span>{{statInfo.need_ship}}</span></p>
+            <p>{{$t('lang.orderStat2')}}：<span>{{statInfo.need_ship}}</span></p>
           </div>
         </el-card>
       </el-col>
@@ -57,7 +57,7 @@
       <el-col :span="4">
         <el-card shadow="always">
           <div class="sp cp" @click="gotoUrl('/order/return')">
-            <p>退款：<span>{{statInfo.refund}}</span></p>
+            <p>{{$t('lang.orderStat3')}}：<span>{{statInfo.refund}}</span></p>
           </div>
         </el-card>
       </el-col>
@@ -65,7 +65,7 @@
       <el-col :span="4">
         <el-card shadow="always">
           <div class="sp">
-            <p>待评价：<span>{{statInfo.need_evaluate}}</span></p>
+            <p>{{$t('lang.orderStat4')}}：<span>{{statInfo.need_evaluate}}</span></p>
           </div>
         </el-card>
       </el-col>
@@ -73,7 +73,7 @@
       <el-col :span="4">
         <el-card shadow="always">
           <div class="sp">
-            <p>物流异常：<span>{{statInfo.shipping_exception}}</span></p>
+            <p>{{$t('lang.orderStat5')}}：<span>{{statInfo.shipping_exception}}</span></p>
           </div>
         </el-card>
       </el-col>
