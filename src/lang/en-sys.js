@@ -41,5 +41,15 @@ export default {
   genTime: 'Adding time',
   loginMobile: 'Register mobile number',
   loginMobileTip: 'This mobile number needs to be registered as an ANINE user first',
-  serviceTip: 'After setting as a customer, the user can use the app to communicate with the administrator'
+  serviceTip: 'After setting as a customer, the user can use the app to communicate with the administrator',
+  cardNo: 'Card number',
+  cardNoTip: 'Please enter the bank card number',
+  bank: 'Bank',
+  bankTip: 'Please input the name of bank',
+  cardBank: 'Accounts bank',
+  cardBankTip: 'Please input the accounts bank',
+  cardMobile: 'Tel No.',
+  cardMobileTip: 'Please input your telephone number recorded in the bank',
+  cardEdit: 'Bank card editor',
+  delCardTip: 'Confirm to delete the bank card information'
 }

@@ -197,3 +197,29 @@ export function adminOptLog(param) {
   })
 }
 
+// 银行卡.增
+export function bankCardsAdd(data) {
+  return request({
+    url: 'purse/bank-cards',
+    method: 'post',
+    data: data
+  })
+}
+
+// 银行卡.查.列表
+export function bankCardsList(param) {
+  return request({
+    url: 'purse/bank-cards',
+    method: 'get',
+    params: param
+  })
+}
+
+// 银行卡.删
+export function bankCardsDel(id) {
+  return request({
+    url: 'purse/bank-cards/' + id,
+    method: 'delete'
+  })
+}
+

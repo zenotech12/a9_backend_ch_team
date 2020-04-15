@@ -46,5 +46,15 @@ export default {
   optTime: '操作时间',
   optModule: '操作模块',
   optContent: '操作内容',
-  postageDelTip: '确认删除该邮费规则？'
+  postageDelTip: '确认删除该邮费规则？',
+  cardNo: '卡号',
+  cardNoTip: '请输入银行卡号',
+  bank: '银行',
+  bankTip: '请输入银行名称',
+  cardBank: '开户行',
+  cardBankTip: '请输入开户行',
+  cardMobile: '联系电话',
+  cardMobileTip: '请输入银行预留电话',
+  cardEdit: '银行卡编辑',
+  delCardTip: '确定删除该银行卡信息'
 }

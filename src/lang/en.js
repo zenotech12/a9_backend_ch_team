@@ -48,5 +48,6 @@ export default {
   financeTixian: 'Withdrawal record',
   address: 'Address Management',
   chatRobot: 'Chat robot',
-  optLog: 'Opt Log'
+  optLog: 'Opt Log',
+  cardMgr: 'Bank Card'
 }

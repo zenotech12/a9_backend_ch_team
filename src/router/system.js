@@ -12,6 +12,11 @@ const system = [{
     meta: { title: 'adminList', icon: 'permission' },
     component: () => import('@/views/system/adminList')
   }, {
+    name: 'card',
+    path: 'card',
+    meta: { title: 'cardMgr', icon: 'permission' },
+    component: () => import('@/views/system/card')
+  }, {
     name: 'postage',
     path: 'postage',
     meta: { title: 'postageRule', icon: 'permission' },

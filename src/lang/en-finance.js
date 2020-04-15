@@ -22,5 +22,8 @@ export default {
   txStatus: 'Status',
   txStatus1: 'To be paid',
   txStatus2: 'Paid',
-  txStatus3: 'Canceled'
+  txStatus3: 'Canceled',
+  tixianTip1: 'Please set the withdrawal amount correctly',
+  tixianTip2: 'Please select the bank card corresponding to withdrawal',
+  tixianTip3: 'Please set up the bank first'
 }

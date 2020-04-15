@@ -48,5 +48,6 @@ export default {
   financeTixian: '提现记录',
   address: '地址管理',
   chatRobot: '聊天机器人',
-  optLog: '操作日志'
+  optLog: '操作日志',
+  cardMgr: '银行卡管理'
 }

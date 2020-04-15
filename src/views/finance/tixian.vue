@@ -52,6 +52,16 @@
             <el-form-item :label="$t('finance.tixianMoney')">
               <price-input v-model="tixianMoney"></price-input>
             </el-form-item>
+            <el-form-item :label="$t('sys.cardNo')">
+              <el-select v-model="selectCard" >
+                <el-option
+                  v-for="item in bankCard"
+                  :key="item.id"
+                  :label="item.no + '('+ item.card_bank_name_got +')'"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -66,6 +76,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { tixianList, balanceDetail, tixianAdd } from '@/api/finance'
+  import { bankCardsList } from '@/api/system'
   export default {
     components: {
     },
@@ -80,7 +91,9 @@
         formEditDialog: false,
         submitDisabled: false,
         balanceDetail: {},
-        tixianMoney: 0
+        tixianMoney: 0,
+        bankCard: [],
+        selectCard: ''
       }
     },
     computed: {
@@ -96,13 +109,28 @@
       }
     },
     methods: {
+      getBankCard() {
+        bankCardsList({ skip: 0, limit: 100 }).then(res => {
+          this.bankCard = res.items
+        })
+      },
       addData() {
         this.tixianMoney = this.balanceDetail.can_withdraw_balance
         this.formEditDialog = true
       },
       saveDataFunc() {
         this.submitDisabled = true
-        tixianAdd({ money: this.tixianMoney }).then(res => {
+        if (this.tixianMoney < 0) {
+          this.$message.error(this.$t('finance.tixianTip1'))
+          this.submitDisabled = false
+          return
+        }
+        if (this.selectCard === '') {
+          this.$message.error(this.$t('finance.tixianTip2'))
+          this.submitDisabled = false
+          return
+        }
+        tixianAdd({ money: this.tixianMoney, bank_card_id: this.selectCard }).then(res => {
           this.submitDisabled = false
           this.getBalanceDetail()
           this.getDataListFun()
@@ -127,6 +155,7 @@
       this.getDataListFun()
     },
     created() {
+      this.getBankCard()
       this.getBalanceDetail()
     }
   }

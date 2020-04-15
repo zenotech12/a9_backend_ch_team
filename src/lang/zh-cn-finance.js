@@ -22,5 +22,8 @@ export default {
   txStatus: '状态',
   txStatus1: '待支付',
   txStatus2: '已支付',
-  txStatus3: '被取消'
+  txStatus3: '被取消',
+  tixianTip1: '请正确设置提现金额',
+  tixianTip2: '请选择提现对应银行卡',
+  tixianTip3: '请先设置银行'
 }
