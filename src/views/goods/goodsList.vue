@@ -98,7 +98,7 @@
                           <p>{{scope.row.name}}
                             <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
                             <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                            <i @click="goodsPreview(scope.row)" style="cursor: pointer" class="el-icon-view"></i>
+                            <a :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer" class="el-icon-view"></a>
                           </p>
                         </div>
                       </div>
@@ -648,8 +648,9 @@
     },
     methods: {
       goodsPreview(row) {
-        this.currentGoods = appUrl + '/goods/info?id=' + row.id
-        this.commodityPreviewShow = true
+        return 'https://www.a9kh.com/goods/' + row.id + '.html'
+        // this.currentGoods = appUrl + '/goods/info?id=' + row.id
+        // this.commodityPreviewShow = true
       },
       getTreePath(k) {
         const path = []
