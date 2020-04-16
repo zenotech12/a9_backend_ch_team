@@ -29,9 +29,9 @@
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
                 <el-button type="primary" @click="exportFunc" size="small" icon="el-icon-download"></el-button>
                 <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
-                  :action= importUrl
+                  :action= "importUrl"
                   :show-file-list="false"
-                  :on-success="importSuccess" on-error="importError">
+                  :on-success="importSuccess" :on-error="importError">
                   <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
                 </el-upload>
               </el-form-item>
