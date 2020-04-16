@@ -73,17 +73,15 @@
      <div class="footer-container">
       <div class="login-footer">
         <div class="footer-menu">
-          <a>{{$t('login.footmenu1')}}</a>
+          <a target="_blank" href="https://www.a9kh.com/document/about.html">{{$t('login.footmenu1')}}</a>
           <span>|</span>
-          <a>{{$t('login.footmenu2')}}</a>
+          <a >{{$t('login.footmenu3')}}</a>
           <span>|</span>
-          <a>{{$t('login.footmenu3')}}</a>
+          <a target="_blank" href="https://www.a9kh.com/document/cooperation.html">{{$t('login.footmenu4')}}</a>
           <span>|</span>
-          <a>{{$t('login.footmenu4')}}</a>
+          <a target="_blank" href="https://www.a9kh.com/document/question.html">{{$t('login.footmenu5')}}</a>
           <span>|</span>
-          <a>{{$t('login.footmenu5')}}</a>
-          <span>|</span>
-          <a>{{$t('login.footmenu6')}}</a>
+          <a target="_blank" href="https://www.a9kh.com/document/contact.html">{{$t('login.footmenu6')}}</a>
         </div>
         <div class="copyright">{{$t('login.copyright')}}</div>
       </div>

@@ -4,20 +4,15 @@
       <!-- 搜索 -->
       <div class="rightbox">
         <el-row>
+          <el-col :span="24">
+            <el-tabs style="height: 40px" v-model="tab_order_status">
+              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatus" v-if="item" :label="item" :name="k + ''"></el-tab-pane>
+            </el-tabs>
+          </el-col>
           <el-col :span ="24">
             <el-form :inline="true" :model="searchForm">
               <el-form-item :label="$t('order.no')">
                 <el-input v-model="searchForm.no" style="width: 250px" clearable></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('order.status')">
-                <el-select v-model="searchForm.order_status" :placeholder="$t('order.commentType')" clearable>
-                  <el-option
-                    v-for="(item, k) in orderStatus" v-if="item"
-                    :key="k"
-                    :label="item"
-                    :value="k">
-                  </el-option>
-                </el-select>
               </el-form-item>
               <el-form-item :label="$t('order.orderTime')">
                 <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
@@ -45,7 +40,7 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100vh - 185px)">
+            <div style="height: calc(100vh - 225px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
@@ -217,6 +212,7 @@
           bt: '',
           et: ''
         },
+        tab_order_status: '0',
         orderTimes: [],
         tableData: [],
         currentPage: 1,
@@ -243,6 +239,12 @@
       ])
     },
     watch: {
+      tab_order_status(val) {
+        this.searchForm.skip = 0
+        this.searchForm.limit = this.pageSize
+        this.searchForm.order_status = parseInt(val)
+        this.getDataListFun()
+      },
       currentPage(val) {
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize

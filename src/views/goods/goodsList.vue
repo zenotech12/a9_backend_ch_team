@@ -17,7 +17,7 @@
           </el-row>
           <div class="custom-tree-container">
             <div class="block">
-              <el-tree style="height: calc(100vh - 280px); overflow-y: auto;"
+              <el-tree style="height: calc(100vh - 265px); overflow-y: auto;"
                        :data="goodsTypeData"
                        node-key="id"
                        :show-checkbox="false"
@@ -51,22 +51,17 @@
           <div class="rightbox">
             <!-- 搜索 -->
             <el-row>
-              <el-col :span="20" style="padding: 6px 15px ">
+              <el-col :span="24">
+                <el-tabs style="height: 40px" v-model="tab_shelf_status">
+                  <el-tab-pane style="height: 44px" v-for="item in shelfStatus" :label="item.label" :name="item.value + ''"></el-tab-pane>
+                </el-tabs>
+              </el-col>
+              <el-col :span="20" style="padding: 0px 15px ">
                 <el-form :inline="true" :model="searchForm">
                   <el-form-item>
                     <el-select v-model="searchForm.approve_status" @change="search" :placeholder="$t('goods.checkSelectorHolder')">
                       <el-option
                         v-for="item in approveStatus"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-select v-model="searchForm.shelf_status" @change="search" :placeholder="$t('goods.displaySelectorHolder')">
-                      <el-option
-                        v-for="item in shelfStatus"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -88,8 +83,8 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="24" style="height: calc(100vh - 242px)">
-                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 42px)" style="width: 100%;">
+              <el-col :span="24" style="height: calc(100vh - 252px)">
+                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 52px)" style="width: 100%;">
                   <el-table-column  :label="$t('goods.name')" min-width="300">
                     <template  slot-scope="scope">
                       <div class="goods-item">
@@ -538,7 +533,8 @@
         goodsInventoryData: [],
         showPropsImageDialog: false,
         propsImageEditIndex: 0,
-        propsImageEditTitle: ''
+        propsImageEditTitle: '',
+        tab_shelf_status: '2'
       }
     },
     created() {
@@ -552,6 +548,12 @@
       // this.getPartner()
     },
     watch: {
+      tab_shelf_status(val) {
+        this.searchForm.skip = 0
+        this.searchForm.limit = this.pageSize
+        this.searchForm.shelf_status = parseInt(val)
+        this.getTableData()
+      },
       batchWeight(val) {
         this.goodsInventoryTable.forEach(item => {
           this.$set(item, 'weight', val)
