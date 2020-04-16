@@ -4,7 +4,7 @@ export default {
   pleaseEnterAccount: 'Please enter your mobile number',
   passwordCheck: 'Please enter the password correctly',
   accountCheck: 'Please enter the correct mobile number',
-  title: 'Log in to ANINE store',
+  title: 'Login to ANINE store',
   passwordCannotLess: 'Password cannot be less than 6 digits',
   welcome: 'Welcome',
   login: 'Login',

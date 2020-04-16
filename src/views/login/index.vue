@@ -91,6 +91,7 @@
 
 <script>
 import { mobileCode } from '@/api/login'
+import { mapMutations } from 'vuex'
 export default {
   name: 'login',
   data() {
@@ -131,6 +132,14 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      changeLang: 'CHANGE_LANG'
+    }),
+    changeNewLang(lan) {
+      if (this.lang !== lan) {
+        this.changeLang(lan)
+      }
+    },
     getVerificationCode() {
       const timeCount = 60
       if (!this.timer) {
@@ -195,6 +204,7 @@ export default {
     }
   },
   mounted() {
+    this.changeNewLang('en')
     if (this.$route.query.p) {
       this.loginForm.login_name = this.$route.query.p
     }
