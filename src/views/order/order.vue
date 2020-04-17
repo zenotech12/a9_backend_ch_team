@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="24">
             <el-tabs style="height: 40px" v-model="tab_order_status">
-              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatus" v-if="item" :label="item" :name="k + ''"></el-tab-pane>
+              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatusTab" :key="k" v-if="item" :label="item.label" :name="item.value"></el-tab-pane>
             </el-tabs>
           </el-col>
           <el-col :span ="24">
@@ -203,6 +203,8 @@
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
+        orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
+          { value: '10', label: this.$t('order.status10') }, { value: '7', label: this.$t('order.status7') }],
         searchForm: {
           user_id: '',
           order_status: 0,
