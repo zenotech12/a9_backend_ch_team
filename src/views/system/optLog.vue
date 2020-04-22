@@ -3,8 +3,9 @@
     <div class="sys-neiBody">
       <!-- 搜索 -->
         <el-row>
-          <el-col :span="24">
-            <el-table stripe border v-loading="tableData.loading" :data="tableData.body" style="width: 100%">
+          <el-col :span="24" >
+            <div style="">
+            <el-table stripe border v-loading="tableData.loading" :data="tableData.body" style="width: 100%;" height="calc(100vh - 175px)" >
               <el-table-column prop="user_nick_name"  width="200px" :label="$t('sys.optUser')">
                 <template slot-scope="scope">
                   {{scope.row.user_nick_name}}/{{scope.row.user_login_name}}
@@ -26,6 +27,7 @@
                 </el-pagination>
               </div>
             </template>
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -37,12 +39,16 @@
   export default {
     data() {
       return {
-        pageSize: 10,
+        pageSize: 20,
         itemCount: 0,
         currentPage: 1,
         tableData: {
           loading: true,
           body: []
+        },
+        searchForm: {
+          skip: 0,
+          limit: 20
         }
       }
     },
