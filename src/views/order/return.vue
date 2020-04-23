@@ -276,7 +276,7 @@
           const defaultAddr = this.addressList.find(addr => {
             return addr.default === true
           })
-          this.defaultAddr = defaultAddr ? defaultAddr.id : (this.addressList.length > 0 ? this.addressList[0].id : '')
+          this.defaultAddr = typeof (defaultAddr) !== 'undefined' ? defaultAddr.id : (this.addressList.length > 0 ? this.addressList[0].id : '')
         })
       },
       search() {
