@@ -85,5 +85,7 @@ export default {
   opt9: '修改价格',
   returnTip: '同意退换货申请',
   gift: '兑换',
-  afterSale: '售后'
+  afterSale: '售后',
+  searchKey: '关键词',
+  searchKeyTip: '商品名/收货人/地址/手机号'
 }

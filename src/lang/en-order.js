@@ -85,5 +85,7 @@ export default {
   opt9: 'Price revision',
   returnTip: 'Agree to return and exchange application',
   gift: 'gift',
-  afterSale: 'After-Sale'
+  afterSale: 'After-Sale',
+  searchKey: 'Key',
+  searchKeyTip: 'Product/User/Address/Mobile'
 }

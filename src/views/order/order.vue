@@ -11,6 +11,9 @@
           </el-col>
           <el-col :span ="24">
             <el-form :inline="true" :model="searchForm">
+              <el-form-item :label="$t('order.searchKey')">
+                <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 250px" clearable></el-input>
+              </el-form-item>
               <el-form-item :label="$t('order.no')">
                 <el-input v-model="searchForm.no" style="width: 250px" clearable></el-input>
               </el-form-item>
@@ -208,6 +211,7 @@
         orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
           { value: '10', label: this.$t('order.status10') }, { value: '7', label: this.$t('order.status7') }],
         searchForm: {
+          key: '',
           user_id: '',
           order_status: 0,
           no: '',
