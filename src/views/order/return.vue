@@ -276,7 +276,7 @@
           const defaultAddr = this.addressList.find(addr => {
             return addr.default === true
           })
-          this.defaultAddr = defaultAddr.id
+          this.defaultAddr = defaultAddr ? defaultAddr.id : (this.addressList.length > 0 ? this.addressList[0].id : '')
         })
       },
       search() {
@@ -287,6 +287,8 @@
       }
     },
     mounted() {
+      console.log(this.$route.params)
+      this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
       this.getDataListFun()
       this.getAddressListFunc()
     },

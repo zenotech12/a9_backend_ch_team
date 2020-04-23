@@ -59,7 +59,9 @@
                     <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
                       <div class="g-info">
-                        <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
+                        <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
+                          <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click="showReturn(scope.row)">{{$t('order.afterSale')}}</el-tag>
+                        </p>
                         <p>
                           <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
@@ -263,6 +265,9 @@
       }
     },
     methods: {
+      showReturn(row) {
+        this.$router.push({ name: 'returnList', params: { order_no: row.no }})
+      },
       importSuccess(res) {
         this.$message.success(res.error)
         this.getDataListFun()
