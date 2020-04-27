@@ -3,6 +3,7 @@ export default {
   webTitle: 'ANINE Merchant backstage',
   zh: 'Chinese',
   en: 'English',
+  km: 'Khmer',
   home: 'Home Page',
   logout: 'Logout',
   account: 'Account name',

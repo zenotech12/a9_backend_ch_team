@@ -204,7 +204,7 @@ export default {
     }
   },
   mounted() {
-    this.changeNewLang('en')
+    // this.changeNewLang('en')
     if (this.$route.query.p) {
       this.loginForm.login_name = this.$route.query.p
     }

@@ -63,8 +63,6 @@
                       <span v-else>{{scope.row.min_price | price}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="brokerage_percent" width="200"  :label="$t('goods.commissionPercent')">
-                  </el-table-column>
                   <el-table-column prop="sales" width="120"  :label="$t('goods.commissionMoney')">
                     <template  slot-scope="scope">
                       <span v-if="scope.row.min_brokerage !== scope.row.max_brokerage">{{scope.row.min_brokerage | price}}-{{scope.row.max_brokerage | price}}</span>
@@ -74,8 +72,8 @@
                   <el-table-column :label="$t('tools.opt')" width = "180" fixed="right">
                     <template slot-scope="scope">
                       <el-button type="text" :title="$t('tools.copyLinkTip')" v-clipboard:copy="goodsShareLink(scope.row.id)" v-clipboard:success="copySuccess" v-clipboard:error="copyError"  size="small">{{$t('tools.copyLink')}}</el-button>
-                      <span class="xiexian">/</span>
-                      <el-button type="text" @click="editShareGoods(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
+                      <!--<span class="xiexian">/</span>-->
+                      <!--<el-button type="text" @click="editShareGoods(scope.row)" size="small">{{$t('tools.edit')}}</el-button>-->
                       <span class="xiexian">/</span>
                       <delete-button @delData="deleteShareGoods(scope.row)"></delete-button>
                     </template>
@@ -97,11 +95,6 @@
             </el-row>
             <el-dialog :title="$t('goods.shareSet')" width="800px" @close="cancelShareEdit" :visible.sync="shareEditorShow" :close-on-click-modal="false" center>
               <el-form :model="shareForm" ref="forms" label-width="120px">
-                <el-form-item :label="$t('goods.commissionPercent')" prop="name" label-width="120px">
-                  <el-input v-model.number="shareForm.brokerage_percent" auto-complete="off" clearable>
-                    <template slot="append">‰</template>
-                  </el-input>
-                </el-form-item>
                 <template v-if="!shareForm.edit">
                   <el-form-item :label="$t('goods.shareGoods')" label-width="120px">
                     <el-checkbox v-model="shareForm.all">{{$t('goods.shareAll')}}</el-checkbox>
@@ -171,9 +164,9 @@
         shareForm: {
           goodsName: '',
           edit: false,
-          brokerage_percent: 0,
           all: false,
-          spu_ids: ''
+          spu_ids: '',
+          distribution: true
         }
       }
     },
@@ -216,7 +209,7 @@
             if (response.items !== null) {
               this.isShowType = true
               this.typeData = response.items
-              this.goodsTypeData = [{ name: '全部', code: '', id: '' }, ...response.items]
+              this.goodsTypeData = [{ name: this.$t('tools.all'), code: '', id: '' }, ...response.items]
             } else {
               this.isShowType = false
             }
@@ -262,13 +255,12 @@
       },
       deleteShareGoods(row) {
         const goodsIds = [row.id]
-        spuDistribution({ brokerage_percent: 0, spu_ids: JSON.stringify(goodsIds) }).then(res => {
+        spuDistribution({ distribution: false, spu_ids: JSON.stringify(goodsIds) }).then(res => {
           this.getTableData()
         })
       },
       editShareGoods(row) {
         this.shareForm.edit = true
-        this.shareForm.brokerage_percent = row.brokerage_percent
         this.shareForm.goodsName = row.name
         this.shareForm.spu_ids = JSON.stringify([row.id])
         this.shareEditorShow = true

@@ -35,7 +35,7 @@ import { getIdentity } from '@/utils/auth'
 export default {
   data() {
     return {
-      languages: [{ code: 'zh', name: this.$t('global.zh') }, { code: 'en', name: this.$t('global.en') }],
+      languages: [{ code: 'zh', name: this.$t('global.zh') }, { code: 'en', name: this.$t('global.en') }, { code: 'km', name: this.$t('global.km') }],
       name: '',
       imgPng: require('../../../assets/images/dl/userLogo.png'),
       zhLang: require('../../../assets/images/icon_zw.png'),
@@ -74,6 +74,7 @@ export default {
     changeNewLang(lan) {
       if (this.lang !== lan) {
         this.changeLang(lan)
+        window.location = window.location
       }
     },
     toggleSideBar() {
