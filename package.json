@@ -17,7 +17,7 @@
     "babel-polyfill": "^6.26.0",
     "copy-webpack-plugin": "^4.2.3",
     "echarts": "^4.2.1",
-    "element-ui": "^2.13.0",
+    "element-ui": "^2.13.1",
     "jquery": "^3.3.1",
     "js-cookie": "2.2.0",
     "js-md5": "^0.7.3",

@@ -39,7 +39,7 @@
                   <template slot-scope="scope">
                     {{scope.row.content}}
                     <div>
-                      <el-image v-for="(img, k) in scope.row.imgs" style="width: 80px; height: 80px" :key="k" fit="contain" :src="getImageUrl(img,50)" :preview-src-list="previewList(scope.row.imgs)">
+                      <el-image v-for="(img, k) in scope.row.imgs" style="width: 80px; height: 80px" :key="scope.row.id + k" fit="contain" :src="getImageUrl(img, 50)" :preview-src-list="previewList(scope.row.imgs)">
                       </el-image>
                     </div>
                   </template>
@@ -170,6 +170,7 @@
         imgs.forEach(img => {
           result.push(this.getImageUrl(img))
         })
+        console.log(result)
         return result
       },
       showReplyEditor(data) {
