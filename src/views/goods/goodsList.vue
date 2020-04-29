@@ -746,11 +746,11 @@
         <div class='funcListBox'>
           <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
       <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
-          <span class='permissionsDel'>删除</span>
+          <span class='permissionsDel'>{this.$t('tools.delete')}</span>
           </div>
           <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
       <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
-          <span class='permissionsEdit'>编辑</span>
+          <span class='permissionsEdit'>{this.$t('tools.edit')}</span>
           </div>
           </div>
           <i class='el-icon-more imgMore' slot='reference'></i>
