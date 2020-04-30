@@ -2,6 +2,7 @@
 export default {
   id: '订单ID',
   orderType2: '拼团',
+  orderType3: '积分兑换',
   no: '单号',
   goods: '商品',
   user: '用户',

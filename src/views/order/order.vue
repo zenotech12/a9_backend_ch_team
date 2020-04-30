@@ -48,6 +48,7 @@
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
                     <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
+                    <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===3" size="mini">{{$t('order.orderType3')}}</el-tag>
                     {{scope.row.no}}
                   </template>
                 </el-table-column>
@@ -68,7 +69,7 @@
                         <p>
                           <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price | price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                        <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                       </div>
                       <div class="clear"></div>
                     </div>
@@ -76,7 +77,7 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.price')" width="130">
                   <template slot-scope="scope" >
-                    <span :title="$t('order.price1') + '+' + $t('order.price2')"> {{scope.row.pay_price | price}}</span>
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">

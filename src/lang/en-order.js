@@ -2,6 +2,7 @@
 export default {
   id: 'Order ID',
   orderType2: 'Group purchase',
+  orderType3: 'Integral exchange',
   no: 'Order number',
   goods: 'goods',
   user: 'User',
