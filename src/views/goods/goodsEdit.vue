@@ -76,6 +76,12 @@
               </el-form-item>
               <el-form-item :label="$t('goods.piEdit')" required>
                 <el-table :data="goodsInventoryTable"  style="width: 100%">
+                  <el-table-column  :label="$t('goods.barcode')">
+                    <template  slot-scope="scope">
+                      <el-input v-model="scope.row.barcode"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column v-if="goodsData.id" prop="no"  :label="$t('goods.skuNo')"></el-table-column>
                   <el-table-column :label="$t('goods.sp')">
                     <template  slot-scope="scope">
                       {{scope.row.title}}
@@ -202,8 +208,10 @@
               <el-form-item :label="$t('goods.xgLabel')" prop="xg">
                 <el-radio v-model="xgType" :label="1">{{$t('goods.xgLabel1')}}</el-radio>
                 <el-radio v-model="xgType" :label="2">{{$t('goods.xgLabel2')}}</el-radio>
-                <el-input style="width: 100px; display: inline-block" v-if="xgType == 2" size="small" placeholder="" v-model.number="goodsData.buy_limit">
-                </el-input>
+                <template v-if="xgType == 2">
+                  {{$t('goods.limitNo')}}<el-input style="width: 100px; display: inline-block"  size="small" placeholder="" v-model.number="goodsData.buy_limit">  </el-input>
+                  {{$t('goods.limitDays')}}<el-input style="width: 100px; display: inline-block"   size="small" placeholder="" v-model.number="goodsData.buy_limit_day"></el-input>days
+                </template>
               </el-form-item>
               <el-form-item :label="$t('goods.putaway')">
                 <el-col :span="4">
@@ -508,7 +516,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [], weight: 0 }
+            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -527,6 +535,8 @@
               }
               if (isEque) {
                 tableItem.inventory = this.goodsInventoryData[i].inventory
+                tableItem.barcode = this.goodsInventoryData[i].barcode
+                tableItem.no = this.goodsInventoryData[i].no
                 tableItem.price = this.goodsInventoryData[i].price
                 tableItem.weight = this.goodsInventoryData[i].weight
                 tableItem.cobuy_price = this.goodsInventoryData[i].cobuy_price ? this.goodsInventoryData[i].cobuy_price : 0
@@ -690,24 +700,24 @@
           return
         }
         this.goodsData.default_type_id = data[data.length - 1]
-        const nodes = this.$refs.sysGoodsTypeSelector.getCheckedNodes()
-        this.goodsData.fields = {}
-        this.goodsSysTypeFields = []
-        const currentNode = nodes[nodes.length - 1]
-        currentNode.data.fields && currentNode.data.fields.length > 0 && currentNode.data.fields.forEach(item => {
-          if (item.type === 'string' || item.type === 'number') {
-            this.goodsSysTypeFields.push({ code: item.code, name: item.name, type: item.type })
-            this.$set(this.goodsData.fields, item.code, '')
-          } else if (item.type === 'select' || item.type === 'mulitselect') {
-            this.goodsSysTypeFields.push({ code: item.code, name: item.name, type: item.type, param: JSON.parse(item.param) })
-            if (item.type === 'mulitselect') {
-              this.$set(this.goodsData.fields, item.code, [])
-            } else {
+        getPathById(this.goodsData.default_type_id, this.sysTypes, (res, node) => {
+          this.goodsData.fields = {}
+          this.goodsSysTypeFields = []
+          const currentNode = node
+          currentNode.data.fields && currentNode.data.fields.length > 0 && currentNode.data.fields.forEach(item => {
+            if (item.type === 'string' || item.type === 'number') {
+              this.goodsSysTypeFields.push({ code: item.code, name: item.name, type: item.type })
               this.$set(this.goodsData.fields, item.code, '')
+            } else if (item.type === 'select' || item.type === 'mulitselect') {
+              this.goodsSysTypeFields.push({ code: item.code, name: item.name, type: item.type, param: JSON.parse(item.param) })
+              if (item.type === 'mulitselect') {
+                this.$set(this.goodsData.fields, item.code, [])
+              } else {
+                this.$set(this.goodsData.fields, item.code, '')
+              }
             }
-          }
+          })
         })
-        console.log(currentNode)
         // console.log(data)
       },
       goodsTypeChange(data) {
@@ -803,7 +813,8 @@
             address_id: data.address_id,
             postage_setting_id: data.postage_setting_id,
             rider_post_support: data.rider_post_support,
-            buy_limit: data.buy_limit ? data.buy_limit.default : 0
+            buy_limit: data.buy_limit ? data.buy_limit.default : 0,
+            buy_limit_day: data.buy_limit_day ? data.buy_limit_day.default : 0
           }
           this.xgType = this.goodsData.buy_limit > 0 ? 2 : 1
           this.isSetShelfTime = false
@@ -840,7 +851,8 @@
             address_id: '',
             postage_setting_id: '',
             rider_post_support: false,
-            buy_limit: 0
+            buy_limit: 0,
+            buy_limit_day: 0
           }
         }
       },
@@ -907,7 +919,7 @@
       updateGoodsFunc() {
         const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, intro: this.goodsData.intro,
           type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images),
-          buy_limit: this.goodsData.buy_limit, desc: this.goodsData.desc }
+          buy_limit: this.goodsData.buy_limit, buy_limit_day: this.goodsData.buy_limit_day, desc: this.goodsData.desc }
         goodsItem['postage_setting_id'] = this.goodsData.postage_setting_id
         goodsItem['rider_post_support'] = this.goodsData.rider_post_support
         goodsItem['address_id'] = this.goodsData.address_id

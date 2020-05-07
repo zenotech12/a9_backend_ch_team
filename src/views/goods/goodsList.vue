@@ -135,6 +135,8 @@
                   </el-table-column>
                   <el-table-column prop="sales" width="75"  :label="$t('goods.saled')">
                   </el-table-column>
+                  <el-table-column prop="gen_time" width="150"  :label="$t('goods.publishTime')">
+                  </el-table-column>
                   <el-table-column :label="$t('tools.opt')" width = "190" fixed="right">
                     <template slot-scope="scope">
                       <template v-if="!scope.row.deleted">
@@ -281,6 +283,8 @@
                   </el-form-item>
                   <el-form-item :label="$t('goods.piEdit')">
                     <el-table :data="goodsInventoryTable"  style="width: 100%">
+                      <el-table-column prop="barcode"  :label="$t('goods.barcode')"></el-table-column>
+                      <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
                       <el-table-column :label="$t('goods.sp')">
                         <template  slot-scope="scope">
                           {{scope.row.title}}
@@ -595,7 +599,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [], weight: 0 }
+            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -615,6 +619,8 @@
               if (isEque) {
                 tableItem.inventory = this.goodsInventoryData[i].inventory
                 tableItem.weight = this.goodsInventoryData[i].weight
+                tableItem.barcode = this.goodsInventoryData[i].barcode
+                tableItem.no = this.goodsInventoryData[i].no
                 tableItem.price = this.goodsInventoryData[i].price
                 tableItem.cobuy_price = this.goodsInventoryData[i].cobuy_price ? this.goodsInventoryData[i].cobuy_price : 0
                 tableItem.images = this.goodsInventoryData[i].images

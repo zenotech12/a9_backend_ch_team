@@ -103,5 +103,10 @@ export default {
   addressSetTip: 'Address Set',
   postageSet: 'Postage Rule',
   dpTypeSet: 'Goods Type',
-  weight: 'Weight'
+  weight: 'Weight',
+  publishTime: 'Publish Time',
+  barcode: 'Bar code',
+  skuNo: 'Sku no',
+  limitNo: 'Limit No',
+  limitDays: 'Limit Days'
 }

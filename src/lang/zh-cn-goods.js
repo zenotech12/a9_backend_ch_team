@@ -104,5 +104,10 @@ export default {
   postageSet: '邮费规则设置',
   dpTypeSet: '店铺分类设置',
   weight: '重量',
-  batchSet: '批量设置'
+  batchSet: '批量设置',
+  publishTime: '发布时间',
+  barcode: '条码',
+  skuNo: 'SKU 编码',
+  limitNo: '限购数量',
+  limitDays: '限购周期'
 }
