@@ -27,8 +27,12 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100vh - 185px)">
-              <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+            <div style="height: calc(100vh - 190px)">
+              <el-table stripe border :data="tableData" height="calc(100% - 40px)" @selection-change="handleSelectionChange">
+                <el-table-column
+                  type="selection"
+                  width="55">
+                </el-table-column>
                 <el-table-column :label="$t('order.user')" align="left" width="120" fixed="left">
                   <template slot-scope="scope">
                     {{scope.row.user_nick_name}}<br/>
@@ -78,14 +82,20 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <div style="text-align: right;margin-top: 10px">
-                <el-pagination
-                  :current-page.sync="currentPage"
-                  :page-size="pageSize"
-                  layout="total, prev, pager, next, jumper"
-                  :total="itemCount">
-                </el-pagination>
-              </div>
+              <el-row style="margin-top: 10px">
+                <el-col :span="6">
+                  <el-button size="mini" @click="showBatchReplyDialog">{{$t('order.reply')}}</el-button>
+                </el-col>
+                <el-col :span="18" style="text-align: right;">
+                  <el-pagination
+                    :current-page.sync="currentPage"
+                    :page-size.sync="pageSize"
+                    :page-sizes="[10, 30, 50, 100, 500]"
+                    layout="total, prev, pager, next, jumper, sizes"
+                    :total="itemCount">
+                  </el-pagination>
+                </el-col>
+              </el-row>
             </div>
           </el-col>
         </el-row>
@@ -117,6 +127,15 @@
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
+        <el-dialog :title="$t('order.batchReply')" width="500px" @close="batchReplyDialog=false" :visible.sync="batchReplyDialog" :close-on-click-modal="false" center >
+          <div>
+            <el-divider content-position="left">{{$t('order.reply1')}}</el-divider>
+            <el-input style="margin-top: 10px" type="textarea"  :rows="5" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
+          </div>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="batchReplyFunc" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -124,7 +143,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { evalutionsList, evalutionsReply } from '@/api/order'
+  import { evalutionsList, evalutionsReply, batchEvalutionsReply } from '@/api/order'
   import goodsSelector from '@/components/goodsSelector'
   export default {
     components: {
@@ -149,7 +168,9 @@
         replyContent: '',
         replyData: {},
         formEditDialog: false,
-        submitDisabled: false
+        submitDisabled: false,
+        batchReplyDialog: false,
+        multipleSelection: []
       }
     },
     computed: {
@@ -162,9 +183,34 @@
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
+      },
+      pageSize(val) {
+        this.searchForm.skip = 0
+        this.searchForm.limit = val
+        this.getDataListFun()
       }
     },
     methods: {
+      showBatchReplyDialog() {
+        if (this.multipleSelection.length < 1) {
+          this.$message.error(this.$t('order.batchReplyTip'))
+          return
+        }
+        this.replyContent = ''
+        this.batchReplyDialog = true
+      },
+      batchReplyFunc() {
+        batchEvalutionsReply({ ids: JSON.stringify(this.multipleSelection), reply: this.replyContent }).then(() => {
+          this.getDataListFun()
+          this.batchReplyDialog = false
+        })
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = []
+        val.forEach(item => {
+          this.multipleSelection.push(item.id)
+        })
+      },
       previewList(imgs) {
         const result = []
         imgs.forEach(img => {

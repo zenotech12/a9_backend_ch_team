@@ -54,6 +54,15 @@ export function evalutionsReply(id, data) {
   })
 }
 
+// 评价.批量.回复
+export function batchEvalutionsReply(data) {
+  return request({
+    url: 'batch/evalutions/replies',
+    method: 'post',
+    data: data
+  })
+}
+
 // 评价.查.个
 export function evalutionsInfo(id) {
   return request({

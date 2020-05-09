@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="24">
             <el-tabs style="height: 40px" v-model="tab_status">
-              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatus" v-if="item" :label="item" :name="k + ''"></el-tab-pane>
+              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatus" :key="k" v-if="item" :label="item" :name="k + ''"></el-tab-pane>
             </el-tabs>
           </el-col>
           <el-col :span ="24">

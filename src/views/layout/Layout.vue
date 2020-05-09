@@ -12,7 +12,6 @@
 <script>
 import { Navbar, Sidebar, AppMain, TagsView } from '@/views/layout/components'
 import { mapGetters } from 'vuex'
-import SDK from '@/imsdk/NIM_Web_SDK_v6.1.0'
 export default {
   name: 'layout',
   components: {

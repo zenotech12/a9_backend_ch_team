@@ -154,3 +154,30 @@ export function goodsRestore(id) {
     method: 'put'
   })
 }
+
+// 商品.批量.删
+export function spusBatchDel(id) {
+  return request({
+    url: 'batch/spus',
+    method: 'delete',
+    params: { ids: JSON.stringify(id) }
+  })
+}
+
+// 商品.批量.上下架
+export function spusBatchShelf(data) {
+  return request({
+    url: 'batch/spus/shelf',
+    method: 'put',
+    data: data
+  })
+}
+
+// 商品.批量.恢复
+export function spusBatchRestore(data) {
+  return request({
+    url: 'batch/spus/restore',
+    method: 'put',
+    data: data
+  })
+}

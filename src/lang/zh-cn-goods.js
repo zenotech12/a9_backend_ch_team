@@ -109,5 +109,6 @@ export default {
   barcode: '条码',
   skuNo: 'SKU 编码',
   limitNo: '限购数量',
-  limitDays: '限购周期'
+  limitDays: '限购周期',
+  batchOptTip: '请选择您要操作的商品'
 }

@@ -140,7 +140,7 @@
         const toolbar = document.getElementsByClassName('ql-toolbar')[0]
         const editor = document.getElementsByClassName('quill-editor')[0]
         const top = editor.getBoundingClientRect().top
-        if (top < 0 && Math.abs(top) < editor.offsetHeight - 150 ) {
+        if (top < 0 && Math.abs(top) < editor.offsetHeight - 150) {
           toolbar.style.position = 'fixed'
           toolbar.style.top = '0px'
           toolbar.style.width = editor.offsetWidth + 'px'
@@ -232,7 +232,7 @@
           this.formImagesLists.forEach(res => {
             const imgUrl = this.getImageUrl(res)
             this.$refs['myeditor'].quill.insertEmbed(this.imageInsertIndex, 'image', imgUrl)
-            this.imageInsertIndex ++
+            this.imageInsertIndex++
           })
           this.formImagesLists = []
           this.images = []

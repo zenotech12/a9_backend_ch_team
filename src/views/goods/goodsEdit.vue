@@ -269,7 +269,7 @@
             </el-dialog>
             <el-dialog v-if="showGoodsLangSetDialog" :title="$t('goods.goodsLang')" width="70%" @close="showGoodsLangSetDialog=false" :visible.sync="showGoodsLangSetDialog" :close-on-click-modal="false" center append-to-body >
               <el-tabs v-model="currentLang" >
-                <el-tab-pane v-for="(lv,lk) in languages" :label="lv" :name="lk"></el-tab-pane>
+                <el-tab-pane v-for="(lv,lk) in languages" :key="lk" :label="lv" :name="lk"></el-tab-pane>
               </el-tabs>
               <el-form v-model="langInfo"  label-width="100px">
                 <el-form-item :label="$t('goods.name')" prop="name">

@@ -88,5 +88,8 @@ export default {
   gift: '兑换',
   afterSale: '售后',
   searchKey: '关键词',
-  searchKeyTip: '商品名/收货人/地址/手机号'
+  searchKeyTip: '商品名/收货人/地址/手机号',
+  batchReply: '批量回复',
+  batchReplyTip: '请选择您要回复的评论',
+  batchExportTip: '请选择您要导出的订单'
 }

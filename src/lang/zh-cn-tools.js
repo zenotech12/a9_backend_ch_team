@@ -57,5 +57,8 @@ export default {
   selectAll: '全选',
   copyLink: '复制链接',
   copyLinkTip: '点击复制',
-  copySuccess: '复制成功'
+  copySuccess: '复制成功',
+  shelfOn: '上架',
+  shelfOff: '下架',
+  export: '导出'
 }

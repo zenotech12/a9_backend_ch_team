@@ -53,7 +53,7 @@
             <el-row>
               <el-col :span="24">
                 <el-tabs style="height: 40px" v-model="tab_shelf_status">
-                  <el-tab-pane style="height: 44px" v-for="item in shelfStatus" :label="item.label" :name="item.value + ''"></el-tab-pane>
+                  <el-tab-pane style="height: 44px" v-for="item in shelfStatus" :key="item.value" :label="item.label" :name="item.value + ''"></el-tab-pane>
                 </el-tabs>
               </el-col>
               <el-col :span="20" style="padding: 0px 15px ">
@@ -69,7 +69,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item>
-                    <el-input v-model="searchForm.key" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
+                    <el-input v-model="searchForm.name" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
                   </el-form-item>
                   <el-form-item class="searchBtn">
                     <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
@@ -84,7 +84,11 @@
             </el-row>
             <el-row>
               <el-col :span="24" style="height: calc(100vh - 252px)">
-                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 52px)" style="width: 100%;">
+                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 52px)" style="width: 100%;" row-key="id"  @selection-change="handleSelectionChange">
+                  <el-table-column
+                    type="selection"
+                    width="55">
+                  </el-table-column>
                   <el-table-column  :label="$t('goods.name')" min-width="300">
                     <template  slot-scope="scope">
                       <div class="goods-item">
@@ -153,16 +157,31 @@
                   </el-table-column>
                 </el-table>
                 <template v-if="itemCount !== 0">
-                  <div style="text-align: right;margin-top: 10px">
-                    <el-pagination
-                      @size-change="sizeChangeFunc"
-                      @current-change="pageChangeFunc"
-                      :current-page.sync="currentPage"
-                      :page-size="10"
-                      layout="total, prev, pager, next, jumper"
-                      :total="itemCount">
-                    </el-pagination>
-                  </div>
+                  <el-row style="margin-top: 10px">
+                    <el-col :span="8">
+                      <template v-if="searchForm.deleted">
+                        <el-button size="mini" @click="batchRestoreFunc()">{{$t('goods.restore')}}</el-button>
+                      </template>
+                      <template v-else-if="searchForm.shelf_status === 2">
+                        <el-button size="mini" @click="bathShelfFunc(1)">{{$t('tools.shelfOff')}}</el-button>
+                        <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                      </template>
+                      <template v-else-if="searchForm.shelf_status === 1">
+                        <el-button size="mini" @click="bathShelfFunc(2)">{{$t('tools.shelfOn')}}</el-button>
+                        <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                      </template>
+                      &nbsp;
+                    </el-col>
+                    <el-col :span="16"  style="text-align: right;">
+                      <el-pagination
+                        :current-page.sync="currentPage"
+                        :page-sizes="[10, 30, 50, 100, 500]"
+                        :page-size.sync="pageSize"
+                        layout="total, prev, pager, next, jumper, sizes"
+                        :total="itemCount">
+                      </el-pagination>
+                    </el-col>
+                  </el-row>
                 </template>
               </el-col>
             </el-row>
@@ -395,13 +414,13 @@
 </template>
 
 <script>
-  import { spusAdd, spusShelf, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify, spusSkusList, goodsRestore } from '@/api/goods'
+  import { spusAdd, spusShelf, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify, spusSkusList, goodsRestore, spusBatchDel, spusBatchShelf, spusBatchRestore } from '@/api/goods'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
   import service from '@/utils/request'
   import llEditor from '@/components/LLEditor'
   import { mapGetters } from 'vuex'
-  import { appUrl } from '@/utils/serverConfig'
+  // import { appUrl } from '@/utils/serverConfig'
   export default {
     components: {
       llEditor
@@ -445,6 +464,7 @@
         disabled: false,
         promptInfor: this.$t('goods.delTip'),
         searchForm: {
+          name: '',
           skip: 0,
           limit: 10,
           approve_status: 2, // 审批状态 0所有 1待审批 2审批成功 3拒绝
@@ -538,7 +558,8 @@
         showPropsImageDialog: false,
         propsImageEditIndex: 0,
         propsImageEditTitle: '',
-        tab_shelf_status: '2'
+        tab_shelf_status: '2',
+        multipleSelection: []
       }
     },
     created() {
@@ -581,6 +602,12 @@
       },
       currentPage(val) {
         this.searchForm.skip = (val - 1) * this.pageSize
+        this.searchForm.limit = this.pageSize
+        this.getTableData()
+      },
+      pageSize(val) {
+        console.log(val)
+        this.searchForm.skip = 0
         this.searchForm.limit = this.pageSize
         this.getTableData()
       },
@@ -655,6 +682,39 @@
       }
     },
     methods: {
+      handleSelectionChange(val) {
+        this.multipleSelection = []
+        val.forEach((item) => {
+          this.multipleSelection.push(item.id)
+        })
+      },
+      batchRestoreFunc() {
+        if (this.multipleSelection.length < 1) {
+          this.$message.error(this.$t('goods.batchOptTip'))
+          return
+        }
+        spusBatchRestore({ ids: JSON.stringify(this.multipleSelection) }).then(() => {
+          this.getTableData()
+        })
+      },
+      batchDelFunc() {
+        if (this.multipleSelection.length < 1) {
+          this.$message.error(this.$t('goods.batchOptTip'))
+          return
+        }
+        spusBatchDel(this.multipleSelection).then(() => {
+          this.getTableData()
+        })
+      },
+      bathShelfFunc(opt) {
+        if (this.multipleSelection.length < 1) {
+          this.$message.error(this.$t('goods.batchOptTip'))
+          return
+        }
+        spusBatchShelf({ ids: JSON.stringify(this.multipleSelection), shelf_status: opt }).then(() => {
+          this.getTableData()
+        })
+      },
       goodsPreview(row) {
         return 'https://www.a9kh.com/goods/' + row.id + '.html'
         // this.currentGoods = appUrl + '/goods/info?id=' + row.id
@@ -834,12 +894,6 @@
         this.searchForm.type_id = data.id
         this.currentPage = 1
         this.search()
-      },
-      sizeChangeFunc(val) {
-        this.pageSize = val
-      },
-      pageChangeFunc(val) {
-        this.currentPage = val
       },
       getTableData() {
         if (this.searchForm.shelf_status === 3) {

@@ -30,7 +30,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
-                <el-button type="primary" @click="exportFunc" size="small" icon="el-icon-download"></el-button>
+                <el-button type="primary" @click="exportFunc([])" size="small" icon="el-icon-download"></el-button>
                 <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
                   :action= "importUrl"
                   :show-file-list="false"
@@ -44,7 +44,11 @@
         <el-row>
           <el-col :span="24">
             <div style="height: calc(100vh - 225px)">
-              <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+              <el-table stripe border :data="tableData" height="calc(100% - 40px)" @selection-change="handleSelectionChange">
+                <el-table-column
+                  type="selection"
+                  width="55">
+                </el-table-column>
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
                     <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
@@ -114,14 +118,20 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <div style="text-align: right;margin-top: 10px">
-                <el-pagination
-                  :current-page.sync="currentPage"
-                  :page-size="pageSize"
-                  layout="total, prev, pager, next, jumper"
-                  :total="itemCount">
-                </el-pagination>
-              </div>
+              <el-row style="margin-top: 10px">
+                <el-col :span="6">
+                  <el-button size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>
+                </el-col>
+                <el-col :span="18" style="text-align: right;">
+                  <el-pagination
+                    :current-page.sync="currentPage"
+                    :page-size.sync="pageSize"
+                    :page-sizes="[10, 30, 50, 100, 500]"
+                    layout="total, prev, pager, next, jumper,sizes"
+                    :total="itemCount">
+                  </el-pagination>
+                </el-col>
+              </el-row>
             </div>
           </el-col>
         </el-row>
@@ -239,7 +249,8 @@
         payPrice: 0,
         comment: '',
         importUrl: serverConfig.api_url + '/app/v1/merchant/orders-import',
-        fileUploadHeader: { 'X-Access-Token': store.state.user.token }
+        fileUploadHeader: { 'X-Access-Token': store.state.user.token },
+        multipleSelection: []
       }
     },
     computed: {
@@ -259,6 +270,11 @@
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
       },
+      pageSize(val) {
+        this.searchForm.skip = 0
+        this.searchForm.limit = val
+        this.getDataListFun()
+      },
       orderTimes(val) {
         if (val && val.length === 2) {
           this.searchForm.bt = val[0]
@@ -270,6 +286,12 @@
       }
     },
     methods: {
+      handleSelectionChange(val) {
+        this.multipleSelection = []
+        val.forEach(item => {
+          this.multipleSelection.push(item.id)
+        })
+      },
       showReturn(row) {
         this.$router.push({ name: 'returnList', params: { order_no: row.no }})
       },
@@ -280,10 +302,18 @@
       importError(res) {
         this.$message.error(res.error)
       },
-      exportFunc() {
+      batchExportFunc() {
+        if (this.multipleSelection.length < 1) {
+          this.$message.error(this.$t('order.batchExportTip'))
+          return
+        }
+        this.exportFunc(this.multipleSelection)
+      },
+      exportFunc(ids) {
         const sf = JSON.parse(JSON.stringify(this.searchForm))
         sf.skip = 0
         sf.limit = 1000
+        sf.ids = JSON.stringify(ids)
         exportOrder(sf).then(res => {
           // console.log(res)
           // console.log(res, res.url)
