@@ -89,7 +89,7 @@
               </el-select>
             </el-form-item>
             <el-form-item v-if="form.type === 1" :label="$t('operation.goods')">
-              <goods-selector @selectChanged="goodsSelectedChanged" v-model="form.para"></goods-selector>
+              <goods-selector @selectChanged="goodsSelectedChanged" v-model="form.para" :approve_status="2" :shelf_status="2"></goods-selector>
             </el-form-item>
             <el-form-item v-else :label="$t('operation.url')">
               <el-input v-model="form.para"></el-input>

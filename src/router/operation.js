@@ -31,6 +31,11 @@ const order = [{
     meta: { title: 'cobuy', icon: 'list' },
     component: () => import('@/views/operation/cobuy')
   }, {
+    path: 'cutgoods',
+    name: 'cutgoods',
+    meta: { title: 'cutGoods', icon: 'list' },
+    component: () => import('@/views/operation/cutGoods')
+  }, {
     path: 'shop',
     name: 'shopInfo',
     meta: { title: 'shopInfo', icon: 'list' },

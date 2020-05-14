@@ -42,6 +42,7 @@ export default {
   redEnvelope: '红包设置',
   panicBuys: '秒杀',
   cobuy: '团购',
+  cutGoods: '砍价免费领',
   coupon: '优惠券',
   shopInfo: '店铺信息',
   financeMgr: '财务管理',

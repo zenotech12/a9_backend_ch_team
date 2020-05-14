@@ -93,5 +93,20 @@ export default {
   tgPrice: '团购价格设置',
   tgPrice1: '团购价/当前价',
   tgTip: '请正确设置所有团购商品的价格',
-  tgTip2: '确认取消该商品团购？'
+  tgTip2: '确认取消该商品团购？',
+  cutGoodsEdit: '砍价商品设置',
+  cutGoods: '活动商品',
+  cutTimes: '活动时段',
+  cutImg: '活动图片',
+  cutCount: '参与数量',
+  cutWay: '砍价方式',
+  cutWay1: '固定金额',
+  cutWay2: '范围随机',
+  cutWayTip1: '每次砍掉',
+  cutWayTip2: '之间随机砍价',
+  cutWayTip2A: '在',
+  cutShare: '分享语',
+  cutCountTip: '进行中/已领取',
+  cutDelTip: '确认删除这个活动商品？',
+  cutGoodsTip: '您不具有该权限，有疑问请联系管理员'
 }

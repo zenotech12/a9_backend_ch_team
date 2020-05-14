@@ -52,15 +52,20 @@
                 <el-checkbox :checked="isSelected(scope.row)" @change="mulitSelectGoodsChange(scope.row)"></el-checkbox>
               </template>
             </el-table-column>
-            <el-table-column prop="name" label="名称"></el-table-column>
-            <el-table-column label="审核">
+            <el-table-column prop="name" width="50">
+              <template  slot-scope="scope">
+                <img :src="getImageUrl(scope.row.images[0],200,200)" width="50"/>
+              </template>
+            </el-table-column>
+            <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
+            <el-table-column :label="$t('goods.checkStatus')">
               <template  slot-scope="scope">
                 <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
-                  {{scope.row.approve_status === 2 ? '已审' : (scope.row.approve_status === 3 ? '驳回' : '待审' )}}
+                  {{scope.row.approve_status === 2 ? $t('goods.checkStatusB') : (scope.row.approve_status === 3 ? $t('goods.checkStatusC') : $t('goods.checkStatusA') )}}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="上下架">
+            <el-table-column :label="$t('goods.putaway')">
               <template  slot-scope="scope">
                 <el-tag v-if="scope.row.approve_status === 2" @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
                   {{scope.row.shelf_status === 2 ? '已上架' : '已下架'}}

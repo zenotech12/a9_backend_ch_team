@@ -216,3 +216,46 @@ export function cobuySet(id, data) {
   })
 }
 
+// 砍一刀.添加商品
+export function cutGoodsAdd(data) {
+  return request({
+    url: 'cut-goods',
+    method: 'post',
+    data: data
+  })
+}
+
+// 砍一刀.商品.列表
+export function cutGoodsList(param) {
+  return request({
+    url: 'cut-goods',
+    method: 'get',
+    params: param
+  })
+}
+
+// 砍一刀.商品.修改
+export function cutGoodsModify(id, data) {
+  return request({
+    url: 'cut-goods/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+// 砍一刀.商品.删除
+export function cutGoodsDel(id) {
+  return request({
+    url: 'cut-goods/' + id,
+    method: 'delete'
+  })
+}
+
+// 砍一刀.商品.个
+export function cutGoodsInfo(id) {
+  return request({
+    url: 'cut-goods/' + id,
+    method: 'get'
+  })
+}
+
