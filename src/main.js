@@ -34,7 +34,7 @@ Vue.config.productionTip = false
 
 Vue.mixin({
   methods: {
-    getImageUrl(val, width) {
+    getImageUrl(val, width, height) {
       if (!val) {
         return ''
       }
@@ -42,6 +42,9 @@ Vue.mixin({
       let imgUrl = imgGetUrl + '?md5=' + val
       if (width) {
         imgUrl += '&width=' + width
+      }
+      if (height) {
+        imgUrl += '&height=' + height
       }
       return imgUrl
     }

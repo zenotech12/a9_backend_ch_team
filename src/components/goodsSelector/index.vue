@@ -54,7 +54,7 @@
             </el-table-column>
             <el-table-column prop="name" width="50">
               <template  slot-scope="scope">
-                <img :src="getImageUrl(scope.row.images[0],200,200)" width="50"/>
+                <img :src="getImageUrl(scope.row.images[0],200,200)" width="50" height="50"/>
               </template>
             </el-table-column>
             <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
@@ -373,6 +373,7 @@
       },
       emitGoodsIds() {
         this.$emit('goodSelectedChange', JSON.stringify(this.selectedGoodsIds))
+        this.$emit('selectChanged', this.selectedGoods)
       }
     }
   }

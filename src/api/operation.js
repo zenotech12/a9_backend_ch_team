@@ -8,6 +8,24 @@ export function adDelete(id) {
   })
 }
 
+// 广告.批量删除
+export function adBatchDelete(ids) {
+  return request({
+    url: 'batch/recommends',
+    method: 'delete',
+    params: { ids: JSON.stringify(ids) }
+  })
+}
+
+// 广告.批量添加
+export function adBatchAdd(data) {
+  return request({
+    url: 'batch/recommends',
+    method: 'post',
+    data: data
+  })
+}
+
 // 广告/推荐.增
 export function adAdd(data) {
   return request({

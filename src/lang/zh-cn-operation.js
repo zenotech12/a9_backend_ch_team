@@ -108,5 +108,7 @@ export default {
   cutShare: '分享语',
   cutCountTip: '进行中/已领取',
   cutDelTip: '确认删除这个活动商品？',
-  cutGoodsTip: '您不具有该权限，有疑问请联系管理员'
+  cutGoodsTip: '您不具有该权限，有疑问请联系管理员',
+  adBatchDelTip: '请选择您要删除的广告',
+  adEditBatch: '广告添加-批量设置'
 }

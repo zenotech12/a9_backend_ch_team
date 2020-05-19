@@ -60,5 +60,6 @@ export default {
   copySuccess: '复制成功',
   shelfOn: '上架',
   shelfOff: '下架',
-  export: '导出'
+  export: '导出',
+  batchAdd: '批量添加'
 }
