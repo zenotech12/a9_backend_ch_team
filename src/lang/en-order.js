@@ -92,10 +92,12 @@ export default {
   changeAddress: 'Modify address',
   changeS: 'modified successfully',
   userBz: 'User notes',
-  userChangeAdd: 'Change user receiving address',
+  userChangeAdd: 'Change user receiving information',
   province: 'province',
   city: 'city',
   area: 'area',
   addr: 'address',
-  area_code: 'area_code'
+  area_code: 'area_code',
+  userName: 'Contacter Name',
+  userPhone: 'Mobile'
 }

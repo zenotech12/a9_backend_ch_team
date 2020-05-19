@@ -111,7 +111,7 @@
                     </el-popover>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "60" fixed="right">
+                <el-table-column :label="$t('tools.opt')" width = "100" fixed="right">
                   <template slot-scope="scope">
                     <el-button v-if="scope.row.status === 4 || scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">
                       {{$t('order.express')}}
@@ -225,8 +225,11 @@
                 <el-form-item :label="$t('order.addr')" style="display: inline-block" >
                   <el-input v-model="addr" :placeholder="$t('order.addr')" style="width: 200px"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('order.area_code')" style="display: inline-block" >
-                  <el-input v-model="area_code" :placeholder="$t('order.area_code')" style="width: 200px"></el-input>
+                <el-form-item :label="$t('order.userName')" style="display: inline-block" >
+                  <el-input v-model="userName" :placeholder="$t('order.userName')" style="width: 200px"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('order.userPhone')" style="display: inline-block" >
+                  <el-input v-model="userPhone" :placeholder="$t('order.userPhone')" style="width: 200px"></el-input>
                 </el-form-item>
 <!--              </div>-->
             </template>
@@ -292,7 +295,9 @@
         city: '',
         area: '',
         addr: '',
-        area_code: ''
+        area_code: '',
+        userName: '',
+        userPhone: ''
       }
     },
     computed: {
@@ -389,6 +394,8 @@
           this.area = data.shipping_address.address.district
           this.addr = data.shipping_address.address.addr
           this.area_code = data.shipping_address.area_code
+          this.userName = data.shipping_address.contacter_name
+          this.userPhone = data.shipping_address.mobile
         } else if (ot === 4) {
           this.dialogTitle = this.$t('order.price4Note')
           this.userComment = data.comment
@@ -423,8 +430,8 @@
             district: this.area,
             addr: this.addr,
             area_code: this.area_code,
-            contacter_name: this.expressOrder.shipping_address.contacter_name,
-            mobile: this.expressOrder.shipping_address.mobile,
+            contacter_name: this.userName,
+            mobile: this.userPhone,
             lng: this.expressOrder.shipping_address.lng,
             lat: this.expressOrder.shipping_address.lat
           }

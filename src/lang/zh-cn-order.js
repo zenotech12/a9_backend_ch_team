@@ -95,10 +95,12 @@ export default {
   changeAddress: '修改地址',
   changeS: '修改成功',
   userBz: '用户备注',
-  userChangeAdd: '更改用户收货地址',
+  userChangeAdd: '更改用户收货信息',
   province: '省',
   city: '市',
   area: '区',
   addr: '地址',
-  area_code: '地址码'
+  area_code: '地址码',
+  userName: '收货人姓名',
+  userPhone: '手机号'
 }
