@@ -113,8 +113,18 @@
                 </el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "60" fixed="right">
                   <template slot-scope="scope">
-                      <el-button v-if="scope.row.status === 4 || scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">{{$t('order.express')}}</el-button>
-                      <el-button v-else-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">{{$t('order.modifyPrice')}}</el-button>
+                    <el-button v-if="scope.row.status === 4 || scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">
+                      {{$t('order.express')}}
+                    </el-button>
+                    <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">
+                      {{$t('order.modifyPrice')}}
+                    </el-button>
+                    <el-button v-if="scope.row.status === 2 || scope.row.status === 5"  type="text" @click="showExpressEditor(scope.row,3)" size="small" style="margin-left: 0">
+                      {{$t('order.changeAddress')}}
+                    </el-button>
+                    <el-button v-if="scope.row.status !== 7"  type="text" @click="showExpressEditor(scope.row,4)" size="small" style="margin-left: 0">
+                      {{$t('order.price4Note')}}
+                    </el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -164,6 +174,12 @@
               <br/>
               {{expressOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{expressOrder.shipping_address.mobile}}
             </el-form-item>
+            <el-form-item :label="$t('order.userBz')">
+              {{userComment}}
+            </el-form-item>
+            <el-form-item :label="$t('order.note')" >
+              <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
+            </el-form-item>
             <template v-if="optType === 1">
               <el-form-item :label="$t('order.expressInfo')" >
                 <el-row :gutter="20">
@@ -182,17 +198,37 @@
                   </el-col>
                 </el-row>
               </el-form-item>
-              <el-form-item :label="$t('order.note')" >
-                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
-              </el-form-item>
+<!--              <el-form-item :label="$t('order.note')" >-->
+<!--                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>-->
+<!--              </el-form-item>-->
             </template>
             <template v-if="optType === 2">
               <el-form-item :label="$t('order.price4')" >
                 <price-input v-model="payPrice" :placeholder="$t('order.price4')" style="width: 200px"></price-input> <span style="color: #8c939d">{{$t('order.price4Tip')}}</span>
               </el-form-item>
-              <el-form-item :label="$t('order.price4Note')" >
-                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.price4Note')"></el-input>
-              </el-form-item>
+<!--              <el-form-item :label="$t('order.price4Note')" >-->
+<!--                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.price4Note')"></el-input>-->
+<!--              </el-form-item>-->
+            </template>
+            <template v-if="optType === 3">
+              <p>{{$t('order.userChangeAdd')}}</p>
+<!--              <div style="display: flex">-->
+                <el-form-item :label="$t('order.province')" style="display: inline-block" >
+                  <el-input v-model="province" :placeholder="$t('order.province')" style="width: 200px"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('order.city')"  style="display: inline-block">
+                  <el-input v-model="city" :placeholder="$t('order.city')" style="width: 200px"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('order.area')" style="display: inline-block">
+                  <el-input v-model="area" :placeholder="$t('order.area')" style="width: 200px"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('order.addr')" style="display: inline-block" >
+                  <el-input v-model="addr" :placeholder="$t('order.addr')" style="width: 200px"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('order.area_code')" style="display: inline-block" >
+                  <el-input v-model="area_code" :placeholder="$t('order.area_code')" style="width: 200px"></el-input>
+                </el-form-item>
+<!--              </div>-->
             </template>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -206,7 +242,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersExpress, ordersPriceModify, exportOrder } from '@/api/order'
+  import { ordersList, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress } from '@/api/order'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import store from '@/store'
@@ -250,7 +286,13 @@
         comment: '',
         importUrl: serverConfig.api_url + '/app/v1/merchant/orders-import',
         fileUploadHeader: { 'X-Access-Token': store.state.user.token },
-        multipleSelection: []
+        multipleSelection: [],
+        userComment: '',
+        province: '',
+        city: '',
+        area: '',
+        addr: '',
+        area_code: ''
       }
     },
     computed: {
@@ -324,17 +366,33 @@
         return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
       },
       showExpressEditor(data, ot) {
+        console.log(data, '-----------------datata')
         this.expressOrder = data
         this.optType = ot
         if (ot === 1) {
           this.dialogTitle = this.$t('order.express')
           this.expressCompany = data.express.company
           this.expressNo = data.express.novar
-          this.comment = ''
+          this.comment = data.merchant_comment
+          this.userComment = data.comment
         } else if (ot === 2) {
           this.dialogTitle = this.$t('order.modifyPrice')
           this.payPrice = data.pay_price
-          this.comment = ''
+          this.comment = data.merchant_comment
+          this.userComment = data.comment
+        } else if (ot === 3) {
+          this.dialogTitle = this.$t('order.changeAddress')
+          this.userComment = data.comment
+          this.comment = data.merchant_comment
+          this.province = data.shipping_address.address.province
+          this.city = data.shipping_address.address.city
+          this.area = data.shipping_address.address.district
+          this.addr = data.shipping_address.address.addr
+          this.area_code = data.shipping_address.area_code
+        } else if (ot === 4) {
+          this.dialogTitle = this.$t('order.price4Note')
+          this.userComment = data.comment
+          this.comment = data.merchant_comment
         }
         this.formEditDialog = true
       },
@@ -352,6 +410,35 @@
         } else if (this.optType === 2) {
           ordersPriceModify(this.expressOrder.id, { pay_price: this.payPrice, comment: this.comment }).then(res => {
             this.$message.success(this.$t('order.price4Tip1'))
+            this.submitDisabled = false
+            this.getDataListFun()
+            this.formEditDialog = false
+          }).catch(() => {
+            this.submitDisabled = false
+          })
+        } else if (this.optType === 3) {
+          const data = {
+            province: this.province,
+            city: this.city,
+            district: this.area,
+            addr: this.addr,
+            area_code: this.area_code,
+            contacter_name: this.expressOrder.shipping_address.contacter_name,
+            mobile: this.expressOrder.shipping_address.mobile,
+            lng: this.expressOrder.shipping_address.lng,
+            lat: this.expressOrder.shipping_address.lat
+          }
+          changeShippingAddress(this.expressOrder.id, data).then(res => {
+            this.$message.success(this.$t('order.changeS'))
+            this.submitDisabled = false
+            this.getDataListFun()
+            this.formEditDialog = false
+          }).catch(() => {
+            this.submitDisabled = false
+          })
+        } else if (this.optType === 4) {
+          changeMerchantComment(this.expressOrder.id, { merchant_comment: this.comment }).then(res => {
+            this.$message.success(this.$t('order.changeS'))
             this.submitDisabled = false
             this.getDataListFun()
             this.formEditDialog = false

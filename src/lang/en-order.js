@@ -88,5 +88,14 @@ export default {
   gift: 'gift',
   afterSale: 'After-Sale',
   searchKey: 'Key',
-  searchKeyTip: 'Product/User/Address/Mobile'
+  searchKeyTip: 'Product/User/Address/Mobile',
+  changeAddress: 'Modify address',
+  changeS: 'modified successfully',
+  userBz: 'User notes',
+  userChangeAdd: 'Change user receiving address',
+  province: 'province',
+  city: 'city',
+  area: 'area',
+  addr: 'address',
+  area_code: 'area_code'
 }

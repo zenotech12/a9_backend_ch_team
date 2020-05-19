@@ -96,3 +96,19 @@ export function exportOrder(data) {
     params: data
   })
 }
+
+export function changeMerchantComment(id, data) {
+  return request({
+    url: 'orders/' + id + '/merchant-comment',
+    method: 'put',
+    params: data
+  })
+}
+
+export function changeShippingAddress(id, data) {
+  return request({
+    url: 'orders/' + id + '/shipping-address',
+    method: 'put',
+    params: data
+  })
+}

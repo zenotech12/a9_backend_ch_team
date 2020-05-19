@@ -91,5 +91,14 @@ export default {
   searchKeyTip: '商品名/收货人/地址/手机号',
   batchReply: '批量回复',
   batchReplyTip: '请选择您要回复的评论',
-  batchExportTip: '请选择您要导出的订单'
+  batchExportTip: '请选择您要导出的订单',
+  changeAddress: '修改地址',
+  changeS: '修改成功',
+  userBz: '用户备注',
+  userChangeAdd: '更改用户收货地址',
+  province: '省',
+  city: '市',
+  area: '区',
+  addr: '地址',
+  area_code: '地址码'
 }
