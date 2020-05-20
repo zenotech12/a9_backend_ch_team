@@ -7,7 +7,7 @@
       <el-tag :key="goods.id" v-for="(goods, k) in selectedGoods" closable :disable-transitions="false"  @close="deleteSelectedGoods(k)">{{goods.name}}</el-tag>
       <el-button icon="el-icon-search" @click="showGoodsTable" size="mini"></el-button>
     </div>
-    <el-dialog :title="$t('goods.selectorTitle')"  :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
+    <el-dialog :title="$t('goods.selectorTitle')"  v-if="dialogFormVisible" :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
       <!-- 搜索 -->
       <el-row>
         <el-col :span="24" style="padding: 3px">

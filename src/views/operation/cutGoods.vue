@@ -59,8 +59,10 @@
                   {{scope.row.cutting_count}}/{{scope.row.sales}}
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('tools.opt')" width = "120" fixed="right">
+              <el-table-column :label="$t('tools.opt')" width = "200" fixed="right">
                 <template slot-scope="scope">
+                  <el-button type="text" :title="$t('tools.copyLinkTip')" v-clipboard:copy="goodsShareLink(scope.row.id)" v-clipboard:success="copySuccess" v-clipboard:error="copyError"  size="small">{{$t('tools.copyLink')}}</el-button>
+                  <span class="xiexian">/</span>
                   <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                   <span class="xiexian">/</span>
                   <delete-button :promptInfor="promptInfor" @delData="deleteDataFunc(scope.row)"></delete-button>
@@ -149,6 +151,7 @@
   import { mapGetters } from 'vuex'
   import goodsSelector from '@/components/goodsSelector'
   import { cutGoodsAdd, cutGoodsList, cutGoodsModify, cutGoodsDel } from '@/api/operation'
+  import { appUrl } from '@/utils/serverConfig'
   export default {
     components: {
       goodsSelector
@@ -198,6 +201,15 @@
       }
     },
     methods: {
+      goodsShareLink(id) {
+        return appUrl + '/user/bargain?cutGoodsId=' + id
+      },
+      copySuccess() {
+        this.$message.success(this.$t('tools.copySuccess'))
+      },
+      copyError(e) {
+        this.$message.error(e)
+      },
       setForm(data) {
         if (data) {
           this.grantTime = [data.bt, data.et]
