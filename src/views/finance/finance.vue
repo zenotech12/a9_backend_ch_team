@@ -100,7 +100,11 @@
         balanceDetail: {},
         tixianMoney: 0,
         bankCard: [],
-        selectCard: ''
+        selectCard: '',
+        searchForm: {
+          skip: 0,
+          limit: pz
+        }
       }
     },
     computed: {
@@ -156,7 +160,7 @@
         })
       },
       getDataListFun() {
-        balanceLogs().then(res => {
+        balanceLogs(this.searchForm).then(res => {
           this.tableData = res.items
           this.itemCount = res.total
         })

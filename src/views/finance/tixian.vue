@@ -93,7 +93,11 @@
         balanceDetail: {},
         tixianMoney: 0,
         bankCard: [],
-        selectCard: ''
+        selectCard: '',
+        searchForm: {
+          skip: 0,
+          limit: pz
+        }
       }
     },
     computed: {
