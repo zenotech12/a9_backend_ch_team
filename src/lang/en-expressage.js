@@ -1,4 +1,5 @@
 ﻿export default {
+  rider: 'Rider',
   noexpress: 'No need for logistics',
   shunfeng: 'SF express',
   shentong: 'Shentong express',

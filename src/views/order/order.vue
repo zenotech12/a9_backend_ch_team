@@ -81,7 +81,7 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.price')" width="130">
                   <template slot-scope="scope" >
-                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span>
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{scope.row.pay_way}})</span>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
@@ -184,16 +184,17 @@
               <el-form-item :label="$t('order.expressInfo')" >
                 <el-row :gutter="20">
                   <el-col :span="8">
-                    <el-select v-model="expressCompany" :placeholder="$t('order.expressCompany')">
+                    <el-select v-model="expressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
                       <el-option
                         v-for="(item, k) in expressageList"
                         :key="k"
+                        v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "
                         :label="item"
                         :value="k">
                       </el-option>
                     </el-select>
                   </el-col>
-                  <el-col :span="14" v-if="expressCompany !== 'noexpress'">
+                  <el-col :span="14" v-if="expressCompany !== 'noexpress' && !expressOrder.rider_post">
                     <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
                   </el-col>
                 </el-row>
@@ -368,7 +369,11 @@
         })
       },
       getKuaidi100Url(com, nu) {
-        return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
+        if (com === 'rider') {
+          return 'javascript:void(0)'
+        } else {
+          return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
+        }
       },
       showExpressEditor(data, ot) {
         console.log(data, '-----------------datata')
@@ -376,7 +381,7 @@
         this.optType = ot
         if (ot === 1) {
           this.dialogTitle = this.$t('order.express')
-          this.expressCompany = data.express.company
+          this.expressCompany = data.express.company ? data.express.company : (this.expressOrder.rider_post ? 'rider' : '')
           this.expressNo = data.express.novar
           this.comment = data.merchant_comment
           this.userComment = data.comment
