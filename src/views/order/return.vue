@@ -128,7 +128,7 @@
             <el-form-item :label="$t('order.returnReason')">
               {{returnOrder.comment}}
             </el-form-item>
-            <el-form-item v-if="returnOrder.type===1"  :label="$t('order.returnPrice')" >
+            <el-form-item v-if="returnOrder.type===1 || returnOrder.type===3 "  :label="$t('order.returnPrice')" >
               <price-input v-model="amount" clearable></price-input>
             </el-form-item>
             <el-form-item v-if="returnOrder.type===2 && returnOrder.shipping_address"  :label="$t('order.returnUserAddr')" >
@@ -150,7 +150,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="returnOrder.status === 3 || returnOrder.status === 5 || returnOrder.status === 6" :label="$t('order.returnAddr')">
+            <el-form-item v-if="(returnOrder.status === 3 || returnOrder.status === 5 || returnOrder.status === 6) && returnOrder.type !== 3" :label="$t('order.returnAddr')">
               {{returnOrder.merchant_shipping_address.address.province + returnOrder.merchant_shipping_address.address.city + returnOrder.merchant_shipping_address.address.district}}&nbsp;{{returnOrder.merchant_shipping_address.address.addr}}
               <br/>
               {{returnOrder.merchant_shipping_address.contacter_name}}&nbsp;&nbsp;{{returnOrder.merchant_shipping_address.mobile}}
@@ -176,7 +176,7 @@
             <template v-if="returnOrder.status ===1">
               <confirm-button v-if="returnOrder.type === 3" @confirmButton="saveDataFunc(5)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
               <confirm-button v-else @confirmButton="saveDataFunc(3)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
-              <confirm-button @confirmButton="saveDataFunc(4)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.refuse')"></confirm-button>
+              <confirm-button @confirmButton="saveDataFunc(4)" :confirmButtonInfor="$t('tools.refuse')"></confirm-button>
             </template>
             <template v-else>
               <confirm-button @confirmButton="saveDataFunc(5)" :disabled="submitDisabled" :confirmButtonInfor="returnOrder.type === 1 ? $t('order.returnExpress3') : $t('order.returnExpress2')"></confirm-button>
