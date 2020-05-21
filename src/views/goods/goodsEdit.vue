@@ -76,17 +76,17 @@
               </el-form-item>
               <el-form-item :label="$t('goods.piEdit')" required>
                 <el-table :data="goodsInventoryTable"  style="width: 100%">
+                  <el-table-column :label="$t('goods.sp')">
+                    <template  slot-scope="scope">
+                      {{scope.row.title}}
+                    </template>
+                  </el-table-column>
                   <el-table-column  :label="$t('goods.barcode')">
                     <template  slot-scope="scope">
                       <el-input v-model="scope.row.barcode"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column v-if="goodsData.id" prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                  <el-table-column :label="$t('goods.sp')">
-                    <template  slot-scope="scope">
-                      {{scope.row.title}}
-                    </template>
-                  </el-table-column>
                   <el-table-column :label="$t('goods.inventory')">
                     <template slot="header" slot-scope="scope">
                       {{$t('goods.inventory')}}
@@ -102,9 +102,9 @@
                       <el-input v-model.number="scope.row.inventory"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
+                  <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.salePrice')">
                     <template slot="header" slot-scope="scope">
-                      {{$t('goods.price')}}
+                      {{$t('goods.salePrice')}}
                       <el-popover placement="bottom"
                                   width="200"
                                   trigger="click">
@@ -117,6 +117,21 @@
                       <!--<el-input v-model.number="scope.row.price"></el-input>-->
                     </template>
                   </el-table-column>
+                  <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.originalPrice')">
+                    <template slot="header" slot-scope="scope">
+                      {{$t('goods.originalPrice')}}
+                      <el-popover placement="bottom"
+                                  width="200"
+                                  trigger="click">
+                        <price-input v-model="batchOPrice"></price-input>
+                        <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                      </el-popover>
+                    </template>
+                    <template  slot-scope="scope">
+                      <price-input v-model="scope.row.original_price"></price-input>
+                      <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                    </template>
+                  </el-table-column>
                   <el-table-column v-if="goodsData.type === 3" :label="$t('goods.needExp')">
                     <template  slot-scope="scope">
                       <el-input v-model.number="scope.row.price"></el-input>
@@ -126,6 +141,21 @@
                     <template  slot-scope="scope">
                       <price-input v-model="scope.row.cobuy_price"></price-input>
                       <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('goods.recommendTag')">
+                    <template slot="header" slot-scope="scope">
+                      {{$t('goods.recommendTag')}}
+                      <el-popover placement="bottom"
+                                  width="200"
+                                  trigger="click">
+                        <el-input v-model="batchRTag">
+                        </el-input>
+                        <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                      </el-popover>
+                    </template>
+                    <template  slot-scope="scope">
+                      <el-input v-model.number="scope.row.price_recommend_key"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('goods.weight')">
@@ -144,6 +174,7 @@
                       <el-input oninput="value=value.replace(/[^\d.]/g,'')"  v-model="scope.row.weight"><template slot="append">KG</template></el-input>
                     </template>
                   </el-table-column>
+
                   <el-table-column :label="$t('goods.goodsPic')">
                     <template  slot-scope="scope">
                       <i style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
@@ -329,6 +360,8 @@
         batchWeight: 0,
         batchInventory: 0,
         batchPrice: 0,
+        batchRTag: '',
+        batchOPrice: 0,
         langInfo: {},
         currentLang: 'zh',
         languages: languages,
@@ -497,6 +530,16 @@
           this.$set(item, 'price', val)
         })
       },
+      batchOPrice(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'original_price', val)
+        })
+      },
+      batchRTag(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'price_recommend_key', val)
+        })
+      },
       xgType(val) {
         if (val === 1) {
           this.goodsData.buy_limit = 0
@@ -516,7 +559,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
+            const tableItem = { specifications: item, price: 0, original_price: 0, price_recommend_key: '', cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -538,6 +581,8 @@
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.no = this.goodsInventoryData[i].no
                 tableItem.price = this.goodsInventoryData[i].price
+                tableItem.original_price = this.goodsInventoryData[i].original_price
+                tableItem.price_recommend_key = this.goodsInventoryData[i].price_recommend_key
                 tableItem.weight = this.goodsInventoryData[i].weight
                 tableItem.cobuy_price = this.goodsInventoryData[i].cobuy_price ? this.goodsInventoryData[i].cobuy_price : 0
                 tableItem.images = this.goodsInventoryData[i].images

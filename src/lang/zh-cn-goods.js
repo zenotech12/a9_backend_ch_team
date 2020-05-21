@@ -110,5 +110,8 @@ export default {
   skuNo: 'SKU 编码',
   limitNo: '限购数量',
   limitDays: '限购周期',
-  batchOptTip: '请选择您要操作的商品'
+  batchOptTip: '请选择您要操作的商品',
+  salePrice: '卖价',
+  originalPrice: '原价',
+  recommendTag: '推荐词'
 }

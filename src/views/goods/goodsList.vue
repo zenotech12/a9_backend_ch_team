@@ -293,22 +293,22 @@
                 <template v-else-if="goodsEditStep === 4">
                   <el-form-item :label="$t('goods.sp')">
                     <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
-                      <el-input v-model="goodsProps[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
-                      <el-tag :key="tag" v-for="tag in goodsProps[k].items" closable :disable-transitions="false"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
-                      <el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
-                      <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>
+                      <el-input v-model="goodsProps[k].name" disabled class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button style="display: none" size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
+                      <el-tag size="small" :key="tag" v-for="tag in goodsProps[k].items" :disable-transitions="false"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
+                      <!--<el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>-->
+                      <!--<el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>-->
                     </div>
-                    <a @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
+                    <a style="display: none;" @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
                   </el-form-item>
                   <el-form-item :label="$t('goods.piEdit')">
                     <el-table :data="goodsInventoryTable"  style="width: 100%">
-                      <el-table-column prop="barcode"  :label="$t('goods.barcode')"></el-table-column>
-                      <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
                       <el-table-column :label="$t('goods.sp')">
                         <template  slot-scope="scope">
                           {{scope.row.title}}
                         </template>
                       </el-table-column>
+                      <el-table-column prop="barcode"  :label="$t('goods.barcode')"></el-table-column>
+                      <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
                       <el-table-column :label="$t('goods.inventory')">
                         <template slot="header" slot-scope="scope">
                           {{$t('goods.inventory')}}
@@ -339,6 +339,21 @@
                           <!--<el-input v-model.number="scope.row.price"></el-input>-->
                         </template>
                       </el-table-column>
+                      <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.originalPrice')">
+                        <template slot="header" slot-scope="scope">
+                          {{$t('goods.originalPrice')}}
+                          <el-popover placement="bottom"
+                                      width="200"
+                                      trigger="click">
+                            <price-input v-model="batchOPrice"></price-input>
+                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                          </el-popover>
+                        </template>
+                        <template  slot-scope="scope">
+                          <price-input v-model="scope.row.original_price"></price-input>
+                          <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                        </template>
+                      </el-table-column>
                       <el-table-column v-if="goodsData.type === 3" :label="$t('goods.needExp')">
                         <template  slot-scope="scope">
                           <el-input v-model.number="scope.row.price"></el-input>
@@ -348,6 +363,21 @@
                         <template  slot-scope="scope">
                           <price-input v-model="scope.row.cobuy_price"></price-input>
                           <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                        </template>
+                      </el-table-column>
+                      <el-table-column :label="$t('goods.recommendTag')">
+                        <template slot="header" slot-scope="scope">
+                          {{$t('goods.recommendTag')}}
+                          <el-popover placement="bottom"
+                                      width="200"
+                                      trigger="click">
+                            <el-input v-model="batchRTag">
+                            </el-input>
+                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                          </el-popover>
+                        </template>
+                        <template  slot-scope="scope">
+                          <el-input v-model.number="scope.row.price_recommend_key"></el-input>
                         </template>
                       </el-table-column>
                       <el-table-column :label="$t('goods.weight')">
@@ -430,6 +460,8 @@
         batchWeight: 0,
         batchInventory: 0,
         batchPrice: 0,
+        batchRTag: '',
+        batchOPrice: 0,
         commodityPreviewShow: false,
         currentGoods: '',
         formRules: {
@@ -594,6 +626,16 @@
           this.$set(item, 'price', val)
         })
       },
+      batchOPrice(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'original_price', val)
+        })
+      },
+      batchRTag(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'price_recommend_key', val)
+        })
+      },
       tableFile: {
         handler(val) {
           this.importPara.extra = val
@@ -626,7 +668,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { specifications: item, price: 0, cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
+            const tableItem = { specifications: item, price: 0, original_price: 0, price_recommend_key: '', cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -649,6 +691,8 @@
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.no = this.goodsInventoryData[i].no
                 tableItem.price = this.goodsInventoryData[i].price
+                tableItem.original_price = this.goodsInventoryData[i].original_price
+                tableItem.price_recommend_key = this.goodsInventoryData[i].price_recommend_key
                 tableItem.cobuy_price = this.goodsInventoryData[i].cobuy_price ? this.goodsInventoryData[i].cobuy_price : 0
                 tableItem.images = this.goodsInventoryData[i].images
               }
