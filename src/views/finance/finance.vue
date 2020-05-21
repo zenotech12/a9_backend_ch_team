@@ -90,7 +90,7 @@
     data() {
       const pz = 10
       return {
-        optType: [{ code: 2, name: this.$t('finance.type2') }, { code: 3, name: this.$t('finance.type3') }, { code: 4, name: this.$t('finance.type4') }, { code: 5, name: this.$t('finance.type5') }, { code: 6, name: this.$t('finance.type6') }, { code: 7, name: this.$t('finance.type7') }],
+        optType: [{ code: 1, name: this.$t('finance.type2') }, { code: 2, name: this.$t('finance.type2') }, { code: 3, name: this.$t('finance.type3') }, { code: 4, name: this.$t('finance.type4') }, { code: 5, name: this.$t('finance.type5') }, { code: 6, name: this.$t('finance.type6') }, { code: 7, name: this.$t('finance.type7') }],
         tableData: [],
         currentPage: 1,
         pageSize: pz,
