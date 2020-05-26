@@ -3,6 +3,7 @@ export default {
   id: 'Order ID',
   orderType2: 'Group purchase',
   orderType3: 'Integral exchange',
+  orderType4: 'Free buy',
   no: 'Order number',
   goods: 'goods',
   user: 'User',

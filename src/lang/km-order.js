@@ -3,6 +3,7 @@ export default {
   id: 'ឈ្មោះសម្គាល់បញ្ជាទិញ',
   orderType2: 'ការទិញជាក្រុម',
   orderType3: 'រំលោះពិន្ទុ',
+  orderType4: 'Free buy',
   no: 'លេខបញ្ជាទិញ',
   goods: 'ទំនិញ',
   user: 'អ្នកប្រើប្រាស់',
