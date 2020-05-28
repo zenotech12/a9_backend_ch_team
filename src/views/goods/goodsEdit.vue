@@ -155,7 +155,7 @@
                       </el-popover>
                     </template>
                     <template  slot-scope="scope">
-                      <el-input v-model.number="scope.row.price_recommend_key"></el-input>
+                      <el-input v-model="scope.row.price_recommend_key"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('goods.weight')">
