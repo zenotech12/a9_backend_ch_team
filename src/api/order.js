@@ -112,3 +112,19 @@ export function changeShippingAddress(id, data) {
     params: data
   })
 }
+
+export function getOneOrdersInfo(id) {
+  return request({
+    url: 'orders/' + id,
+    method: 'get'
+  })
+}
+
+export function getExpressInfo(data) {
+  return request({
+    url: 'express/info',
+    method: 'get',
+    params: data
+  })
+}
+

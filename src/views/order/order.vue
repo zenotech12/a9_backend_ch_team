@@ -93,8 +93,22 @@
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.status')" width="90">
-                  <template slot-scope="scope" >
-                    <el-tag>{{orderStatus[scope.row.status]}}</el-tag>
+                  <template slot-scope="scope">
+                    <el-tag v-if="scope.row.express.company !== 'zto' ">{{orderStatus[scope.row.status]}}</el-tag>
+                    <el-popover placement="left" width="300" trigger="click" v-else>
+                      <el-timeline style="margin-top: 10px" v-if="expressInfo.length > 0">
+                        <el-timeline-item
+                          v-for="(record, index) in expressInfo"
+                          :key="index"
+                          :timestamp="record.time">
+                          <div class="ui"><span>{{record.message}}</span></div>
+                        </el-timeline-item>
+                      </el-timeline>
+                      <p v-else style="color: #333; font-size: 14px; text-align: center; font-weight: bold">{{$t('order.zwddwl')}}</p>
+                      <a slot="reference" class="gt">
+                        <el-tag style="cursor: pointer"  @click="clickStatus(scope.row)">{{orderStatus[scope.row.status]}}</el-tag>
+                      </a>
+                    </el-popover>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.genTime')" width="180">
@@ -247,7 +261,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress } from '@/api/order'
+  import { ordersList, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo } from '@/api/order'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import store from '@/store'
@@ -299,7 +313,11 @@
         addr: '',
         area_code: '',
         userName: '',
-        userPhone: ''
+        userPhone: '',
+        expressInfo: [],
+        pageX: '',
+        pageY: '',
+        showOrderStatus: false
       }
     },
     computed: {
@@ -335,6 +353,15 @@
       }
     },
     methods: {
+      clickStatus(data) {
+        const info = {
+          no: data.express.novar,
+          company: data.express.company
+        }
+        getExpressInfo(info).then(res => {
+          this.expressInfo = res.items
+        })
+      },
       handleSelectionChange(val) {
         this.multipleSelection = []
         val.forEach(item => {
@@ -364,8 +391,6 @@
         sf.limit = 1000
         sf.ids = JSON.stringify(ids)
         exportOrder(sf).then(res => {
-          // console.log(res)
-          // console.log(res, res.url)
           window.location = res.url
         })
       },
@@ -377,7 +402,6 @@
         }
       },
       showExpressEditor(data, ot) {
-        console.log(data, '-----------------datata')
         this.expressOrder = data
         this.optType = ot
         if (ot === 1) {

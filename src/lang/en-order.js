@@ -100,5 +100,6 @@ export default {
   addr: 'address',
   area_code: 'area_code',
   userName: 'Contacter Name',
-  userPhone: 'Mobile'
+  userPhone: 'Mobile',
+  zwddwl: 'No order logistics information'
 }
