@@ -87,28 +87,55 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
                   <template slot-scope="scope" >
-                    <div class="ui"><span>{{$t('order.expressAddr')}}：</span>{{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}{{scope.row.shipping_address.address.addr}}</div>
-                    <div class="ui"><span>{{$t('order.expressUser')}}：</span>{{scope.row.shipping_address.contacter_name}}&nbsp;&nbsp;{{scope.row.shipping_address.mobile}}</div>
-                    <div class="ui" v-if="scope.row.express.novar"><span>{{$t('order.expressNo')}}：</span><a target="_blank" :href="getKuaidi100Url(scope.row.express.company, scope.row.express.novar)">{{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}<i class="el-icon-arrow-right"></i> </a></div>
+                    <div class="ui">
+                      <span>{{$t('order.expressAddr')}}：</span>
+                      {{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}
+                      {{scope.row.shipping_address.address.addr}}
+                    </div>
+                    <div class="ui">
+                      <span>{{$t('order.expressUser')}}：</span>
+                      {{scope.row.shipping_address.contacter_name}}&nbsp;&nbsp;
+                      {{scope.row.shipping_address.mobile}}
+                    </div>
+                    <div class="ui" v-if="scope.row.express.novar">
+                      <span>{{$t('order.expressNo')}}：</span>
+                      <el-popover placement="left" width="300" trigger="click" v-if="scope.row.express.company === 'zto' || scope.row.express.company === 'rider'">
+                        <div v-if="expressInfo && !showOrderStatus">
+                          <el-timeline style="margin-top: 10px" v-if="expressInfo.length > 0">
+                            <el-timeline-item
+                              v-for="(record, index) in expressInfo"
+                              :key="index"
+                              :timestamp="record.time">
+                              <div class="ui"><span>{{record.message}}</span></div>
+                            </el-timeline-item>
+                          </el-timeline>
+                          <p v-else style="color: #333; font-size: 14px; text-align: center; font-weight: bold">{{$t('order.zwddwl')}}</p>
+                        </div>
+                        <div v-if="showOrderStatus">
+                          <el-timeline style="margin-top: 10px">
+                            <el-timeline-item
+                              v-for="(record, index) in scope.row.operation_records"
+                              :key="index"
+                              :timestamp="record.time">
+                              <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
+                            </el-timeline-item>
+                          </el-timeline>
+                        </div>
+                        <a @click="clickStatus(scope.row)" slot="reference">
+                          {{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}
+                          <i class="el-icon-arrow-right"></i>
+                        </a>
+                      </el-popover>
+                      <a v-else target="_blank" :href="getKuaidi100Url(scope.row.express.company, scope.row.express.novar)">
+                        {{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}
+                        <i class="el-icon-arrow-right"></i>
+                      </a>
+                    </div>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.status')" width="90">
                   <template slot-scope="scope">
-                    <el-tag v-if="scope.row.express.company !== 'zto' ">{{orderStatus[scope.row.status]}}</el-tag>
-                    <el-popover placement="left" width="300" trigger="click" v-else>
-                      <el-timeline style="margin-top: 10px" v-if="expressInfo.length > 0">
-                        <el-timeline-item
-                          v-for="(record, index) in expressInfo"
-                          :key="index"
-                          :timestamp="record.time">
-                          <div class="ui"><span>{{record.message}}</span></div>
-                        </el-timeline-item>
-                      </el-timeline>
-                      <p v-else style="color: #333; font-size: 14px; text-align: center; font-weight: bold">{{$t('order.zwddwl')}}</p>
-                      <a slot="reference" class="gt">
-                        <el-tag style="cursor: pointer"  @click="clickStatus(scope.row)">{{orderStatus[scope.row.status]}}</el-tag>
-                      </a>
-                    </el-popover>
+                    <el-tag >{{orderStatus[scope.row.status]}}</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.genTime')" width="180">
@@ -317,7 +344,8 @@
         expressInfo: [],
         pageX: '',
         pageY: '',
-        showOrderStatus: false
+        showOrderStatus: false,
+        expressRiderInfo: []
       }
     },
     computed: {
@@ -358,9 +386,15 @@
           no: data.express.novar,
           company: data.express.company
         }
-        getExpressInfo(info).then(res => {
-          this.expressInfo = res.items
-        })
+        if (data.express.company === 'zto') {
+          getExpressInfo(info).then(res => {
+            this.showOrderStatus = false
+            this.expressInfo = res.items
+          })
+        }
+        if (data.express.company === 'rider') {
+          this.showOrderStatus = true
+        }
       },
       handleSelectionChange(val) {
         this.multipleSelection = []
