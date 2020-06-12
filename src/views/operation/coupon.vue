@@ -49,6 +49,16 @@
                     {{scope.row.grant_bt + $t('operation.to') + scope.row.grant_et}}
                   </template>
                 </el-table-column>
+                <el-table-column :label="$t('operation.validTime')">
+                  <template  slot-scope="scope">
+                    <template v-if="scope.row.valid_day_count > 0">
+                      {{$t('operation.validTime2Tip1')}}<strong>{{scope.row.valid_day_count}}</strong>{{$t('operation.validTime2Tip2')}}
+                    </template>
+                    <template v-else >
+                      {{scope.row.bt + $t('operation.to') + scope.row.et}}
+                    </template>
+                  </template>
+                </el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "140">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showCouponEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
