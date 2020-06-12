@@ -104,5 +104,6 @@ export default {
   area_code: '地址码',
   userName: '收货人姓名',
   userPhone: '手机号',
-  zwddwl: '暂无订单物流信息'
+  zwddwl: '暂无订单物流信息',
+  modifyExpress: '修改物流信息'
 }

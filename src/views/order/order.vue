@@ -156,7 +156,7 @@
                 <el-table-column :label="$t('tools.opt')" width = "100" fixed="right">
                   <template slot-scope="scope">
                     <el-button v-if="scope.row.status === 4 || scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">
-                      {{$t('order.express')}}
+                      {{scope.row.status === 4 ? $t('order.modifyExpress') : $t('order.express')}}
                     </el-button>
                     <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">
                       {{$t('order.modifyPrice')}}

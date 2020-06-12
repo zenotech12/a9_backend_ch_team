@@ -101,5 +101,6 @@ export default {
   area_code: 'area_code',
   userName: 'Contacter Name',
   userPhone: 'Mobile',
-  zwddwl: 'No order logistics information'
+  zwddwl: 'No order logistics information',
+  modifyExpress: 'Modify Express'
 }
