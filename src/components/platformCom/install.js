@@ -12,6 +12,7 @@ import filterFile from './filterFile'
 import imageUpload from './imageUpload'
 import priceInput from './priceInput'
 import expressSelector from './expressSelector'
+import propSelector from './propSelector'
 
 // 形成组件库
 const components = [
@@ -25,7 +26,8 @@ const components = [
   filterFile,
   imageUpload,
   priceInput,
-  expressSelector
+  expressSelector,
+  propSelector
 ]
 
 // 注册全局组件

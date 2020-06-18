@@ -67,7 +67,9 @@
               </el-form-item>
               <el-form-item :label="$t('goods.sp')" required>
                 <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
-                  <el-input size="small" v-model="goodsProps[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
+                  <prop-selector v-model="goodsProps[k].name" :placeholder="$t('goods.prop')" clang="en"></prop-selector>
+                  <!--<el-input size="small" v-model="goodsProps[k].name" class="prop-name" ></el-input>-->
+                  <el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
                   <el-tag :key="tag" v-for="(tag,i) in goodsProps[k].items" closable :disable-transitions="false" @click="showPropEdit(k,i,tag)"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
                   <el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
                   <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>
@@ -75,7 +77,7 @@
                 <a @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
               </el-form-item>
               <el-form-item :label="$t('goods.piEdit')" required>
-                <el-table :data="goodsInventoryTable"  style="width: 100%">
+                <el-table :data="goodsInventoryTable"  style="width: 100%" :span-method="inventoryTableSpanMethod">
                   <el-table-column :label="$t('goods.sp')">
                     <template  slot-scope="scope">
                       {{scope.row.title}}
@@ -308,7 +310,8 @@
                 </el-form-item>
                 <el-form-item :label="$t('goods.sp')" >
                   <div  v-for="(v,k) in langInfo[currentLang].spectification_options" :key="k" class="prop-item">
-                    <el-input size="small" v-model="langInfo[currentLang].spectification_options[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input>：
+                    <prop-selector :clang="currentLang" v-model="langInfo[currentLang].spectification_options[k].name" ></prop-selector>：
+                    <!--<el-input size="small" v-model="langInfo[currentLang].spectification_options[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input>-->
                     <el-input :key="tag" v-for="(tag,i) in langInfo[currentLang].spectification_options[k].items" v-model="langInfo[currentLang].spectification_options[k].items[i]"  class="input-new-tag" ></el-input>
                   </div>
                 </el-form-item>
@@ -617,6 +620,35 @@
       }
     },
     methods: {
+      inventoryTableSpanMethod({ row, column, rowIndex, columnIndex }) {
+        let spanColumn = 7
+        if (this.goodsData.id !== '') {
+          if (this.goodsData.type !== 3) {
+            spanColumn = 8
+          }
+        } else {
+          if (this.goodsData.type === 3) {
+            spanColumn = 6
+          }
+        }
+        if (columnIndex === spanColumn) {
+          let childProps = 1
+          for (let i = 1; i < this.goodsProps.length; i++) {
+            childProps = childProps * this.goodsProps[i].items.length
+          }
+          if (rowIndex % childProps === 0) {
+            return {
+              rowspan: childProps,
+              colspan: 1
+            }
+          }
+        } else {
+          return {
+            rowspan: 1,
+            colspan: 1
+          }
+        }
+      },
       repaireLangSet() {
         const lk = Object.keys(this.langInfo)
         lk.forEach(l => {
@@ -911,10 +943,24 @@
         this.propsImageEditTitle = this.goodsInventoryTable[this.propsImageEditIndex].title
       },
       propImageUploadSuccess(data) {
-        this.goodsInventoryTable[this.propsImageEditIndex].images.push(data.md5)
+        // this.goodsInventoryTable[this.propsImageEditIndex].images.push(data.md5)
+        const prop0Key = this.goodsProps[0].name
+        const kv = this.goodsInventoryTable[this.propsImageEditIndex].specifications[prop0Key]
+        this.goodsInventoryTable.forEach(item => {
+          if (item.specifications[prop0Key] === kv) {
+            item.images.push(data.md5)
+          }
+        })
       },
       delPropImage(index) {
-        this.goodsInventoryTable[this.propsImageEditIndex].images.splice(index, 1)
+        // this.goodsInventoryTable[this.propsImageEditIndex].images.splice(index, 1)
+        const prop0Key = this.goodsProps[0].name
+        const kv = this.goodsInventoryTable[this.propsImageEditIndex].specifications[prop0Key]
+        this.goodsInventoryTable.forEach(item => {
+          if (item.specifications[prop0Key] === kv) {
+            item.images.splice(index, 1)
+          }
+        })
       },
       delGoodsImage(index) {
         if (!this.showGoodsLangSetDialog) {

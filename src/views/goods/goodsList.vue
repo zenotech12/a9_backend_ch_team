@@ -52,7 +52,7 @@
             <!-- 搜索 -->
             <el-row>
               <el-col :span="24">
-                <el-tabs style="height: 40px" v-model="tab_shelf_status">
+                <el-tabs style="height: 40px; overflow: hidden" v-model="tab_shelf_status">
                   <el-tab-pane style="height: 44px" v-for="item in shelfStatus" :key="item.value" :label="item.label" :name="item.value + ''"></el-tab-pane>
                 </el-tabs>
               </el-col>
@@ -301,7 +301,7 @@
                     <a style="display: none;" @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
                   </el-form-item>
                   <el-form-item :label="$t('goods.piEdit')">
-                    <el-table :data="goodsInventoryTable"  style="width: 100%">
+                    <el-table :data="goodsInventoryTable"  style="width: 100%" :span-method="inventoryTableSpanMethod">
                       <el-table-column :label="$t('goods.sp')">
                         <template  slot-scope="scope">
                           {{scope.row.title}}
@@ -726,6 +726,35 @@
       }
     },
     methods: {
+      inventoryTableSpanMethod({ row, column, rowIndex, columnIndex }) {
+        let spanColumn = 7
+        if (this.goodsData.id !== '') {
+          if (this.goodsData.type !== 3) {
+            spanColumn = 8
+          }
+        } else {
+          if (this.goodsData.type === 3) {
+            spanColumn = 6
+          }
+        }
+        if (columnIndex === spanColumn) {
+          let childProps = 1
+          for (let i = 1; i < this.goodsProps.length; i++) {
+            childProps = childProps * this.goodsProps[i].items.length
+          }
+          if (rowIndex % childProps === 0) {
+            return {
+              rowspan: childProps,
+              colspan: 1
+            }
+          }
+        } else {
+          return {
+            rowspan: 1,
+            colspan: 1
+          }
+        }
+      },
       handleSelectionChange(val) {
         this.multipleSelection = []
         val.forEach((item) => {
@@ -1077,10 +1106,24 @@
         this.propsImageEditTitle = this.goodsInventoryTable[this.propsImageEditIndex].title
       },
       propImageUploadSuccess(data) {
-        this.goodsInventoryTable[this.propsImageEditIndex].images.push(data.md5)
+        // this.goodsInventoryTable[this.propsImageEditIndex].images.push(data.md5)
+        const prop0Key = this.goodsProps[0].name
+        const kv = this.goodsInventoryTable[this.propsImageEditIndex].specifications[prop0Key]
+        this.goodsInventoryTable.forEach(item => {
+          if (item.specifications[prop0Key] === kv) {
+            item.images.push(data.md5)
+          }
+        })
       },
       delPropImage(index) {
-        this.goodsInventoryTable[this.propsImageEditIndex].images.splice(index, 1)
+        // this.goodsInventoryTable[this.propsImageEditIndex].images.splice(index, 1)
+        const prop0Key = this.goodsProps[0].name
+        const kv = this.goodsInventoryTable[this.propsImageEditIndex].specifications[prop0Key]
+        this.goodsInventoryTable.forEach(item => {
+          if (item.specifications[prop0Key] === kv) {
+            item.images.splice(index, 1)
+          }
+        })
       },
       delGoodsImage(index) {
         this.goodsData.images.splice(index, 1)
