@@ -27,7 +27,8 @@
         imgPreUrl: imgGetUrl,
         fileUploadUrl: fileUploadUrl,
         fileUploadHeader: { 'X-Access-Token': store.state.user.token },
-        fileList: []
+        fileList: [],
+        successNum: 0
       }
     },
     props: {
@@ -65,10 +66,14 @@
         }
         return isLimit
       },
-      imageUploadSuccess(res) {
+      imageUploadSuccess(res, f, fileList) {
         if (res.meta === 0) {
-          this.fileList = []
+          this.successNum++
           this.$emit('uploadSuccess', res)
+          if (this.successNum >= fileList.length) {
+            this.fileList = []
+            this.successNum = 0
+          }
           // this.$set(this.company_info[this.currentLanguage], 'logo', res.md5)
         }
       }

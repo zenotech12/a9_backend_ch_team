@@ -37,21 +37,19 @@
         </div>
       </el-dialog>
       <el-dialog :title="$t('tools.imageUpload')" :visible.sync="imagesFormVisible" append-to-body width="515px">
-        <el-upload name="image" :headers="fileUploadHeader"
-                   :action="fileUploadUrl"
-                   list-type="picture-card"
-                   :multiple="true"
-                   :file-list="images"
-                   :on-success="fileUploadSuccess"
-                   :on-preview="handlePictureCardPreview"
-                   :on-remove="handleRemove"
-                   :before-upload="beforeCertificateUpload">
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
-        <span class="fontColor" v-if="promptInfo">{{promptInfo}}</span>
+        <div class="prop-image__preview">
+          <draggable v-model="formImagesLists"  :options = "{animation:500}">
+            <div class="pitem"  v-for="(img,imgk) in formImagesLists" :key="imgk">
+              <el-image
+                style="height: 100px; width: 100px" fit="contain"
+                :src="getImageUrl(img)"
+                :preview-src-list="previewImages">
+              </el-image>
+              <i class="el-icon-delete delbtn" @click="delImage(imgk)"></i>
+            </div>
+          </draggable>
+        </div>
+        <image-upload :multiple="true"  @uploadSuccess="fileUploadSuccess"></image-upload>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" size="small" @click="submitImages">{{$t('tools.confirm')}}</el-button>
           <el-button @click="imagesCancel" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
@@ -71,11 +69,13 @@
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
   import goodsSelector from '@/components/goodsSelector'
+  import draggable from 'vuedraggable'
   export default {
     name: 'LLEditor',
     components: {
       quillEditor,
-      goodsSelector
+      goodsSelector,
+      draggable
     },
     props: {
       content: {
@@ -133,6 +133,15 @@
         this.$refs['myeditor'].quill.getModule('toolbar').addHandler('video', this.editerVideoFunc)
         this.$refs['myeditor'].quill.getModule('toolbar').addHandler('link', this.editerLinkFunc)
         window.addEventListener('scroll', this.getScrollPosition, false)
+      }
+    },
+    computed: {
+      previewImages() {
+        const result = []
+        this.formImagesLists && this.formImagesLists.forEach(img => {
+          result.push(this.getImageUrl(img))
+        })
+        return result
       }
     },
     methods: {
@@ -211,6 +220,9 @@
         // this.setImages(fileList)
         // console.log(response)
         this.formImagesLists.push(response.md5)
+      },
+      delImage(k) {
+        this.formImagesLists.splice(k,1)
       },
       setImages(fileList) {
         // console.log('fileList', fileList)
@@ -320,5 +332,18 @@
   }
   .fontColor{
     color: red;
+  }
+  .prop-image__preview{
+    .pitem{
+      display: inline-block;
+      position: relative;
+      margin-right: 5px;
+      .delbtn{
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
+    }
   }
 </style>

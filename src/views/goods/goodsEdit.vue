@@ -194,14 +194,16 @@
               </el-form-item>
               <el-form-item :label="$t('goods.goodsPic')" required>
                 <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
-                  <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
-                    <el-image
-                      style="height: 100px; width: 100px" fit="contain"
-                      :src="getImageUrl(img)"
-                      :preview-src-list="goodsPreviewImages">
-                    </el-image>
-                    <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
-                  </div>
+                  <draggable v-model="goodsData.images"  :options = "{animation:500}">
+                    <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
+                      <el-image
+                        style="height: 100px; width: 100px" fit="contain"
+                        :src="getImageUrl(img)"
+                        :preview-src-list="goodsPreviewImages">
+                      </el-image>
+                      <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
+                    </div>
+                  </draggable>
                 </div>
                 <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
               </el-form-item>
@@ -354,9 +356,11 @@
   import llEditor from '@/components/LLEditor'
   import { mapGetters } from 'vuex'
   import { languages } from '@/utils/languages'
+  import draggable from 'vuedraggable'
   export default {
     components: {
-      llEditor
+      llEditor,
+      draggable
     },
     data() {
       return {
