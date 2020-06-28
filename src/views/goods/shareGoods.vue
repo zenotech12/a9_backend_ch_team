@@ -46,7 +46,11 @@
             </el-row>
             <el-row>
               <el-col :span="24" style="height: calc(100vh - 242px)">
-                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 42px)" style="width: 100%;">
+                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 42px)" style="width: 100%;" row-key="id"  @selection-change="handleSelectionChange">
+                  <el-table-column
+                    type="selection"
+                    width="55">
+                  </el-table-column>
                   <el-table-column  :label="$t('goods.name')" min-width="300">
                     <template  slot-scope="scope">
                       <div class="goods-item">
@@ -80,7 +84,11 @@
                   </el-table-column>
                 </el-table>
                 <template v-if="itemCount !== 0">
-                  <div style="text-align: right;margin-top: 10px">
+                  <el-row style="margin-top: 10px">
+                    <el-col :span="8">
+                        <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                    </el-col>
+                    <el-col :span="16"  style="text-align: right;">
                     <el-pagination
                       @size-change="sizeChangeFunc"
                       @current-change="pageChangeFunc"
@@ -89,7 +97,8 @@
                       layout="total, prev, pager, next, jumper"
                       :total="itemCount">
                     </el-pagination>
-                  </div>
+                    </el-col>
+                  </el-row>
                 </template>
               </el-col>
             </el-row>
@@ -167,7 +176,8 @@
           all: false,
           spu_ids: '',
           distribution: true
-        }
+        },
+        multipleSelection: []
       }
     },
     created() {
@@ -192,6 +202,12 @@
       ])
     },
     methods: {
+      handleSelectionChange(val) {
+        this.multipleSelection = []
+        val.forEach((item) => {
+          this.multipleSelection.push(item.id)
+        })
+      },
       goodsShareLink(id) {
         return appUrl + '/goods/info?id=' + id
       },
@@ -256,6 +272,15 @@
       deleteShareGoods(row) {
         const goodsIds = [row.id]
         spuDistribution({ distribution: false, spu_ids: JSON.stringify(goodsIds) }).then(res => {
+          this.getTableData()
+        })
+      },
+      batchDelFunc(row) {
+        if (this.multipleSelection.length < 1) {
+          this.$message.error(this.$t('goods.batchOptTip'))
+          return
+        }
+        spuDistribution({ distribution: false, spu_ids: JSON.stringify(this.multipleSelection) }).then(res => {
           this.getTableData()
         })
       },
