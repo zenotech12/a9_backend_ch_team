@@ -56,5 +56,8 @@ export default {
   cardMobile: '联系电话',
   cardMobileTip: '请输入银行预留电话',
   cardEdit: '银行卡编辑',
-  delCardTip: '确定删除该银行卡信息'
+  delCardTip: '确定删除该银行卡信息',
+  permission: '权限',
+  permission_view: '查看',
+  permission_opt: '操作'
 }

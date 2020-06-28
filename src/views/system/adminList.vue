@@ -67,6 +67,19 @@
                 <i class="el-icon-info"></i>
               </el-tooltip>
             </el-form-item>
+            <el-form-item :label="$t('sys.permission')"  prop="status">
+              <div v-for="(v, k) in permissionList" :key="k">
+                <div><el-checkbox >{{$t('global.' + v.lk)}}</el-checkbox></div>
+                <div v-for="(son, sk) in v.son" :key="sk">
+                  <el-checkbox >{{$t('global.' + son.lk)}}</el-checkbox>
+                  <div>{{son.permissions}}</div>
+                  <el-checkbox v-for="per in son.permissions" :label="per" :key="per">{{$t('sys.permission_' + per)}}</el-checkbox>
+                  <!--<el-checkbox-group >-->
+                    <!--<el-checkbox v-for="per in son.permissions" :label="per" :key="per">{{$t('sys.permission_' + per)}}</el-checkbox>-->
+                  <!--</el-checkbox-group>-->
+                </div>
+              </div>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="upsertAdmin('form')" :disabled="disabled"></confirm-button>
@@ -80,6 +93,7 @@
 
 <script>
   import { customerServicesList, customerServicesDel, customerServicesModify, customerServicesAdd } from '@/api/system'
+  import permission from '@/utils/permission'
   export default {
     data() {
       return {
@@ -111,6 +125,7 @@
           body: []
         },
         dialogFormVisible: false,
+        permissionList: permission
       }
     },
     mounted() {
