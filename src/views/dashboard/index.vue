@@ -11,7 +11,7 @@
         </div>
       </el-card>
     </el-row>
-    <el-row class="liuliang">
+    <el-row class="liuliang" v-if="permissionCheck('view', '3_1')">
       <el-col :span="8">
         <el-card shadow="always" class="stat-item">
           <div class="sp cp" @click="gotoUrl('orderList',{ bt: $moment(new Date().getTime()).format('YYYY-MM-DD'), et: $moment(new Date().getTime()).format('YYYY-MM-DD') })">
@@ -37,7 +37,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row class="liuliang">
+    <el-row class="liuliang" v-if="permissionCheck('view', '3_1')">
       <el-col :span="4">
         <el-card shadow="always">
           <div class="sp cp" @click="gotoUrl('orderList', { order_status: 2})">
