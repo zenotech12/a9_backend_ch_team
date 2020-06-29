@@ -4,7 +4,7 @@
       <!-- 搜索 -->
       <div class="rightbox">
         <!--添加-->
-        <el-row>
+        <el-row  v-if="permissionCheck('opt')">
           <el-col :span="24" class="funcList">
             <div class="boxFuncBtn" @click="addData">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
@@ -22,7 +22,7 @@
               <el-table-column prop="card_bank_name_got"  :label="$t('sys.cardBank')">
               </el-table-column>
               <el-table-column prop="mobile" :label="$t('sys.cardMobile')"></el-table-column>
-              <el-table-column :label="$t('tools.opt')" width="80px">
+              <el-table-column :label="$t('tools.opt')" width="80px"  v-if="permissionCheck('opt')">
                 <template slot-scope="scope">
                     <delete-button :promptInfor="promptInfor" @delData="delData(scope.row)"></delete-button>
                 </template>

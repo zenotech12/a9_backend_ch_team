@@ -26,7 +26,7 @@
                 <el-form-item :label="$t('operation.shopDesc')">
                   <el-input type="textarea" maxlength="200" rows="10" v-model="shopForm.desc"></el-input>
                 </el-form-item>
-                <el-form-item >
+                <el-form-item  v-if="permissionCheck('opt')">
                   <confirm-button @confirmButton="saveInfo" :disabled="disabled" :confirmButtonInfor="this.$t('tools.save')"></confirm-button>
                 </el-form-item>
               </el-form>

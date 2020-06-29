@@ -33,7 +33,33 @@ Vue.use(VueClipboard)
 Vue.config.productionTip = false
 
 Vue.mixin({
+  data() {
+    return {
+      functionCode: ''
+    }
+  },
+  mounted() {
+    if (this.$route !== undefined && this.$route.meta !== undefined) {
+      this.functionCode = this.$route.meta.code
+    }
+  },
   methods: {
+    permissionCheck(...param) {
+      const action = param.length > 0 ? param[0] : 'opt'
+      const fName = param.length === 2 ? param[1] : this.functionCode
+      const userInfo = store.getters.shopInfo.user_info
+      if (userInfo.owner) {
+        return true
+      }
+      if (userInfo.permissions === undefined) {
+        return false
+      }
+      if (userInfo.permissions[fName] && userInfo.permissions[fName].indexOf(action) >= 0) {
+        return true
+      } else {
+        return false
+      }
+    },
     getImageUrl(val, width, height) {
       if (!val) {
         return ''

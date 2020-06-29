@@ -14,16 +14,19 @@ import { asyncRouterMap } from '@/router'
 //   }
 // }
 function hasPermission(route, roles) {
-  if (route.meta) {
-    if (Array.isArray(route.meta.role)) {
-      return route.meta.role.some(rules => roles.includes(rules))
-    } else if (route.meta.role) {
-      return roles.includes(route.meta.role)
-    } else {
-      return false
-    }
-  } else {
+  if (roles.owner) {
     return true
+  } else {
+    if (route.meta && route.meta.code) {
+      const code = route.meta.code
+      if (roles.permissions[code]) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
+    }
   }
 }
 

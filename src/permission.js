@@ -23,14 +23,13 @@ router.beforeEach((to, from, next) => {
       }
       if (store.getters.shopInfo === null || !store.getters.shopInfo.id) {
         store.dispatch('GetShopInfo').then(sInfo => {
-          store.dispatch('setRouter', router.options.routes).then(() => {
-            next()
+          store.dispatch('GenerateRoutes', sInfo.user_info).then((res) =>{
+            router.addRoutes(res)
+            next({ ...to, replace: true })
           })
         })
       } else {
-        store.dispatch('setRouter', router.options.routes).then(() => {
-          next()
-        })
+        next()
       }
     }
   } else {

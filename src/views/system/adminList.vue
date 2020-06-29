@@ -6,7 +6,7 @@
         <!--添加-->
         <el-row>
           <el-col :span="24" class="funcList">
-            <div class="boxFuncBtn" @click="addAdmin">
+            <div class="boxFuncBtn" @click="addAdmin" v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
@@ -26,7 +26,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="gen_time" :label="$t('sys.genTime')"></el-table-column>
-              <el-table-column :label="$t('tools.opt')">
+              <el-table-column :label="$t('tools.opt')"  v-if="permissionCheck('opt')">
                 <template slot-scope="scope">
                   <el-button type="text" @click="editAdmin(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                   <template v-if="!scope.row.default">
@@ -50,7 +50,7 @@
             </template>
           </el-col>
         </el-row>
-        <el-dialog :title="editTitle" @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="400px" style="margin-top: 0vh">
+        <el-dialog :title="editTitle" @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="600px" style="margin-top: 0vh">
           <el-form :model="form" :rules="formRule" ref="form" label-width="120px">
             <el-form-item :label="$t('sys.loginMobile')" prop="login_name">
               <el-input style="width: 200px" :disabled="form.id !== ''" v-model="form.mobile" auto-complete="off" clearable></el-input>
@@ -67,17 +67,16 @@
                 <i class="el-icon-info"></i>
               </el-tooltip>
             </el-form-item>
-            <el-form-item :label="$t('sys.permission')"  prop="status">
+            <el-form-item :label="$t('sys.permission')"  prop="status" v-if="!isOwner">
               <div v-for="(v, k) in permissionList" :key="k">
-                <div><el-checkbox >{{$t('global.' + v.lk)}}</el-checkbox></div>
-                <div v-for="(son, sk) in v.son" :key="sk">
-                  <el-checkbox >{{$t('global.' + son.lk)}}</el-checkbox>
-                  <div>{{son.permissions}}</div>
-                  <el-checkbox v-for="per in son.permissions" :label="per" :key="per">{{$t('sys.permission_' + per)}}</el-checkbox>
+                <div><el-checkbox :indeterminate="permissionStatus[v.code]['indeterminate']" v-model="permissionStatus[v.code]['all']"  @change="menuChangeFunc($event, v)" >{{$t('global.' + v.lk)}}</el-checkbox></div>
+                <el-row style="padding-left: 40px" v-for="(son, sk) in v.son" :key="sk">
+                  <el-col :span="12"><el-checkbox :indeterminate="permissionStatus[son.code]['indeterminate']" v-model="permissionStatus[son.code]['all']" @change="functionChangeFunc($event, son)" >{{$t('global.' + son.lk)}}</el-checkbox></el-col>
+                  <el-col :span="6" v-for="per in son.permissions"><el-checkbox  v-model="permissionStatus[son.code][per]" :label="per" :key="per" @change="permissionChangeFunc($event, son.code, per)">{{$t('sys.permission_' + per)}}</el-checkbox></el-col>
                   <!--<el-checkbox-group >-->
                     <!--<el-checkbox v-for="per in son.permissions" :label="per" :key="per">{{$t('sys.permission_' + per)}}</el-checkbox>-->
                   <!--</el-checkbox-group>-->
-                </div>
+                </el-row>
               </div>
             </el-form-item>
           </el-form>
@@ -96,6 +95,7 @@
   import permission from '@/utils/permission'
   export default {
     data() {
+      const ps = this.initPermissionStatus()
       return {
         editTitle: this.$t('lang.addAdmin'),
         disabled: false,
@@ -125,7 +125,10 @@
           body: []
         },
         dialogFormVisible: false,
-        permissionList: permission
+        permissionList: permission,
+        permissionSelect: {},
+        permissionStatus: ps,
+        isOwner: false
       }
     },
     mounted() {
@@ -136,9 +139,102 @@
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getTableData()
+      },
+      permissionSelect: {
+        handler(val) {
+          permission.forEach(item => {
+            let childrenAllNum = 0
+            let isSet = 0
+            item.son.forEach(son => {
+              if (val[son.code]) {
+                isSet++
+                if (val[son.code].length === son.permissions.length) {
+                  this.$set(this.permissionStatus[son.code], 'indeterminate', false)
+                  this.$set(this.permissionStatus[son.code], 'all', true)
+                  childrenAllNum++
+                } else {
+                  this.$set(this.permissionStatus[son.code], 'indeterminate', true)
+                  this.$set(this.permissionStatus[son.code], 'all', false)
+                }
+                son.permissions.forEach(p => {
+                  this.$set(this.permissionStatus[son.code], p, val[son.code].indexOf(p) >= 0)
+                })
+              } else {
+                this.$set(this.permissionStatus[son.code], 'indeterminate', false)
+                this.$set(this.permissionStatus[son.code], 'all', false)
+                son.permissions.forEach(p => {
+                  this.$set(this.permissionStatus[son.code], p, false)
+                })
+              }
+            })
+            if (childrenAllNum >= item.son.length) {
+              this.$set(this.permissionStatus[item.code], 'indeterminate', false)
+              this.$set(this.permissionStatus[item.code], 'all', true)
+            } else {
+              this.$set(this.permissionStatus[item.code], 'all', false)
+              this.$set(this.permissionStatus[item.code], 'indeterminate', isSet > 0)
+            }
+            if (isSet > 0) {
+              if (!this.permissionSelect[item.code]) {
+                this.permissionSelect[item.code] = ['view']
+              }
+            } else if (this.permissionSelect[item.code]) {
+              delete this.permissionSelect[item.code]
+            }
+          })
+        },
+        deep: true
       }
     },
     methods: {
+      initPermissionStatus() {
+        const ps = {}
+        permission.forEach(item => {
+          this.$set(ps, item.code, {})
+          item.son.forEach(son => {
+            this.$set(ps, son.code, {})
+          })
+        })
+        return ps
+      },
+      permissionChangeFunc(val, code, per) {
+        if (val) {
+          if (!this.permissionSelect[code]) {
+            this.$set(this.permissionSelect, code, [per])
+          } else {
+            if (this.permissionSelect[code].indexOf(per) < 0) {
+              this.permissionSelect[code].push(per)
+              // this.$set(this.permissionSelect, code, JSON.parse(JSON.stringify([...this.permissionSelect[code], per])))
+              // console.log(this.permissionSelect)
+            }
+          }
+        } else {
+          if (this.permissionSelect[code]) {
+            this.permissionSelect[code].splice(this.permissionSelect[code].indexOf(per), 1)
+            if (this.permissionSelect[code].length < 1) {
+              this.$delete(this.permissionSelect, code)
+            }
+          }
+        }
+      },
+      functionChangeFunc(val, son) {
+        if (val) {
+          this.$set(this.permissionSelect, son.code, JSON.parse(JSON.stringify(son.permissions)))
+        } else {
+          this.$delete(this.permissionSelect, son.code)
+        }
+      },
+      menuChangeFunc(val, v) {
+        if (val) {
+          v.son.forEach(item => {
+            this.$set(this.permissionSelect, item.code, JSON.parse(JSON.stringify(item.permissions)))
+          })
+        } else {
+          v.son.forEach(item => {
+            this.$delete(this.permissionSelect, item.code)
+          })
+        }
+      },
       checkedPwd() {
         if (this.form.pass === '') {
           this.passShow = true
@@ -188,7 +284,9 @@
         $('.start').removeClass('is-error')
       },
       addAdmin() {
+        this.permissionSelect = {}
         this.dialogFormVisible = true
+        this.isOwner = false
         this.disabled = false
         this.form.id = ''
         this.form.mobile = ''
@@ -206,7 +304,9 @@
       editAdmin(data) {
         this.disabled = false
         this.editTitle = this.$t('lang.editAdmin')
+        this.permissionSelect = data.permissions ? JSON.parse(JSON.stringify(data.permissions)) : {}
         this.dialogFormVisible = true
+        this.isOwner = data.default
         this.form = { id: data.id, mobile: data.user_login_name, nick_name: data.user_nick_name, customer_servicer: data.customer_servicer }
       },
       getTableData() {
@@ -234,6 +334,7 @@
           this.$message.error(this.$t('sys.mobileTip'))
           return
         }
+        this.form.permissions = JSON.stringify(this.permissionSelect)
         if (!this.form.id) {
           customerServicesAdd(this.form).then(response => {
             if (response.meta === 0) {

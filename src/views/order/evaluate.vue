@@ -84,7 +84,7 @@
               </el-table>
               <el-row style="margin-top: 10px">
                 <el-col :span="6">
-                  <el-button size="mini" @click="showBatchReplyDialog">{{$t('order.reply')}}</el-button>
+                  <el-button v-if="permissionCheck('opt')" size="mini" @click="showBatchReplyDialog">{{$t('order.reply')}}</el-button>
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
                   <el-pagination
@@ -121,9 +121,9 @@
             </el-form-item>
             <el-divider content-position="left">{{$t('order.reply1')}}</el-divider>
             <div class="reply-item" v-for="v in replyData.replies">{{v}}</div>
-            <el-input style="margin-top: 10px" type="textarea"  :rows="2" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
+            <el-input  v-if="permissionCheck('opt')" style="margin-top: 10px" type="textarea"  :rows="2" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
           </el-form>
-          <div slot="footer" class="dialog-footer">
+          <div slot="footer" class="dialog-footer" v-if="permissionCheck('opt')">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>

@@ -5,7 +5,7 @@
       <div class="rightbox">
         <el-row>
           <el-col :span="24" class="funcList">
-            <div class="boxFuncBtn" @click="addNewsPostage">
+            <div class="boxFuncBtn" @click="addNewsPostage"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
@@ -36,7 +36,7 @@
                       <span>{{scope.row.quote.price_step | price}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('tools.opt')">
+                  <el-table-column :label="$t('tools.opt')"  v-if="permissionCheck('opt')">
                     <template slot-scope="scope">
                       <el-button @click="editPostage(scope.row, scope.$index)" type="text">{{$t('tools.edit')}}</el-button>
                       <span class="xiexian">/</span>

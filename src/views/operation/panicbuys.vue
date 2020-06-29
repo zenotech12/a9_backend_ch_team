@@ -12,7 +12,7 @@
             </el-radio-group>
           </el-col>
           <el-col :span="10" class="funcList">
-            <div class="boxFuncBtn" @click="addData">
+            <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
@@ -48,7 +48,7 @@
                     {{scope.row.bt.substring(0,13)}}
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140" fixed="right">
+                <el-table-column :label="$t('tools.opt')" width = "140" fixed="right"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <span class="xiexian">/</span>

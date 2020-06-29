@@ -3,7 +3,7 @@
     <div class="sys-neiBody">
       <!-- 搜索 -->
       <div class="rightbox">
-        <el-row>
+        <el-row  v-if="permissionCheck('opt')">
           <el-col :span="24" class="funcList">
             <div class="boxFuncBtn" @click="addData">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
@@ -27,7 +27,7 @@
                     <el-tag v-else type="info">{{$t('tools.no')}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140">
+                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <span class="xiexian">/</span>

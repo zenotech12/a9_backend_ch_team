@@ -15,7 +15,7 @@
             </el-form>
           </el-col>
           <el-col :span="4" style="text-align: right;padding: 10px 15px">
-            <div class="boxFuncBtn" @click="addData">
+            <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
@@ -62,10 +62,12 @@
               <el-table-column :label="$t('tools.opt')" width = "200" fixed="right">
                 <template slot-scope="scope">
                   <el-button type="text" :title="$t('tools.copyLinkTip')" v-clipboard:copy="goodsShareLink(scope.row.id)" v-clipboard:success="copySuccess" v-clipboard:error="copyError"  size="small">{{$t('tools.copyLink')}}</el-button>
-                  <span class="xiexian">/</span>
-                  <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                  <span class="xiexian">/</span>
-                  <delete-button :promptInfor="promptInfor" @delData="deleteDataFunc(scope.row)"></delete-button>
+                  <template  v-if="permissionCheck('opt')">
+                    <span class="xiexian">/</span>
+                    <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
+                    <span class="xiexian">/</span>
+                    <delete-button :promptInfor="promptInfor" @delData="deleteDataFunc(scope.row)"></delete-button>
+                  </template>
                 </template>
               </el-table-column>
             </el-table>

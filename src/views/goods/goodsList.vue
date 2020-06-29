@@ -9,10 +9,12 @@
               <div class="small_title">{{$t('goods.type')}}</div>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row >
             <el-col :span="24" class="funcBoxTitle2">
+              <template v-if="permissionCheck('opt')">
               <i class="el-icon-circle-plus-outline" @click="showTypeEditForm"></i>
               <span @click="showTypeEditForm" >{{$t('goods.addType')}}</span>
+              </template>
             </el-col>
           </el-row>
           <div class="custom-tree-container">
@@ -76,7 +78,7 @@
                   </el-form-item>
                 </el-form>
               </el-col>
-              <el-col :span="4" style="text-align: right;padding: 10px 15px">
+              <el-col :span="4" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
                 <div class="boxFuncBtn">
                   <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsEditor(null, 1)">{{$t('tools.add')}}</el-button>
                 </div>
@@ -141,7 +143,7 @@
                   </el-table-column>
                   <el-table-column prop="gen_time" width="150"  :label="$t('goods.publishTime')">
                   </el-table-column>
-                  <el-table-column :label="$t('tools.opt')" width = "190" fixed="right">
+                  <el-table-column :label="$t('tools.opt')" width = "190" fixed="right" v-if="permissionCheck('opt')">
                     <template slot-scope="scope">
                       <template v-if="!scope.row.deleted">
                         <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
@@ -159,16 +161,18 @@
                 <template v-if="itemCount !== 0">
                   <el-row style="margin-top: 10px">
                     <el-col :span="8">
-                      <template v-if="searchForm.deleted">
-                        <el-button size="mini" @click="batchRestoreFunc()">{{$t('goods.restore')}}</el-button>
-                      </template>
-                      <template v-else-if="searchForm.shelf_status === 2">
-                        <el-button size="mini" @click="bathShelfFunc(1)">{{$t('tools.shelfOff')}}</el-button>
-                        <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
-                      </template>
-                      <template v-else-if="searchForm.shelf_status === 1">
-                        <el-button size="mini" @click="bathShelfFunc(2)">{{$t('tools.shelfOn')}}</el-button>
-                        <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                      <template v-if="permissionCheck('opt')">
+                        <template v-if="searchForm.deleted">
+                          <el-button size="mini" @click="batchRestoreFunc()">{{$t('goods.restore')}}</el-button>
+                        </template>
+                        <template v-else-if="searchForm.shelf_status === 2">
+                          <el-button size="mini" @click="bathShelfFunc(1)">{{$t('tools.shelfOff')}}</el-button>
+                          <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                        </template>
+                        <template v-else-if="searchForm.shelf_status === 1">
+                          <el-button size="mini" @click="bathShelfFunc(2)">{{$t('tools.shelfOn')}}</el-button>
+                          <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                        </template>
                       </template>
                       &nbsp;
                     </el-col>
@@ -871,31 +875,36 @@
         }
       },
       renderContent(h, { node, data, store }) {
-        return (
-          <span class='custom-tree-node'>
-          <span title={node.label}>{node.label}</span>
-        <span class='showHide' v-show={data.tree_code}>
-      <i class='el-icon-circle-plus-outline treeAddImg' on-click={ () => this.showAddChildFunc(data)}></i>
-        <el-popover
-        placement='bottom-end'
-        width='250'
-        visible-arrow
-        trigger='hover'>
-          <div class='labelName'>{node.label}</div>
-        <div class='funcListBox'>
-          <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
-      <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
-          <span class='permissionsDel'>{this.$t('tools.delete')}</span>
+        if (this.permissionCheck('opt')) {
+          return (
+            <span class='custom-tree-node'>
+            <span title={node.label}>{node.label}</span>
+          <span class='showHide' v-show={data.tree_code}>
+        <i class='el-icon-circle-plus-outline treeAddImg' on-click={ () => this.showAddChildFunc(data)}></i>
+          <el-popover
+          placement='bottom-end'
+          width='250'
+          visible-arrow
+          trigger='hover'>
+            <div class='labelName'>{node.label}</div>
+          <div class='funcListBox'>
+            <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
+        <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
+            <span class='permissionsDel'>{this.$t('tools.delete')}</span>
           </div>
           <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
-      <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
-          <span class='permissionsEdit'>{this.$t('tools.edit')}</span>
+        <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
+            <span class='permissionsEdit'>{this.$t('tools.edit')}</span>
           </div>
           </div>
           <i class='el-icon-more imgMore' slot='reference'></i>
-          </el-popover>
-          </span>
-          </span>)
+            </el-popover>
+            </span>
+            </span>)
+        } else {
+          return (<span class='custom-tree-node'>
+            <span title={node.label}>{node.label}</span></span>)
+        }
       },
       showEditDataFunc(row) {
         this.parentType = []

@@ -39,7 +39,7 @@
                 </el-form>
               </el-col>
               <el-col :span="4" style="text-align: right;padding: 10px 15px">
-                <div class="boxFuncBtn">
+                <div class="boxFuncBtn" v-if="permissionCheck('opt')">
                   <el-button type="primary" size="mini" icon="el-icon-plus" @click="showShareEditor">{{$t('tools.add')}}</el-button>
                 </div>
               </el-col>
@@ -78,15 +78,18 @@
                       <el-button type="text" :title="$t('tools.copyLinkTip')" v-clipboard:copy="goodsShareLink(scope.row.id)" v-clipboard:success="copySuccess" v-clipboard:error="copyError"  size="small">{{$t('tools.copyLink')}}</el-button>
                       <!--<span class="xiexian">/</span>-->
                       <!--<el-button type="text" @click="editShareGoods(scope.row)" size="small">{{$t('tools.edit')}}</el-button>-->
-                      <span class="xiexian">/</span>
-                      <delete-button @delData="deleteShareGoods(scope.row)"></delete-button>
+                      <template  v-if="permissionCheck('opt')">
+                        <span class="xiexian">/</span>
+                        <delete-button @delData="deleteShareGoods(scope.row)"></delete-button>
+                      </template>
                     </template>
                   </el-table-column>
                 </el-table>
                 <template v-if="itemCount !== 0">
                   <el-row style="margin-top: 10px">
                     <el-col :span="8">
-                        <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                      <el-button v-if="permissionCheck('opt')" size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                      &nbsp;
                     </el-col>
                     <el-col :span="16"  style="text-align: right;">
                     <el-pagination

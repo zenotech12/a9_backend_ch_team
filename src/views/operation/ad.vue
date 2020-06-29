@@ -16,11 +16,13 @@
             </el-switch>
           </el-col>
           <el-col :span="10" class="funcList" style="text-align: right">
-            <el-button size="mini" @click="showBatchAdd" type="text" style="margin-right: 20px">{{$t('tools.batchAdd')}}</el-button>
-            <div class="boxFuncBtn" @click="addAd">
-              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
-            </div>
+            <template v-if="permissionCheck('opt')">
+              <el-button size="mini" @click="showBatchAdd" type="text" style="margin-right: 20px">{{$t('tools.batchAdd')}}</el-button>
+              <div class="boxFuncBtn" @click="addAd">
+                <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+                <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              </div>
+            </template>
           </el-col>
         </el-row>
         <el-row>
@@ -52,7 +54,7 @@
                     {{scope.row.bt + $t('operation.to') + scope.row.et}}
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140">
+                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showAdEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <span class="xiexian">/</span>
@@ -62,7 +64,8 @@
               </el-table>
               <el-row style="margin-top: 10px">
                 <el-col :span="6">
-                  <el-button size="mini" @click="batchDelete">{{$t('tools.delete')}}</el-button>
+                  <el-button  v-if="permissionCheck('opt')" size="mini" @click="batchDelete">{{$t('tools.delete')}}</el-button>
+                  &nbsp;
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
                 <el-pagination

@@ -71,7 +71,7 @@
           </el-col>
           <el-col :span="18"  class="funcBox">
             <el-row class="funcList">
-              <div class="boxFuncBtn" @click="addMessage">
+              <div class="boxFuncBtn" @click="addMessage"  v-if="permissionCheck('opt')">
                 <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
                 <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
               </div>
@@ -96,7 +96,7 @@
                   </el-table-column>
                   <el-table-column prop="content" :label="$t('sys.content')"></el-table-column>
                   <el-table-column prop="gen_time" :label="$t('sys.addTime')"></el-table-column>
-                  <el-table-column :label="$t('tools.opt')">
+                  <el-table-column :label="$t('tools.opt')"  v-if="permissionCheck('opt')">
                     <template slot-scope="scope">
                       <el-button type="text" @click="editMessage(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                       <span class="xiexian">|</span>

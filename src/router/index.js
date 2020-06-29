@@ -42,7 +42,7 @@ export const constantRouterMap = [
       // meta: { title: '主页' },
       component: () => import('@/views/dashboard/index')
     }]
-  }, ...goods, ...order, ...operation, ...finance, ...system]
+  }]
 // , ...dashboard, ...fileManagement, ...user, ...borrow, ...permission]
 /*  { path: '*', redirect: '/404', hidden: true },
   ...GoodsRouter,*/
@@ -53,6 +53,6 @@ export default new Router({
 })
 // export const asyncRouterMap = [
 //   { path: '/404', component: () => import('@/views/404'), hidden: true }]
-export const asyncRouterMap = []
+export const asyncRouterMap = [...goods, ...order, ...operation, ...finance, ...system]
 // export const defaultRouter = [...homePage]
 

@@ -30,13 +30,15 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
-                <el-button type="primary" @click="exportFunc([])" size="small" icon="el-icon-download"></el-button>
-                <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
-                  :action= "importUrl"
-                  :show-file-list="false"
-                  :on-success="importSuccess" :on-error="importError">
-                  <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
-                </el-upload>
+                <template v-if="permissionCheck('opt')">
+                  <el-button type="primary" @click="exportFunc([])" size="small" icon="el-icon-download"></el-button>
+                  <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
+                    :action= "importUrl"
+                    :show-file-list="false"
+                    :on-success="importSuccess" :on-error="importError">
+                    <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
+                  </el-upload>
+                </template>
               </el-form-item>
             </el-form>
           </el-col>
@@ -153,7 +155,7 @@
                     </el-popover>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "100" fixed="right">
+                <el-table-column :label="$t('tools.opt')" width = "100" fixed="right"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button v-if="scope.row.status === 4 || scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">
                       {{scope.row.status === 4 ? $t('order.modifyExpress') : $t('order.express')}}
@@ -172,7 +174,8 @@
               </el-table>
               <el-row style="margin-top: 10px">
                 <el-col :span="6">
-                  <el-button size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>
+                  <el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>
+                  &nbsp;
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
                   <el-pagination

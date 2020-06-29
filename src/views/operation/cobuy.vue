@@ -15,7 +15,7 @@
             </el-form>
           </el-col>
           <el-col :span="4" style="text-align: right;padding: 10px 15px">
-            <div class="boxFuncBtn" @click="addData">
+            <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
@@ -59,7 +59,7 @@
                   {{scope.row.cobuy.sales}}
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('tools.opt')" width = "120" fixed="right">
+              <el-table-column :label="$t('tools.opt')" width = "120" fixed="right"  v-if="permissionCheck('opt')">
                 <template slot-scope="scope">
                   <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                   <span class="xiexian">/</span>

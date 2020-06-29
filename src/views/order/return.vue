@@ -172,7 +172,7 @@
               </el-row>
             </el-form-item>
           </el-form>
-          <div slot="footer" class="dialog-footer" v-if="returnOrder.status === 1 || returnOrder.status === 6">
+          <div slot="footer" class="dialog-footer" v-if="permissionCheck('opt') && (returnOrder.status === 1 || returnOrder.status === 6)">
             <template v-if="returnOrder.status ===1">
               <confirm-button v-if="returnOrder.type === 3" @confirmButton="saveDataFunc(5)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
               <confirm-button v-else @confirmButton="saveDataFunc(3)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
