@@ -176,10 +176,10 @@
                       <el-input oninput="value=value.replace(/[^\d.]/g,'')"  v-model="scope.row.weight"><template slot="append">KG</template></el-input>
                     </template>
                   </el-table-column>
-
                   <el-table-column :label="$t('goods.goodsPic')">
                     <template  slot-scope="scope">
-                      <i style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
+                      <i v-if="scope.row.images.length < 1" style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
+                      <img style="cursor: pointer" v-else @click="editorProppImageFunc(scope.$index)" :src="getImageUrl(scope.row.images[0], 20,20)"/>
                     </template>
                   </el-table-column>
                 </el-table>

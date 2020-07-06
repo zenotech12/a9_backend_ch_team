@@ -93,16 +93,16 @@
                   </el-table-column>
                   <el-table-column  :label="$t('goods.name')" min-width="300">
                     <template  slot-scope="scope">
-                      <div class="goods-item">
+                      <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
                         <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
                         <div class="g-info">
                           <p>{{scope.row.name}}
                             <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
                             <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                            <a :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer" class="el-icon-view"></a>
+                            <!--<a class="el-icon-view"></a>-->
                           </p>
                         </div>
-                      </div>
+                      </a>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('goods.checkStatus')" width="110">
@@ -402,7 +402,8 @@
                       </el-table-column>
                       <el-table-column :label="$t('goods.goodsPic')">
                         <template  slot-scope="scope">
-                          <i style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
+                          <i v-if="scope.row.images.length < 1" style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
+                          <img v-else @click="editorProppImageFunc(scope.$index)" :src="getImageUrl(scope.row.images[0], 20,20)"/>
                         </template>
                       </el-table-column>
                     </el-table>
