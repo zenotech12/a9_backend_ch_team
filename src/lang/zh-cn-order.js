@@ -105,5 +105,6 @@ export default {
   userName: '收货人姓名',
   userPhone: '手机号',
   zwddwl: '暂无订单物流信息',
-  modifyExpress: '修改物流信息'
+  modifyExpress: '修改物流信息',
+  includePostage: '含运费'
 }

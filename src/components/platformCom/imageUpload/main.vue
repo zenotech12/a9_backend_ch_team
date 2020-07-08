@@ -69,10 +69,24 @@
       imageUploadSuccess(res, f, fileList) {
         if (res.meta === 0) {
           this.successNum++
-          this.$emit('uploadSuccess', res)
+          this.$emit('uploadSuccess', res, f, fileList)
           if (this.successNum >= fileList.length) {
+            fileList.sort(function(a, b) {
+              if (a.name < b.name) {
+                return -1
+              } else if (a.name > b.name) {
+                return 1
+              } else {
+                return 0
+              }
+            })
+            const tempList = []
+            fileList.forEach(fl => {
+              tempList.push(fl.response.md5)
+            })
             this.fileList = []
             this.successNum = 0
+            this.$emit('multiSuccess', tempList)
           }
           // this.$set(this.company_info[this.currentLanguage], 'logo', res.md5)
         }

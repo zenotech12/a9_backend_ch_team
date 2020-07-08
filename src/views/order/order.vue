@@ -67,7 +67,7 @@
                 </el-table-column>
                 <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
-                    <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
+                    <a target="_blank" :href="goodsPreview(gInfo.goods_info)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
                       <div class="g-info">
                         <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
@@ -79,12 +79,13 @@
                         <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                       </div>
                       <div class="clear"></div>
-                    </div>
+                    </a>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.price')" width="130">
                   <template slot-scope="scope" >
-                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{scope.row.pay_way}})</span>
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{scope.row.pay_way}})</span><br/>
+                    <span>({{$t('order.includePostage')}}：{{scope.row.postage | price}})</span>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
@@ -384,6 +385,11 @@
       }
     },
     methods: {
+      goodsPreview(row) {
+        return 'https://www.a9kh.com/goods/' + row.spu_id + '.html'
+        // this.currentGoods = appUrl + '/goods/info?id=' + row.id
+        // this.commodityPreviewShow = true
+      },
       clickStatus(data) {
         const info = {
           no: data.express.novar,

@@ -49,7 +49,7 @@
             </div>
           </draggable>
         </div>
-        <image-upload :multiple="true"  @uploadSuccess="fileUploadSuccess"></image-upload>
+        <image-upload :multiple="true"  @multiSuccess="fileMultiUploadSuccess"></image-upload>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" size="small" @click="submitImages">{{$t('tools.confirm')}}</el-button>
           <el-button @click="imagesCancel" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
@@ -216,13 +216,11 @@
         this.dialogImageUrl = file.url
         this.dialogVisible = true
       },
-      fileUploadSuccess(response, file, fileList) {
-        // this.setImages(fileList)
-        // console.log(response)
-        this.formImagesLists.push(response.md5)
+      fileMultiUploadSuccess(files) {
+        this.formImagesLists = this.formImagesLists.concat(files)
       },
       delImage(k) {
-        this.formImagesLists.splice(k,1)
+        this.formImagesLists.splice(k, 1)
       },
       setImages(fileList) {
         // console.log('fileList', fileList)
