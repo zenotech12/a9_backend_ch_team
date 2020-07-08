@@ -223,6 +223,16 @@
             <el-form-item :label="$t('order.userBz')">
               {{userComment}}
             </el-form-item>
+            <el-form-item :label="$t('order.businessBz')" v-if="expressOrder.merchant_comments && expressOrder.merchant_comments.length > 0">
+              <el-timeline style="margin-top: 10px">
+                <el-timeline-item
+                  v-for="(comments, index) in expressOrder.merchant_comments"
+                  :key="index"
+                  :timestamp="comments.gen_time">
+                  <div class="ui"><span>{{comments.operator_name}}</span>{{comments.comment}}</div>
+                </el-timeline-item>
+              </el-timeline>
+            </el-form-item>
             <el-form-item :label="$t('order.note')" >
               <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
             </el-form-item>
