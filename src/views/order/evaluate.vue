@@ -58,7 +58,7 @@
                 </el-table-column>
                 <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
-                    <div class="goods-item">
+                    <a class="goods-item" target="_blank" :href="goodsPreview(scope.row.sku_goods_item)">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(scope.row.sku_goods_item.sku_img)"  fit="cover"></el-image>
                       <div class="g-info">
                         <p>{{scope.row.sku_goods_item.spu_name}}</p>
@@ -67,7 +67,7 @@
                         </p>
                         <p><span>{{$t('order.price3')}}：</span>{{scope.row.sku_goods_item.price | price}}；<span>{{$t('order.number')}}：</span>{{scope.row.sku_goods_item.count}}</p>
                       </div>
-                    </div>
+                    </a>
                   </template>
                 </el-table-column>
                 <el-table-column prop="order_no" :label="$t('order.order')" width="200">
@@ -191,6 +191,11 @@
       }
     },
     methods: {
+      goodsPreview(row) {
+        return 'https://www.a9kh.com/goods/' + row.spu_id + '.html'
+        // this.currentGoods = appUrl + '/goods/info?id=' + row.id
+        // this.commodityPreviewShow = true
+      },
       showBatchReplyDialog() {
         if (this.multipleSelection.length < 1) {
           this.$message.error(this.$t('order.batchReplyTip'))

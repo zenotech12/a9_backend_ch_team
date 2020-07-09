@@ -47,7 +47,7 @@
                 </el-table-column>
                 <el-table-column  :label="$t('order.returnGoods')" min-width="350px">
                   <template  slot-scope="scope">
-                    <div class="goods-item">
+                    <a class="goods-item" target="_blank" :href="goodsPreview(scope.row.goods_item)">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(scope.row.goods_item.sku_img,100,100)"  fit="cover"></el-image>
                       <div class="g-info">
                         <p><span>{{scope.row.goods_item.spu_name}}</span></p>
@@ -57,7 +57,7 @@
                         <p>{{scope.row.goods_item.price | price}}X {{scope.row.goods_item.count}}</p>
                       </div>
                       <div class="clear"></div>
-                    </div>
+                    </a>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.returnPrice')" width="80">
@@ -245,6 +245,11 @@
       }
     },
     methods: {
+      goodsPreview(row) {
+        return 'https://www.a9kh.com/goods/' + row.spu_id + '.html'
+        // this.currentGoods = appUrl + '/goods/info?id=' + row.id
+        // this.commodityPreviewShow = true
+      },
       showReturnOrderDetail(data) {
         this.returnOrder = data
         this.amount = data.amount
