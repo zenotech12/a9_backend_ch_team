@@ -56,7 +56,27 @@
                     <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
                     <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===3" size="mini">{{$t('order.orderType3')}}</el-tag>
                     <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===4" size="mini">{{$t('order.orderType4')}}</el-tag>
-                    {{scope.row.no}}
+                    {{scope.row.no}}<br/>
+                    <el-popover v-if="scope.row.comment || (scope.row.merchant_comments && scope.row.merchant_comments.length > 0)" placement="right" width="300" trigger="click">
+                      <template v-if="scope.row.comment">
+                        <el-divider content-position="left">{{$t('order.userBz')}}</el-divider>
+                        <div style="padding: 0px 10px; text-align: left">
+                          {{scope.row.comment}}
+                        </div>
+                      </template>
+                      <template v-if="scope.row.merchant_comments && scope.row.merchant_comments.length > 0">
+                        <el-divider content-position="left">{{$t('order.businessBz')}}</el-divider>
+                        <el-timeline style="margin-top: 10px">
+                          <el-timeline-item
+                            v-for="(comments, index) in scope.row.merchant_comments"
+                            :key="index"
+                            :timestamp="comments.gen_time">
+                            <div class="ui"><span>{{comments.operator_name}}</span>{{comments.comment}}</div>
+                          </el-timeline-item>
+                        </el-timeline>
+                      </template>
+                      <a slot="reference" class="gt">{{$t('order.note')}}<i class="el-icon-arrow-right"></i></a>
+                    </el-popover>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.user')" width="130">

@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="24">
             <el-tabs style="height: 40px" v-model="tab_status">
-              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatus" :key="k" v-if="item" :label="item" :name="k + ''"></el-tab-pane>
+              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatus"  :key="k" v-if="item" :label="item" :name="k + ''"></el-tab-pane>
             </el-tabs>
           </el-col>
           <el-col :span ="24">
@@ -150,7 +150,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="(returnOrder.status === 3 || returnOrder.status === 5 || returnOrder.status === 6) && returnOrder.type !== 3" :label="$t('order.returnAddr')">
+            <el-form-item v-if="(returnOrder.status === 3 || returnOrder.status === 5 || returnOrder.status === 6) && returnOrder.type !== 3 && returnOrder.merchant_shipping_address" :label="$t('order.returnAddr')">
               {{returnOrder.merchant_shipping_address.address.province + returnOrder.merchant_shipping_address.address.city + returnOrder.merchant_shipping_address.address.district}}&nbsp;{{returnOrder.merchant_shipping_address.address.addr}}
               <br/>
               {{returnOrder.merchant_shipping_address.contacter_name}}&nbsp;&nbsp;{{returnOrder.merchant_shipping_address.mobile}}
@@ -201,7 +201,7 @@
       return {
         returnType: [this.$t('tools.all'), this.$t('order.returnType1'), this.$t('order.returnType2'), this.$t('order.returnType3')],
         orderStatus: [this.$t('tools.all'), this.$t('order.returnStatus1'), this.$t('order.returnStatus2'), this.$t('order.returnStatus3'), this.$t('order.returnStatus4'), this.$t('order.returnStatus5'),
-          this.$t('order.returnStatus6')],
+          this.$t('order.returnStatus6'), '', this.$t('order.returnStatus8')],
         searchForm: {
           type: 0,
           order_no: '',
