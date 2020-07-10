@@ -108,5 +108,10 @@ export default {
   barcode: 'Bar code',
   skuNo: 'Sku no',
   limitNo: 'Limit No',
-  limitDays: 'Limit Days'
+  limitDays: 'Limit Days',
+  batchOptTip: 'Please select the product you want to operate',
+  salePrice: 'Selling Price',
+  originalPrice: 'Original Price',
+  recommendTag: 'Recommendation',
+  serialNo: 'Sort'
 }

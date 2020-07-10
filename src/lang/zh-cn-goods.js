@@ -113,5 +113,6 @@ export default {
   batchOptTip: '请选择您要操作的商品',
   salePrice: '卖价',
   originalPrice: '原价',
-  recommendTag: '推荐词'
+  recommendTag: '推荐词',
+  serialNo: '排序'
 }

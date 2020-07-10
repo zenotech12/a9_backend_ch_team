@@ -39,6 +39,9 @@
               <el-form-item :label="$t('goods.name')" prop="name" label-width="80px">
                 <el-input v-model="forms.name" auto-complete="off" clearable></el-input>
               </el-form-item>
+              <el-form-item :label="$t('goods.serialNo')" label-width="80px">
+                <el-input v-model="forms.serial_no" auto-complete="off" clearable></el-input>
+              </el-form-item>
               <el-form-item :label="$t('goods.note')" label-width="80px">
                 <el-input type="textarea" :rows="2" v-model="forms.desc" auto-complete="off" clearable></el-input>
               </el-form-item>
@@ -479,7 +482,8 @@
           id: '',
           parent_id: '',
           name: '',
-          desc: ''
+          desc: '',
+          serial_no: ''
         },
         isShowType: true,
         typeData: [],
@@ -879,28 +883,28 @@
         if (this.permissionCheck('opt')) {
           return (
             <span class='custom-tree-node'>
-            <span title={node.label}>{node.label}</span>
-          <span class='showHide' v-show={data.tree_code}>
-        <i class='el-icon-circle-plus-outline treeAddImg' on-click={ () => this.showAddChildFunc(data)}></i>
-          <el-popover
-          placement='bottom-end'
-          width='250'
-          visible-arrow
-          trigger='hover'>
-            <div class='labelName'>{node.label}</div>
-          <div class='funcListBox'>
-            <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
-        <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
-            <span class='permissionsDel'>{this.$t('tools.delete')}</span>
-          </div>
-          <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
-        <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
-            <span class='permissionsEdit'>{this.$t('tools.edit')}</span>
-          </div>
-          </div>
-          <i class='el-icon-more imgMore' slot='reference'></i>
-            </el-popover>
-            </span>
+              <span title={node.label}>{node.label}</span>
+              <span class='showHide' v-show={data.tree_code}>
+                <i class='el-icon-circle-plus-outline treeAddImg' on-click={ () => this.showAddChildFunc(data)}></i>
+                <el-popover
+                  placement='bottom-end'
+                  width='250'
+                  visible-arrow
+                  trigger='hover'>
+                  <div class='labelName'>{node.label}</div>
+                  <div class='funcListBox'>
+                    <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
+                      <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
+                      <span class='permissionsDel'>{this.$t('tools.delete')}</span>
+                    </div>
+                    <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
+                      <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
+                      <span class='permissionsEdit'>{this.$t('tools.edit')}</span>
+                    </div>
+                  </div>
+                  <i class='el-icon-more imgMore' slot='reference'></i>
+                </el-popover>
+              </span>
             </span>)
         } else {
           return (<span class='custom-tree-node'>
@@ -922,6 +926,7 @@
         this.forms.parent_id = ''
         this.forms.name = ''
         this.forms.desc = ''
+        this.forms.serial_no = ''
       },
       deleteResourcesType(data) {
         spuTypesDel(data.id).then(res => {
@@ -946,6 +951,7 @@
         this.forms.parent_id = ''
         this.forms.name = ''
         this.forms.desc = ''
+        this.forms.serial_no = ''
         this.cascaderDisabled = false
         this.FormVisible = true
         this.parentType = []
