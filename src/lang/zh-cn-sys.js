@@ -59,5 +59,8 @@ export default {
   delCardTip: '确定删除该银行卡信息',
   permission: '权限',
   permission_view: '查看',
-  permission_opt: '操作'
+  permission_opt: '操作',
+  lngAndlat: '经纬度',
+  lng: '经度',
+  lat: '纬度'
 }

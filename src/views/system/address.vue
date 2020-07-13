@@ -58,6 +58,14 @@
             <el-form-item :label="$t('sys.addr')">
               <el-input v-model="form.addr"></el-input>
             </el-form-item>
+            <el-form-item :label="$t('sys.lngAndlat')">
+              <el-col :span="8">
+                <el-input v-model="form.lng" :placeholder="$t('sys.lng')"></el-input>
+              </el-col>
+              <el-col :span="8">
+                <el-input v-model="form.lat" :placeholder="$t('sys.lat')"></el-input>
+              </el-col>
+            </el-form-item>
             <el-form-item :label="$t('sys.default')">
               <el-checkbox v-model="form.default"></el-checkbox>
             </el-form-item>
@@ -123,7 +131,9 @@
             default: false,
             contacter_name: '',
             mobile: '',
-            area_code: ''
+            area_code: '',
+            lng: 0,
+            lat: 0
           }
         }
       },
