@@ -70,7 +70,7 @@ export default {
   dpTypeTip1: '请先设置店铺分类',
   dpTypeTip2: '请选择商品所属店铺分类',
   nameTip: '请设置商品名称',
-  imgTip: '请上传商品介绍图，且不少于2张',
+  imgTip: '请上传商品介绍图',
   ipTip: '请至少设置一种商品规格以及价格',
   postageRuleTip: '请选择邮费规则',
   addressIdTip: '请选择发货地',

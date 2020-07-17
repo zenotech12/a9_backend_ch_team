@@ -984,7 +984,7 @@
               this.$message.error(this.$t('goods.ipTip'))
               return false
             }
-            if (this.goodsData.images.length < 2) {
+            if (this.goodsData.images.length < 1) {
               this.$message.error(this.$t('goods.imgTip'))
               return false
             }

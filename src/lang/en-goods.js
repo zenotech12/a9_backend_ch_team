@@ -70,7 +70,7 @@ export default {
   dpTypeTip1: 'Please set the store category first',
   dpTypeTip2: 'Please select the category of the store to which the product belongs',
   nameTip: 'Please set the product name',
-  imgTip: 'Please upload product pictures, and no less than 2',
+  imgTip: 'Please upload product pictures',
   ipTip: 'Please set at least one product specification and price',
   postageRuleTip: 'Please select the postage rule',
   addressIdTip: 'Please select the place of shipment',
