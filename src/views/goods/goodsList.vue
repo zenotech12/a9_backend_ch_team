@@ -474,7 +474,7 @@
         currentGoods: '',
         formRules: {
           name: [
-            { required: true, message: '请输入商品分类的名称', trigger: 'blur' }
+            { required: true, message: this.$t('goods.pleaseEnterGoodsTypeName'), trigger: 'blur' }
           ]
         },
         // 商品类型
@@ -501,7 +501,7 @@
         goodsType: [this.$t('goods.goodsType1'), this.$t('goods.goodsType2'), this.$t('goods.goodsType3')],
         putAwayType: [this.$t('goods.putawayE'), this.$t('goods.putawayC')],
         secondArr: [{ label: 0.5, value: 1800 }, { label: 1, value: 3600 }, { label: 2, value: 7200 }, { label: 5, value: 18000 }],
-        editTitle: '发布资源',
+        editTitle: this.$t('goods.publishResources'),
         disabled: false,
         promptInfor: this.$t('goods.delTip'),
         searchForm: {

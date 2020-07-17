@@ -5,9 +5,9 @@
     </el-input>
     <div v-else>
       <el-tag :key="goods.id" v-for="(goods, k) in selectedGoods" closable :disable-transitions="false"  @close="deleteSelectedGoods(k)">{{goods.name}}</el-tag>
-      <el-button icon="el-icon-search" @click="showGoodsTable" size="mini"></el-button>
+      <el-button icon="el-icon-search" @click="showGoodsTable1" size="mini"></el-button>
     </div>
-    <el-dialog :title="$t('goods.selectorTitle')"  v-if="dialogFormVisible" :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
+    <el-dialog :title="$t('goods.selectorTitle')" v-if="dialogFormVisible" :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
       <!-- 搜索 -->
       <el-row>
         <el-col :span="24" style="padding: 3px">
@@ -26,7 +26,7 @@
               </el-select>
             </el-form-item>
             <el-form-item style="width: 150px">
-              <el-select v-model="searchForm.shelf_status" :disabled="shelfDisable" @change="search" placeholder="请选择上架状态">
+              <el-select v-model="searchForm.shelf_status" :disabled="shelfDisable" @change="search" :placeholder="$t('goods.displaySelectorHolder')">
                 <el-option
                   v-for="item in shelfStatus"
                   :key="item.value"
@@ -36,7 +36,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="searchForm.key" placeholder="请输入关键字" clearable></el-input>
+              <el-input v-model="searchForm.key" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
             </el-form-item>
             <el-form-item class="searchBtn">
               <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
@@ -46,11 +46,11 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-table ref="goodsDataTable" row-key="id" stripe v-loading="tableData.loading" :data="tableData.body" style="width: 100%" highlight-current-row @current-change="selectGoodsChange">
-            <el-table-column v-if="mulit" width="55">
-              <template  slot-scope="scope">
-                <el-checkbox :checked="isSelected(scope.row)" @change="mulitSelectGoodsChange(scope.row)"></el-checkbox>
-              </template>
+          <el-table ref="goodsDataTable" row-key="id" stripe v-loading="tableData.loading" @selection-change="handleSelectionChange" :data="tableData.body" style="width: 100%" highlight-current-row @current-change="selectGoodsChange">
+            <el-table-column v-if="mulit" type="selection" width="55">
+              <!--<template  slot-scope="scope">-->
+                <!--<el-checkbox :checked="isSelected(scope.row)" @change="mulitSelectGoodsChange(scope.row)"></el-checkbox>-->
+              <!--</template>-->
             </el-table-column>
             <el-table-column prop="name" width="50">
               <template  slot-scope="scope">
@@ -68,7 +68,7 @@
             <el-table-column :label="$t('goods.putaway')">
               <template  slot-scope="scope">
                 <el-tag v-if="scope.row.approve_status === 2" @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
-                  {{scope.row.shelf_status === 2 ? '已上架' : '已下架'}}
+                  {{scope.row.shelf_status === 2 ? $t('goods.hasBeenAddedTo') : $t('goods.removed')}}
                 </el-tag>
                 <template v-else>
                   --
@@ -133,27 +133,27 @@
         approveStatus: [
           {
             value: 0,
-            label: '所有'
+            label: this.$t('goods.all')
           }, {
             value: 1,
-            label: '待审批'
+            label: this.$t('goods.pending')
           }, {
             value: 2,
-            label: '审批成功'
+            label: this.$t('goods.approvalSuccess')
           }, {
             value: 3,
-            label: '拒绝'
+            label: this.$t('goods.refuse')
           }],
         shelfStatus: [
           {
             value: 0,
-            label: '所有'
+            label: this.$t('goods.whole')
           }, {
             value: 1,
-            label: '未上架'
+            label: this.$t('goods.notListed')
           }, {
             value: 2,
-            label: '上架'
+            label: this.$t('goods.shangJia')
           }],
         itemCount: 0,
         tableData: {
@@ -166,7 +166,8 @@
         selectedGoods: [],
         dialogFormVisible: false,
         submitDisabled: false,
-        selectedGoodsIds: ''
+        selectedGoodsIds: '',
+        multipleSelection: []
       }
     },
     model: {
@@ -237,7 +238,7 @@
       },
       goodsId: {
         handler(val) {
-          console.log(val, 'xx')
+          // console.log(val, 'xx')
           if (val !== '' && val.length >= 24) {
             if (!this.mulit) {
               if (this.goodsInfo.id !== val) {
@@ -283,8 +284,32 @@
     computed: {
     },
     methods: {
+      handleSelectionChange(val) {
+        this.selectedGoods = val
+        this.selectedGoodsIds = []
+        val.forEach(res => {
+          this.selectedGoodsIds.push(res.id)
+        })
+        this.emitGoodsIds()
+      },
+      toggleSelection(rows) {
+        if (rows) {
+          // debugger
+          rows.forEach(row => {
+            this.$refs.goodsDataTable.toggleRowSelection(row, true)
+          })
+        } else {
+          this.$refs.goodsDataTable.clearSelection()
+        }
+      },
       showGoodsTable() {
         this.dialogFormVisible = true
+      },
+      showGoodsTable1() {
+        this.dialogFormVisible = true
+        this.$nextTick(() => {
+          this.toggleSelection(this.selectedGoods)
+        })
       },
       sizeChangeFunc() {
 
@@ -365,10 +390,13 @@
       },
       saveSelectedFunc() {
         this.dialogFormVisible = false
+        this.emitGoodsIds()
       },
       deleteSelectedGoods(k) {
         this.selectedGoodsIds.splice(this.selectedGoodsIds.indexOf(this.selectedGoods[k].id), 1)
         this.selectedGoods.splice(k, 1)
+        console.log('selectedGoodsIds', this.selectedGoodsIds)
+        console.log('selectedGoods', this.selectedGoods)
         this.emitGoodsIds()
       },
       emitGoodsIds() {

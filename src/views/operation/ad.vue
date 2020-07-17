@@ -106,9 +106,9 @@
                 v-model="showTime"
                 type="datetimerange"
                 value-format = "yyyy-MM-dd HH:mm:ss"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                :range-separator="$t('tools.to')"
+                :start-placeholder="$t('tools.startDate')"
+                :end-placeholder="$t('tools.endDate')"
                 align="right">
               </el-date-picker>
             </el-form-item>

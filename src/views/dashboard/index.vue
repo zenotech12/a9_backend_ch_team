@@ -107,6 +107,9 @@
         })
       },
       gotoUrl(url, params) {
+        if (url === '/order/evaluate' && !this.permissionCheck('view', '3_3')) {
+          return
+        }
         let pushUrl = {}
         if (params) {
           pushUrl = { name: url, params: params }

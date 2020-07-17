@@ -114,5 +114,16 @@ export default {
   salePrice: '卖价',
   originalPrice: '原价',
   recommendTag: '推荐词',
-  serialNo: '排序'
+  serialNo: '排序',
+  notListed: '未上架',
+  shangJia: '上架',
+  refuse: '拒绝',
+  approvalSuccess: '审批成功',
+  pending: '待审批',
+  all: '所有',
+  publishResources: '发布资源',
+  pleaseEnterGoodsTypeName: '请输入商品分类的名称',
+  delCurrentResources: '确定删除当前资源?',
+  hasBeenAddedTo: '已上架',
+  removed: '已下架'
 }
