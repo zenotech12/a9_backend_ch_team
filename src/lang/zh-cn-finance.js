@@ -25,5 +25,7 @@ export default {
   txStatus3: '被取消',
   tixianTip1: '请正确设置提现金额',
   tixianTip2: '请选择提现对应银行卡',
-  tixianTip3: '请先设置银行'
+  tixianTip3: '请先设置银行',
+  timeSpan: '时段',
+  moneyChange: '变化金额'
 }

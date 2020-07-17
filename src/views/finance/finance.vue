@@ -18,7 +18,36 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100vh - 200px)">
+            <el-form :inline="true" :model="searchForm">
+              <el-form-item :label="$t('finance.timeSpan')">
+                <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
+                                v-model="searchTimes"
+                                type="daterange"
+                                align="right"
+                                unlink-panels
+                                :range-separator="$t('tools.to')"
+                                :start-placeholder="$t('tools.startDate')"
+                                :end-placeholder="$t('tools.endDate')">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item :label="$t('finance.moneyChange')">
+                <el-row type="flex" >
+                  <el-col :span="11" style="padding-top: 4px">
+                    <price-input :can-clear="true" style="width: 150px" v-model="searchForm.change_min"></price-input>
+                  </el-col>
+                  <el-col :span="2" style="text-align: center; width: 20px; height: 40px">-</el-col>
+                  <el-col :span="11"  style="padding-top: 4px">
+                    <price-input :can-clear="true" style="width: 150px" v-model="searchForm.change_max"></price-input>
+                  </el-col>
+                </el-row>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <el-col :span="24">
+            <div style="height: calc(100vh - 260px)">
               <el-table stripe border :data="tableData" height="calc(100% - 50px)">
                 <el-table-column  :label="$t('finance.type')">
                   <template  slot-scope="scope">
@@ -101,7 +130,12 @@
         tixianMoney: 0,
         bankCard: [],
         selectCard: '',
+        searchTimes: [],
         searchForm: {
+          bt: '',
+          et: '',
+          change_min: 0,
+          change_max: 0,
           skip: 0,
           limit: pz
         }
@@ -117,9 +151,21 @@
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
+      },
+      searchTimes(val) {
+        if (val && val.length >= 2) {
+          this.searchForm.bt = val[0]
+          this.searchForm.et = val[1]
+        } else {
+          this.searchForm.bt = ''
+          this.searchForm.et = ''
+        }
       }
     },
     methods: {
+      search() {
+        this.getDataListFun()
+      },
       getBankCard() {
         bankCardsList({ skip: 0, limit: 100 }).then(res => {
           this.bankCard = res.items
