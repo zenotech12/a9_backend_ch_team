@@ -45,7 +45,7 @@
     },
     methods: {
       changeFunc(val) {
-        let p = parseInt(val * 100)
+        let p = Math.round(val * 100)
         if (isNaN(p)) {
           p = 0
           this.$message.error(this.$t('tools.priceTip'))
