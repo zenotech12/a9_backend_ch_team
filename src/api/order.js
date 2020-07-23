@@ -127,4 +127,12 @@ export function getExpressInfo(data) {
     params: data
   })
 }
+// 订单.各个状态数
+export function ordersCount(data) {
+  return request({
+    url: 'orders-count',
+    method: 'get',
+    params: data
+  })
+}
 

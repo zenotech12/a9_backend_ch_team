@@ -322,7 +322,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo } from '@/api/order'
+  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo } from '@/api/order'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import store from '@/store'
@@ -415,6 +415,20 @@
       }
     },
     methods: {
+      getOrderCount() {
+        const statuses = [0, 2, 4, 5, 7, 8, 10]
+        ordersCount({ 'statuses': JSON.stringify(statuses) }).then(res => {
+          if (res.meta === 0) {
+            res.items.forEach(item => {
+              this.orderStatusTab.forEach((Z, k) => {
+                if (Z.value === item.order_status.toString()) {
+                  this.orderStatusTab[k].label = this.orderStatusTab[k].label + '(' + item.order_count + ')'
+                }
+              })
+            })
+          }
+        })
+      },
       goodsPreview(row) {
         return 'https://www.a9kh.com/goods/' + row.spu_id + '.html'
         // this.currentGoods = appUrl + '/goods/info?id=' + row.id
@@ -573,6 +587,7 @@
       if (this.$route.params.bt || this.$route.params.et) {
         this.orderTimes = [this.$route.params.bt, this.$route.params.et]
       }
+      this.getOrderCount()
       this.getDataListFun()
     },
     created() {
