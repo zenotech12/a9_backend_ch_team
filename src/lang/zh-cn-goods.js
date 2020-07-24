@@ -125,5 +125,6 @@ export default {
   pleaseEnterGoodsTypeName: '请输入商品分类的名称',
   delCurrentResources: '确定删除当前资源?',
   hasBeenAddedTo: '已上架',
-  removed: '已下架'
+  removed: '已下架',
+  imgae: '商品图'
 }

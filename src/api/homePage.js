@@ -26,3 +26,20 @@ export function statisticsUserConsumeTime(data) {
     data: data
   })
 }
+
+// 统计.数量统计v2
+export function statisticsCountV2(data) {
+  return request({
+    url: 'statistics/v2/count',
+    method: 'get',
+    params: data
+  })
+}
+// 统计.排行榜
+export function rankingList(data) {
+  return request({
+    url: 'statistics/spu/ranking-list',
+    method: 'get',
+    params: data
+  })
+}

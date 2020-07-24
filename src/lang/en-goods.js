@@ -113,5 +113,6 @@ export default {
   salePrice: 'Selling Price',
   originalPrice: 'Original Price',
   recommendTag: 'Recommendation',
-  serialNo: 'Sort'
+  serialNo: 'Sort',
+  imgae: 'Commodity Picture'
 }

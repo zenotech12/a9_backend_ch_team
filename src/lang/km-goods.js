@@ -103,5 +103,6 @@ export default {
   addressSetTip: 'កំណត់អស័យដ្ឋានt',
   postageSet: 'ច្បាប់នៃការដឹកជញ្ជូន',
   dpTypeSet: 'ប្រភេទទំនិញ',
-  weight: 'ទម្ងន់'
+  weight: 'ទម្ងន់',
+  imgae: 'រូបភាពទំនិញ'
 }

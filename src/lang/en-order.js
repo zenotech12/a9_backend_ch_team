@@ -102,5 +102,23 @@ export default {
   userName: 'Contacter Name',
   userPhone: 'Mobile',
   zwddwl: 'No order logistics information',
-  modifyExpress: 'Modify Express'
+  modifyExpress: 'Modify Express',
+  includePostage: '含运费',
+  businessBz: '商家备注',
+  orderNumber: '订单数',
+  customerPrice: '客单价',
+  refundAmountSale: '售中申请退款金额',
+  paymentAmount: '支付金额',
+  pageviews: '浏览量',
+  visitorsNumber: '访客数',
+  type: '类型',
+  pleaseChooseType: '请选择类型',
+  view: '视图',
+  leaderboard: '排行榜',
+  pageviewRanking: '浏览量排行榜',
+  visitorsRanking: '访客数排行榜',
+  paymentRanking: '支付金额排行榜',
+  addShopRanking: '加购物车排行榜',
+  starRanking: '收藏排行榜'
+
 }
