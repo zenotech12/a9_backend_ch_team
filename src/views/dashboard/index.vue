@@ -159,17 +159,21 @@
           </el-row>
           <el-table stripe border :data="tableData" height="400">
             <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
-            <el-table-column :label="$t('goods.imgae')">
+            <el-table-column :label="$t('order.goods')">
               <template slot-scope="scope">
-                <el-popover v-for="(img, k) in scope.row.images" class="pointer"
-                            placement="right"
-                            title=""
-                            :key="k"
-                            trigger="click">
-                  <img :src="imgUrl + img" :key="k" height="480"/>
-                  <img slot="reference" :src="imgUrl +img" :key="k" style="margin-right:8px;max-height: 40px;max-width: 100px">
-                </el-popover>
+                <div>
+                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                    <div style="margin-left: 20px">
+                      {{scope.row.name}}
+                    </div>
+                  </a>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.pageviews')">
+              <template slot-scope="scope">
+                <span>{{scope.row.statistic_val}}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -205,17 +209,21 @@
           </el-row>
           <el-table stripe border :data="listVisit" height="400">
             <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
-            <el-table-column :label="$t('goods.imgae')">
+            <el-table-column :label="$t('order.goods')">
               <template slot-scope="scope">
-                <el-popover v-for="(img, k) in scope.row.images" class="pointer"
-                            placement="right"
-                            title=""
-                            :key="k"
-                            trigger="click">
-                  <img :src="imgUrl + img" :key="k" height="480"/>
-                  <img slot="reference" :src="imgUrl +img" :key="k" style="margin-right:8px;max-height: 40px;max-width: 100px">
-                </el-popover>
+                <div>
+                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                    <div style="margin-left: 20px">
+                      {{scope.row.name}}
+                    </div>
+                  </a>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.visitorsNumber')">
+              <template slot-scope="scope">
+                <span>{{scope.row.statistic_val}}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -251,17 +259,21 @@
           </el-row>
           <el-table stripe border :data="listPaid" height="400">
             <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
-            <el-table-column :label="$t('goods.imgae')">
+            <el-table-column :label="$t('order.goods')">
               <template slot-scope="scope">
-                <el-popover v-for="(img, k) in scope.row.images" class="pointer"
-                            placement="right"
-                            title=""
-                            :key="k"
-                            trigger="click">
-                  <img :src="imgUrl + img" :key="k" height="480"/>
-                  <img slot="reference" :src="imgUrl +img" :key="k" style="margin-right:8px;max-height: 40px;max-width: 100px">
-                </el-popover>
+                <div>
+                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                    <div style="margin-left: 20px">
+                      {{scope.row.name}}
+                    </div>
+                  </a>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.paymentAmount')">
+              <template slot-scope="scope">
+                <span>{{scope.row.statistic_val | price}}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -297,17 +309,21 @@
           </el-row>
           <el-table stripe border :data="listAddCart" height="400">
             <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
-            <el-table-column :label="$t('goods.imgae')">
+            <el-table-column :label="$t('order.goods')">
               <template slot-scope="scope">
-                <el-popover v-for="(img, k) in scope.row.images" class="pointer"
-                            placement="right"
-                            title=""
-                            :key="k"
-                            trigger="click">
-                  <img :src="imgUrl + img" :key="k" height="480"/>
-                  <img slot="reference" :src="imgUrl +img" :key="k" style="margin-right:8px;max-height: 40px;max-width: 100px">
-                </el-popover>
+                <div>
+                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                    <div style="margin-left: 20px">
+                      {{scope.row.name}}
+                    </div>
+                  </a>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.addShopCart')">
+              <template slot-scope="scope">
+                <span>{{scope.row.statistic_val}}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -343,17 +359,21 @@
           </el-row>
           <el-table stripe border :data="listStar" height="400">
             <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
-            <el-table-column :label="$t('goods.imgae')">
+            <el-table-column :label="$t('order.goods')">
               <template slot-scope="scope">
-                <el-popover v-for="(img, k) in scope.row.images" class="pointer"
-                            placement="right"
-                            title=""
-                            :key="k"
-                            trigger="click">
-                  <img :src="imgUrl + img" :key="k" height="480"/>
-                  <img slot="reference" :src="imgUrl +img" :key="k" style="margin-right:8px;max-height: 40px;max-width: 100px">
-                </el-popover>
+                <div>
+                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                    <div style="margin-left: 20px">
+                      {{scope.row.name}}
+                    </div>
+                  </a>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.favorites')">
+              <template slot-scope="scope">
+                <span>{{scope.row.statistic_val}}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -401,23 +421,23 @@
         listType: [
           {
             value: 'traffic',
-            label: '浏览量'
+            label: this.$t('order.pageviews')
           },
           {
             value: 'visit',
-            label: '访客数'
+            label: this.$t('order.visitorsNumber')
           },
           {
             value: 'paid',
-            label: '支付金额'
+            label: this.$t('order.paymentAmount')
           },
           {
             value: 'add_cart',
-            label: '加购物车'
+            label: this.$t('order.addShopCart')
           },
           {
             value: 'star',
-            label: '收藏'
+            label: this.$t('order.favorites')
           }
         ],
         tableData: [],
@@ -693,5 +713,9 @@
         }
       }
     }
+  }
+  .styleImgShow {
+    display: flex;
+    cursor: pointer;
   }
 </style>

@@ -123,6 +123,8 @@ export default {
   visitorsRanking: '访客数排行榜',
   paymentRanking: '支付金额排行榜',
   addShopRanking: '加购物车排行榜',
-  starRanking: '收藏排行榜'
+  starRanking: '收藏排行榜',
+  addShopCart: '加购物车',
+  favorites: '收藏'
 
 }
