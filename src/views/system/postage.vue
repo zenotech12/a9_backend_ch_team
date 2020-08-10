@@ -63,7 +63,7 @@
                   <div style="padding: 20px">
                     <el-popover
                       placement="top-start"
-                      width="600"
+                      width="800"
                       trigger="click">
                       <el-row  style="padding: 10px">
                         <el-col v-for="(i, j) in provinces" :span="6" :key="j">
