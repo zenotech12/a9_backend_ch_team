@@ -223,3 +223,20 @@ export function bankCardsDel(id) {
   })
 }
 
+// 支付密码.设置
+export function resetPayPass(data) {
+  return request({
+    url: 'purse/reset-paypass',
+    method: 'post',
+    data: data
+  })
+}
+
+// 发送验证码
+export function mobileCode(data) {
+  return request({
+    url: 'mobile/code',
+    method: 'post',
+    data: data
+  })
+}

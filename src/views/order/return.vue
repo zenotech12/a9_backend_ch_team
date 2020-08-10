@@ -171,6 +171,9 @@
                 </el-col>
               </el-row>
             </el-form-item>
+            <el-form-item :label="$t('sys.payPasswordSet')" v-if="returnOrder.status === 5" prop="pay_pass">
+              <el-input type="password" v-model="pay_pass" auto-complete="new-password" clearable></el-input>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer" v-if="permissionCheck('opt') && (returnOrder.status === 1 || returnOrder.status === 6)">
             <template v-if="returnOrder.status ===1">
@@ -223,7 +226,8 @@
         formEditDialog: false,
         submitDisabled: false,
         addressList: [],
-        expressageList: expressage
+        expressageList: expressage,
+        pay_pass: ''
       }
     },
     computed: {
@@ -256,11 +260,12 @@
         this.addressId = (data.merchant_shipping_address && data.merchant_shipping_address.id) ? data.merchant_shipping_address.id : this.defaultAddr
         this.expressCompany = ''
         this.expressNo = ''
+        this.pay_pass = ''
         this.formEditDialog = true
       },
       saveDataFunc(status) {
         this.submitDisabled = true
-        orderAfterSalesOpt(this.returnOrder.id, { status: status, address_id: this.addressId, amount: this.amount, express_company: this.expressCompany, express_no: this.expressNo }).then(res => {
+        orderAfterSalesOpt(this.returnOrder.id, { status: status, address_id: this.addressId, amount: this.amount, express_company: this.expressCompany, express_no: this.expressNo, pay_pass: this.pay_pass }).then(res => {
           this.$message.success(this.$t('order.returnTip'))
           this.submitDisabled = false
           this.getDataListFun()

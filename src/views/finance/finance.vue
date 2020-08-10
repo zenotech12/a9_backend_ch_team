@@ -98,6 +98,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item :label="$t('sys.payPasswordSet')" prop="pay_pass">
+              <el-input type="password" v-model="pay_pass" auto-complete="new-password" clearable></el-input>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -138,7 +141,8 @@
           change_max: 0,
           skip: 0,
           limit: pz
-        }
+        },
+        pay_pass: ''
       }
     },
     computed: {
@@ -181,6 +185,7 @@
           })
           return
         }
+        this.pay_pass = ''
         this.tixianMoney = this.balanceDetail.can_withdraw_balance
         this.formEditDialog = true
       },
@@ -196,7 +201,12 @@
           this.submitDisabled = false
           return
         }
-        tixianAdd({ money: this.tixianMoney, bank_card_id: this.selectCard }).then(res => {
+        if (this.pay_pass === '') {
+          this.$message.error(this.$t('sys.pleaseEnterPayPasswordSet'))
+          this.submitDisabled = false
+          return
+        }
+        tixianAdd({ money: this.tixianMoney, bank_card_id: this.selectCard, pay_pass: this.pay_pass }).then(res => {
           this.submitDisabled = false
           this.getBalanceDetail()
           this.getDataListFun()

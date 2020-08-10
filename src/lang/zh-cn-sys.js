@@ -62,5 +62,12 @@ export default {
   permission_opt: '操作',
   lngAndlat: '经纬度',
   lng: '经度',
-  lat: '纬度'
+  lat: '纬度',
+  setPayPass: '设置支付密码',
+  codePhone: '验证码',
+  enterCodePhone: '请输入验证码',
+  payPasswordSet: '支付密码',
+  enterPayPasswordSet: '请设置支付密码',
+  pleaseEnterPayPasswordSet: '请输入支付密码',
+  setPayPassSuccess: '支付密码设置成功'
 }
