@@ -136,3 +136,11 @@ export function ordersCount(data) {
   })
 }
 
+// 售后.数量获取
+export function afterSalesCount(data) {
+  return request({
+    url: 'after-sales-count',
+    method: 'get',
+    params: data
+  })
+}

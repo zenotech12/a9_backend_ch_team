@@ -290,15 +290,22 @@
             <template v-if="optType === 3">
               <p>{{$t('order.userChangeAdd')}}</p>
 <!--              <div style="display: flex">-->
-                <el-form-item :label="$t('order.province')" style="display: inline-block" >
-                  <el-input v-model="province" :placeholder="$t('order.province')" style="width: 200px"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('order.city')"  style="display: inline-block">
-                  <el-input v-model="city" :placeholder="$t('order.city')" style="width: 200px"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('order.area')" style="display: inline-block">
-                  <el-input v-model="area" :placeholder="$t('order.area')" style="width: 200px"></el-input>
-                </el-form-item>
+              <el-form-item :label="$t('order.provinceCityArea')" class="addressChooseBox">
+                <el-cascader
+                  v-model="addressArray"
+                  :options="optionsAddress"
+                  :props="typeProp"
+                  @change="handleChange"></el-cascader>
+              </el-form-item>
+                <!--<el-form-item :label="$t('order.province')" style="display: inline-block" >-->
+                  <!--<el-input v-model="province" :placeholder="$t('order.province')" style="width: 200px"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item :label="$t('order.city')"  style="display: inline-block">-->
+                  <!--<el-input v-model="city" :placeholder="$t('order.city')" style="width: 200px"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item :label="$t('order.area')" style="display: inline-block">-->
+                  <!--<el-input v-model="area" :placeholder="$t('order.area')" style="width: 200px"></el-input>-->
+                <!--</el-form-item>-->
                 <el-form-item :label="$t('order.addr')" style="display: inline-block" >
                   <el-input v-model="addr" :placeholder="$t('order.addr')" style="width: 200px"></el-input>
                 </el-form-item>
@@ -325,6 +332,7 @@
   import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo } from '@/api/order'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
+  import areaInfo from '@/utils/areaInfo'
   import store from '@/store'
   export default {
     components: {
@@ -379,7 +387,10 @@
         pageX: '',
         pageY: '',
         showOrderStatus: false,
-        expressRiderInfo: []
+        expressRiderInfo: [],
+        addressArray: [],
+        optionsAddress: [],
+        typeProp: { value: 'name', label: 'name', children: 'children' }
       }
     },
     computed: {
@@ -419,6 +430,9 @@
       }
     },
     methods: {
+      handleChange(val) {
+        console.log('val', val)
+      },
       getOrderCount() {
         const statuses = [0, 2, 4, 5, 7, 8, 10]
         ordersCount({ 'statuses': JSON.stringify(statuses) }).then(res => {
@@ -510,9 +524,10 @@
           this.dialogTitle = this.$t('order.changeAddress')
           this.userComment = data.comment
           this.comment = data.merchant_comment
-          this.province = data.shipping_address.address.province
-          this.city = data.shipping_address.address.city
-          this.area = data.shipping_address.address.district
+          this.addressArray = []
+          this.addressArray[0] = data.shipping_address.address.province
+          this.addressArray[1] = data.shipping_address.address.city
+          this.addressArray[2] = data.shipping_address.address.district
           this.addr = data.shipping_address.address.addr
           this.area_code = data.shipping_address.area_code
           this.userName = data.shipping_address.contacter_name
@@ -546,9 +561,9 @@
           })
         } else if (this.optType === 3) {
           const data = {
-            province: this.province,
-            city: this.city,
-            district: this.area,
+            province: this.addressArray[0],
+            city: this.addressArray[1],
+            district: this.addressArray[2],
             addr: this.addr,
             area_code: this.area_code,
             contacter_name: this.userName,
@@ -586,7 +601,29 @@
       }
     },
     mounted() {
-      console.log(this.$route)
+      // console.log(this.$route)
+      areaInfo.forEach(item => {
+        const obj = {
+          name: item.provinceInfo.name,
+          children: []
+        }
+        item.provinceInfo.districtInfos.forEach(dis => {
+          const disObj = {
+            name: dis.name,
+            children: []
+          }
+          dis.communes.forEach(city => {
+            const cityObj = {
+              name: city.name,
+              children: null
+            }
+            disObj.children.push(cityObj)
+          })
+          obj.children.push(disObj)
+        })
+        this.optionsAddress.push(obj)
+      })
+      // console.log('optionsAddress', this.optionsAddress)
       this.searchForm.order_status = this.$route.params.order_status ? this.$route.params.order_status : 0
       this.tab_order_status = this.searchForm.order_status + ''
       if (this.$route.params.bt || this.$route.params.et) {
@@ -655,5 +692,11 @@
   }
   .gt{
     color: #1E88E5;
+  }
+  .addressChooseBox {
+    /deep/
+    .el-cascader {
+      width: 100%;
+    }
   }
 </style>

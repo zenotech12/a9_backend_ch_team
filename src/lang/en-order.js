@@ -121,6 +121,7 @@ export default {
   addShopRanking: '加购物车排行榜',
   starRanking: '收藏排行榜',
   addShopCart: '加购物车',
-  favorites: '收藏'
+  favorites: '收藏',
+  provinceCityArea: '省市区'
 
 }

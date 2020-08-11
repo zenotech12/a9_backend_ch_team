@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="24">
             <el-tabs style="height: 40px" v-model="tab_status">
-              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatus"  :key="k" v-if="item" :label="item" :name="k + ''"></el-tab-pane>
+              <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatusTab"  :key="k" v-if="item.label" :label="item.label" :name="k + ''"></el-tab-pane>
             </el-tabs>
           </el-col>
           <el-col :span ="24">
@@ -193,7 +193,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { orderAfterSales, orderAfterSalesOpt } from '@/api/order'
+  import { orderAfterSales, orderAfterSalesOpt, afterSalesCount } from '@/api/order'
   import { shippingAddressesList } from '@/api/system'
   import expressage from '@/utils/expressage'
   export default {
@@ -205,6 +205,8 @@
         returnType: [this.$t('tools.all'), this.$t('order.returnType1'), this.$t('order.returnType2'), this.$t('order.returnType3')],
         orderStatus: [this.$t('tools.all'), this.$t('order.returnStatus1'), this.$t('order.returnStatus2'), this.$t('order.returnStatus3'), this.$t('order.returnStatus4'), this.$t('order.returnStatus5'),
           this.$t('order.returnStatus6'), '', this.$t('order.returnStatus8')],
+        orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
+          { value: '5', label: this.$t('order.returnStatus5') }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }],
         searchForm: {
           type: 0,
           order_no: '',
@@ -227,7 +229,8 @@
         submitDisabled: false,
         addressList: [],
         expressageList: expressage,
-        pay_pass: ''
+        pay_pass: '',
+        tabList: []
       }
     },
     computed: {
@@ -249,6 +252,20 @@
       }
     },
     methods: {
+      getAfterSalesCount() {
+        this.orderStatusTab = JSON.parse(JSON.stringify(this.tabList))
+        afterSalesCount({ type: this.searchForm.type }).then(res => {
+          if (res.meta === 0) {
+            res.items.forEach(item => {
+              this.orderStatusTab.forEach((Z, k) => {
+                if (Z.value === item.aftersale_status.toString()) {
+                  this.orderStatusTab[k].label = this.orderStatusTab[k].label + '(' + item.aftersale_count + ')'
+                }
+              })
+            })
+          }
+        })
+      },
       goodsPreview(row) {
         return 'https://www.a9kh.com/goods/' + row.spu_id + '.html'
         // this.currentGoods = appUrl + '/goods/info?id=' + row.id
@@ -291,6 +308,7 @@
       },
       search() {
         this.getDataListFun()
+        this.getAfterSalesCount()
       },
       getKuaidi100Url(com, nu) {
         return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
@@ -298,8 +316,10 @@
     },
     mounted() {
       console.log(this.$route.params)
+      this.tabList = JSON.parse(JSON.stringify(this.orderStatusTab))
       this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
       this.getDataListFun()
+      this.getAfterSalesCount()
       this.getAddressListFunc()
     },
     created() {
