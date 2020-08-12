@@ -171,7 +171,7 @@
                 </el-col>
               </el-row>
             </el-form-item>
-            <el-form-item :label="$t('sys.payPasswordSet')" v-if="returnOrder.status === 5" prop="pay_pass">
+            <el-form-item :label="$t('sys.payPasswordSet')" v-if="returnOrder.status === 1 && returnOrder.type === 3" prop="pay_pass">
               <el-input type="password" v-model="pay_pass" auto-complete="new-password" clearable></el-input>
             </el-form-item>
           </el-form>
