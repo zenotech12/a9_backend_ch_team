@@ -515,6 +515,12 @@
                 obj.index = index
                 res.items.push(obj)
               })
+            } else {
+              const obj = JSON.parse(str)
+              obj.quote = { province: [], price_base: 0, price_step: 0, base: 0, step: 0 }
+              obj.settings = [{ province: [], price_base: 0, price_step: 0, base: 0, step: 0 }]
+              obj.index = 0
+              res.items.push(obj)
             }
           }
           this.tablePostage = res.items.filter(res => {
