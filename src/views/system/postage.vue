@@ -23,17 +23,17 @@
                   </el-table-column>
                   <el-table-column :label="$t('sys.region')">
                     <template slot-scope="scope">
-                      <span>{{scope.row.quote.province.join(',')}}</span>
+                      <span v-if="scope.row.quote">{{scope.row.quote.province.join(',')}}</span>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('sys.firstWeight')">
                     <template slot-scope="scope">
-                      <span>{{scope.row.quote.price_base |price}}</span>
+                      <span v-if="scope.row.quote">{{scope.row.quote.price_base |price}}</span>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('sys.addWeight')">
                     <template slot-scope="scope">
-                      <span>{{scope.row.quote.price_step | price}}</span>
+                      <span v-if="scope.row.quote">{{scope.row.quote.price_step | price}}</span>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('tools.opt')"  v-if="permissionCheck('opt')">
@@ -520,6 +520,7 @@
           this.tablePostage = res.items.filter(res => {
             return res.quote
           })
+          // this.tablePostage = res.items
           console.log(this.tablePostage)
         })
       }

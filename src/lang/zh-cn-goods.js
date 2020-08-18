@@ -127,5 +127,7 @@ export default {
   hasBeenAddedTo: '已上架',
   removed: '已下架',
   imgae: '商品图',
-  backGoodsList: '返回商品列表'
+  backGoodsList: '返回商品列表',
+  successTip: '成功提示',
+  lookGoodsInfo: '查看商品详情'
 }

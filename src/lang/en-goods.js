@@ -115,5 +115,7 @@ export default {
   recommendTag: 'Recommendation',
   serialNo: 'Sort',
   imgae: 'Commodity Picture',
-  backGoodsList: 'Return to product list'
+  backGoodsList: 'Return to product list',
+  successTip: '成功提示',
+  lookGoodsInfo: '查看商品详情'
 }

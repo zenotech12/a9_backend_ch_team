@@ -105,5 +105,7 @@ export default {
   dpTypeSet: 'ប្រភេទទំនិញ',
   weight: 'ទម្ងន់',
   imgae: 'រូបភាពទំនិញ',
-  backGoodsList: 'ត្រឡប់ទៅបញ្ជីផលិតផលវិញ'
+  backGoodsList: 'ត្រឡប់ទៅបញ្ជីផលិតផលវិញ',
+  successTip: '成功提示',
+  lookGoodsInfo: '查看商品详情'
 }

@@ -149,7 +149,8 @@
                   <el-table-column :label="$t('tools.opt')" width = "190" fixed="right" v-if="permissionCheck('opt')">
                     <template slot-scope="scope">
                       <template v-if="!scope.row.deleted">
-                        <el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
+                        <a :href="'/goods/publish?id=' + scope.row.id" target="_blank" style="color: #1E88E5">{{$t('tools.edit')}}</a>
+                        <!--<el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>-->
                         <span class="xiexian">/</span>
                         <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">{{$t('goods.piEdit')}}</el-button>
                         <span class="xiexian">/</span>
@@ -458,7 +459,6 @@
   import service from '@/utils/request'
   import llEditor from '@/components/LLEditor'
   import { mapGetters } from 'vuex'
-  // import { appUrl } from '@/utils/serverConfig'
   export default {
     components: {
       llEditor

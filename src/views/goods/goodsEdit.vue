@@ -343,6 +343,21 @@
         <confirm-button @confirmButton="saveFunc" :disabled="disabled" :confirmButtonInfor="$t('goods.saveGoods')"></confirm-button>
         <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('goods.backGoodsList')}}</el-button>
       </div>
+      <el-dialog :title="$t('goods.successTip')" width="30%" @close="showSuccessTip = false" :visible.sync="showSuccessTip" :close-on-click-modal="false" center>
+        <el-row>
+          <el-col :span="24" style="text-align: center">
+            <span>{{$t('goods.saveTip2')}}</span>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24" style="text-align: center">
+            <el-button @click="showCurrentGoodsInfo" size="medium" type="text">{{$t('goods.lookGoodsInfo')}}</el-button>
+          </el-col>
+        </el-row>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="showSuccessTip = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.close')}}</el-button>
+        </div>
+      </el-dialog>
     </template>
   </div>
 </template>
@@ -504,7 +519,8 @@
         propeditingTag: '',
         propeditingTagOld: '',
         propeditingIndex: 0,
-        propeditingTagIndex: 0
+        propeditingTagIndex: 0,
+        showSuccessTip: false
       }
     },
     created() {
@@ -1047,7 +1063,8 @@
           spusModify(this.goodsData.id, goodsItem).then(res => {
             this.goodsData.id = res.error
             this.disabled = false
-            this.$message.success(this.$t('goods.saveTip2'))
+            // this.$message.success(this.$t('goods.saveTip2'))
+            this.showSuccessTip = true
           }).catch(() => {
             this.disabled = false
           })
@@ -1093,6 +1110,12 @@
       },
       deleteProps(k) {
         this.goodsProps.splice(k, 1)
+      },
+      showCurrentGoodsInfo() {
+        const id = this.$route.query.id
+        if (id && id.length === 24) {
+          window.location.href = 'https://www.a9kh.com/goods/' + id + '.html'
+        }
       }
     }
   }
