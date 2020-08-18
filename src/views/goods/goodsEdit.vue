@@ -341,7 +341,7 @@
       </div>
       <div class="page-footer">
         <confirm-button @confirmButton="saveFunc" :disabled="disabled" :confirmButtonInfor="$t('goods.saveGoods')"></confirm-button>
-        <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
+        <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('goods.backGoodsList')}}</el-button>
       </div>
     </template>
   </div>
@@ -1058,7 +1058,7 @@
             this.disabled = false
             this.$confirm(this.$t('goods.saveTip1'), this.$t('tools.prompt'), {
               confirmButtonText: this.$t('tools.confirm'),
-              cancelButtonText: this.$t('tools.cancel'),
+              cancelButtonText: this.$t('goods.backGoodsList'),
               type: 'success'
             }).then(() => {
               this.$router.go(0)

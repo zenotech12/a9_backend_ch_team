@@ -104,5 +104,6 @@ export default {
   postageSet: 'ច្បាប់នៃការដឹកជញ្ជូន',
   dpTypeSet: 'ប្រភេទទំនិញ',
   weight: 'ទម្ងន់',
-  imgae: 'រូបភាពទំនិញ'
+  imgae: 'រូបភាពទំនិញ',
+  backGoodsList: 'ត្រឡប់ទៅបញ្ជីផលិតផលវិញ'
 }

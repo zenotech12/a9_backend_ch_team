@@ -114,5 +114,6 @@ export default {
   originalPrice: 'Original Price',
   recommendTag: 'Recommendation',
   serialNo: 'Sort',
-  imgae: 'Commodity Picture'
+  imgae: 'Commodity Picture',
+  backGoodsList: 'Return to product list'
 }

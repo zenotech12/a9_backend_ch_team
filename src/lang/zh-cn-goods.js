@@ -126,5 +126,6 @@ export default {
   delCurrentResources: '确定删除当前资源?',
   hasBeenAddedTo: '已上架',
   removed: '已下架',
-  imgae: '商品图'
+  imgae: '商品图',
+  backGoodsList: '返回商品列表'
 }
