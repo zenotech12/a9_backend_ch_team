@@ -363,7 +363,7 @@
 </template>
 
 <script>
-  import { spusAdd, spusInfo, spusModify, spuTypesList, spusSkusList } from '@/api/goods'
+  import { spusAdd, spusInfo, spusModify, spuTypesList, spusSkusList, draftsAdd, draftsInfo, draftsDel } from '@/api/goods'
   import { shippingAddressesList, postagesList } from '@/api/system'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
@@ -524,14 +524,24 @@
       }
     },
     created() {
-
+      this.getTypeGoodsBaseInfo()
       // this.$store.state.user.funcListName = '资源列表'
       // this.$store.state.user.pathRouter = false
     },
     mounted() {
       // this.loading = false
       // return
-      this.getTypeGoodsBaseInfo()
+      const id = this.$route.query.id
+      console.log('id', id)
+      if (!id) {
+        this.getDraftsInfo()
+        const timer = setInterval(() => {
+          this.saveGoodsTime()
+        }, 30000)
+        this.$once('hook:beforeDestroy', () => {
+          clearInterval(timer)
+        })
+      }
       // this.loading = false
       this.getAddressListFunc()
       this.getPostageListFunc()
@@ -640,6 +650,124 @@
       }
     },
     methods: {
+      getDraftsInfo() {
+        draftsInfo({ classify: 'spu' }).then(res => {
+          if (res.meta === 0) {
+            if (res.item.need_recover) {
+              this.$confirm(this.$t('goods.noSaveGoodsTip'), this.$t('tools.prompt'), {
+                confirmButtonText: this.$t('goods.lijihuifusuju'),
+                cancelButtonText: this.$t('goods.cancelhuifusuju'),
+                type: 'success'
+              }).then(() => {
+                const data = JSON.parse(res.item.content)
+                // console.log('fff', data)
+                this.backItem(data)
+              }).catch(() => {
+                draftsDel({ classify: 'spu' }).then(res => {})
+              })
+            }
+          }
+        })
+      },
+      backItem(data) {
+        this.goodsProps = []
+        this.goodsSysTypes = []
+        this.goodsSysTypeFields = []
+        getPathById(data.default_type_id, this.sysTypes, (res, node) => {
+          this.goodsSysTypes = res
+          const fields = node.data.fields
+          fields.forEach(fi => {
+            const fitem = { code: fi.code, name: fi.name, type: fi.type }
+            if (fitem.type === 'select' || fitem.type === 'mulitselect') {
+              fitem['param'] = JSON.parse(fi.param)
+            }
+            this.goodsSysTypeFields.push(fitem)
+          })
+        })
+        const fieldsData = {}
+        this.goodsSysTypeFields.forEach(fi => {
+          if (fi.type === 'mulitselect') {
+            fieldsData[fi.code] = JSON.parse(data.fields[fi.code])
+          } else {
+            fieldsData[fi.code] = data.fields[fi.code]
+          }
+        })
+        this.goodsTypes = []
+        data.merchant_type_ids && data.merchant_type_ids.forEach(item => {
+          getPathById(item, this.typeData, (res) => {
+            this.goodsTypes.push(res)
+            console.log('this.goodsTypes', this.goodsTypes)
+          })
+        })
+        this.langInfo = data.lang ? data.lang : {}
+        this.goodsData = {
+          id: '',
+          default_type_id: data.default_type_id,
+          fields: fieldsData,
+          merchant_type_ids: data.merchant_type_ids,
+          name: data.name,
+          intro: data.intro,
+          type: data.type,
+          cobuy_person_count: data.cobuy ? data.cobuy.person_count : 0,
+          cobuy_group_valid_sec: data.cobuy ? data.cobuy.cobuy_group_valid_sec : 0,
+          images: data.images,
+          desc: data.desc,
+          shelf_status: data.shelf_status === 2 ? 2 : 1,
+          shelf_time: data.shelf_time !== '--' ? data.shelf_time : this.$moment().format('YYYY-MM-DD HH:mm:ss'),
+          address_id: data.address_id,
+          postage_setting_id: data.postage_setting_id,
+          rider_post_support: data.rider_post_support,
+          buy_limit: data.buy_limit ? data.buy_limit : 0,
+          buy_limit_day: data.buy_limit_day ? data.buy_limit_day : 0
+        }
+        this.xgType = data.buy_limit > 0 ? 2 : 1
+        this.isSetShelfTime = false
+        if (data.shelf_time !== '--' && data.shelf_time > this.$moment().format('YYYY-MM-DD HH:mm:ss')) {
+          this.isSetShelfTime = true
+        }
+        this.goodsInventoryData = data.skus
+        this.goodsProps = data.spectification_options
+      },
+      saveGoodsTime() {
+        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: this.goodsData.merchant_type_ids, name: this.goodsData.name, intro: this.goodsData.intro,
+          type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: this.goodsData.images,
+          buy_limit: this.goodsData.buy_limit, buy_limit_day: this.goodsData.buy_limit_day, desc: this.goodsData.desc }
+        goodsItem['postage_setting_id'] = this.goodsData.postage_setting_id
+        goodsItem['rider_post_support'] = this.goodsData.rider_post_support
+        goodsItem['address_id'] = this.goodsData.address_id
+        this.goodsInventoryTable.forEach((item) => {
+          item.weight = parseFloat(item.weight)
+        })
+        goodsItem['skus'] = this.goodsInventoryTable
+        goodsItem['spectification_options'] = this.goodsProps
+        this.repaireLangSet()
+        var tempLang = JSON.parse(JSON.stringify(this.langInfo))
+        const lKys = Object.keys(tempLang)
+        lKys.forEach(lk => {
+          tempLang[lk].images = tempLang[lk].images
+          tempLang[lk].spectification_options = tempLang[lk].spectification_options
+          tempLang[lk].specifications_sku_ids = ''
+          tempLang[lk].fields = ''
+        })
+        goodsItem['lang'] = tempLang
+        const filedItem = {}
+        for (const key in this.goodsData.fields) {
+          if (Array.isArray(this.goodsData.fields[key])) {
+            filedItem[key] = JSON.stringify(this.goodsData.fields[key])
+          } else {
+            filedItem[key] = this.goodsData.fields[key]
+          }
+        }
+        goodsItem['fields'] = filedItem
+        const form = {
+          content: JSON.stringify(goodsItem),
+          // content: goodsItem,
+          classify: 'spu'
+        }
+        draftsAdd(form).then(res => {
+        })
+        console.log('form', form)
+      },
       inventoryTableSpanMethod({ row, column, rowIndex, columnIndex }) {
         let spanColumn = 7
         if (this.goodsData.id !== '') {
@@ -885,7 +1013,6 @@
               fieldsData[fi.code] = data.fields[fi.code]
             }
           })
-
           this.goodsTypes = []
           data.merchant_type_ids && data.merchant_type_ids.forEach(item => {
             getPathById(item, this.typeData, (res) => {
@@ -1073,6 +1200,7 @@
           spusAdd(goodsItem).then(res => {
             this.goodsData.id = res.error
             this.disabled = false
+            draftsDel({ classify: 'spu' }).then(res => {})
             this.$confirm(this.$t('goods.saveTip1'), this.$t('tools.prompt'), {
               confirmButtonText: this.$t('tools.confirm'),
               cancelButtonText: this.$t('goods.backGoodsList'),

@@ -116,6 +116,9 @@ export default {
   serialNo: 'Sort',
   imgae: 'Commodity Picture',
   backGoodsList: 'Return to product list',
-  successTip: '成功提示',
-  lookGoodsInfo: '查看商品详情'
+  successTip: 'Success tips',
+  lookGoodsInfo: 'View product details',
+  noSaveGoodsTip: 'You have unsaved product data, whether to restore the data',
+  lijihuifusuju: 'Restore data immediately',
+  cancelhuifusuju: 'Cancel restore data'
 }

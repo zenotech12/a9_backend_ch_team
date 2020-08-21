@@ -181,3 +181,30 @@ export function spusBatchRestore(data) {
     data: data
   })
 }
+
+// 草稿.添加/修改
+export function draftsAdd(data) {
+  return request({
+    url: 'drafts',
+    method: 'post',
+    data: data
+  })
+}
+
+// 草稿.获取
+export function draftsInfo(data) {
+  return request({
+    url: 'drafts/one',
+    method: 'get',
+    params: data
+  })
+}
+
+// 草稿.删除
+export function draftsDel(data) {
+  return request({
+    url: 'drafts/one',
+    method: 'delete',
+    params: data
+  })
+}

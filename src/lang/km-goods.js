@@ -106,6 +106,9 @@ export default {
   weight: 'ទម្ងន់',
   imgae: 'រូបភាពទំនិញ',
   backGoodsList: 'ត្រឡប់ទៅបញ្ជីផលិតផលវិញ',
-  successTip: '成功提示',
-  lookGoodsInfo: '查看商品详情'
+  successTip: 'គន្លឹះជោគជ័យ',
+  lookGoodsInfo: 'មើលព័ត៌មានលម្អិតផលិតផល',
+  noSaveGoodsTip: 'អ្នកមានទិន្នន័យផលិតផលមិនទាន់បានរក្សាទុកថាតើត្រូវស្តារទិន្នន័យ',
+  lijihuifusuju: 'ស្តារទិន្នន័យភ្លាមៗ',
+  cancelhuifusuju: 'បោះបង់ការស្តារទិន្នន័យ'
 }

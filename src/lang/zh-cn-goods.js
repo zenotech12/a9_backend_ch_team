@@ -129,5 +129,8 @@ export default {
   imgae: '商品图',
   backGoodsList: '返回商品列表',
   successTip: '成功提示',
-  lookGoodsInfo: '查看商品详情'
+  lookGoodsInfo: '查看商品详情',
+  noSaveGoodsTip: '你有未保存的商品数据，是否恢复数据',
+  lijihuifusuju: '立即恢复数据',
+  cancelhuifusuju: '取消恢复数据'
 }
