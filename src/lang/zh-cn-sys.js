@@ -69,5 +69,12 @@ export default {
   payPasswordSet: '支付密码',
   enterPayPasswordSet: '请设置支付密码',
   pleaseEnterPayPasswordSet: '请输入支付密码',
-  setPayPassSuccess: '支付密码设置成功'
+  setPayPassSuccess: '支付密码设置成功',
+  pleaseFillCompleteAddr: '请填写完整地址',
+  keywordSearch: '请输入搜索关键字',
+  coordinate: '坐标',
+  address1: '地址',
+  googleMapError: 'google地图打开失败!',
+  addressChoose: '地址选择',
+  selectAddress: '请选择地址',
 }

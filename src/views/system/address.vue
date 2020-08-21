@@ -46,26 +46,30 @@
             <el-form-item :label="$t('sys.mobile')">
               <el-input v-model="form.mobile"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('sys.province')">
-              <el-input v-model="form.province"></el-input>
+            <el-form-item class="start" :label="$t('sys.address1')">
+              <map-selector v-model="formAddress"></map-selector>
+              <div class="distpicker_error" v-if="placeShow">{{$t('sys.selectAddress')}}</div>
             </el-form-item>
-            <el-form-item :label="$t('sys.city')">
-              <el-input v-model="form.city"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('sys.district')">
-              <el-input v-model="form.district"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('sys.addr')">
-              <el-input v-model="form.addr"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('sys.lngAndlat')">
-              <el-col :span="8">
-                <el-input v-model="form.lng" :placeholder="$t('sys.lng')"></el-input>
-              </el-col>
-              <el-col :span="8">
-                <el-input v-model="form.lat" :placeholder="$t('sys.lat')"></el-input>
-              </el-col>
-            </el-form-item>
+            <!--<el-form-item :label="$t('sys.province')">-->
+              <!--<el-input v-model="form.province"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item :label="$t('sys.city')">-->
+              <!--<el-input v-model="form.city"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item :label="$t('sys.district')">-->
+              <!--<el-input v-model="form.district"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item :label="$t('sys.addr')">-->
+              <!--<el-input v-model="form.addr"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item :label="$t('sys.lngAndlat')">-->
+              <!--<el-col :span="8">-->
+                <!--<el-input v-model="form.lng" :placeholder="$t('sys.lng')"></el-input>-->
+              <!--</el-col>-->
+              <!--<el-col :span="8">-->
+                <!--<el-input v-model="form.lat" :placeholder="$t('sys.lat')"></el-input>-->
+              <!--</el-col>-->
+            <!--</el-form-item>-->
             <el-form-item :label="$t('sys.default')">
               <el-checkbox v-model="form.default"></el-checkbox>
             </el-form-item>
@@ -96,7 +100,17 @@
         grantTime: [], // 发放时段
         form: formData,
         formEditDialog: false,
-        submitDisabled: false
+        submitDisabled: false,
+        formAddress: {
+          province: '',
+          city: '',
+          area: '',
+          address: '',
+          lon: 104.917445,
+          lat: 11.558831
+        },
+        placeShow: false,
+        placeChecked: false
       }
     },
     computed: {
@@ -118,6 +132,15 @@
       }
     },
     methods: {
+      placeCheck() {
+        if (this.formAddress.province !== '' && this.formAddress.city !== '' && this.formAddress.area !== '' && this.formAddress.address !== '' && this.formAddress.lat !== '' && this.formAddress.lon !== '') {
+          this.placeShow = false
+          this.placeChecked = true
+        } else {
+          this.placeShow = true
+          this.placeChecked = false
+        }
+      },
       setForm(data) {
         if (data) {
           return data
@@ -126,7 +149,7 @@
             id: '',
             province: '',
             city: '',
-            districe: '',
+            district: '',
             addr: '',
             default: false,
             contacter_name: '',
@@ -139,11 +162,28 @@
       },
       addData() {
         this.form = this.setForm()
+        this.formAddress = {
+          province: '',
+          city: '',
+          area: '',
+          address: '',
+          lon: 104.917445,
+          lat: 11.558831
+        }
         this.formEditDialog = true
       },
       showDataEditor(data) {
         console.log(data)
         this.form = this.setForm(data)
+        const obj = {
+          province: data.province,
+          city: data.city,
+          area: data.district,
+          address: data.addr,
+          lon: data.lng,
+          lat: data.lat
+        }
+        this.formAddress = obj
         this.formEditDialog = true
       },
       imageUploadSuccess(res) {
@@ -152,8 +192,20 @@
       },
       saveDataFunc() {
         this.submitDisabled = true
-        console.log(this.form)
         this.form.triggers = JSON.stringify(this.form.triggers)
+        this.form.province = this.formAddress.province
+        this.form.city = this.formAddress.city
+        this.form.district = this.formAddress.area
+        this.form.addr = this.formAddress.address
+        this.form.lng = this.formAddress.lon
+        this.form.lat = this.formAddress.lat
+        console.log(this.form)
+        this.placeCheck()
+        if (this.placeChecked === false) {
+          this.$message.error(this.$t('sys.pleaseFillCompleteAddr'))
+          this.submitDisabled = false
+          return
+        }
         if (this.form.id !== '') {
           shippingAddressesModify(this.form.id, this.form).then(res => {
             this.getDataListFun()

@@ -13,6 +13,7 @@ import imageUpload from './imageUpload'
 import priceInput from './priceInput'
 import expressSelector from './expressSelector'
 import propSelector from './propSelector'
+import MapSelector from './MapSelector'
 
 // 形成组件库
 const components = [
@@ -27,7 +28,8 @@ const components = [
   imageUpload,
   priceInput,
   expressSelector,
-  propSelector
+  propSelector,
+  MapSelector
 ]
 
 // 注册全局组件

@@ -28,6 +28,20 @@ export default {
       'imInfo'
     ])
   },
+  created() {
+    const currentLang = this.$store.state.app.lang
+    console.log('currentLang', currentLang)
+    let lang = navigator.language || navigator.userLanguage
+    lang = lang.substr(0, 2).toLowerCase()
+    // console.log('lang', lang)
+    if (lang !== 'zh' || currentLang !== 'zh') {
+      var oHead = document.getElementsByTagName('HEAD').item(0)
+      var oScript = document.createElement('script')
+      oScript.type = 'text/javascript'
+      oScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCNmBY7o9y-mK6omSYieGg12TE25xjqsms&libraries=places'
+      oHead.appendChild(oScript)
+    }
+  },
   mounted() {
     // window.nim = SDK.NIM.getInstance({
     //   debug: true,

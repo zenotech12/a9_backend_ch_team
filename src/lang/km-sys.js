@@ -51,5 +51,14 @@ export default {
   cardMobile: 'លេខទូរស័ព្ទ.',
   cardMobileTip: 'សូមបញ្ចូលលេខទូរស័ព្ទរបស់អ្នកដែលបានកត់ត្រានៅក្នុងធនាគារ',
   cardEdit: 'កែសម្រួលកាតធនាគារ',
-  delCardTip: 'បញ្ជាក់ថាត្រូវលុបព័ត៌មានកាតធនាគារ'
+  delCardTip: 'បញ្ជាក់ថាត្រូវលុបព័ត៌មានកាតធនាគារ',
+  pleaseFillCompleteAddr: 'សូមបំពេញអាសយដ្ឋានពេញលេញ',
+  keywordSearch: 'សូមបញ្ចូលពាក្យគន្លឹះដើម្បីស្វែងរក',
+  coordinate: 'សំរបសំរួល',
+  address1: 'អាសយដ្ឋាន',
+  googleMapError: 'ផែនទីហ្គូហ្គលបានបរាជ័យក្នុងការបើក!',
+  addressChoose: 'ការជ្រើសរើសអាសយដ្ឋាន',
+  lng: 'longitude',
+  lat: 'latitude',
+  selectAddress: 'សូមជ្រើសរើសអាសយដ្ឋាន'
 }

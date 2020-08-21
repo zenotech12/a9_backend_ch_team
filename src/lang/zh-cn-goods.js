@@ -133,4 +133,5 @@ export default {
   noSaveGoodsTip: '你有未保存的商品数据，是否恢复数据',
   lijihuifusuju: '立即恢复数据',
   cancelhuifusuju: '取消恢复数据'
+
 }

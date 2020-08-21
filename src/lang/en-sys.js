@@ -51,5 +51,14 @@ export default {
   cardMobile: 'Tel No.',
   cardMobileTip: 'Please input your telephone number recorded in the bank',
   cardEdit: 'Bank card editor',
-  delCardTip: 'Confirm to delete the bank card information'
+  delCardTip: 'Confirm to delete the bank card information',
+  pleaseFillCompleteAddr: 'Please fill in the complete address',
+  keywordSearch: 'please enter keyword to search',
+  coordinate: 'coordinate',
+  address1: 'address',
+  googleMapError: 'google map failed to open!',
+  addressChoose: 'Address selection',
+  lng: 'longitude',
+  lat: 'latitude',
+  selectAddress: 'Please select address'
 }
