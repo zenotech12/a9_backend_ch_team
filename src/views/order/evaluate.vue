@@ -58,7 +58,7 @@
                 </el-table-column>
                 <el-table-column  :label="$t('order.commentStar')" width="220">
                   <template  slot-scope="scope">
-                    <div><el-tag size="mini" :type="scope.row.comprehensive_lv===3 ? '':(scope.row.comprehensive_lv===2? 'success': 'info')">{{commentLevel[scope.row.comprehensive_lv]}}</el-tag></div>
+                    <div><el-tag size="mini" :type="scope.row.comprehensive_lv===3 ? '':(scope.row.comprehensive_lv===2? 'success': 'info')">{{commentLevel1[scope.row.comprehensive_lv]}}</el-tag></div>
                     <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="scope.row.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
                     <div class="rate-item"><span>{{$t('order.star2')}}</span><el-rate class="rate" :value="scope.row.service_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
                     <div class="rate-item"><span>{{$t('order.star3')}}</span><el-rate class="rate" :value="scope.row.express_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
@@ -113,7 +113,7 @@
               {{replyData.user_nick_name}}&nbsp;{{replyData.user_mobile}}
             </el-form-item>
             <el-form-item :label="$t('order.commentLevel')">
-              <el-tag size="mini" :type="replyData.comprehensive_lv===3 ? '':(replyData.comprehensive_lv===2? 'success': 'info')">{{commentLevel[replyData.comprehensive_lv]}}</el-tag>
+              <el-tag size="mini" :type="replyData.comprehensive_lv===3 ? '':(replyData.comprehensive_lv===2? 'success': 'info')">{{commentLevel1[replyData.comprehensive_lv]}}</el-tag>
             </el-form-item>
             <el-form-item :label="$t('order.commentStar')">
               <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="replyData.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
@@ -161,6 +161,7 @@
       const pz = 10
       return {
         commentLevel: [this.$t('tools.all'), this.$t('order.commentStar1'), this.$t('order.commentStar2'), this.$t('order.commentStar3')],
+        commentLevel1: [this.$t('tools.all'), this.$t('order.commentStar1'), this.$t('order.commentStar2'), this.$t('order.commentStar3')],
         commentReplied: [this.$t('tools.all'), this.$t('order.repliedResponded'), this.$t('order.notRespondingReviews')],
         searchForm: {
           spu_id: '',
