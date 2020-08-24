@@ -122,6 +122,9 @@ export default {
   starRanking: '收藏排行榜',
   addShopCart: '加购物车',
   favorites: '收藏',
-  provinceCityArea: '省市区'
+  provinceCityArea: '省市区',
+  repliedResponded: 'Reviews responded',
+  notRespondingReviews: 'Not responding to reviews',
+  replyReviews: 'Reply to reviews'
 
 }

@@ -10,14 +10,22 @@
                 <goods-selector v-model="searchForm.spu_id"></goods-selector>
               </el-form-item>
               <el-form-item>
-                <el-select v-model="searchForm.comprehensive_lv" :placeholder="$t('order.commentType')">
-                  <el-option
-                    v-for="(item, k) in commentLevel"
-                    :key="k"
-                    :label="item"
-                    :value="k">
-                  </el-option>
-                </el-select>
+                <el-radio-group v-model="searchForm.comprehensive_lv" size="small">
+                  <el-radio-button v-for="(item, k) in commentLevel"
+                                   :key="k"
+                                   :label="k">
+                    {{item}}
+                  </el-radio-button>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item>
+                <el-radio-group v-model="searchForm.replied" size="small">
+                  <el-radio-button v-for="(item, k) in commentReplied"
+                                   :key="k"
+                                   :label="k">
+                    {{item}}
+                  </el-radio-button>
+                </el-radio-group>
               </el-form-item>
               <el-form-item class="searchBtn">
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
@@ -33,7 +41,7 @@
                   type="selection"
                   width="55">
                 </el-table-column>
-                <el-table-column :label="$t('order.user')" align="left" width="120" fixed="left">
+                <el-table-column :label="$t('order.user')" align="left" width="100" fixed="left">
                   <template slot-scope="scope">
                     {{scope.row.user_nick_name}}<br/>
                     {{scope.row.user_mobile}}<br/>
@@ -74,10 +82,10 @@
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('order.evaluateTime')" width="160">
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "70" fixed="right">
+                <el-table-column :label="$t('tools.opt')" width = "90" fixed="right">
                   <template slot-scope="scope">
-                    <el-badge :value="scope.row.replies.length" class="item" style="margin: 10px 0px !important;">
-                      <el-button type="text" @click="showReplyEditor(scope.row)" size="small">{{$t('order.reply')}}</el-button>
+                    <el-badge :value="scope.row.replies.length" v-if="scope.row.replies" class="item" style="margin: 10px 0px !important;">
+                      <el-button type="text" @click="showReplyEditor(scope.row)" size="small">{{$t('order.replyReviews')}}</el-button>
                     </el-badge>
                   </template>
                 </el-table-column>
@@ -143,7 +151,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { evalutionsList, evalutionsReply, batchEvalutionsReply } from '@/api/order'
+  import { evalutionsList, evalutionsReply, batchEvalutionsReply, evaluationsCount } from '@/api/order'
   import goodsSelector from '@/components/goodsSelector'
   export default {
     components: {
@@ -153,10 +161,12 @@
       const pz = 10
       return {
         commentLevel: [this.$t('tools.all'), this.$t('order.commentStar1'), this.$t('order.commentStar2'), this.$t('order.commentStar3')],
+        commentReplied: [this.$t('tools.all'), this.$t('order.repliedResponded'), this.$t('order.notRespondingReviews')],
         searchForm: {
           spu_id: '',
           sku_id: '',
           comprehensive_lv: 0,
+          replied: 0,
           skip: '',
           limit: pz
         },
@@ -191,6 +201,20 @@
       }
     },
     methods: {
+      getEvaluationsCount() {
+        evaluationsCount().then(res => {
+          if (res.meta === 0) {
+            this.commentReplied = [this.$t('tools.all'),
+              this.$t('order.repliedResponded') + '(' + res.item.replied + ')',
+              this.$t('order.notRespondingReviews') + '(' + res.item.noreply + ')']
+            // console.log('res', res)
+            this.commentLevel = [this.$t('tools.all'),
+              this.$t('order.commentStar1') + '(' + res.item.bad + ')',
+              this.$t('order.commentStar2') + '(' + res.item.medium + ')',
+              this.$t('order.commentStar3') + '(' + res.item.good + ')']
+          }
+        })
+      },
       goodsPreview(row) {
         return 'https://www.a9kh.com/goods/' + row.spu_id + '.html'
         // this.currentGoods = appUrl + '/goods/info?id=' + row.id
@@ -221,7 +245,7 @@
         imgs.forEach(img => {
           result.push(this.getImageUrl(img))
         })
-        console.log(result)
+        // console.log(result)
         return result
       },
       showReplyEditor(data) {
@@ -235,6 +259,7 @@
           this.$message.success(this.$t('order.replyTip'))
           this.submitDisabled = false
           this.getDataListFun()
+          this.getEvaluationsCount()
           this.formEditDialog = false
         }).catch(() => {
           this.submitDisabled = false
@@ -251,6 +276,7 @@
       }
     },
     mounted() {
+      this.getEvaluationsCount()
       this.getDataListFun()
     },
     created() {

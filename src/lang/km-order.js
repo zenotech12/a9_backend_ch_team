@@ -106,5 +106,8 @@ export default {
   starRanking: '收藏排行榜',
   addShopCart: '加购物车',
   favorites: '收藏',
-  provinceCityArea: '省市区'
+  provinceCityArea: '省市区',
+  repliedResponded: 'ការឆ្លើយតបត្រូវបានឆ្លើយតប',
+  notRespondingReviews: 'មិនឆ្លើយតបនឹងការពិនិត្យ',
+  replyReviews: 'ឆ្លើយតបទៅការពិនិត្យឡើងវិញ'
 }

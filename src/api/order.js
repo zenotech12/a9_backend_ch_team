@@ -144,3 +144,11 @@ export function afterSalesCount(data) {
     params: data
   })
 }
+
+// 评价.查.数量
+export function evaluationsCount() {
+  return request({
+    url: 'evaluations-count',
+    method: 'get'
+  })
+}
