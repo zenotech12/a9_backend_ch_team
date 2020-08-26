@@ -26,12 +26,14 @@ const system = [{
     path: 'address',
     meta: { title: 'address', icon: 'permission', code: 'y_4' },
     component: () => import('@/views/system/address')
-  }, {
-    name: 'chatRobot',
-    path: 'chatRobot',
-    meta: { title: 'chatRobot', icon: 'permission', code: '6_5' },
-    component: () => import('@/views/system/chatRobot')
-  }, {
+  },
+  //   {
+  //   name: 'chatRobot',
+  //   path: 'chatRobot',
+  //   meta: { title: 'chatRobot', icon: 'permission', code: '6_5' },
+  //   component: () => import('@/views/system/chatRobot')
+  // },
+  {
     name: 'optLog',
     path: 'optLog',
     meta: { title: 'optLog', icon: 'permission', code: '6_6' },

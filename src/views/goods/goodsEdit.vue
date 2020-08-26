@@ -532,11 +532,12 @@
       // this.loading = false
       // return
       const id = this.$route.query.id
-      console.log('id', id)
       if (!id) {
         this.getDraftsInfo()
         const timer = setInterval(() => {
-          this.saveGoodsTime()
+          if (this.goodsData.name.length > 0 || this.goodsData.default_type_id !== '') {
+            this.saveGoodsTime()
+          }
         }, 30000)
         this.$once('hook:beforeDestroy', () => {
           clearInterval(timer)
