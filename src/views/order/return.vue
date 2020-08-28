@@ -47,14 +47,14 @@
                 </el-table-column>
                 <el-table-column  :label="$t('order.returnGoods')" min-width="350px">
                   <template  slot-scope="scope">
-                    <a class="goods-item" target="_blank" :href="goodsPreview(scope.row.goods_item)">
-                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(scope.row.goods_item.sku_img,100,100)"  fit="cover"></el-image>
+                    <a class="goods-item" target="_blank" v-for="(item, k) in scope.row.goods_items" :key="k" :href="goodsPreview(item)">
+                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(item.sku_img,100,100)"  fit="cover"></el-image>
                       <div class="g-info">
-                        <p><span>{{scope.row.goods_item.spu_name}}</span></p>
+                        <p><span>{{item.spu_name}}</span></p>
                         <p>
-                          <span v-for="(v,k) in scope.row.goods_item.specifications"> {{k}}：<font>{{v}}</font></span>
+                          <span v-for="(v,k) in item.specifications"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p>{{scope.row.goods_item.price | price}}X {{scope.row.goods_item.count}}</p>
+                        <p>{{item.price | price}}X {{item.count}}</p>
                       </div>
                       <div class="clear"></div>
                     </a>
@@ -113,14 +113,14 @@
               {{returnOrder.user_nick_name}}/{{returnOrder.user_mobile}}
             </el-form-item>
             <el-form-item :label="$t('order.returnGoods')">
-              <div class="goods-item" v-if="returnOrder.id">
-                <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(returnOrder.goods_item.sku_img,100,100)"  fit="cover"></el-image>
+              <div class="goods-item" v-if="returnOrder.id" v-for="(goods, i) in returnOrder.goods_items" :key="i">
+                <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(goods.sku_img,100,100)"  fit="cover"></el-image>
                 <div class="g-info">
-                  <p><el-tag size="mini" :type="returnOrder.type === 2 ? 'success': ''">{{returnType[returnOrder.type]}}</el-tag>&nbsp;&nbsp;<span>{{returnOrder.goods_item.spu_name}}</span></p>
+                  <p><el-tag size="mini" :type="returnOrder.type === 2 ? 'success': ''">{{returnType[returnOrder.type]}}</el-tag>&nbsp;&nbsp;<span>{{goods.spu_name}}</span></p>
                   <p>
-                    <span v-for="(v,k) in returnOrder.goods_item.specifications"> {{k}}：<font>{{v}}</font></span>
+                    <span v-for="(v,k) in goods.specifications"> {{k}}：<font>{{v}}</font></span>
                   </p>
-                  <p><span>{{$t('order.price3')}}：</span>{{returnOrder.goods_item.price | price}}；<span>{{$t('order.number')}}：</span>{{returnOrder.goods_item.count}}</p>
+                  <p><span>{{$t('order.price3')}}：</span>{{goods.price | price}}；<span>{{$t('order.number')}}：</span>{{goods.count}}</p>
                 </div>
                 <div class="clear"></div>
               </div>
