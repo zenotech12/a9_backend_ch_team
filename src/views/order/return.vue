@@ -155,10 +155,10 @@
               <br/>
               {{returnOrder.merchant_shipping_address.contacter_name}}&nbsp;&nbsp;{{returnOrder.merchant_shipping_address.mobile}}
             </el-form-item>
-            <el-form-item v-if="returnOrder.status === 5 || returnOrder.status === 6" :label="$t('order.returnExpress')">
+            <el-form-item v-if="(returnOrder.status === 5 || returnOrder.status === 6|| returnOrder.status === 8) && (returnOrder.type === 1 || returnOrder.type === 2)" :label="$t('order.returnExpress')">
               <a target="_blank" :href="getKuaidi100Url(returnOrder.express2merchant.company, returnOrder.express2merchant.novar)">{{expressageList[returnOrder.express2merchant.company]}}&nbsp;&nbsp;{{returnOrder.express2merchant.novar}}<i class="el-icon-arrow-right"></i> </a>
             </el-form-item>
-            <el-form-item :label="$t('order.returnExpress1')" v-if="returnOrder.status === 5 && returnOrder.type === 2">
+            <el-form-item :label="$t('order.returnExpress1')" v-if="(returnOrder.status === 5 || returnOrder.status === 8)  && returnOrder.type === 2">
               <a target="_blank" :href="getKuaidi100Url(returnOrder.express2user.company, returnOrder.express2user.novar)">{{expressageList[returnOrder.express2user.company]}}&nbsp;&nbsp;{{returnOrder.express2user.novar}}<i class="el-icon-arrow-right"></i> </a>
             </el-form-item>
             <el-form-item :label="$t('order.returnExpress1')" v-if="returnOrder.status === 6 && returnOrder.type === 2">
