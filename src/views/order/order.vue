@@ -629,6 +629,10 @@
       if (this.$route.params.bt || this.$route.params.et) {
         this.orderTimes = [this.$route.params.bt, this.$route.params.et]
       }
+      const key = this.$route.query.k
+      if (key !== undefined && key !== '' && key !== null) {
+        this.searchForm.key = key
+      }
       this.getOrderCount()
       this.getDataListFun()
     },
