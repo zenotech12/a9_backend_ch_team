@@ -14,13 +14,13 @@
               <el-form-item :label="$t('order.returnOrder')">
                 <el-input v-model="searchForm.order_no" style="width: 250px" clearable></el-input>
               </el-form-item>
-              <el-form-item :label="$t('order.returnType')">
+              <el-form-item v-if="searchForm.type !== 2">
                 <el-select v-model="searchForm.type" clearable>
                   <el-option
                     v-for="(item, k) in returnType"
                     :key="k"
-                    :label="item"
-                    :value="k">
+                    :label="item.label"
+                    :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -42,7 +42,7 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.returnType')" width="120">
                   <template slot-scope="scope">
-                    <el-tag :type="scope.row.type === 2 ? 'success': ''">{{returnType[scope.row.type]}}</el-tag>
+                    <el-tag :type="scope.row.type === 2 ? 'success': ''">{{returnType1[scope.row.type]}}</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column  :label="$t('order.returnGoods')" min-width="350px">
@@ -116,7 +116,7 @@
               <div class="goods-item" v-if="returnOrder.id" v-for="(goods, i) in returnOrder.goods_items" :key="i">
                 <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(goods.sku_img,100,100)"  fit="cover"></el-image>
                 <div class="g-info">
-                  <p><el-tag size="mini" :type="returnOrder.type === 2 ? 'success': ''">{{returnType[returnOrder.type]}}</el-tag>&nbsp;&nbsp;<span>{{goods.spu_name}}</span></p>
+                  <p><el-tag size="mini" :type="returnOrder.type === 2 ? 'success': ''">{{returnType1[returnOrder.type]}}</el-tag>&nbsp;&nbsp;<span>{{goods.spu_name}}</span></p>
                   <p>
                     <span v-for="(v,k) in goods.specifications"> {{k}}：<font>{{v}}</font></span>
                   </p>
@@ -202,13 +202,27 @@
     data() {
       const pz = 10
       return {
-        returnType: [this.$t('tools.all'), this.$t('order.returnType1'), this.$t('order.returnType2'), this.$t('order.returnType3')],
+        returnType1: [this.$t('tools.all'), this.$t('order.returnType1'), this.$t('order.returnType2'), this.$t('order.returnType3')],
+        returnType: [
+          {
+            value: 4,
+            label: this.$t('tools.all')
+          },
+          {
+            value: 1,
+            label: this.$t('order.returnType1')
+          },
+          {
+            value: 3,
+            label: this.$t('order.returnType3')
+          }
+        ],
         orderStatus: [this.$t('tools.all'), this.$t('order.returnStatus1'), this.$t('order.returnStatus2'), this.$t('order.returnStatus3'), this.$t('order.returnStatus4'), this.$t('order.returnStatus5'),
           this.$t('order.returnStatus6'), '', this.$t('order.returnStatus8')],
         orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
           { value: '5', label: this.$t('order.returnStatus5') }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }],
         searchForm: {
-          type: 0,
+          type: 0, // 1退货 2换货 3只退钱 4退货和只退钱
           order_no: '',
           status: 0,
           skip: '',
@@ -249,6 +263,20 @@
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
+      },
+      '$route.path': function(newVal, oldVal) {
+        // console.log(newVal + '---' + oldVal)
+        if (newVal === '/order/orderExchange') { // 换货
+          this.searchForm.type = 2
+          this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
+          this.getDataListFun()
+          this.getAfterSalesCount()
+        } else if (newVal === '/order/orderReturn') { // 退货
+          this.searchForm.type = 4
+          this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
+          this.getDataListFun()
+          this.getAfterSalesCount()
+        }
       }
     },
     methods: {
@@ -315,12 +343,19 @@
       }
     },
     mounted() {
+      const currentRouter = this.$router.currentRoute.name
+      if (currentRouter === 'orderExchange') {
+        this.searchForm.type = 2
+      } else if (currentRouter === 'orderReturn') {
+        this.searchForm.type = 4
+      }
       console.log(this.$route.params)
       this.tabList = JSON.parse(JSON.stringify(this.orderStatusTab))
       this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
       this.getDataListFun()
       this.getAfterSalesCount()
       this.getAddressListFunc()
+      console.log(1111)
     },
     created() {
     }

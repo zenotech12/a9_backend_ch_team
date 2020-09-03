@@ -63,7 +63,7 @@ export default {
   returnType: 'ត្រឡប់ / ជំនួស',
   returnType1: 'ប្រគល់ទំនិញមកវិញ',
   returnType2: 'ផ្លាស់ប្តូរទំនិញ',
-  returnType3: 'សងប្រាក់វិញ (មិនផ្ដល់ទំនិញ)',
+  returnType3: 'សងប្រាក់វិញ',
   returnStatus: 'ស្ថានភាព',
   returnStatus1: 'យល់ព្រម',
   returnStatus2: 'បោះបង់',

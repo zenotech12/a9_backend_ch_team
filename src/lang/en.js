@@ -36,6 +36,8 @@ export default {
   orderMgr: 'Order',
   orderList: 'Order List',
   returnList: 'Return/Exchange',
+  returnGoods: 'Return',
+  exchangeGoods: 'Exchange',
   evaluateMgr: 'Comment',
   operationMgr: 'Operation',
   adMgr: 'Advertising management',

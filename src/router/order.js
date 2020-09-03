@@ -11,9 +11,14 @@ const order = [{
     meta: { title: 'orderList', icon: 'list', code: '3_1' },
     component: () => import('@/views/order/order')
   }, {
-    path: 'return',
-    name: 'returnList',
-    meta: { title: 'returnList', icon: 'list', code: '3_2' },
+    path: 'orderReturn',
+    name: 'orderReturn',
+    meta: { title: 'returnGoods', icon: 'list', code: '3_2' },
+    component: () => import('@/views/order/return')
+  }, {
+    path: 'orderExchange',
+    name: 'orderExchange',
+    meta: { title: 'exchangeGoods', icon: 'list', code: '3_4' },
     component: () => import('@/views/order/return')
   }, {
     path: 'evaluate',

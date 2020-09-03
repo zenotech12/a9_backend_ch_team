@@ -132,6 +132,8 @@ export default {
   lookGoodsInfo: '查看商品详情',
   noSaveGoodsTip: '你有未保存的商品数据，是否恢复数据',
   lijihuifusuju: '立即恢复数据',
-  cancelhuifusuju: '取消恢复数据'
-
+  cancelhuifusuju: '取消恢复数据',
+  distributionLowProfits: '是否为低利润商品',
+  yes: '是',
+  not: '否'
 }

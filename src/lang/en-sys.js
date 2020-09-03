@@ -60,5 +60,9 @@ export default {
   addressChoose: 'Address selection',
   lng: 'longitude',
   lat: 'latitude',
-  selectAddress: 'Please select address'
+  selectAddress: 'Please select address',
+  payPasswordSet: 'Payment password',
+  enterPayPasswordSet: 'Please set payment password',
+  pleaseEnterPayPasswordSet: 'Please enter payment password',
+  setPayPassSuccess: 'The payment password is set successfully'
 }

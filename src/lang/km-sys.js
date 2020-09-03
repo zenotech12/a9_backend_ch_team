@@ -60,5 +60,9 @@ export default {
   addressChoose: 'ការជ្រើសរើសអាសយដ្ឋាន',
   lng: 'longitude',
   lat: 'latitude',
-  selectAddress: 'សូមជ្រើសរើសអាសយដ្ឋាន'
+  selectAddress: 'សូមជ្រើសរើសអាសយដ្ឋាន',
+  payPasswordSet: 'ពាក្យសម្ងាត់ទូទាត់ប្រាក់',
+  enterPayPasswordSet: 'សូមកំណត់ពាក្យសម្ងាត់ទូទាត់',
+  pleaseEnterPayPasswordSet: 'សូមបញ្ចូលពាក្យសម្ងាត់ទូទាត់',
+  setPayPassSuccess: 'ពាក្យសម្ងាត់ទូទាត់ត្រូវបានកំណត់ដោយជោគជ័យ'
 }

@@ -63,7 +63,7 @@ export default {
   returnType: '退/换货',
   returnType1: '退货',
   returnType2: '换货',
-  returnType3: '退款（不退货）',
+  returnType3: '只退款',
   returnStatus: '状态',
   returnStatus1: '申请',
   returnStatus2: '取消',

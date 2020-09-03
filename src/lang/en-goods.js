@@ -120,5 +120,8 @@ export default {
   lookGoodsInfo: 'View product details',
   noSaveGoodsTip: 'You have unsaved product data, whether to restore the data',
   lijihuifusuju: 'Restore data immediately',
-  cancelhuifusuju: 'Cancel restore data'
+  cancelhuifusuju: 'Cancel restore data',
+  distributionLowProfits: 'Is it a low-profit product',
+  yes: 'Yes',
+  not: 'No'
 }

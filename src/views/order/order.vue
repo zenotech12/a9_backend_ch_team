@@ -91,7 +91,7 @@
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
                       <div class="g-info">
                         <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
-                          <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.prevent="showReturn(scope.row)">{{$t('order.afterSale')}}</el-tag>
+                          <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.prevent="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
                         </p>
                         <p>
                           <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
@@ -473,8 +473,13 @@
           this.multipleSelection.push(item.id)
         })
       },
-      showReturn(row) {
-        this.$router.push({ name: 'returnList', params: { order_no: row.no }})
+      showReturn(row, gInfo) {
+        // console.log(gInfo)
+        if (gInfo.after_sale_type === 1 || gInfo.after_sale_type === 3) {
+          this.$router.push({ name: 'orderReturn', params: { order_no: row.no }})
+        } else if (gInfo.after_sale_type === 2) {
+          this.$router.push({ name: 'orderExchange', params: { order_no: row.no }})
+        }
       },
       importSuccess(res) {
         this.$message.success(res.error)

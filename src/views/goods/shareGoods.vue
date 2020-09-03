@@ -106,17 +106,24 @@
               </el-col>
             </el-row>
             <el-dialog :title="$t('goods.shareSet')" width="800px" @close="cancelShareEdit" :visible.sync="shareEditorShow" :close-on-click-modal="false" center>
-              <el-form :model="shareForm" ref="forms" label-width="120px">
+              <el-form :model="shareForm" ref="forms" label-width="140px">
                 <template v-if="!shareForm.edit">
-                  <el-form-item :label="$t('goods.shareGoods')" label-width="120px">
+                  <el-form-item :label="$t('goods.shareGoods')">
                     <el-checkbox v-model="shareForm.all">{{$t('goods.shareAll')}}</el-checkbox>
                   </el-form-item>
-                  <el-form-item v-if="!shareForm.all" :label="$t('goods.goodsSelect')" label-width="120px">
+                  <el-form-item v-if="!shareForm.all" :label="$t('goods.goodsSelect')">
                     <goods-selector v-if="shareEditorShow" v-model="shareForm.spu_ids" :approve_status="2" :shelf_status="2" :distribution="1" :mulit="true"></goods-selector>
+                  </el-form-item>
+                  <el-form-item :label="$t('goods.distributionLowProfits')">
+                    <el-switch
+                      v-model="shareForm.distribution_low_profits"
+                      :active-text="$t('goods.yes')"
+                      :inactive-text="$t('goods.not')">
+                    </el-switch>
                   </el-form-item>
                 </template>
                 <template v-else>
-                  <el-form-item :label="$t('goods.shareGoods')" label-width="120px">
+                  <el-form-item :label="$t('goods.shareGoods')">
                     {{shareForm.goodsName}}
                   </el-form-item>
                 </template>
@@ -178,7 +185,8 @@
           edit: false,
           all: false,
           spu_ids: '',
-          distribution: true
+          distribution: true,
+          distribution_low_profits: false // 是否为低利润商品true false
         },
         multipleSelection: []
       }

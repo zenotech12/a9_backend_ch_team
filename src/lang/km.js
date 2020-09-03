@@ -36,6 +36,8 @@ export default {
   orderMgr: 'ការបញ្ជាទិញ',
   orderList: 'តារាងការបញ្ជាទិញ',
   returnList: 'ត្រលប់ / ផ្លាស់ប្ដូរ',
+  returnGoods: 'ត្រលប់',
+  exchangeGoods: 'ផ្លាស់ប្ដូរ',
   evaluateMgr: 'យោបល់',
   operationMgr: 'ការគ្រប់គ្រងប្រតិបត្តិការ',
   adMgr: 'ការគ្រប់គ្រងការផ្សព្វផ្សាយ',

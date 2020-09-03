@@ -6,7 +6,8 @@ export default [
   ] },
   { 'name': '订单管理', 'lk': 'orderMgr', 'code': '3', 'permissions': [], 'urls': [], 'son': [
     { 'name': '订单列表', 'lk': 'orderList', 'code': '3_1', 'permissions': ['view', 'opt'], 'urls': [] },
-    { 'name': '退/换货', 'lk': 'returnList', 'code': '3_2', 'permissions': ['view', 'opt'], 'urls': [] },
+    { 'name': '退货', 'lk': 'returnGoods', 'code': '3_2', 'permissions': ['view', 'opt'], 'urls': [] },
+    { 'name': '换货', 'lk': 'exchangeGoods', 'code': '3_4', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '评论管理', 'lk': 'evaluateMgr', 'code': '3_3', 'permissions': ['view', 'opt'], 'urls': [] }
   ] },
   { 'name': '运营管理', 'lk': 'operationMgr', 'code': '4', 'permissions': [], 'urls': [], 'son': [

@@ -110,5 +110,8 @@ export default {
   lookGoodsInfo: 'មើលព័ត៌មានលម្អិតផលិតផល',
   noSaveGoodsTip: 'អ្នកមានទិន្នន័យផលិតផលមិនទាន់បានរក្សាទុកថាតើត្រូវស្តារទិន្នន័យ',
   lijihuifusuju: 'ស្តារទិន្នន័យភ្លាមៗ',
-  cancelhuifusuju: 'បោះបង់ការស្តារទិន្នន័យ'
+  cancelhuifusuju: 'បោះបង់ការស្តារទិន្នន័យ',
+  distributionLowProfits: 'វាគឺជាផលិតផលដែលរកប្រាក់ចំណេញទាប',
+  yes: 'ត្រូវហើយ',
+  not: 'ទេ'
 }
