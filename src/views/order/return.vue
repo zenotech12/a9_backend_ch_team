@@ -269,11 +269,15 @@
         if (newVal === '/order/orderExchange') { // 换货
           this.searchForm.type = 2
           this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
+          this.tabList = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
+            { value: '5', label: this.$t('order.returnStatus5') }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
           this.getDataListFun()
           this.getAfterSalesCount()
         } else if (newVal === '/order/orderReturn') { // 退货
           this.searchForm.type = 4
           this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
+          this.tabList = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
+            { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
           this.getDataListFun()
           this.getAfterSalesCount()
         }
@@ -348,6 +352,8 @@
         this.searchForm.type = 2
       } else if (currentRouter === 'orderReturn') {
         this.searchForm.type = 4
+        this.orderStatusTab = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
+          { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
       }
       console.log(this.$route.params)
       this.tabList = JSON.parse(JSON.stringify(this.orderStatusTab))
