@@ -129,7 +129,7 @@
               {{returnOrder.comment}}
             </el-form-item>
             <el-form-item v-if="returnOrder.type===1 || returnOrder.type===3 "  :label="$t('order.returnPrice')" >
-              <price-input v-model="amount" clearable></price-input>
+              <price-input v-model="amount" :disabled="true" clearable></price-input>
             </el-form-item>
             <el-form-item v-if="returnOrder.type===2 && returnOrder.shipping_address"  :label="$t('order.returnUserAddr')" >
               {{returnOrder.shipping_address.address.province + returnOrder.shipping_address.address.city + returnOrder.shipping_address.address.district}}&nbsp;{{returnOrder.shipping_address.address.addr}}
@@ -254,6 +254,7 @@
     },
     watch: {
       tab_status(val) {
+        console.log('val', val)
         this.searchForm.skip = 0
         this.searchForm.limit = this.pageSize
         this.searchForm.status = parseInt(val)
@@ -277,7 +278,7 @@
           this.searchForm.type = 4
           this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
           this.tabList = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
-            { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
+            { value: '9', label: '' }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
           this.getDataListFun()
           this.getAfterSalesCount()
         }
@@ -353,7 +354,7 @@
       } else if (currentRouter === 'orderReturn') {
         this.searchForm.type = 4
         this.orderStatusTab = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
-          { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
+          { value: '9', label: '' }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
       }
       console.log(this.$route.params)
       this.tabList = JSON.parse(JSON.stringify(this.orderStatusTab))

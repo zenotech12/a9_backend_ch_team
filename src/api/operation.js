@@ -277,3 +277,45 @@ export function cutGoodsInfo(id) {
   })
 }
 
+// 直播单.添加
+export function liveItemsAdd(data) {
+  return request({
+    url: 'live-items',
+    method: 'post',
+    data: data
+  })
+}
+
+// 直播单.查.列表
+export function liveItemsList(data) {
+  return request({
+    url: 'live-items',
+    method: 'get',
+    params: data
+  })
+}
+
+// 直播单.查.个
+export function liveItemsInfo(id) {
+  return request({
+    url: 'live-items/' + id,
+    method: 'get'
+  })
+}
+
+// 直播单.删除
+export function liveItemsDel(id) {
+  return request({
+    url: 'live-items/' + id,
+    method: 'delete'
+  })
+}
+
+// 直播单.修改
+export function liveItemsModify(data) {
+  return request({
+    url: 'live-items',
+    method: 'put',
+    data: data
+  })
+}

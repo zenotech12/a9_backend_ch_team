@@ -17,7 +17,8 @@ export default [
     { 'name': '秒杀', 'lk': 'redEnvelope', 'code': '4_4', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '团购', 'lk': 'cobuy', 'code': '4_5', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '砍价免费领', 'lk': 'cutGoods', 'code': '4_6', 'permissions': ['view', 'opt'], 'urls': [] },
-    { 'name': '店铺信息', 'lk': 'shopInfo', 'code': '4_7', 'permissions': ['view', 'opt'], 'urls': [] }
+    { 'name': '店铺信息', 'lk': 'shopInfo', 'code': '4_7', 'permissions': ['view', 'opt'], 'urls': [] },
+    { 'name': '直播管理', 'lk': 'liveBroadcast', 'code': '4_8', 'permissions': ['view', 'opt'], 'urls': [] }
   ] },
   { 'name': '财务管理', 'lk': 'financeMgr', 'code': '5', 'permissions': [], 'urls': [], 'son': [
     { 'name': '账户明细', 'lk': 'financeList', 'code': '5_1', 'permissions': ['view', 'opt'], 'urls': [] },

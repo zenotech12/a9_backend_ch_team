@@ -1,5 +1,5 @@
 <template>
-  <el-input :placeholder="placeHolder" :precision="2" v-model="floatPrice" :clearable="canClear" @change="changeFunc" :controls="false">
+  <el-input :placeholder="placeHolder" :precision="2" v-model="floatPrice" :disabled="disabled" :clearable="canClear" @change="changeFunc" :controls="false">
     <template slot="prepend"><slot name="prepend">$</slot></template>
     <template slot="append"><slot name="append"></slot></template>
   </el-input>
@@ -29,6 +29,12 @@
         }
       },
       canClear: {
+        type: Boolean,
+        default() {
+          return false
+        }
+      },
+      disabled: {
         type: Boolean,
         default() {
           return false

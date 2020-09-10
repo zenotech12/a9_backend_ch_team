@@ -52,5 +52,6 @@ export default {
   address: '地址管理',
   chatRobot: '聊天机器人',
   optLog: '操作日志',
-  cardMgr: '银行卡管理'
+  cardMgr: '银行卡管理',
+  liveBroadcast: '直播管理'
 }

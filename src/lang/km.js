@@ -52,5 +52,6 @@ export default {
   address: 'ការគ្រប់គ្រងអាស័យដ្ខាន',
   chatRobot: 'សារស្វ័យប្រវត្ត',
   optLog: 'ចាកចេញ',
-  cardMgr: 'គណនីធនាគារ'
+  cardMgr: 'គណនីធនាគារ',
+  liveBroadcast: 'ការគ្រប់គ្រងការផ្សាយផ្ទាល់'
 }

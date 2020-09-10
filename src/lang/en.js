@@ -52,5 +52,6 @@ export default {
   address: 'Address Management',
   chatRobot: 'Chat robot',
   optLog: 'Opt Log',
-  cardMgr: 'Bank Card'
+  cardMgr: 'Bank Card',
+  liveBroadcast: 'Live Broadcast'
 }
