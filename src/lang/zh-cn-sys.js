@@ -76,5 +76,5 @@ export default {
   address1: '地址',
   googleMapError: 'google地图打开失败!',
   addressChoose: '地址选择',
-  selectAddress: '请选择地址',
+  selectAddress: '请选择地址'
 }

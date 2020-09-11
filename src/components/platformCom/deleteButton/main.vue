@@ -1,5 +1,5 @@
 <template>
-      <el-button type="text" @click="deleteInfro()" size="small">{{btnName}}</el-button>
+      <el-button :type="btnType" @click="deleteInfro()" size="small">{{btnName}}</el-button>
 </template>
 <script>
   export default {
@@ -19,6 +19,12 @@
         type: String,
         default: function() {
           return this.$t('tools.delete')
+        }
+      },
+      btnType: {
+        type: String,
+        default: function() {
+          return 'text'
         }
       }
     },

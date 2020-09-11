@@ -14,6 +14,7 @@ import priceInput from './priceInput'
 import expressSelector from './expressSelector'
 import propSelector from './propSelector'
 import MapSelector from './MapSelector'
+import SingleFileUpload from './SingleFileUpload'
 
 // 形成组件库
 const components = [
@@ -27,6 +28,7 @@ const components = [
   filterFile,
   imageUpload,
   priceInput,
+  SingleFileUpload,
   expressSelector,
   propSelector,
   MapSelector

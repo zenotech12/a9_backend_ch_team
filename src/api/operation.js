@@ -312,9 +312,9 @@ export function liveItemsDel(id) {
 }
 
 // 直播单.修改
-export function liveItemsModify(data) {
+export function liveItemsModify(id, data) {
   return request({
-    url: 'live-items',
+    url: 'live-items/' + id,
     method: 'put',
     data: data
   })

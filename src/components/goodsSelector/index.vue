@@ -247,6 +247,7 @@
             } else if (val !== JSON.stringify(this.selectedGoodsIds)) {
               this.selectedGoodsIds = JSON.parse(val)
               this.getSelectedGoods(val)
+              console.log('this.selectedGoodsIds', this.selectedGoodsIds)
             }
           } else {
             this.goodsInfo = {}
@@ -286,6 +287,7 @@
     methods: {
       handleSelectionChange(val) {
         this.selectedGoods = val
+        console.log('val', val)
         this.selectedGoodsIds = []
         val.forEach(res => {
           this.selectedGoodsIds.push(res.id)
@@ -294,7 +296,6 @@
       },
       toggleSelection(rows) {
         if (rows) {
-          // debugger
           rows.forEach(row => {
             this.$refs.goodsDataTable.toggleRowSelection(row, true)
           })
@@ -308,6 +309,7 @@
       showGoodsTable1() {
         this.dialogFormVisible = true
         this.$nextTick(() => {
+          console.log('ye')
           this.toggleSelection(this.selectedGoods)
         })
       },
@@ -346,6 +348,7 @@
       getSelectedGoods(gids) {
         spusList({ spu_ids: gids, skip: 0, limit: 1000 }).then(res => {
           this.selectedGoods = res.items
+          console.log('this.selectedGoods', this.selectedGoods)
         })
       },
       getGoodsInfo() {

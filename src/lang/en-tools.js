@@ -53,5 +53,7 @@ export default {
   no: 'No',
   imgUploadTip1: 'Drag files here, or',
   imgUploadTip2: 'Click upload',
-  imgUploadTip3: 'Only JPG / PNG files can be uploaded, and no more than'
+  imgUploadTip3: 'Only JPG / PNG files can be uploaded, and no more than',
+  uploadImgFormat: 'Upload pictures can only be in JPG, PNG format!',
+  uploadImgNoMoreThan: 'Upload image size cannot exceed'
 }

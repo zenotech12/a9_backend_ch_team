@@ -53,5 +53,7 @@ export default {
   no: 'ទេ',
   imgUploadTip1: 'ទាញឯកសារនៅទីនេះឬ',
   imgUploadTip2: 'ចុចបញ្ចូល',
-  imgUploadTip3: 'មានតែឯកសារ JPG / PNG ប៉ុណ្ណោះដែលអាចបញ្ចូលបានបានហើយមិនអាចលើសពីនេះទេ'
+  imgUploadTip3: 'មានតែឯកសារ JPG / PNG ប៉ុណ្ណោះដែលអាចបញ្ចូលបានបានហើយមិនអាចលើសពីនេះទេ',
+  uploadImgFormat: 'បញ្ចូលរូបភាពឡើងបានតែក្នុងទម្រង់ជា JPG, PNG ប៉ុណ្ណោះ!',
+  uploadImgNoMoreThan: 'ទំហំផ្ទុកឡើងមិនអាចលើស'
 }

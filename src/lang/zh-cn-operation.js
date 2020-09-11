@@ -112,5 +112,8 @@ export default {
   adBatchDelTip: '请选择您要删除的广告',
   adEditBatch: '广告添加-批量设置',
   addLive: '添加直播',
-  editLive: '修改直播'
+  editLive: '修改直播',
+  liveName: '直播名称',
+  liveFenMian: '直播封面',
+  uploadTip: '上传的封面图大小不能超过1MB，且图片格式为jpg、png!'
 }

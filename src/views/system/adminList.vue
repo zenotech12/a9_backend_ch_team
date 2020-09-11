@@ -72,7 +72,7 @@
                 <div><el-checkbox :indeterminate="permissionStatus[v.code]['indeterminate']" v-model="permissionStatus[v.code]['all']"  @change="menuChangeFunc($event, v)" >{{$t('global.' + v.lk)}}</el-checkbox></div>
                 <el-row style="padding-left: 40px" v-for="(son, sk) in v.son" :key="sk">
                   <el-col :span="12"><el-checkbox :indeterminate="permissionStatus[son.code]['indeterminate']" v-model="permissionStatus[son.code]['all']" @change="functionChangeFunc($event, son)" >{{$t('global.' + son.lk)}}</el-checkbox></el-col>
-                  <el-col :span="6" v-for="per in son.permissions"><el-checkbox  v-model="permissionStatus[son.code][per]" :label="per" :key="per" @change="permissionChangeFunc($event, son.code, per)">{{$t('sys.permission_' + per)}}</el-checkbox></el-col>
+                  <el-col :span="6" v-for="(per, i) in son.permissions" :key="i"><el-checkbox  v-model="permissionStatus[son.code][per]" :label="per" :key="per" @change="permissionChangeFunc($event, son.code, per)">{{$t('sys.permission_' + per)}}</el-checkbox></el-col>
                   <!--<el-checkbox-group >-->
                     <!--<el-checkbox v-for="per in son.permissions" :label="per" :key="per">{{$t('sys.permission_' + per)}}</el-checkbox>-->
                   <!--</el-checkbox-group>-->
