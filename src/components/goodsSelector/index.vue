@@ -299,18 +299,25 @@
           return
         }
         if (rows) {
-          this.tableData.body.forEach(item => {
-            const exit = rows.find(r => {
-              return r.id === item.id
+          // this.tableData.body.forEach(item => {
+          //   const exit = rows.find(r => {
+          //     return r.id === item.id
+          //   })
+          //   if (exit) {
+          //     console.log('exit', exit)
+          //     this.$refs.goodsDataTable.toggleRowSelection(item, true)
+          //   }
+          // })
+          rows.forEach(row => {
+            const find = this.tableData.body.find(item => {
+              return item.id === row.id
             })
-            if (exit) {
-              console.log('exit', exit)
-              this.$refs.goodsDataTable.toggleRowSelection(item, true)
+            if (find) {
+              this.$refs.goodsDataTable.toggleRowSelection(find, true)
+            } else {
+              this.$refs.goodsDataTable.toggleRowSelection(row, true)
             }
           })
-          // rows.forEach(row => {
-          //   this.$refs.goodsDataTable.toggleRowSelection(row, true)
-          // })
         } else {
           this.$refs.goodsDataTable.clearSelection()
         }
