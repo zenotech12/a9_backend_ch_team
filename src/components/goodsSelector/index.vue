@@ -47,7 +47,7 @@
       <el-row>
         <el-col :span="24">
           <el-table ref="goodsDataTable" row-key="id" stripe v-loading="tableData.loading" @selection-change="handleSelectionChange" :data="tableData.body" style="width: 100%" highlight-current-row @current-change="selectGoodsChange">
-            <el-table-column v-if="mulit" type="selection" width="55">
+            <el-table-column v-if="mulit" type="selection" :reserve-selection="true" width="55">
               <!--<template  slot-scope="scope">-->
                 <!--<el-checkbox :checked="isSelected(scope.row)" @change="mulitSelectGoodsChange(scope.row)"></el-checkbox>-->
               <!--</template>-->
@@ -95,7 +95,7 @@
                 @size-change="sizeChangeFunc"
                 @current-change="pageChangeFunc"
                 :current-page.sync="currentPage"
-                :page-size="10"
+                :page-size="pageSize"
                 layout="total, prev, pager, next, jumper"
                 :total="itemCount">
               </el-pagination>
@@ -122,7 +122,7 @@
         typeProp: { value: 'id', label: 'name', children: 'items' },
         searchForm: {
           skip: 0,
-          limit: 10,
+          limit: 5,
           approve_status: 0, // 审批状态 0所有 1待审批 2审批成功 3拒绝
           type_id: '',
           shelf_status: 0, // 上架状态 所有0 未上架1 上架2
@@ -162,7 +162,7 @@
           body: []
         },
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 5,
         goodsInfo: { id: '', name: '' },
         selectedGoods: [],
         dialogFormVisible: false,
@@ -305,9 +305,28 @@
         this.emitGoodsIds()
       },
       toggleSelection(rows) {
+        if (!this.$refs.goodsDataTable) {
+          return
+        }
         if (rows) {
+          // this.tableData.body.forEach(item => {
+          //   const exit = rows.find(r => {
+          //     return r.id === item.id
+          //   })
+          //   if (exit) {
+          //     console.log('exit', exit)
+          //     this.$refs.goodsDataTable.toggleRowSelection(item, true)
+          //   }
+          // })
           rows.forEach(row => {
-            this.$refs.goodsDataTable.toggleRowSelection(row, true)
+            const find = this.tableData.body.find(item => {
+              return item.id === row.id
+            })
+            if (find) {
+              this.$refs.goodsDataTable.toggleRowSelection(find, true)
+            } else {
+              this.$refs.goodsDataTable.toggleRowSelection(row, true)
+            }
           })
         } else {
           this.$refs.goodsDataTable.clearSelection()
@@ -319,7 +338,6 @@
       showGoodsTable1() {
         this.dialogFormVisible = true
         this.$nextTick(() => {
-          console.log('ye')
           this.toggleSelection(this.selectedGoods)
         })
       },
@@ -352,6 +370,18 @@
             this.tableData.loading = false
             this.itemCount = response.total
             this.tableData.body = response.items
+            this.$nextTick(() => {
+              if (this.$refs.goodsDataTable) {
+                this.tableData.body.forEach(item => {
+                  const exit = this.selectedGoodsIds.find(r => {
+                    return r.id === item.id
+                  })
+                  if (exit) {
+                    this.$refs.goodsDataTable.toggleRowSelection(item, true)
+                  }
+                })
+              }
+            })
           }
         })
       },
@@ -370,7 +400,6 @@
         this.getTableData()
       },
       selectGoodsChange(val) {
-        console.log(val, 'selected')
         if (!this.mulit) {
           this.goodsInfo = JSON.parse(JSON.stringify(val))
           this.$emit('goodSelectedChange', this.goodsInfo.id)
