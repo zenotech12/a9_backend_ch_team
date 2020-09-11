@@ -126,7 +126,8 @@
           approve_status: 0, // 审批状态 0所有 1待审批 2审批成功 3拒绝
           type_id: '',
           shelf_status: 0, // 上架状态 所有0 未上架1 上架2
-          distribution: 0 // 0所有 1不参与分销 2参与分销
+          distribution: 0, // 0所有 1不参与分销 2参与分销
+          not_spu_ids: '' // 除开里面的spu
         },
         approveDisable: false,
         shelfDisable: false,
@@ -181,6 +182,12 @@
           return ''
         }
       },
+      notSpuIds: {
+        type: String,
+        default: function() {
+          return ''
+        }
+      },
       mulit: {
         type: Boolean,
         default() {
@@ -209,6 +216,9 @@
     created() {
     },
     mounted() {
+      if (this.notSpuIds !== '') {
+        this.searchForm.not_spu_ids = this.notSpuIds
+      }
       this.getTableData()
       this.getTypeList()
     },

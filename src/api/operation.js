@@ -319,3 +319,12 @@ export function liveItemsModify(id, data) {
     data: data
   })
 }
+
+// 直播单.即时添加商品
+export function liveItemsAddGoods(id, data) {
+  return request({
+    url: 'live-items/' + id + '/spus',
+    method: 'post',
+    data: data
+  })
+}
