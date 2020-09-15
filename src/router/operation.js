@@ -43,7 +43,7 @@ const order = [{
   }, {
     path: 'liveBroadcast',
     name: 'liveBroadcast',
-    meta: { title: 'liveBroadcast', icon: 'list', code: '4_7' },
+    meta: { title: 'liveBroadcast', icon: 'list', code: '4_8' },
     component: () => import('@/views/operation/liveBroadcast')
   }]
 }]

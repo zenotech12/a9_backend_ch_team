@@ -3,6 +3,7 @@
        <el-upload :headers="fileUploadHeader"  name="image"
                    :action="fileUploadUrl"
                    :show-file-list="false"
+                   :disabled="disabled"
                    :on-success="handleUploadSuccess"
                    :before-upload="beforeCertificateUpload">
          <div v-if="imageUrl" class="imgBox">
@@ -51,6 +52,12 @@
         type: String,
         default: function() {
           return ''
+        }
+      },
+      disabled: {
+        type: Boolean,
+        default: function() {
+          return false
         }
       }
     },

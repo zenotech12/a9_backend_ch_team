@@ -4,8 +4,13 @@
       <el-button slot="append" icon="el-icon-search" @click="showGoodsTable"></el-button>
     </el-input>
     <div v-else>
-      <el-tag :key="goods.id" v-for="(goods, k) in selectedGoods" closable :disable-transitions="false"  @close="deleteSelectedGoods(k)">{{goods.name}}</el-tag>
-      <el-button icon="el-icon-search" @click="showGoodsTable1" size="mini"></el-button>
+      <div v-if="showTag">
+        <el-tag :key="goods.id" v-for="(goods, k) in selectedGoods" :closable="disabled" :disable-transitions="false"  @close="deleteSelectedGoods(k)">{{goods.name}}</el-tag>
+        <el-button icon="el-icon-search" :disabled="!disabled" @click="showGoodsTable1" size="mini"></el-button>
+      </div>
+      <div v-if="!showTag">
+        <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsTable1">选择商品</el-button>
+      </div>
     </div>
     <el-dialog :title="$t('goods.selectorTitle')" v-if="dialogFormVisible" :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
       <!-- 搜索 -->
@@ -194,6 +199,24 @@
           return false
         }
       },
+      disabled: {
+        type: Boolean,
+        default() {
+          return true
+        }
+      },
+      trigger: {
+        type: Boolean,
+        default() {
+          return true
+        }
+      },
+      showTag: {
+        type: Boolean,
+        default() {
+          return true
+        }
+      },
       approve_status: {
         type: Number,
         default() {
@@ -206,6 +229,12 @@
           return 0
         }
       },
+      haveTime: {
+        type: Boolean,
+        default() {
+          return false
+        }
+      },
       distribution: {
         type: Number,
         default() {
@@ -216,7 +245,7 @@
     created() {
     },
     mounted() {
-      if (this.notSpuIds !== '') {
+      if (this.notSpuIds !== '' && this.notSpuIds.length > 24) {
         this.searchForm.not_spu_ids = this.notSpuIds
       }
       this.getTableData()
@@ -236,6 +265,16 @@
           this.getTableData()
         }
       },
+      notSpuIds(val) {
+        if (val !== '' && val.length > 24) {
+          this.searchForm.not_spu_ids = this.notSpuIds
+          this.getTableData()
+        }
+        // console.log('notSpuIds', val)
+      },
+      // haveTime(val) {
+      //   console.log('valll;', val)
+      // },
       selectTypes(val) {
         if (val.length < 1) {
           this.searchForm.type_id = ''
@@ -257,7 +296,7 @@
             } else if (val !== JSON.stringify(this.selectedGoodsIds)) {
               this.selectedGoodsIds = JSON.parse(val)
               this.getSelectedGoods(val)
-              console.log('this.selectedGoodsIds', this.selectedGoodsIds)
+              // console.log('this.selectedGoodsIds', this.selectedGoodsIds)
             }
           } else {
             this.goodsInfo = {}
@@ -297,12 +336,14 @@
     methods: {
       handleSelectionChange(val) {
         this.selectedGoods = val
-        console.log('val', val)
+        // console.log('val', val)
         this.selectedGoodsIds = []
         val.forEach(res => {
           this.selectedGoodsIds.push(res.id)
         })
-        this.emitGoodsIds()
+        if (this.trigger) {
+          this.emitGoodsIds()
+        }
       },
       toggleSelection(rows) {
         if (!this.$refs.goodsDataTable) {
@@ -388,7 +429,6 @@
       getSelectedGoods(gids) {
         spusList({ spu_ids: gids, skip: 0, limit: 1000 }).then(res => {
           this.selectedGoods = res.items
-          console.log('this.selectedGoods', this.selectedGoods)
         })
       },
       getGoodsInfo() {
@@ -437,8 +477,6 @@
       deleteSelectedGoods(k) {
         this.selectedGoodsIds.splice(this.selectedGoodsIds.indexOf(this.selectedGoods[k].id), 1)
         this.selectedGoods.splice(k, 1)
-        console.log('selectedGoodsIds', this.selectedGoodsIds)
-        console.log('selectedGoods', this.selectedGoods)
         this.emitGoodsIds()
       },
       emitGoodsIds() {

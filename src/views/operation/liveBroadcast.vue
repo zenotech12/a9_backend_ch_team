@@ -13,46 +13,42 @@
         </el-row>
         <el-row v-if="tabStatus === 'live'">
           <el-col :span="24">
-            <el-row v-if="Object.keys(currentLive).length !== 0">
+            <el-row>
               <el-col :span="24" class="liveBigBoxCurrent">
-                <el-form ref="form" :model="form" label-width="120px">
+                <el-form ref="form" :inline="true" :model="form" label-width="120px">
                   <el-row>
                     <el-col :span="8">
-                      <el-form-item label="直播间名称：">
-                        {{currentLive.name}}
+                      <el-form-item :label="$t('operation.liveName')">
+                        <el-input v-model="form.name" :disabled="modifyDisabled"></el-input>
                       </el-form-item>
                       <el-form-item label="直播状态：">
-                        <span v-if="currentLive.status === 1">即将开播</span> <span v-if="currentLive.status === 2">直播中</span>
+                        <span v-if="currentLive.status === 1">即将开播</span>
+                        <span v-if="currentLive.status === 2">直播中</span>
                       </el-form-item>
                     </el-col>
-                    <el-col :span="12">
-                      <el-form-item label="直播封面：">
-                        <img :src="getImageUrl(currentLive.cover_imgs, 300, 300)" style="width: 100px;height: 100px;border-radius: 5px" alt="">
+                    <el-col :span="8">
+                      <el-form-item :label="$t('operation.liveFenMian')">
+                        <single-file-upload v-model="coverImgs" :promptInfo1="promptInfo" :disabled="modifyDisabled"></single-file-upload>
                       </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
               </el-col>
-              <el-col :span="24">
-                <el-divider>售卖商品</el-divider>
-              </el-col>
-              <!--<el-col :span="20">-->
-                <!--<el-form :inline="true">-->
-                  <!--<el-form-item>-->
-                    <!--<el-input v-model="searchKey" :placeholder="$t('tools.searchKeyTip')" clearable @change="search"></el-input>-->
-                  <!--</el-form-item>-->
-                  <!--&lt;!&ndash;<el-form-item class="searchBtn">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>&ndash;&gt;-->
-                  <!--&lt;!&ndash;</el-form-item>&ndash;&gt;-->
-                <!--</el-form>-->
-              <!--</el-col>-->
-              <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
+              <!--直播中可添加-->
+              <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt') && currentLive.status === 2">
                 <div class="boxFuncBtn">
-                  <el-button type="primary" size="mini" icon="el-icon-plus" @click="addGoods">{{$t('tools.add')}}</el-button>
+                  <goods-selector :mulit="true" v-if="modifyDisabled" :trigger="false" :haveTime.sync="modifyDisabled" :showTag="!modifyDisabled" v-model="spu_ids" :notSpuIds="JSON.stringify(currentLive.spu_ids)" @selectChanged="addNewGoods" :approve_status="2" :shelf_status="2"></goods-selector>
+                  <!--<el-button type="primary" size="mini" icon="el-icon-plus" @click="addGoods">{{$t('tools.add')}}</el-button>-->
+                </div>
+              </el-col>
+              <!--还没直播时-->
+              <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt') && currentLive.status !== 2">
+                <div class="boxFuncBtn">
+                  <goods-selector :mulit="true" :showTag="modifyDisabled" :trigger="false" v-model="form.spu_ids" @selectChanged="selectChanged" :approve_status="2" :shelf_status="2"></goods-selector>
                 </div>
               </el-col>
               <el-col :span="24">
-                <div style="height: calc(100vh - 450px)">
+                <div style="height: calc(100vh - 490px)">
                     <el-table stripe border :data="tableData" height="calc(100% - -10px)">
                       <el-table-column prop="code">
                         <template slot="header" slot-scope="scope">
@@ -97,30 +93,28 @@
                           </template>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="inventory" :label="$t('goods.inventory')">
-                      </el-table-column>
-                      <el-table-column prop="sales"  :label="$t('goods.saled')">
-                      </el-table-column>
-                      <el-table-column prop="gen_time"  :label="$t('goods.publishTime')">
+                      <el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>
+                      <el-table-column prop="sales"  :label="$t('goods.saled')"></el-table-column>
+                      <el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>
+                      <el-table-column :label="$t('tools.opt')" v-if="!modifyDisabled">
+                        <template slot-scope="scope">
+                          <i class="el-icon-delete" style="font-size: 18px;cursor: pointer" @click="delCurrentGoods(scope.row.id)"></i>
+                        </template>
                       </el-table-column>
                     </el-table>
                   </div>
               </el-col>
               <el-col :span="24" style="margin-top: 20px">
-                <el-button type="primary" size="mini" style="margin-left: 20px" @click="editLive">修改</el-button>
-                <delete-button :promptInfor="delTip" v-if="currentLive.status === 1" :btnType="primary" style="margin-left: 20px" @delData="delCurrentLive"></delete-button>
-              </el-col>
-            </el-row>
-            <el-row class="funcList" v-else>
-              <el-col :span="24" v-if="permissionCheck('opt')" style="display: flex;align-items: center;justify-content: center;height: calc(100vh - 200px)">
-                <el-button type="primary" size="small" @click="addLive">{{$t('tools.add')}}</el-button>
+                <confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="type === 'add' && permissionCheck('opt') && currentLive.status === 1" :confirmButtonInfor="$t('tools.save')"></confirm-button>
+                <confirm-button @confirmButton="editLive" :disabled="submitDisabled" v-if="type === 'edit' && permissionCheck('opt') && currentLive.status === 1" :confirmButtonInfor="$t('tools.save')"></confirm-button>
+                <delete-button :promptInfor="delTip" v-if="currentLive.status === 1 && permissionCheck('opt')" :btnType="primary" style="margin-left: 20px" @delData="delCurrentLive"></delete-button>
               </el-col>
             </el-row>
           </el-col>
         </el-row>
         <el-row v-if="tabStatus === 'history'">
           <el-col :span="24">
-            <div style="height: calc(100vh - 190px)">
+            <div style="height: calc(100vh - 200px)">
               <el-table stripe border :data="historyData" height="calc(100% - 30px)">
                 <el-table-column label="名称" prop="name"></el-table-column>
                 <el-table-column label="封面">
@@ -134,12 +128,28 @@
                     </el-popover>
                   </template>
                 </el-table-column>
-                <el-table-column label="直播时段"></el-table-column>
-                <el-table-column label="观看人数"></el-table-column>
-                <el-table-column label="留言人次"></el-table-column>
-                <el-table-column label="售卖商品数"></el-table-column>
-                <el-table-column label="订单数"></el-table-column>
-                <el-table-column label="操作"></el-table-column>
+                <el-table-column label="直播时段">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.start_time}}~{{scope.row.end_time}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="观看人数" prop="visiter_count"></el-table-column>
+                <el-table-column label="点赞数" prop="thumb_count"></el-table-column>
+                <el-table-column label="售卖商品数" prop="goods_sale_count">
+                  <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="showOrder(scope.row)">{{scope.row.goods_sale_count}}</el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column label="订单数" prop="order_count">
+                  <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="showOrder(scope.row)">{{scope.row.order_count}}</el-button>
+                  </template>
+                </el-table-column>
+                <!--<el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">-->
+                  <!--<template slot-scope="scope">-->
+                    <!--<el-button type="text" @click="showLiveVideo(scope.row)" size="small">回看</el-button>-->
+                  <!--</template>-->
+                <!--</el-table-column>-->
               </el-table>
               <el-row style="margin-top: 10px">
                 <el-col :span="24" style="text-align: right;">
@@ -184,6 +194,153 @@
             <el-button @click="goodsDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
+        <el-dialog title="订单列表" width="80%" @close="orderShowDialog = false" :visible.sync="orderShowDialog" :close-on-click-modal="false" center >
+          <el-row>
+            <el-col :span="24" style="height: calc(100vh - 270px)">
+              <el-table stripe border :data="orderData" height="calc(100% - 18px)" @selection-change="handleSelectionChange">
+                <el-table-column :label="$t('order.no')" width="200px" fixed="left">
+                  <template slot-scope="scope">
+                    <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
+                    <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===3" size="mini">{{$t('order.orderType3')}}</el-tag>
+                    <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===4" size="mini">{{$t('order.orderType4')}}</el-tag>
+                    {{scope.row.no}}<br/>
+                    <el-popover v-if="scope.row.comment || (scope.row.merchant_comments && scope.row.merchant_comments.length > 0)" placement="right" width="300" trigger="click">
+                      <template v-if="scope.row.comment">
+                        <el-divider content-position="left">{{$t('order.userBz')}}</el-divider>
+                        <div style="padding: 0px 10px; text-align: left">
+                          {{scope.row.comment}}
+                        </div>
+                      </template>
+                      <template v-if="scope.row.merchant_comments && scope.row.merchant_comments.length > 0">
+                        <el-divider content-position="left">{{$t('order.businessBz')}}</el-divider>
+                        <el-timeline style="margin-top: 10px">
+                          <el-timeline-item
+                            v-for="(comments, index) in scope.row.merchant_comments"
+                            :key="index"
+                            :timestamp="comments.gen_time">
+                            <div class="ui"><span>{{comments.operator_name}}</span>{{comments.comment}}</div>
+                          </el-timeline-item>
+                        </el-timeline>
+                      </template>
+                      <a slot="reference" class="gt">{{$t('order.note')}}<i class="el-icon-arrow-right"></i></a>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.user')" width="130">
+                  <template slot-scope="scope">
+                    <div class="ui">{{scope.row.user_nick_name}}</div>
+                    <div class="ui">{{scope.row.user_mobile}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column  :label="$t('order.goods')" min-width="400">
+                  <template  slot-scope="scope">
+                    <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
+                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                      <div class="g-info">
+                        <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
+                          <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.prevent="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
+                        </p>
+                        <p>
+                          <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
+                        </p>
+                        <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                      </div>
+                      <div class="clear"></div>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.price')" width="130">
+                  <template slot-scope="scope" >
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{scope.row.pay_way}})</span><br/>
+                    <span>({{$t('order.includePostage')}}：{{scope.row.postage | price}})</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
+                  <template slot-scope="scope" >
+                    <div class="ui">
+                      <span>{{$t('order.expressAddr')}}：</span>
+                      {{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}
+                      {{scope.row.shipping_address.address.addr}}
+                    </div>
+                    <div class="ui">
+                      <span>{{$t('order.expressUser')}}：</span>
+                      {{scope.row.shipping_address.contacter_name}}&nbsp;&nbsp;
+                      {{scope.row.shipping_address.mobile}}
+                    </div>
+                    <div class="ui" v-if="scope.row.express.novar">
+                      <span>{{$t('order.expressNo')}}：</span>
+                      <el-popover placement="left" width="300" trigger="click" v-if="scope.row.express.company === 'zto' || scope.row.express.company === 'rider'">
+                        <div v-if="expressInfo && !showOrderStatus">
+                          <el-timeline style="margin-top: 10px" v-if="expressInfo.length > 0">
+                            <el-timeline-item
+                              v-for="(record, index) in expressInfo"
+                              :key="index"
+                              :timestamp="record.time">
+                              <div class="ui"><span>{{record.message}}</span></div>
+                            </el-timeline-item>
+                          </el-timeline>
+                          <p v-else style="color: #333; font-size: 14px; text-align: center; font-weight: bold">{{$t('order.zwddwl')}}</p>
+                        </div>
+                        <div v-if="showOrderStatus">
+                          <el-timeline style="margin-top: 10px">
+                            <el-timeline-item
+                              v-for="(record, index) in scope.row.operation_records"
+                              :key="index"
+                              :timestamp="record.time">
+                              <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
+                            </el-timeline-item>
+                          </el-timeline>
+                        </div>
+                        <a @click="clickStatus(scope.row)" slot="reference">
+                          {{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}
+                          <i class="el-icon-arrow-right"></i>
+                        </a>
+                      </el-popover>
+                      <a v-else target="_blank" :href="getKuaidi100Url(scope.row.express.company, scope.row.express.novar)">
+                        {{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}
+                        <i class="el-icon-arrow-right"></i>
+                      </a>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.status')" width="90">
+                  <template slot-scope="scope">
+                    <el-tag >{{orderStatus[scope.row.status]}}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.genTime')" width="180">
+                  <template slot-scope="scope" >
+                    <el-popover placement="left" width="300" trigger="click">
+                      <el-timeline style="margin-top: 10px">
+                        <el-timeline-item
+                          v-for="(record, index) in scope.row.operation_records"
+                          :key="index"
+                          :timestamp="record.time">
+                          <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
+                        </el-timeline-item>
+                      </el-timeline>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.gen_time}}</a>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-row style="margin-top: 10px" v-if="itemCountOrder === 0">
+                <el-col :span="24" style="text-align: right;">
+                  <el-pagination
+                    :current-page.sync="currentPageOrder"
+                    :page-size.sync="pageSizeOrder"
+                    :page-sizes="[10, 30, 50, 100, 500]"
+                    layout="total, prev, pager, next, jumper,sizes"
+                    :total="itemCountOrder">
+                  </el-pagination>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="orderShowDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -194,6 +351,7 @@
   import goodsSelector from '@/components/goodsSelector'
   import { liveItemsModify, liveItemsAdd, liveItemsDel, liveItemsList, liveItemsAddGoods } from '@/api/operation'
   import { spusList } from '@/api/goods'
+  import { ordersList } from '@/api/order'
   export default {
     components: {
       goodsSelector
@@ -239,7 +397,21 @@
           skip: 0,
           limit: pz,
           status: 4
-        }
+        },
+        orderShowDialog: false,
+        orderData: [],
+        currentPageOrder: 1,
+        pageSizeOrder: pz,
+        itemCountOrder: 0,
+        orderSearch: {
+          skip: 0,
+          limit: pz,
+          bt: '',
+          et: '',
+          spu_ids: '',
+          order_status: -1
+        },
+        modifyDisabled: false
       }
     },
     computed: {
@@ -281,9 +453,66 @@
           })
           this.tableData = array
         }
+      },
+      currentPageOrder(val) {
+        this.orderSearch.skip = (val - 1) * this.pageSizeOrder
+        this.orderSearch.limit = this.pageSizeOrder
+        this.getOrderList()
+      },
+      pageSizeOrder(val) {
+        this.orderSearch.skip = 0
+        this.orderSearch.limit = val
+        this.getOrderList()
       }
     },
     methods: {
+      delCurrentGoods(id) {
+        const arrayId = JSON.parse(this.form.spu_ids)
+        arrayId.splice(arrayId.indexOf(id), 1)
+        this.form.spu_ids = JSON.stringify(arrayId)
+        const index = this.tableData.findIndex(c => {
+          if (c.id === id) {
+            return c
+          }
+        })
+        this.tableData.splice(index, 1)
+        this.tableData && this.tableData.forEach((v, k) => {
+          v['code'] = k + 1
+        })
+        this.currentDataGoods = this.tableData
+      },
+      addNewGoods(data) {
+        console.log('data', data)
+        console.log('spu_ids', this.spu_ids)
+        liveItemsAddGoods(this.currentLive.id, { 'spu_ids': this.spu_ids }).then(res => {
+          this.getLiveListFunc()
+        })
+      },
+      selectChanged(data) {
+        data && data.forEach((v, k) => {
+          v['code'] = k + 1
+        })
+        // console.log('array', array)
+        // console.log('this.currentLive.spu_ids', this.currentLive.spu_ids)
+        this.tableData = JSON.parse(JSON.stringify(data))
+        this.currentDataGoods = JSON.parse(JSON.stringify(data))
+      },
+      showOrder(data) {
+        this.orderSearch.bt = data.start_time
+        this.orderSearch.et = data.end_time
+        this.orderSearch.spu_ids = data.spu_ids ? JSON.stringify(data.spu_ids) : ''
+        this.getOrderList()
+        this.orderShowDialog = true
+      },
+      getOrderList() {
+        ordersList(this.orderSearch).then(res => {
+          this.orderData = res.items
+          this.itemCountOrder = res.total
+        })
+      },
+      showLiveVideo(data) { // 回看
+
+      },
       // 历史记录
       getHistoryList() {
         liveItemsList(this.historySearch).then(res => {
@@ -303,7 +532,7 @@
         })
       },
       goodsPreview(row) {
-        return 'https://www.a9kh.com/goods/' + row.id + '.html'
+        // return 'https://www.a9kh.com/goods/' + row.id + '.html'
       },
       cancel() {
         this.formEditDialog = false
@@ -318,27 +547,20 @@
         const result = this.adPosition.find(item => { return item.code === code })
         return result ? result.name : ''
       },
-      addLive() {
-        this.isBatch = true
-        this.form.spu_ids = ''
-        this.form.cover_imgs = ''
-        this.form.name = ''
-        this.coverImgs = ''
-        this.type = 'add'
-        this.formEditDialog = true
-      },
       editLive() {
-        this.formEditDialog = true
         this.type = 'edit'
-        this.form.name = this.currentLive.name
-        this.form.cover_imgs = this.currentLive.cover_imgs ? JSON.stringify(this.currentLive.cover_imgs) : ''
-        this.coverImgs = this.currentLive.cover_imgs ? this.currentLive.cover_imgs[0] : ''
-        this.form.spu_ids = this.currentLive.spu_ids ? JSON.stringify(this.currentLive.spu_ids) : ''
-        // this.form.spu_ids = ''
+        console.log('form', this.form)
+        this.saveAdFunc()
       },
       delCurrentLive() {
         liveItemsDel(this.currentLive.id).then(res => {
-          this.getLiveListFunc()
+          this.form.name = ''
+          this.form.cover_imgs = ''
+          this.coverImgs = ''
+          this.form.spu_ids = ''
+          this.tableData = []
+          this.currentDataGoods = []
+          // this.getLiveListFunc()
         })
       },
       imageUploadSuccess(res) {
@@ -360,7 +582,7 @@
         if (this.type === 'edit') {
           liveItemsModify(this.currentLive.id, this.form).then(res => {
             this.getLiveListFunc()
-            this.formEditDialog = false
+            this.$message.success('保存成功')
             this.submitDisabled = false
           }).catch(() => {
             this.submitDisabled = false
@@ -368,7 +590,7 @@
         } else if (this.type === 'add') {
           liveItemsAdd(this.form).then(res => {
             this.getLiveListFunc()
-            this.formEditDialog = false
+            this.$message.success('保存成功')
             this.submitDisabled = false
           }).catch(() => {
             this.submitDisabled = false
@@ -377,9 +599,22 @@
       },
       getLiveListFunc() {
         liveItemsList(this.searchForm).then(res => {
-          this.currentLive = res.items[0] ? res.items[0] : {}
+          this.currentLive = res.items[0] ? JSON.parse(JSON.stringify(res.items[0])) : {}
+          this.form.name = res.items[0] ? res.items[0].name : ''
+          this.coverImgs = res.items[0] ? res.items[0].cover_imgs[0] : ''
+          this.form.spu_ids = res.items[0] ? JSON.stringify(res.items[0].spu_ids) : ''
+          // this.currentLive.status = 2
+          // console.log('this.currentLive', this.currentLive.spu_ids)
           if (res.items[0]) {
+            this.type = 'edit'
+            if (res.items[0].status === 2) {
+              this.modifyDisabled = true
+            } else if (res.items[0].status === 1) {
+              this.modifyDisabled = false
+            }
             this.getLiveGoodsList()
+          } else {
+            this.type = 'add'
           }
         })
       },
@@ -389,7 +624,7 @@
           //   item['code'] = k + 1
           // })
           const array = []
-          this.currentLive.spu_ids.forEach((v, k) => {
+          this.currentLive.spu_ids && this.currentLive.spu_ids.forEach((v, k) => {
             res.items.forEach(z => {
               if (v === z.id) {
                 z['code'] = k + 1
@@ -397,18 +632,18 @@
               }
             })
           })
-          console.log('array', array)
-          console.log('this.currentLive.spu_ids', this.currentLive.spu_ids)
-          this.tableData = array
-          this.currentDataGoods = array
+          // console.log('array', array)
+          // console.log('this.currentLive.spu_ids', this.currentLive.spu_ids)
+          this.tableData = JSON.parse(JSON.stringify(array))
+          this.currentDataGoods = JSON.parse(JSON.stringify(array))
         })
       }
     },
     mounted() {
-      this.getLiveListFunc()
-      this.getHistoryList()
     },
     created() {
+      this.getLiveListFunc()
+      this.getHistoryList()
     }
   }
 </script>
