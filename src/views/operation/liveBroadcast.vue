@@ -6,8 +6,8 @@
         <el-row>
           <el-col :span ="24">
             <el-tabs v-model="tabStatus">
-              <el-tab-pane label="直播中、即将开播" name="live"></el-tab-pane>
-              <el-tab-pane label="历史记录" name="history"></el-tab-pane>
+              <el-tab-pane :label="$t('operation.liveComingSoon')" name="live"></el-tab-pane>
+              <el-tab-pane :label="$t('operation.historyRecord')" name="history"></el-tab-pane>
             </el-tabs>
           </el-col>
         </el-row>
@@ -21,9 +21,9 @@
                       <el-form-item :label="$t('operation.liveName')">
                         <el-input v-model="form.name" :disabled="modifyDisabled"></el-input>
                       </el-form-item>
-                      <el-form-item label="直播状态：">
-                        <span v-if="currentLive.status === 1">即将开播</span>
-                        <span v-if="currentLive.status === 2">直播中</span>
+                      <el-form-item :label="$t('operation.liveStatus')">
+                        <span v-if="currentLive.status === 1">{{$t('operation.comingSoon')}}</span>
+                        <span v-if="currentLive.status === 2">{{$t('operation.live')}}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -56,7 +56,7 @@
                             v-model="searchCode"
                             size="mini"
                             clearable
-                            placeholder="商品编号"/>
+                            :placeholder="$t('operation.goodsCode')"/>
                         </template>
                       </el-table-column>
                       <el-table-column>
@@ -116,8 +116,8 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 200px)">
               <el-table stripe border :data="historyData" height="calc(100% - 30px)">
-                <el-table-column label="名称" prop="name"></el-table-column>
-                <el-table-column label="封面">
+                <el-table-column :label="$t('operation.name')" prop="name"></el-table-column>
+                <el-table-column :label="$t('operation.cover')">
                   <template slot-scope="scope">
                     <el-popover class="pointer"
                                 placement="right"
@@ -128,19 +128,19 @@
                     </el-popover>
                   </template>
                 </el-table-column>
-                <el-table-column label="直播时段">
+                <el-table-column :label="$t('operation.liveTime')">
                   <template slot-scope="scope">
                     <span>{{scope.row.start_time}}~{{scope.row.end_time}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="观看人数" prop="visiter_count"></el-table-column>
-                <el-table-column label="点赞数" prop="thumb_count"></el-table-column>
-                <el-table-column label="售卖商品数" prop="goods_sale_count">
+                <el-table-column :label="$t('operation.lookNumberPeople')" prop="visiter_count"></el-table-column>
+                <el-table-column :label="$t('operation.likes')" prop="thumb_count"></el-table-column>
+                <el-table-column :label="$t('operation.numberGoodsSold')" prop="goods_sale_count">
                   <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showOrder(scope.row)">{{scope.row.goods_sale_count}}</el-button>
                   </template>
                 </el-table-column>
-                <el-table-column label="订单数" prop="order_count">
+                <el-table-column :label="$t('operation.orderNumber')" prop="order_count">
                   <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showOrder(scope.row)">{{scope.row.order_count}}</el-button>
                   </template>
@@ -183,7 +183,7 @@
           </div>
         </el-dialog>
         <!--新增商品-->
-        <el-dialog title="新增商品" width="700px" @close="goodsDialog = false" :visible.sync="goodsDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('operation.addNewGoods')" width="700px" @close="goodsDialog = false" :visible.sync="goodsDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px">
             <el-form-item :label="$t('operation.goods')">
               <goods-selector :mulit="true" v-model="spu_ids" :notSpuIds="JSON.stringify(currentLive.spu_ids)" :approve_status="2" :shelf_status="2"></goods-selector>
@@ -194,9 +194,10 @@
             <el-button @click="goodsDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
-        <el-dialog title="订单列表" width="80%" @close="orderShowDialog = false" :visible.sync="orderShowDialog" :close-on-click-modal="false" center >
+        <!--订单列表-->
+        <el-dialog :title="$t('operation.orderList')" width="80%" @close="orderShowDialog = false" :visible.sync="orderShowDialog" :close-on-click-modal="false" center >
           <el-row>
-            <el-col :span="24" style="height: calc(100vh - 270px)">
+            <el-col :span="24" style="height: calc(100vh - 320px)">
               <el-table stripe border :data="orderData" height="calc(100% - 18px)" @selection-change="handleSelectionChange">
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
@@ -385,7 +386,7 @@
         type: 'add',
         coverImgs: '',
         currentLive: {},
-        delTip: '确定删除当前直播间？',
+        delTip: this.$t('operation.delTipLive'),
         primary: 'primary',
         goodsDialog: false,
         addGoodsDisable: false,
@@ -549,7 +550,7 @@
       },
       editLive() {
         this.type = 'edit'
-        console.log('form', this.form)
+        // console.log('form', this.form)
         this.saveAdFunc()
       },
       delCurrentLive() {
@@ -569,20 +570,20 @@
       },
       saveAdFunc() {
         this.form.cover_imgs = JSON.stringify([this.coverImgs])
-        console.log('this.form', this.form)
+        // console.log('this.form', this.form)
         if (this.form.name === '') {
-          this.$message.error('请输入直播间名称')
+          this.$message.error(this.$t('operation.enterLiveName'))
           return
         }
         if (this.coverImgs === '') {
-          this.$message.error('请上传直播间封面')
+          this.$message.error(this.$t('operation.pleaseUploadCover'))
           return
         }
         this.submitDisabled = true
         if (this.type === 'edit') {
           liveItemsModify(this.currentLive.id, this.form).then(res => {
             this.getLiveListFunc()
-            this.$message.success('保存成功')
+            this.$message.success(this.$t('operation.saveSuccess'))
             this.submitDisabled = false
           }).catch(() => {
             this.submitDisabled = false
@@ -590,7 +591,7 @@
         } else if (this.type === 'add') {
           liveItemsAdd(this.form).then(res => {
             this.getLiveListFunc()
-            this.$message.success('保存成功')
+            this.$message.success(this.$t('operation.saveSuccess'))
             this.submitDisabled = false
           }).catch(() => {
             this.submitDisabled = false
