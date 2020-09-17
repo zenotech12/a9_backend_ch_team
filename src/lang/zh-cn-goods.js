@@ -135,5 +135,7 @@ export default {
   cancelhuifusuju: '取消恢复数据',
   distributionLowProfits: '是否为低利润商品',
   yes: '是',
-  not: '否'
+  not: '否',
+  lowMarginGoods: '低利润商品',
+  noLowMarginGoods: '非低利润商品'
 }

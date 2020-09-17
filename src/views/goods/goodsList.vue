@@ -3,7 +3,7 @@
     <div class="sys-neiBody">
       <!-- 搜索 -->
       <el-row  style="margin-top: 24px;">
-        <el-col :span="4" class="funcTree">
+        <el-col :span="4" class="funcTree" style="margin-left: 0">
           <el-row>
             <el-col :span="24" class="funcBoxTitle">
               <div class="small_title">{{$t('goods.type')}}</div>
@@ -52,7 +52,7 @@
             </div>
           </el-dialog>
         </el-col>
-        <el-col :span="19" class="funcBox">
+        <el-col :span="20" class="funcBox">
           <div class="rightbox">
             <!-- 搜索 -->
             <el-row>

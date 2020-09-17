@@ -123,5 +123,7 @@ export default {
   cancelhuifusuju: 'Cancel restore data',
   distributionLowProfits: 'Is it a low-profit product',
   yes: 'Yes',
-  not: 'No'
+  not: 'No',
+  lowMarginGoods: 'Low-margin goods',
+  noLowMarginGoods: 'Non-low-margin goods'
 }

@@ -31,6 +31,13 @@
               <el-col :span="20" style="padding: 6px 15px ">
                 <el-form :inline="true" :model="searchForm">
                   <el-form-item>
+                    <el-radio-group v-model="searchForm.distribution_low_profits" @change="search" size="medium">
+                      <el-radio-button :label="0">{{$t('goods.all')}}</el-radio-button>
+                      <el-radio-button :label="1">{{$t('goods.noLowMarginGoods')}}</el-radio-button>
+                      <el-radio-button :label="2">{{$t('goods.lowMarginGoods')}}</el-radio-button>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-form-item>
                     <el-input v-model="searchForm.key" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
                   </el-form-item>
                   <el-form-item class="searchBtn">
@@ -170,7 +177,8 @@
           merchant_id: '', // 商户id，不填所有，自营填000000000000000000000001
           type_id: '',
           shelf_status: 0, // 上架状态 所有0 未上架1 上架2
-          distribution: 2
+          distribution: 2,
+          distribution_low_profits: 0 // 分销 0所有 1非低利润商品 2低利润商品
         },
         pageSize: 10,
         itemCount: 0,
@@ -270,6 +278,8 @@
         })
       },
       search() {
+        this.searchForm.skip = 0
+        this.currentPage = 1
         this.getTableData()
       },
       showShareEditor() {

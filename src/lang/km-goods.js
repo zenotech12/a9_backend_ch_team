@@ -113,5 +113,7 @@ export default {
   cancelhuifusuju: 'បោះបង់ការស្តារទិន្នន័យ',
   distributionLowProfits: 'វាគឺជាផលិតផលដែលរកប្រាក់ចំណេញទាប',
   yes: 'ត្រូវហើយ',
-  not: 'ទេ'
+  not: 'ទេ',
+  lowMarginGoods: 'ទំនិញមានកំរិតទាប',
+  noLowMarginGoods: 'ទំនិញដែលមិនមានរឹមទាប'
 }
