@@ -24,6 +24,7 @@
                       <el-form-item :label="$t('operation.liveStatus')">
                         <span v-if="currentLive.status === 1">{{$t('operation.comingSoon')}}</span>
                         <span v-if="currentLive.status === 2">{{$t('operation.live')}}</span>
+                        <el-button type="primary" size="mini" @click="lookLiveVideo">查看</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -164,36 +165,36 @@
             </div>
           </el-col>
         </el-row>
-        <!--添加直播间-->
-        <el-dialog :title="isBatch ? $t('operation.addLive') : $t('operation.editLive')" width="700px" @close="formEditDialog = false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px" :model="form">
-            <el-form-item :label="$t('operation.liveName')">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('operation.liveFenMian')">
-              <single-file-upload v-model="coverImgs" :promptInfo1="promptInfo"></single-file-upload>
-            </el-form-item>
-            <el-form-item :label="$t('operation.goods')">
-              <goods-selector :mulit="true" v-model="form.spu_ids" :approve_status="2" :shelf_status="2"></goods-selector>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="saveAdFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
-            <el-button @click="cancel" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
-          </div>
-        </el-dialog>
-        <!--新增商品-->
-        <el-dialog :title="$t('operation.addNewGoods')" width="700px" @close="goodsDialog = false" :visible.sync="goodsDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
-            <el-form-item :label="$t('operation.goods')">
-              <goods-selector :mulit="true" v-model="spu_ids" :notSpuIds="JSON.stringify(currentLive.spu_ids)" :approve_status="2" :shelf_status="2"></goods-selector>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="addGoodsUpdata" :disabled="addGoodsDisable" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
-            <el-button @click="goodsDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
-          </div>
-        </el-dialog>
+        <!--&lt;!&ndash;添加直播间&ndash;&gt;-->
+        <!--<el-dialog :title="isBatch ? $t('operation.addLive') : $t('operation.editLive')" width="700px" @close="formEditDialog = false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >-->
+          <!--<el-form label-width="100px" :model="form">-->
+            <!--<el-form-item :label="$t('operation.liveName')">-->
+              <!--<el-input v-model="form.name"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item :label="$t('operation.liveFenMian')">-->
+              <!--<single-file-upload v-model="coverImgs" :promptInfo1="promptInfo"></single-file-upload>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item :label="$t('operation.goods')">-->
+              <!--<goods-selector :mulit="true" v-model="form.spu_ids" :approve_status="2" :shelf_status="2"></goods-selector>-->
+            <!--</el-form-item>-->
+          <!--</el-form>-->
+          <!--<div slot="footer" class="dialog-footer">-->
+            <!--<confirm-button @confirmButton="saveAdFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>-->
+            <!--<el-button @click="cancel" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>-->
+          <!--</div>-->
+        <!--</el-dialog>-->
+        <!--&lt;!&ndash;新增商品&ndash;&gt;-->
+        <!--<el-dialog :title="$t('operation.addNewGoods')" width="700px" @close="goodsDialog = false" :visible.sync="goodsDialog" :close-on-click-modal="false" center >-->
+          <!--<el-form label-width="100px">-->
+            <!--<el-form-item :label="$t('operation.goods')">-->
+              <!--<goods-selector :mulit="true" v-model="spu_ids" :notSpuIds="JSON.stringify(currentLive.spu_ids)" :approve_status="2" :shelf_status="2"></goods-selector>-->
+            <!--</el-form-item>-->
+          <!--</el-form>-->
+          <!--<div slot="footer" class="dialog-footer">-->
+            <!--<confirm-button @confirmButton="addGoodsUpdata" :disabled="addGoodsDisable" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>-->
+            <!--<el-button @click="goodsDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>-->
+          <!--</div>-->
+        <!--</el-dialog>-->
         <!--订单列表-->
         <el-dialog :title="$t('operation.orderList')" width="80%" @close="orderShowDialog = false" :visible.sync="orderShowDialog" :close-on-click-modal="false" center >
           <el-row>
@@ -342,6 +343,19 @@
             <el-button @click="orderShowDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
+        <!--直播-->
+        <el-dialog :title="$t('operation.liveVideo')" v-if="dialogShow" @close="closeLiveDialog" :close-on-click-modal="false" width="700px" :visible.sync="dialogShow" center style="margin-top: 0vh">
+          <el-row class="liveVideo">
+            <el-col :span="24" style="min-height: 380px;max-height: 500px">
+              <video id="my-video" class="video-js vjs-big-play-centered vjs-fluid" x-webkit-airplay="allow" webkit-playsinline autoplay style="min-height: 500px" controls preload="auto" data-setup="{}">
+                <source :src="videoUrl" type="application/x-mpegURL">
+              </video>
+            </el-col>
+          </el-row>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="closeLiveDialog" size="small" style="margin-right: 24px;">{{$t('tools.close')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -388,8 +402,8 @@
         currentLive: {},
         delTip: this.$t('operation.delTipLive'),
         primary: 'primary',
-        goodsDialog: false,
-        addGoodsDisable: false,
+        // goodsDialog: false,
+        // addGoodsDisable: false,
         searchKey: '',
         searchCode: '',
         currentDataGoods: [],
@@ -412,7 +426,9 @@
           spu_ids: '',
           order_status: -1
         },
-        modifyDisabled: false
+        modifyDisabled: false,
+        dialogShow: false,
+        videoUrl: ''
       }
     },
     computed: {
@@ -467,6 +483,38 @@
       }
     },
     methods: {
+      closeLiveDialog() {
+        this.removejscssfile('neplayer.min.css', 'css')
+        this.removejscssfile('neplayer.min.js', 'js')
+        this.dialogShow = false
+      },
+      removejscssfile(filename, filetype) {
+        var targetelement = (filetype === 'js') ? 'script' : (filetype === 'css') ? 'link' : 'none'
+        var targetattr = (filetype === 'js') ? 'src' : (filetype === 'css') ? 'href' : 'none'
+        var allsuspects = document.getElementsByTagName(targetelement)
+        for (var i = allsuspects.length; i >= 0; i--) {
+          if (allsuspects[i] && allsuspects[i].getAttribute(targetattr) !== null && allsuspects[i].getAttribute(targetattr).indexOf(filename) !== -1) {
+            allsuspects[i].parentNode.removeChild(allsuspects[i])
+          }
+        }
+      },
+      addResources() {
+        var oHead = document.getElementsByTagName('HEAD').item(0)
+        var link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.type = 'text/css'
+        link.href = 'https://sys.a9kh.com/neplayer/neplayer.min.css'
+        oHead.appendChild(link)
+        var oScript = document.createElement('script')
+        oScript.type = 'text/javascript'
+        oScript.src = 'https://sys.a9kh.com/neplayer/neplayer.min.js'
+        oHead.appendChild(oScript)
+      },
+      lookLiveVideo() {
+        this.addResources()
+        this.videoUrl = this.currentLive.channel_info.hlsPullUrl
+        this.dialogShow = true
+      },
       delCurrentGoods(id) {
         const arrayId = JSON.parse(this.form.spu_ids)
         arrayId.splice(arrayId.indexOf(id), 1)
@@ -483,8 +531,8 @@
         this.currentDataGoods = this.tableData
       },
       addNewGoods(data) {
-        console.log('data', data)
-        console.log('spu_ids', this.spu_ids)
+        // console.log('data', data)
+        // console.log('spu_ids', this.spu_ids)
         liveItemsAddGoods(this.currentLive.id, { 'spu_ids': this.spu_ids }).then(res => {
           this.getLiveListFunc()
         })
@@ -511,9 +559,9 @@
           this.itemCountOrder = res.total
         })
       },
-      showLiveVideo(data) { // 回看
-
-      },
+      // showLiveVideo(data) { // 回看
+      //
+      // },
       // 历史记录
       getHistoryList() {
         liveItemsList(this.historySearch).then(res => {
@@ -521,17 +569,17 @@
           this.itemCount = res.total
         })
       },
-      addGoods() {
-        this.goodsDialog = true
-      },
-      addGoodsUpdata() {
-        this.addGoodsDisable = true
-        liveItemsAddGoods(this.currentLive.id, { 'spu_ids': this.spu_ids }).then(res => {
-          this.goodsDialog = false
-          this.addGoodsDisable = false
-          this.getLiveListFunc()
-        })
-      },
+      // addGoods() {
+      //   this.goodsDialog = true
+      // },
+      // addGoodsUpdata() {
+      //   this.addGoodsDisable = true
+      //   liveItemsAddGoods(this.currentLive.id, { 'spu_ids': this.spu_ids }).then(res => {
+      //     this.goodsDialog = false
+      //     this.addGoodsDisable = false
+      //     this.getLiveListFunc()
+      //   })
+      // },
       goodsPreview(row) {
         // return 'https://www.a9kh.com/goods/' + row.id + '.html'
       },
@@ -657,4 +705,10 @@
     }
   }
 }
+  .liveVideo {
+    /deep/
+    .my-video-dimensions.vjs-fluid {
+      padding-top: 0;
+    }
+  }
 </style>

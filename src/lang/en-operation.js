@@ -132,5 +132,6 @@ export default {
   delTipLive: 'Confirm to delete the current live room？',
   enterLiveName: 'Please enter the live room name',
   pleaseUploadCover: 'Please upload the cover of the live broadcast room',
-  saveSuccess: 'Saved successfully'
+  saveSuccess: 'Saved successfully',
+  liveVideo: 'Live screen'
 }

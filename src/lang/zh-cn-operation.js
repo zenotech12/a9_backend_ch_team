@@ -133,5 +133,6 @@ export default {
   delTipLive: '确定删除当前直播间？',
   enterLiveName: '请输入直播间名称',
   pleaseUploadCover: '请上传直播间封面',
-  saveSuccess: '保存成功'
+  saveSuccess: '保存成功',
+  liveVideo: '直播画面'
 }
