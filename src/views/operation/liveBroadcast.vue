@@ -223,7 +223,7 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.price')" width="130">
                   <template slot-scope="scope" >
-                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{scope.row.pay_way}})</span><br/>
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
                     <span>({{$t('order.includePostage')}}：{{scope.row.postage | price}})</span>
                   </template>
                 </el-table-column>
@@ -401,7 +401,41 @@
         },
         modifyDisabled: false,
         dialogShow: false,
-        videoUrl: ''
+        videoUrl: '',
+        listV: [
+          {
+            value: 'mpay_ali',
+            label: this.$t('lang.alipay')
+          },
+          {
+            value: 'mpay_wx',
+            label: this.$t('lang.weChat')
+          },
+          {
+            value: '1',
+            label: 'Credit Card'
+          },
+          {
+            value: '15',
+            label: 'UnionPay'
+          },
+          {
+            value: '3',
+            label: 'Acleda Xpay'
+          },
+          {
+            value: '235',
+            label: 'Wing'
+          },
+          {
+            value: '11',
+            label: 'PiPay'
+          },
+          {
+            value: 'yue',
+            label: this.$t('lang.balance')
+          }
+        ]
       }
     },
     computed: {
@@ -456,6 +490,15 @@
       }
     },
     methods: {
+      payWay(data) {
+        let str = ''
+        this.listV.forEach(v => {
+          if (v.value === data) {
+            str = v.label
+          }
+        })
+        return str
+      },
       closeLiveDialog() {
         this.removejscssfile('neplayer.min.css', 'css')
         this.removejscssfile('neplayer.min.js', 'js')
