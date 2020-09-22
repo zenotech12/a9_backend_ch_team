@@ -21,10 +21,10 @@
                       <el-form-item :label="$t('operation.liveName')">
                         <el-input v-model="form.name" :disabled="modifyDisabled"></el-input>
                       </el-form-item>
-                      <el-form-item :label="$t('operation.liveStatus')">
+                      <el-form-item :label="$t('operation.liveStatus')" v-if="Object.keys(currentLive).length > 0">
                         <span v-if="currentLive.status === 1">{{$t('operation.comingSoon')}}</span>
                         <span v-if="currentLive.status === 2">{{$t('operation.live')}}</span>
-                        <el-button type="primary" size="mini" @click="lookLiveVideo">查看</el-button>
+                        <el-button type="primary" v-if="currentLive.status === 2" size="mini" @click="lookLiveVideo">查看</el-button>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -106,8 +106,8 @@
                   </div>
               </el-col>
               <el-col :span="24" style="margin-top: 20px">
-                <confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="type === 'add' && permissionCheck('opt') && currentLive.status === 1" :confirmButtonInfor="$t('tools.save')"></confirm-button>
-                <confirm-button @confirmButton="editLive" :disabled="submitDisabled" v-if="type === 'edit' && permissionCheck('opt') && currentLive.status === 1" :confirmButtonInfor="$t('tools.save')"></confirm-button>
+                <confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="type === 'add' && permissionCheck('opt')" :confirmButtonInfor="$t('tools.save')"></confirm-button>
+                <confirm-button @confirmButton="editLive" :disabled="submitDisabled" v-if="type === 'edit' && permissionCheck('opt') && currentLive.status !== 2" :confirmButtonInfor="$t('tools.save')"></confirm-button>
                 <delete-button :promptInfor="delTip" v-if="currentLive.status === 1 && permissionCheck('opt')" :btnType="primary" style="margin-left: 20px" @delData="delCurrentLive"></delete-button>
               </el-col>
             </el-row>
@@ -165,36 +165,6 @@
             </div>
           </el-col>
         </el-row>
-        <!--&lt;!&ndash;添加直播间&ndash;&gt;-->
-        <!--<el-dialog :title="isBatch ? $t('operation.addLive') : $t('operation.editLive')" width="700px" @close="formEditDialog = false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >-->
-          <!--<el-form label-width="100px" :model="form">-->
-            <!--<el-form-item :label="$t('operation.liveName')">-->
-              <!--<el-input v-model="form.name"></el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item :label="$t('operation.liveFenMian')">-->
-              <!--<single-file-upload v-model="coverImgs" :promptInfo1="promptInfo"></single-file-upload>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item :label="$t('operation.goods')">-->
-              <!--<goods-selector :mulit="true" v-model="form.spu_ids" :approve_status="2" :shelf_status="2"></goods-selector>-->
-            <!--</el-form-item>-->
-          <!--</el-form>-->
-          <!--<div slot="footer" class="dialog-footer">-->
-            <!--<confirm-button @confirmButton="saveAdFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>-->
-            <!--<el-button @click="cancel" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>-->
-          <!--</div>-->
-        <!--</el-dialog>-->
-        <!--&lt;!&ndash;新增商品&ndash;&gt;-->
-        <!--<el-dialog :title="$t('operation.addNewGoods')" width="700px" @close="goodsDialog = false" :visible.sync="goodsDialog" :close-on-click-modal="false" center >-->
-          <!--<el-form label-width="100px">-->
-            <!--<el-form-item :label="$t('operation.goods')">-->
-              <!--<goods-selector :mulit="true" v-model="spu_ids" :notSpuIds="JSON.stringify(currentLive.spu_ids)" :approve_status="2" :shelf_status="2"></goods-selector>-->
-            <!--</el-form-item>-->
-          <!--</el-form>-->
-          <!--<div slot="footer" class="dialog-footer">-->
-            <!--<confirm-button @confirmButton="addGoodsUpdata" :disabled="addGoodsDisable" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>-->
-            <!--<el-button @click="goodsDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>-->
-          <!--</div>-->
-        <!--</el-dialog>-->
         <!--订单列表-->
         <el-dialog :title="$t('operation.orderList')" width="80%" @close="orderShowDialog = false" :visible.sync="orderShowDialog" :close-on-click-modal="false" center >
           <el-row>
@@ -236,8 +206,8 @@
                 </el-table-column>
                 <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
-                    <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
-                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                    <div class="goods-item" style="min-height: 100px" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
+                      <el-image class="image" style="width: 100px; height: 100px;display: inline-block"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
                       <div class="g-info">
                         <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
                           <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.prevent="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
@@ -326,7 +296,7 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <el-row style="margin-top: 10px" v-if="itemCountOrder === 0">
+              <el-row style="margin-top: 10px" v-if="itemCountOrder !== 0">
                 <el-col :span="24" style="text-align: right;">
                   <el-pagination
                     :current-page.sync="currentPageOrder"
@@ -379,6 +349,9 @@
           limit: pz,
           status: 5 // 0所有 1准备中 2直播中 4结束 5准备中和直播中的单
         },
+        optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
+        orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
+          this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
         tableData: [],
         historyData: [],
         currentPage: 1,
@@ -609,7 +582,7 @@
           this.form.spu_ids = ''
           this.tableData = []
           this.currentDataGoods = []
-          // this.getLiveListFunc()
+          this.getLiveListFunc()
         })
       },
       imageUploadSuccess(res) {
