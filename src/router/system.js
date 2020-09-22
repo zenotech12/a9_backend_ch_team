@@ -24,7 +24,7 @@ const system = [{
   }, {
     name: 'address',
     path: 'address',
-    meta: { title: 'address', icon: 'permission', code: 'y_4' },
+    meta: { title: 'address', icon: 'permission', code: '6_4' },
     component: () => import('@/views/system/address')
   },
   //   {
