@@ -519,16 +519,16 @@
         var link = document.createElement('link')
         link.rel = 'stylesheet'
         link.type = 'text/css'
-        link.href = 'https://sys.a9kh.com/neplayer/neplayer.min.css'
+        link.href = '//sys.a9kh.com/neplayer/neplayer.min.css'
         oHead.appendChild(link)
         var oScript = document.createElement('script')
         oScript.type = 'text/javascript'
-        oScript.src = 'https://sys.a9kh.com/neplayer/neplayer.min.js'
+        oScript.src = '//sys.a9kh.com/neplayer/neplayer.min.js'
         oHead.appendChild(oScript)
       },
       lookLiveVideo() {
         this.addResources()
-        this.videoUrl = this.currentLive.channel_info.hlsPullUrl
+        this.videoUrl = this.currentLive.channel_info.hlsPullUrl.replace('http:', '')
         this.dialogShow = true
       },
       delCurrentGoods(id) {
