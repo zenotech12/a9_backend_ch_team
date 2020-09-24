@@ -26,11 +26,11 @@
                         <span v-if="currentLive.status === 2">{{$t('operation.live')}}</span>
                         <el-button type="primary" v-if="currentLive.status === 2" size="mini" @click="lookLiveVideo">{{$t('tools.check')}}</el-button>
                       </el-form-item>
-                      <el-form-item label="推流地址" v-if="pushUrlShow">
+                      <el-form-item :label="$t('operation.pushStreamAddress')" v-if="pushUrlShow">
                         <span>{{pushurl}}</span>
                       </el-form-item>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="16">
                       <el-form-item :label="$t('operation.liveFenMian')">
                         <single-file-upload v-model="coverImgs" :promptInfo1="promptInfo" :disabled="modifyDisabled"></single-file-upload>
                       </el-form-item>
@@ -114,8 +114,8 @@
                 <confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="type === 'add' && permissionCheck('opt')" :confirmButtonInfor="$t('tools.save')"></confirm-button>
                 <confirm-button @confirmButton="editLive" :disabled="submitDisabled" v-if="type === 'edit' && permissionCheck('opt') && currentLive.status !== 2" :confirmButtonInfor="$t('tools.save')"></confirm-button>
                 <delete-button :promptInfor="delTip" v-if="currentLive.status === 1 && permissionCheck('opt')" :btnType="primary" style="margin-left: 20px" @delData="delCurrentLive"></delete-button>
-                <el-button type="primary" size="small" @click="liveStartFunc" v-if="isShowStart && permissionCheck('opt')">开播</el-button>
-                <el-button type="primary" size="small" @click="liveStopFunc" v-if="currentLive.status === 2 && permissionCheck('opt')">结束直播</el-button>
+                <el-button type="primary" size="small" @click="liveStartFunc" v-if="isShowStart && permissionCheck('opt')">{{$t('operation.startBroadcast')}}</el-button>
+                <el-button type="primary" size="small" @click="liveStopFunc" v-if="currentLive.status === 2 && permissionCheck('opt')">{{$t('operation.endLiveBroadcast')}}</el-button>
               </el-col>
             </el-row>
           </el-col>
@@ -524,7 +524,7 @@
             console.log('form', JSON.stringify(this.form))
 
             if (JSON.stringify(item) !== JSON.stringify(this.form)) {
-              this.$message.error('请先点击保存按钮后再开播')
+              this.$message.error(this.$t('operation.pleaseClickBtnTip'))
             } else {
               liveStart(this.form).then(vRes => {
                 this.pushurl = vRes.pushurl
@@ -538,7 +538,7 @@
       },
       liveStopFunc() {
         liveStop().then(res => {
-          this.$message.success('直播结束')
+          // this.$message.success('直播结束')
           this.resetForm()
         })
       },

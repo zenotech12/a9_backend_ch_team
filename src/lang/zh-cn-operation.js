@@ -134,5 +134,9 @@ export default {
   enterLiveName: '请输入直播间名称',
   pleaseUploadCover: '请上传直播间封面',
   saveSuccess: '保存成功',
-  liveVideo: '直播画面'
+  liveVideo: '直播画面',
+  pushStreamAddress: '推流地址',
+  startBroadcast: '开播',
+  endLiveBroadcast: '结束直播',
+  pleaseClickBtnTip: '请先点击保存按钮后再开播'
 }

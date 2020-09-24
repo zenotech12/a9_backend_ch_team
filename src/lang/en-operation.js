@@ -133,5 +133,9 @@ export default {
   enterLiveName: 'Please enter the live room name',
   pleaseUploadCover: 'Please upload the cover of the live broadcast room',
   saveSuccess: 'Saved successfully',
-  liveVideo: 'Live screen'
+  liveVideo: 'Live screen',
+  pushStreamAddress: 'Push stream address',
+  startBroadcast: 'Start broadcast',
+  endLiveBroadcast: 'End live broadcast',
+  pleaseClickBtnTip: 'Please click the save button before starting the broadcast'
 }

@@ -133,5 +133,9 @@ export default {
   enterLiveName: 'សូមបញ្ចូលឈ្មោះបន្ទប់ផ្ទាល់',
   pleaseUploadCover: 'សូមបញ្ចូលគម្របបន្ទប់ផ្សាយផ្ទាល់',
   saveSuccess: 'បានរក្សាទុកដោយជោគជ័យ',
-  liveVideo: 'អេក្រង់ផ្សាយផ្ទាល់'
+  liveVideo: 'អេក្រង់ផ្សាយផ្ទាល់',
+  pushStreamAddress: 'ជំរុញស្ទ្រីមស្ទ្រីម',
+  startBroadcast: 'ចាប់ផ្តើមផ្សាយ',
+  endLiveBroadcast: 'បញ្ចប់ការផ្សាយផ្ទាល់',
+  pleaseClickBtnTip: 'សូមចុចប៊ូតុងរក្សាទុកមុនពេលចាប់ផ្តើមការចាក់ផ្សាយ'
 }
