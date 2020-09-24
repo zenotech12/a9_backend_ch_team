@@ -328,3 +328,20 @@ export function liveItemsAddGoods(id, data) {
     data: data
   })
 }
+
+// 直播.开始
+export function liveStart(data) {
+  return request({
+    url: 'live/start',
+    method: 'post',
+    data: data
+  })
+}
+
+// 直播.结束
+export function liveStop() {
+  return request({
+    url: 'live/stop',
+    method: 'post'
+  })
+}

@@ -269,6 +269,9 @@
         if (val !== '' && val.length > 24) {
           this.searchForm.not_spu_ids = this.notSpuIds
           this.getTableData()
+        } else {
+          this.searchForm.not_spu_ids = ''
+          this.getTableData()
         }
         // console.log('notSpuIds', val)
       },

@@ -11,11 +11,11 @@
             </el-tabs>
           </el-col>
         </el-row>
-        <el-row v-if="tabStatus === 'live'">
+        <el-row v-if="tabStatus === 'live'" class="liveBox">
           <el-col :span="24">
             <el-row>
               <el-col :span="24" class="liveBigBoxCurrent">
-                <el-form ref="form" :inline="true" :model="form" label-width="120px">
+                <el-form ref="form" :model="form" label-width="120px">
                   <el-row>
                     <el-col :span="8">
                       <el-form-item :label="$t('operation.liveName')">
@@ -24,7 +24,10 @@
                       <el-form-item :label="$t('operation.liveStatus')" v-if="Object.keys(currentLive).length > 0">
                         <span v-if="currentLive.status === 1">{{$t('operation.comingSoon')}}</span>
                         <span v-if="currentLive.status === 2">{{$t('operation.live')}}</span>
-                        <el-button type="primary" v-if="currentLive.status === 2" size="mini" @click="lookLiveVideo">查看</el-button>
+                        <el-button type="primary" v-if="currentLive.status === 2" size="mini" @click="lookLiveVideo">{{$t('tools.check')}}</el-button>
+                      </el-form-item>
+                      <el-form-item label="推流地址" v-if="pushUrlShow">
+                        <span>{{pushurl}}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -45,7 +48,7 @@
               <!--还没直播时-->
               <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt') && currentLive.status !== 2">
                 <div class="boxFuncBtn">
-                  <goods-selector :mulit="true" :showTag="modifyDisabled" :trigger="false" v-model="form.spu_ids" @selectChanged="selectChanged" :approve_status="2" :shelf_status="2"></goods-selector>
+                  <goods-selector :mulit="true" :showTag="modifyDisabled" :trigger="false" v-model="form.spu_ids" @selectChanged="selectChanged" :approve_status="2" :notSpuIds="JSON.stringify([])" :shelf_status="2"></goods-selector>
                 </div>
               </el-col>
               <el-col :span="24">
@@ -105,10 +108,14 @@
                     </el-table>
                   </div>
               </el-col>
+            </el-row>
+            <el-row class="optBtnStyle">
               <el-col :span="24" style="margin-top: 20px">
                 <confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="type === 'add' && permissionCheck('opt')" :confirmButtonInfor="$t('tools.save')"></confirm-button>
                 <confirm-button @confirmButton="editLive" :disabled="submitDisabled" v-if="type === 'edit' && permissionCheck('opt') && currentLive.status !== 2" :confirmButtonInfor="$t('tools.save')"></confirm-button>
                 <delete-button :promptInfor="delTip" v-if="currentLive.status === 1 && permissionCheck('opt')" :btnType="primary" style="margin-left: 20px" @delData="delCurrentLive"></delete-button>
+                <el-button type="primary" size="small" @click="liveStartFunc" v-if="isShowStart && permissionCheck('opt')">开播</el-button>
+                <el-button type="primary" size="small" @click="liveStopFunc" v-if="currentLive.status === 2 && permissionCheck('opt')">结束直播</el-button>
               </el-col>
             </el-row>
           </el-col>
@@ -334,7 +341,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import goodsSelector from '@/components/goodsSelector'
-  import { liveItemsModify, liveItemsAdd, liveItemsDel, liveItemsList, liveItemsAddGoods } from '@/api/operation'
+  import { liveItemsModify, liveItemsAdd, liveItemsDel, liveItemsList, liveItemsAddGoods, liveStart, liveStop } from '@/api/operation'
   import { spusList } from '@/api/goods'
   import { ordersList } from '@/api/order'
   export default {
@@ -435,7 +442,10 @@
             value: 'yue',
             label: this.$t('lang.balance')
           }
-        ]
+        ],
+        pushurl: '',
+        isShowStart: false,
+        pushUrlShow: false
       }
     },
     computed: {
@@ -490,6 +500,58 @@
       }
     },
     methods: {
+      liveStartFunc() {
+        this.form.cover_imgs = JSON.stringify([this.coverImgs])
+        // console.log('this.form', this.form)
+        if (this.form.name === '') {
+          this.$message.error(this.$t('operation.enterLiveName'))
+          return
+        }
+        if (this.coverImgs === '') {
+          this.$message.error(this.$t('operation.pleaseUploadCover'))
+          return
+        }
+        console.log('formff', this.form)
+        liveItemsList(this.searchForm).then(res => {
+          const obj = res.items[0] ? JSON.parse(JSON.stringify(res.items[0])) : {}
+          if (obj) {
+            const item = {
+              spu_ids: JSON.stringify(obj.spu_ids),
+              cover_imgs: JSON.stringify(obj.cover_imgs),
+              name: obj.name
+            }
+            console.log('item', JSON.stringify(item))
+            console.log('form', JSON.stringify(this.form))
+
+            if (JSON.stringify(item) !== JSON.stringify(this.form)) {
+              this.$message.error('请先点击保存按钮后再开播')
+            } else {
+              liveStart(this.form).then(vRes => {
+                this.pushurl = vRes.pushurl
+                this.pushUrlShow = true
+                this.isShowStart = false
+                this.getLiveListFunc()
+              })
+            }
+          }
+        })
+      },
+      liveStopFunc() {
+        liveStop().then(res => {
+          this.$message.success('直播结束')
+          this.resetForm()
+        })
+      },
+      resetForm() {
+        this.form.name = ''
+        this.form.cover_imgs = ''
+        this.form.spu_ids = ''
+        this.tableData = []
+        this.modifyDisabled = false
+        this.coverImgs = ''
+        this.pushUrlShow = false
+        this.currentLive = {}
+      },
       payWay(data) {
         let str = ''
         this.listV.forEach(v => {
@@ -661,6 +723,7 @@
             this.submitDisabled = false
           })
         }
+        this.isShowStart = true
       },
       getLiveListFunc() {
         liveItemsList(this.searchForm).then(res => {
@@ -674,8 +737,12 @@
             this.type = 'edit'
             if (res.items[0].status === 2) {
               this.modifyDisabled = true
+              this.isShowStart = false
+              this.pushUrlShow = true // 直播中就显示推流地址
+              this.pushurl = res.items[0].channel_info.pushurl
             } else if (res.items[0].status === 1) {
               this.modifyDisabled = false
+              this.isShowStart = true // 还没直播的时候显示可以开播的按钮
             }
             this.getLiveGoodsList()
           } else {
@@ -726,5 +793,13 @@
     .my-video-dimensions.vjs-fluid {
       padding-top: 0;
     }
+  }
+  .liveBox {
+    position: relative;
+    height: calc(100vh - 236px);
+  }
+  .optBtnStyle {
+    position: absolute;
+    bottom: -60px;
   }
 </style>
