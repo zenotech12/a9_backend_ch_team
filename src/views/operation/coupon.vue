@@ -4,11 +4,26 @@
       <!-- 搜索 -->
       <div class="rightbox">
         <el-row>
+          <el-col :span ="24">
+            <el-tabs v-model="tabStatus" @tab-click="changeTab">
+              <el-tab-pane :label="$t('operation.puTongCoupon')" name="coupon"></el-tab-pane>
+              <el-tab-pane :label="$t('operation.liveCoupon')" name="live"></el-tab-pane>
+            </el-tabs>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span ="14">
             <el-radio-group v-model="selectedType" size="small">
               <el-radio-button :label="$t('tools.all')"></el-radio-button>
               <el-radio-button v-for="(v,k) in couponType" :label="v.name" :key="k"></el-radio-button>
             </el-radio-group>
+            <span v-if="tabStatus === 'live'" style="font-size: 14px;color: #020;margin-left: 10px;margin-right: 5px">查看已发放券</span>
+            <el-switch v-if="tabStatus === 'live'"
+              v-model="live_template"
+              @change="liveChangeTemplate"
+              active-text="是"
+              inactive-text="否">
+            </el-switch>
           </el-col>
           <el-col :span="10" class="funcList">
             <div class="boxFuncBtn" @click="addCoupon"  v-if="permissionCheck('opt')">
@@ -44,7 +59,7 @@
                     {{scope.row.used_count + '/' + scope.row.total_count}}
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('operation.getTime')">
+                <el-table-column :label="$t('operation.getTime')" v-if="tabStatus === 'coupon'">
                   <template  slot-scope="scope">
                     {{scope.row.grant_bt + $t('operation.to') + scope.row.grant_et}}
                   </template>
@@ -132,7 +147,7 @@
             <el-form-item :label="$t('operation.totalCount')">
               <el-input v-model.number="form.total_count"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('operation.getTime')">
+            <el-form-item :label="$t('operation.getTime')" v-if="tabStatus === 'coupon'">
               <el-date-picker
                 v-model="grantTime"
                 type="daterange"
@@ -206,7 +221,9 @@
         searchForm: {
           type: 0,
           skip: '',
-          limit: pz
+          limit: pz,
+          for_live: false,
+          live_template: true
         },
         selectedType: this.$t('tools.all'),
         tableData: [],
@@ -219,7 +236,9 @@
         form: formData,
         formEditDialog: false,
         submitDisabled: false,
-        goodsTypeData: []
+        goodsTypeData: [],
+        tabStatus: 'coupon',
+        live_template: true
       }
     },
     computed: {
@@ -268,6 +287,32 @@
       }
     },
     methods: {
+      liveChangeTemplate(v) {
+        this.searchForm.live_template = !v
+        this.searchForm.skip = 0
+        this.searchForm.type = 0
+        this.currentPage = 1
+        this.selectedType = this.$t('tools.all')
+        this.getCouponListFun()
+      },
+      changeTab(value) {
+        if (value.name === 'coupon') {
+          this.resetFormSearch(false)
+        } else if (value.name === 'live') {
+          this.resetFormSearch(true)
+        }
+      },
+      resetFormSearch(boolean) {
+        this.searchForm.for_live = boolean
+        this.searchForm.skip = 0
+        this.searchForm.type = 0
+        this.currentPage = 1
+        this.searchForm.live_template = true
+        this.form.for_live = boolean
+        this.selectedType = this.$t('tools.all')
+        this.live_template = !boolean
+        this.getCouponListFun()
+      },
       setForm(data) {
         if (data) {
           this.grantTime = [data.grant_bt, data.grant_et]
@@ -302,12 +347,18 @@
             grant_et: '',
             total_count: 0,
             per_quota_count: 0,
-            desc: ''
+            desc: '',
+            for_live: false
           }
         }
       },
       addCoupon() {
         this.form = this.setForm()
+        if (this.tabStatus === 'live') {
+          this.form.for_live = true
+        } else {
+          this.form.for_live = false
+        }
         this.formEditDialog = true
       },
       showCouponEditor(data) {

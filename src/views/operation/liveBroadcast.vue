@@ -98,7 +98,20 @@
                         </template>
                       </el-table-column>
                       <el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>
-                      <el-table-column prop="sales"  :label="$t('goods.saled')"></el-table-column>
+                      <el-table-column prop="sales" :label="$t('goods.saled')"></el-table-column>
+                      <el-table-column prop="sales" label="讲解">
+
+                      </el-table-column>
+                      <el-table-column prop="sales" label="推荐">
+                        <template slot-scope="scope">
+                          <el-switch
+                            v-model="scope.row.recommend"
+                            @change="tuiJianSwitchFunc(scope.row.id, scope.row)"
+                            active-color="#13ce66"
+                            inactive-color="#ff4949">
+                          </el-switch>
+                        </template>
+                      </el-table-column>
                       <el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>
                       <el-table-column :label="$t('tools.opt')" v-if="!modifyDisabled">
                         <template slot-scope="scope">
@@ -368,7 +381,8 @@
         form: {
           spu_ids: '', // ["xxxx","xxxxxxx"]商品ids
           cover_imgs: '', // ["xxxx"]直播封面
-          name: '' // 直播间名称
+          name: '', // 直播间名称
+          recommend_spu_id: '' // 推荐商品
         },
         formEditDialog: false,
         submitDisabled: false,
@@ -445,7 +459,8 @@
         ],
         pushurl: '',
         isShowStart: false,
-        pushUrlShow: false
+        pushUrlShow: false,
+        tuiJianId: ''
       }
     },
     computed: {
@@ -606,6 +621,7 @@
         this.tableData && this.tableData.forEach((v, k) => {
           v['code'] = k + 1
         })
+        console.log('tableData', this.tableData)
         this.currentDataGoods = this.tableData
       },
       addNewGoods(data) {
@@ -615,12 +631,27 @@
           this.getLiveListFunc()
         })
       },
+      tuiJianSwitchFunc(id, item) {
+        console.log('vvvv', id)
+        const recommend = item.recommend
+        if (id === this.tuiJianId) {
+          item.recommend = !recommend
+        } else {
+          item.recommend = true
+        }
+        this.tuiJianId = id
+        this.tableData.forEach((v, k) => {
+          if (v.id !== id) {
+            this.tableData[k].recommend = false
+          }
+        })
+      },
       selectChanged(data) {
         data && data.forEach((v, k) => {
           v['code'] = k + 1
+          v['recommend'] = false
         })
-        // console.log('array', array)
-        // console.log('this.currentLive.spu_ids', this.currentLive.spu_ids)
+        console.log('data', data)
         this.tableData = JSON.parse(JSON.stringify(data))
         this.currentDataGoods = JSON.parse(JSON.stringify(data))
       },
@@ -760,6 +791,7 @@
             res.items.forEach(z => {
               if (v === z.id) {
                 z['code'] = k + 1
+                z['recommend'] = false
                 array.push(z)
               }
             })

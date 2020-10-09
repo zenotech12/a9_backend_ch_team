@@ -238,7 +238,7 @@
         </div>
       </el-col>
       <el-col :span="8">
-        <div>
+        <div class="listPaidStyle">
           <div style="margin-bottom: 10px;">{{$t('order.paymentRanking')}}</div>
           <el-row>
             <el-col :span ="24">
@@ -288,7 +288,7 @@
         </div>
       </el-col>
       <el-col :span="12">
-        <div>
+        <div class="listPaidStyle">
           <div style="margin-bottom: 10px;">{{$t('order.addShopRanking')}}</div>
           <el-row>
             <el-col :span ="24">
@@ -338,7 +338,7 @@
         </div>
       </el-col>
       <el-col :span="12">
-        <div>
+        <div class="listPaidStyle">
           <div style="margin-bottom: 10px;">{{$t('order.starRanking')}}</div>
           <el-row>
             <el-col :span ="24">
@@ -717,5 +717,11 @@
   .styleImgShow {
     display: flex;
     cursor: pointer;
+  }
+  .listPaidStyle {
+    /deep/
+    .el-table__body-wrapper {
+      overflow-y: auto;
+    }
   }
 </style>
