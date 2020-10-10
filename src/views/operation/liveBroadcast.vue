@@ -4,7 +4,7 @@
       <!-- 搜索 -->
       <div class="rightbox">
         <el-row>
-          <el-col :span ="24">
+          <el-col :span="24">
             <el-tabs v-model="tabStatus">
               <el-tab-pane :label="$t('operation.liveComingSoon')" name="live"></el-tab-pane>
               <el-tab-pane :label="$t('operation.historyRecord')" name="history"></el-tab-pane>
@@ -38,97 +38,177 @@
                   </el-row>
                 </el-form>
               </el-col>
-              <!--直播中可添加-->
-              <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt') && currentLive.status === 2">
-                <div class="boxFuncBtn">
-                  <goods-selector :mulit="true" v-if="modifyDisabled" :trigger="false" :haveTime.sync="modifyDisabled" :showTag="!modifyDisabled" v-model="spu_ids" :notSpuIds="JSON.stringify(currentLive.spu_ids)" @selectChanged="addNewGoods" :approve_status="2" :shelf_status="2"></goods-selector>
-                  <!--<el-button type="primary" size="mini" icon="el-icon-plus" @click="addGoods">{{$t('tools.add')}}</el-button>-->
-                </div>
-              </el-col>
-              <!--还没直播时-->
-              <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt') && currentLive.status !== 2">
-                <div class="boxFuncBtn">
-                  <goods-selector :mulit="true" :showTag="modifyDisabled" :trigger="false" v-model="form.spu_ids" @selectChanged="selectChanged" :approve_status="2" :notSpuIds="JSON.stringify([])" :shelf_status="2"></goods-selector>
-                </div>
-              </el-col>
               <el-col :span="24">
-                <div style="height: calc(100vh - 490px)">
-                    <el-table stripe border :data="tableData" height="calc(100% - -10px)">
-                      <el-table-column prop="code">
-                        <template slot="header" slot-scope="scope">
-                          <el-input
-                            v-model="searchCode"
-                            size="mini"
-                            clearable
-                            :placeholder="$t('operation.goodsCode')"/>
-                        </template>
-                      </el-table-column>
-                      <el-table-column>
-                        <template slot="header" slot-scope="scope">
-                          <el-input
-                            v-model="searchKey"
-                            size="mini"
-                            clearable
-                            :placeholder="$t('goods.name')"/>
-                        </template>
-                        <template  slot-scope="scope">
-                          <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
-                            <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
-                            <div class="g-info">
-                              <p>{{scope.row.name}}
-                                <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
-                                <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                                <!--<a class="el-icon-view"></a>-->
-                              </p>
-                            </div>
-                          </a>
-                        </template>
-                      </el-table-column>
-                      <el-table-column :label="$t('goods.price')">
-                        <template  slot-scope="scope">
-                          <template v-if="scope.row.type === 3">
-                            <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                            <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>
-                            <span v-else>{{scope.row.min_price}}</span>
-                          </template>
-                          <template v-else>
-                            <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
-                            <span v-else>{{scope.row.min_price | price}}</span>
-                          </template>
-                        </template>
-                      </el-table-column>
-                      <el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>
-                      <el-table-column prop="sales" :label="$t('goods.saled')"></el-table-column>
-                      <el-table-column prop="sales" label="讲解">
-
-                      </el-table-column>
-                      <el-table-column prop="sales" label="推荐">
-                        <template slot-scope="scope">
-                          <el-switch
-                            v-model="scope.row.recommend"
-                            @change="tuiJianSwitchFunc(scope.row.id, scope.row)"
-                            active-color="#13ce66"
-                            inactive-color="#ff4949">
-                          </el-switch>
-                        </template>
-                      </el-table-column>
-                      <el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>
-                      <el-table-column :label="$t('tools.opt')" v-if="!modifyDisabled">
-                        <template slot-scope="scope">
-                          <i class="el-icon-delete" style="font-size: 18px;cursor: pointer" @click="delCurrentGoods(scope.row.id)"></i>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                  </div>
+                <el-tabs v-model="tabGoods" @tab-click="tabChooseFunc">
+                  <el-tab-pane :label="$t('operation.goods')" name="goods"></el-tab-pane>
+                  <el-tab-pane :label="$t('operation.liveCoupon')" name="coupon"></el-tab-pane>
+                </el-tabs>
               </el-col>
-            </el-row>
-            <el-row class="optBtnStyle">
-              <el-col :span="24" style="margin-top: 20px">
-                <confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="type === 'add' && permissionCheck('opt')" :confirmButtonInfor="$t('tools.save')"></confirm-button>
-                <confirm-button @confirmButton="editLive" :disabled="submitDisabled" v-if="type === 'edit' && permissionCheck('opt') && currentLive.status !== 2" :confirmButtonInfor="$t('tools.save')"></confirm-button>
-                <delete-button :promptInfor="delTip" v-if="currentLive.status === 1 && permissionCheck('opt')" :btnType="primary" style="margin-left: 20px" @delData="delCurrentLive"></delete-button>
-                <el-button type="primary" size="small" @click="liveStartFunc" v-if="isShowStart && permissionCheck('opt')">{{$t('operation.startBroadcast')}}</el-button>
-                <el-button type="primary" size="small" @click="liveStopFunc" v-if="currentLive.status === 2 && permissionCheck('opt')">{{$t('operation.endLiveBroadcast')}}</el-button>
+              <!--商品表格-->
+              <el-col :span="24" v-if="tabGoods === 'goods'">
+                <el-row>
+                  <!--直播中可添加-->
+                  <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt') && currentLive.status === 2">
+                    <div class="boxFuncBtn">
+                      <goods-selector :mulit="true" v-if="modifyDisabled" :trigger="false" :haveTime.sync="modifyDisabled" :showTag="!modifyDisabled" v-model="spu_ids" :notSpuIds="JSON.stringify(currentLive.spu_ids)" @selectChanged="addNewGoods" :approve_status="2" :shelf_status="2"></goods-selector>
+                      <!--<el-button type="primary" size="mini" icon="el-icon-plus" @click="addGoods">{{$t('tools.add')}}</el-button>-->
+                    </div>
+                  </el-col>
+                  <!--还没直播时-->
+                  <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt') && currentLive.status !== 2">
+                    <div class="boxFuncBtn">
+                      <goods-selector :mulit="true" :showTag="modifyDisabled" :trigger="false" v-model="form.spu_ids" @selectChanged="selectChanged" :approve_status="2" :notSpuIds="JSON.stringify([])" :shelf_status="2"></goods-selector>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div style="height: calc(100vh - 530px)">
+                      <el-table stripe border :data="tableData" height="calc(100% - -10px)">
+                        <el-table-column prop="code">
+                          <template slot="header" slot-scope="scope">
+                            <el-input
+                              v-model="searchCode"
+                              size="mini"
+                              clearable
+                              :placeholder="$t('operation.goodsCode')"/>
+                          </template>
+                        </el-table-column>
+                        <el-table-column>
+                          <template slot="header" slot-scope="scope">
+                            <el-input
+                              v-model="searchKey"
+                              size="mini"
+                              clearable
+                              :placeholder="$t('goods.name')"/>
+                          </template>
+                          <template  slot-scope="scope">
+                            <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
+                              <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
+                              <div class="g-info">
+                                <p>{{scope.row.name}}
+                                  <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
+                                  <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                                  <!--<a class="el-icon-view"></a>-->
+                                </p>
+                              </div>
+                            </a>
+                          </template>
+                        </el-table-column>
+                        <el-table-column :label="$t('goods.price')">
+                          <template  slot-scope="scope">
+                            <template v-if="scope.row.type === 3">
+                              <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                              <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>
+                              <span v-else>{{scope.row.min_price}}</span>
+                            </template>
+                            <template v-else>
+                              <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
+                              <span v-else>{{scope.row.min_price | price}}</span>
+                            </template>
+                          </template>
+                        </el-table-column>
+                        <el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>
+                        <el-table-column prop="sales" :label="$t('goods.saled')"></el-table-column>
+                        <el-table-column label="推荐">
+                          <template slot-scope="scope">
+                            <el-switch
+                              v-model="scope.row.recommend"
+                              @change="liveIngTuiJian(scope.row.id, scope.row.recommend)"
+                              active-color="#13ce66"
+                              inactive-color="#ff4949">
+                            </el-switch>
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="讲解" v-if="currentLive.status === 2">
+                          <template slot-scope="scope">
+                            <el-switch
+                              v-model="scope.row.explain"
+                              @change="explainFunc(scope.row.id, scope.row.explain)"
+                              active-color="#13ce66"
+                              inactive-color="#ff4949">
+                            </el-switch>
+                          </template>
+                        </el-table-column>
+                        <!--<el-table-column label="推荐" v-if="currentLive.status === 1">-->
+                        <!--<template slot-scope="scope">-->
+                        <!--<el-switch-->
+                        <!--v-model="scope.row.recommend"-->
+                        <!--@change="tuiJianSwitchFunc(scope.row.id)"-->
+                        <!--active-color="#13ce66"-->
+                        <!--inactive-color="#ff4949">-->
+                        <!--</el-switch>-->
+                        <!--</template>-->
+                        <!--</el-table-column>-->
+                        <el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>
+                        <el-table-column :label="$t('tools.opt')">
+                          <template slot-scope="scope">
+                            <i class="el-icon-delete" style="font-size: 18px;cursor: pointer" v-if="!modifyDisabled" @click="delCurrentGoods(scope.row.id)"></i>
+                            <el-button type="text" v-if="currentLive.status === 2" @click="goodsOffShelf(scope.row.id, scope.$index)">商品下架</el-button>
+                          </template>
+                        </el-table-column>
+                      </el-table>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row class="optBtnStyle">
+                  <el-col :span="24" style="margin-top: 20px">
+                    <confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="type === 'add' && permissionCheck('opt')" :confirmButtonInfor="$t('tools.save')"></confirm-button>
+                    <confirm-button @confirmButton="editLive" :disabled="submitDisabled" v-if="type === 'edit' && permissionCheck('opt') && currentLive.status !== 2" :confirmButtonInfor="$t('tools.save')"></confirm-button>
+                    <delete-button :promptInfor="delTip" v-if="currentLive.status === 1 && permissionCheck('opt')" :btnType="primary" style="margin-left: 20px" @delData="delCurrentLive"></delete-button>
+                    <el-button type="primary" size="small" @click="liveStartFunc" v-if="isShowStart && permissionCheck('opt')">{{$t('operation.startBroadcast')}}</el-button>
+                    <el-button type="primary" size="small" @click="liveStopFunc" v-if="currentLive.status === 2 && permissionCheck('opt')">{{$t('operation.endLiveBroadcast')}}</el-button>
+                  </el-col>
+                </el-row>
+              </el-col>
+              <!--优惠券表格-->
+              <el-col :span="24" v-if="tabGoods === 'coupon'">
+                <el-row>
+                  <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt') && currentLive.status === 2">
+                    <div class="boxFuncBtn">
+                      <el-button type="primary" size="mini" icon="el-icon-plus" @click="chooseCoupon">{{$t('tools.add')}}</el-button>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="24">
+                    <div style="height: calc(100vh - 490px)">
+                      <el-table stripe border :data="liveCouponList" height="calc(100% - -10px)">
+                        <el-table-column prop="name" :label="$t('operation.name')"></el-table-column>
+                        <el-table-column :label="$t('operation.couponType')">
+                          <template  slot-scope="scope">
+                            {{couponType[scope.row.type-1].name}}
+                            <template v-if="scope.row.type === 1">[{{scope.row.quantity_discount_value | price}}]</template>
+                            <template v-else-if="scope.row.type === 2">[{{scope.row.percentage_discount_value}}%]</template>
+                          </template>
+                        </el-table-column>
+                        <el-table-column :label="$t('operation.couponCond')">
+                          <template  slot-scope="scope">
+                            {{$t('operation.couponCondA')}} {{scope.row.threshold | price}} {{$t('operation.couponCondB')}}
+                          </template>
+                        </el-table-column>
+                        <el-table-column :label="$t('operation.rangeType')">
+                          <template  slot-scope="scope">
+                            {{rangeType[scope.row.range_type-1].name}}
+                          </template>
+                        </el-table-column>
+                        <el-table-column :label="$t('operation.totalCount')">
+                          <template  slot-scope="scope">
+                            {{scope.row.used_count + '/' + scope.row.total_count}}
+                          </template>
+                        </el-table-column>
+                        <el-table-column :label="$t('operation.validTime')">
+                          <template  slot-scope="scope">
+                            <template v-if="scope.row.valid_day_count > 0">
+                              {{$t('operation.validTime2Tip1')}}<strong>{{scope.row.valid_day_count}}</strong>{{$t('operation.validTime2Tip2')}}
+                            </template>
+                            <template v-else >
+                              {{scope.row.bt + $t('operation.to') + scope.row.et}}
+                            </template>
+                          </template>
+                        </el-table-column>
+                      </el-table>
+                    </div>
+                  </el-col>
+                </el-row>
               </el-col>
             </el-row>
           </el-col>
@@ -346,6 +426,34 @@
             <el-button @click="closeLiveDialog" size="small" style="margin-right: 24px;">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
+        <!--优惠券-->
+        <el-dialog :title="$t('operation.chooseCoupon')" width="40%" @close="couponShowDialog = false" :visible.sync="couponShowDialog" :close-on-click-modal="false" center >
+          <el-form label-width="100px" :model="couponForm">
+            <el-form-item :label="$t('operation.coupon')">
+              <el-select v-model="currentCouponId" :placeholder="$t('tools.pleaseSelect')">
+                <el-option
+                  v-for="item in couponList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('operation.isLimitTime')">
+              <el-radio-group v-model="couponForm.send_type">
+                <el-radio :label="1">不限时</el-radio>
+                <el-radio :label="2">限时5s</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item :label="$t('operation.totalCount')">
+              <el-input v-model.number="couponForm.count"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="saveCoupon" size="small" type="primary">{{$t('tools.confirm')}}</el-button>
+            <el-button @click="couponShowDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -354,7 +462,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import goodsSelector from '@/components/goodsSelector'
-  import { liveItemsModify, liveItemsAdd, liveItemsDel, liveItemsList, liveItemsAddGoods, liveStart, liveStop } from '@/api/operation'
+  import { liveItemsModify, liveItemsAdd, liveItemsDel, liveItemsList, liveItemsAddGoods, liveStart, liveStop, liveRecommend, liveExplain, liveOffshelf, couponSetLiveSend, couponList, sendedSetCoupons } from '@/api/operation'
   import { spusList } from '@/api/goods'
   import { ordersList } from '@/api/order'
   export default {
@@ -460,7 +568,19 @@
         pushurl: '',
         isShowStart: false,
         pushUrlShow: false,
-        tuiJianId: ''
+        tuiJianId: '',
+        explainId: '',
+        tabGoods: 'goods',
+        couponShowDialog: false,
+        couponForm: {
+          send_type: 1, // 1不限时 2限时5s
+          count: 0 // 数量
+        },
+        currentCouponId: '',
+        couponList: [],
+        liveCouponList: [],
+        couponType: [{ code: 1, name: this.$t('operation.couponTypeA') }, { code: 2, name: this.$t('operation.couponTypeB') }, { code: 3, name: this.$t('operation.couponTypeC') }],
+        rangeType: [{ code: 1, name: this.$t('operation.rangeTypeA') }, { code: 2, name: this.$t('operation.rangeTypeB') }, { code: 3, name: this.$t('operation.rangeTypeC') }]
       }
     },
     computed: {
@@ -515,6 +635,45 @@
       }
     },
     methods: {
+      // 选择优惠券
+      chooseCoupon() {
+        this.couponShowDialog = true
+        this.currentCouponId = ''
+        this.couponForm.send_type = 1
+        this.couponForm.count = 0
+      },
+      saveCoupon() { // 保存优惠券
+        couponSetLiveSend(this.currentCouponId, this.couponForm).then(res => {
+          if (res.meta === 0) {
+            this.$message.success('优惠券发放成功')
+            this.couponShowDialog = false
+            this.getLiveCouponList()
+          }
+        })
+      },
+      // 获取直播优惠券
+      getLiveCouponList() {
+        sendedSetCoupons(this.currentLive.id).then(res => {
+          this.liveCouponList = res.items
+          console.log('this.liveCouponList', this.liveCouponList)
+        })
+      },
+      tabChooseFunc(v) {
+        if (v.name === 'coupon') {
+          this.getLiveCouponList()
+        }
+      },
+      // 获取优惠券模板列表
+      getCouponList() {
+        const search = {
+          type: 0,
+          for_live: true,
+          live_template: true
+        }
+        couponList(search).then(res => {
+          this.couponList = res.items
+        })
+      },
       liveStartFunc() {
         this.form.cover_imgs = JSON.stringify([this.coverImgs])
         // console.log('this.form', this.form)
@@ -537,8 +696,12 @@
             }
             console.log('item', JSON.stringify(item))
             console.log('form', JSON.stringify(this.form))
-
-            if (JSON.stringify(item) !== JSON.stringify(this.form)) {
+            const form = {
+              spu_ids: this.form.spu_ids,
+              cover_imgs: this.form.cover_imgs,
+              name: this.form.name
+            }
+            if (JSON.stringify(item) !== JSON.stringify(form)) {
               this.$message.error(this.$t('operation.pleaseClickBtnTip'))
             } else {
               liveStart(this.form).then(vRes => {
@@ -608,6 +771,21 @@
         this.videoUrl = this.currentLive.channel_info.hlsPullUrl.replace('http:', '')
         this.dialogShow = true
       },
+      // 商品下架
+      goodsOffShelf(id, index) {
+        // this.tableData.splice(index, 1)
+        liveOffshelf(this.currentLive.id, { 'spu_ids': id }).then(res => {
+          this.$message.success('商品下架成功')
+          if (id === this.tuiJianId) {
+            this.tuiJianId = ''
+          }
+          if (id === this.explainId) {
+            this.explainId = ''
+          }
+          this.spu_ids = ''
+          this.getLiveListFunc()
+        })
+      },
       delCurrentGoods(id) {
         const arrayId = JSON.parse(this.form.spu_ids)
         arrayId.splice(arrayId.indexOf(id), 1)
@@ -621,6 +799,15 @@
         this.tableData && this.tableData.forEach((v, k) => {
           v['code'] = k + 1
         })
+        // 判断删除的商品是否有推荐的商品。如果有推荐的商品，那就把推荐商品id清空
+        const tuiIndex = this.tableData.findIndex(res => {
+          if (res.id === this.tuiJianId) {
+            return res
+          }
+        })
+        if (tuiIndex === -1) {
+          this.tuiJianId = ''
+        }
         console.log('tableData', this.tableData)
         this.currentDataGoods = this.tableData
       },
@@ -631,27 +818,59 @@
           this.getLiveListFunc()
         })
       },
-      tuiJianSwitchFunc(id, item) {
-        console.log('vvvv', id)
-        const recommend = item.recommend
+      // 直播中的推荐
+      liveIngTuiJian(id, item) {
         if (id === this.tuiJianId) {
-          item.recommend = !recommend
-        } else {
-          item.recommend = true
+          this.tuiJianId = ''
+        } else if (id !== this.tuiJianId) {
+          this.tuiJianId = id
         }
-        this.tuiJianId = id
+        if (this.currentLive.status === 2) {
+          const obj = {
+            spu_id: id,
+            end: !item
+          }
+          liveRecommend(this.currentLive.id, obj).then(res => {})
+        }
         this.tableData.forEach((v, k) => {
           if (v.id !== id) {
             this.tableData[k].recommend = false
           }
         })
       },
+      // 讲解商品
+      explainFunc(id, item) {
+        if (id === this.explainId) {
+          this.explainId = ''
+        } else if (id !== this.explainId) {
+          this.explainId = id
+        }
+        if (this.currentLive.status === 2) {
+          const obj = {
+            spu_id: id,
+            end: !item
+          }
+          console.log('obj', obj)
+          liveExplain(this.currentLive.id, obj).then(res => {})
+        }
+        this.tableData.forEach((v, k) => {
+          if (v.id !== id) {
+            this.tableData[k].explain = false
+          }
+        })
+      },
       selectChanged(data) {
         data && data.forEach((v, k) => {
           v['code'] = k + 1
-          v['recommend'] = false
+          if (v.id === this.tuiJianId) {
+            v['recommend'] = true
+          } else {
+            v['recommend'] = false
+          }
+          v['explain'] = false
         })
         console.log('data', data)
+        console.log('this.tuiJianId', this.tuiJianId)
         this.tableData = JSON.parse(JSON.stringify(data))
         this.currentDataGoods = JSON.parse(JSON.stringify(data))
       },
@@ -668,9 +887,6 @@
           this.itemCountOrder = res.total
         })
       },
-      // showLiveVideo(data) { // 回看
-      //
-      // },
       // 历史记录
       getHistoryList() {
         liveItemsList(this.historySearch).then(res => {
@@ -678,17 +894,6 @@
           this.itemCount = res.total
         })
       },
-      // addGoods() {
-      //   this.goodsDialog = true
-      // },
-      // addGoodsUpdata() {
-      //   this.addGoodsDisable = true
-      //   liveItemsAddGoods(this.currentLive.id, { 'spu_ids': this.spu_ids }).then(res => {
-      //     this.goodsDialog = false
-      //     this.addGoodsDisable = false
-      //     this.getLiveListFunc()
-      //   })
-      // },
       goodsPreview(row) {
         // return 'https://www.a9kh.com/goods/' + row.id + '.html'
       },
@@ -737,6 +942,8 @@
           return
         }
         this.submitDisabled = true
+        this.form.recommend_spu_id = this.tuiJianId
+        console.log('tu', this.form)
         if (this.type === 'edit') {
           liveItemsModify(this.currentLive.id, this.form).then(res => {
             this.getLiveListFunc()
@@ -765,6 +972,7 @@
           // this.currentLive.status = 2
           // console.log('this.currentLive', this.currentLive.spu_ids)
           if (res.items[0]) {
+            this.tuiJianId = res.items[0].recommend_spu_id
             this.type = 'edit'
             if (res.items[0].status === 2) {
               this.modifyDisabled = true
@@ -777,6 +985,7 @@
             }
             this.getLiveGoodsList()
           } else {
+            this.tuiJianId = ''
             this.type = 'add'
           }
         })
@@ -786,12 +995,22 @@
           // res.items && res.items.forEach((item, k) => {
           //   item['code'] = k + 1
           // })
+          console.log('res', res.items)
           const array = []
           this.currentLive.spu_ids && this.currentLive.spu_ids.forEach((v, k) => {
             res.items.forEach(z => {
               if (v === z.id) {
                 z['code'] = k + 1
-                z['recommend'] = false
+                if (z.id === this.currentLive.recommend_spu_id) {
+                  z['recommend'] = true
+                } else {
+                  z['recommend'] = false
+                }
+                if (z.id === this.currentLive.explain_spu_id) {
+                  z['explain'] = true
+                } else {
+                  z['explain'] = false
+                }
                 array.push(z)
               }
             })
@@ -804,6 +1023,7 @@
       }
     },
     mounted() {
+      this.getCouponList()
     },
     created() {
       this.getLiveListFunc()
@@ -832,6 +1052,6 @@
   }
   .optBtnStyle {
     position: absolute;
-    bottom: -60px;
+    bottom: -47px;
   }
 </style>

@@ -140,5 +140,9 @@ export default {
   endLiveBroadcast: '结束直播',
   pleaseClickBtnTip: '请先点击保存按钮后再开播',
   puTongCoupon: '普通优惠券',
-  liveCoupon: '直播优惠券'
+  liveCoupon: '直播优惠券',
+  chooseCoupon: '选择优惠券',
+  number: '数量',
+  coupon: '优惠券',
+  isLimitTime: '是否限时'
 }

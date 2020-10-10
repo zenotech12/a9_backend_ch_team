@@ -345,3 +345,47 @@ export function liveStop() {
     method: 'post'
   })
 }
+
+// 直播单.下架商品
+export function liveOffshelf(id, data) {
+  return request({
+    url: 'live-items/' + id + '/offshelf',
+    method: 'post',
+    data: data
+  })
+}
+
+// 直播单.推荐商品
+export function liveRecommend(id, data) {
+  return request({
+    url: 'live-items/' + id + '/recommend',
+    method: 'post',
+    data: data
+  })
+}
+
+// 直播单.讲解商品
+export function liveExplain(id, data) {
+  return request({
+    url: 'live-items/' + id + '/explain',
+    method: 'post',
+    data: data
+  })
+}
+
+// 直播.优惠券.发放
+export function couponSetLiveSend(id, data) {
+  return request({
+    url: 'coupon-settings/' + id + '/live-send',
+    method: 'post',
+    data: data
+  })
+}
+
+// 直播单.已发放优惠券列表
+export function sendedSetCoupons(id) {
+  return request({
+    url: 'live-items/' + id + '/sended-setting-coupons',
+    method: 'get'
+  })
+}
