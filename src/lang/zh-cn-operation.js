@@ -144,5 +144,14 @@ export default {
   chooseCoupon: '选择优惠券',
   number: '数量',
   coupon: '优惠券',
-  isLimitTime: '是否限时'
+  isLimitTime: '是否限时',
+  received: '已领取',
+  recommend: '推荐',
+  explain: '讲解',
+  unlimitedTime: '不限时',
+  limitFives: '限时5s',
+  couponSendSuccess: '优惠券发放成功',
+  goodsOffShelfSuccess: '商品下架成功',
+  goodsOffshelf: '商品下架',
+  chooseGoods: '选择商品'
 }

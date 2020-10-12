@@ -45,6 +45,7 @@ export default {
   panicBuys: 'Snap up',
   cobuy: 'Group purchase',
   coupon: 'Coupon',
+  cutGoods: 'Free bargain',
   shopInfo: 'Store information',
   financeMgr: 'Financial',
   financeList: 'Account details',
@@ -53,5 +54,6 @@ export default {
   chatRobot: 'Chat robot',
   optLog: 'Opt Log',
   cardMgr: 'Bank Card',
-  liveBroadcast: 'Live Broadcast'
+  liveBroadcast: 'Live Broadcast',
+  freeShipingSet: 'Free shipping settings'
 }

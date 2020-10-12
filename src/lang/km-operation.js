@@ -137,5 +137,20 @@ export default {
   pushStreamAddress: 'ជំរុញស្ទ្រីមស្ទ្រីម',
   startBroadcast: 'ចាប់ផ្តើមផ្សាយ',
   endLiveBroadcast: 'បញ្ចប់ការផ្សាយផ្ទាល់',
-  pleaseClickBtnTip: 'សូមចុចប៊ូតុងរក្សាទុកមុនពេលចាប់ផ្តើមការចាក់ផ្សាយ'
+  pleaseClickBtnTip: 'សូមចុចប៊ូតុងរក្សាទុកមុនពេលចាប់ផ្តើមការចាក់ផ្សាយ',
+  puTongCoupon: 'គូប៉ុងធម្មតា',
+  liveCoupon: 'ប័ណ្ណផ្សាយផ្ទាល់',
+  chooseCoupon: 'ជ្រើសរើសគូប៉ុង',
+  number: 'បរិមាណ',
+  coupon: 'គូប៉ុង',
+  isLimitTime: 'តើពេលវេលាមានកំណត់ទេ',
+  received: 'បានទទួល',
+  recommend: 'សូមផ្តល់អនុសាសន៍',
+  explain: 'ពន្យល់',
+  unlimitedTime: 'ពេលវេលាគ្មានដែនកំណត់',
+  limitFives: 'ពេលវេលាមានកំណត់ ៥',
+  couponSendSuccess: 'គូប៉ុងចេញដោយជោគជ័យ',
+  goodsOffShelfSuccess: 'ទំនិញត្រូវបានយកចេញដោយជោគជ័យ',
+  goodsOffshelf: 'ទំនិញបិទធ្នើ',
+  chooseGoods: 'ជ្រើសរើសទំនិញ'
 }

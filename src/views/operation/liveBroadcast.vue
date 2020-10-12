@@ -108,7 +108,7 @@
                         </el-table-column>
                         <el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>
                         <el-table-column prop="sales" :label="$t('goods.saled')"></el-table-column>
-                        <el-table-column label="推荐">
+                        <el-table-column :label="$t('operation.recommend')">
                           <template slot-scope="scope">
                             <el-switch
                               v-model="scope.row.recommend"
@@ -118,7 +118,7 @@
                             </el-switch>
                           </template>
                         </el-table-column>
-                        <el-table-column label="讲解" v-if="currentLive.status === 2">
+                        <el-table-column :label="$t('operation.explain')" v-if="currentLive.status === 2">
                           <template slot-scope="scope">
                             <el-switch
                               v-model="scope.row.explain"
@@ -128,21 +128,11 @@
                             </el-switch>
                           </template>
                         </el-table-column>
-                        <!--<el-table-column label="推荐" v-if="currentLive.status === 1">-->
-                        <!--<template slot-scope="scope">-->
-                        <!--<el-switch-->
-                        <!--v-model="scope.row.recommend"-->
-                        <!--@change="tuiJianSwitchFunc(scope.row.id)"-->
-                        <!--active-color="#13ce66"-->
-                        <!--inactive-color="#ff4949">-->
-                        <!--</el-switch>-->
-                        <!--</template>-->
-                        <!--</el-table-column>-->
                         <el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>
                         <el-table-column :label="$t('tools.opt')">
                           <template slot-scope="scope">
                             <i class="el-icon-delete" style="font-size: 18px;cursor: pointer" v-if="!modifyDisabled" @click="delCurrentGoods(scope.row.id)"></i>
-                            <el-button type="text" v-if="currentLive.status === 2" @click="goodsOffShelf(scope.row.id, scope.$index)">商品下架</el-button>
+                            <el-button type="text" v-if="currentLive.status === 2" @click="goodsOffShelf(scope.row.id, scope.$index)">{{$t('operation.goodsOffshelf')}}</el-button>
                           </template>
                         </el-table-column>
                       </el-table>
@@ -190,9 +180,14 @@
                             {{rangeType[scope.row.range_type-1].name}}
                           </template>
                         </el-table-column>
+                        <el-table-column :label="$t('operation.received')">
+                          <template  slot-scope="scope">
+                            {{scope.row.used_count}}
+                          </template>
+                        </el-table-column>
                         <el-table-column :label="$t('operation.totalCount')">
                           <template  slot-scope="scope">
-                            {{scope.row.used_count + '/' + scope.row.total_count}}
+                            {{scope.row.total_count}}
                           </template>
                         </el-table-column>
                         <el-table-column :label="$t('operation.validTime')">
@@ -214,7 +209,7 @@
           </el-col>
         </el-row>
         <el-row v-if="tabStatus === 'history'">
-          <el-col :span="24">
+          <el-col :span="24" class="historyBox">
             <div style="height: calc(100vh - 200px)">
               <el-table stripe border :data="historyData" height="calc(100% - 30px)">
                 <el-table-column :label="$t('operation.name')" prop="name"></el-table-column>
@@ -238,12 +233,12 @@
                 <el-table-column :label="$t('operation.likes')" prop="thumb_count"></el-table-column>
                 <el-table-column :label="$t('operation.numberGoodsSold')" prop="goods_sale_count">
                   <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="showOrder(scope.row)">{{scope.row.goods_sale_count}}</el-button>
+                    <el-button type="text" size="small" @click="showOrder(scope.row, scope.row.goods_sale_count)">{{scope.row.goods_sale_count}}</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('operation.orderNumber')" prop="order_count">
                   <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="showOrder(scope.row)">{{scope.row.order_count}}</el-button>
+                    <el-button type="text" size="small" @click="showOrder(scope.row, scope.row.order_count)">{{scope.row.order_count}}</el-button>
                   </template>
                 </el-table-column>
                 <!--<el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">-->
@@ -441,8 +436,8 @@
             </el-form-item>
             <el-form-item :label="$t('operation.isLimitTime')">
               <el-radio-group v-model="couponForm.send_type">
-                <el-radio :label="1">不限时</el-radio>
-                <el-radio :label="2">限时5s</el-radio>
+                <el-radio :label="1">{{$t('operation.unlimitedTime')}}</el-radio>
+                <el-radio :label="2">{{$t('operation.limitFives')}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('operation.totalCount')">
@@ -645,7 +640,7 @@
       saveCoupon() { // 保存优惠券
         couponSetLiveSend(this.currentCouponId, this.couponForm).then(res => {
           if (res.meta === 0) {
-            this.$message.success('优惠券发放成功')
+            this.$message.success(this.$t('operation.couponSendSuccess'))
             this.couponShowDialog = false
             this.getLiveCouponList()
           }
@@ -728,6 +723,7 @@
         this.modifyDisabled = false
         this.coverImgs = ''
         this.pushUrlShow = false
+        this.type = 'add' // 结束直播后要重置保存按钮的类型为添加
         this.currentLive = {}
       },
       payWay(data) {
@@ -775,7 +771,7 @@
       goodsOffShelf(id, index) {
         // this.tableData.splice(index, 1)
         liveOffshelf(this.currentLive.id, { 'spu_ids': id }).then(res => {
-          this.$message.success('商品下架成功')
+          this.$message.success(this.$t('operation.goodsOffShelfSuccess'))
           if (id === this.tuiJianId) {
             this.tuiJianId = ''
           }
@@ -813,8 +809,9 @@
       },
       addNewGoods(data) {
         // console.log('data', data)
-        // console.log('spu_ids', this.spu_ids)
+        console.log('spu_ids', this.spu_ids)
         liveItemsAddGoods(this.currentLive.id, { 'spu_ids': this.spu_ids }).then(res => {
+          this.spu_ids = ''
           this.getLiveListFunc()
         })
       },
@@ -874,12 +871,14 @@
         this.tableData = JSON.parse(JSON.stringify(data))
         this.currentDataGoods = JSON.parse(JSON.stringify(data))
       },
-      showOrder(data) {
-        this.orderSearch.bt = data.start_time
-        this.orderSearch.et = data.end_time
-        this.orderSearch.spu_ids = data.spu_ids ? JSON.stringify(data.spu_ids) : ''
-        this.getOrderList()
-        this.orderShowDialog = true
+      showOrder(data, number) {
+        if (number > 0) {
+          this.orderSearch.bt = data.start_time
+          this.orderSearch.et = data.end_time
+          this.orderSearch.spu_ids = data.spu_ids ? JSON.stringify(data.spu_ids) : ''
+          this.getOrderList()
+          this.orderShowDialog = true
+        }
       },
       getOrderList() {
         ordersList(this.orderSearch).then(res => {
@@ -1053,5 +1052,11 @@
   .optBtnStyle {
     position: absolute;
     bottom: -47px;
+  }
+  .historyBox {
+    /deep/
+    .el-table__body-wrapper {
+      overflow-y: auto;
+    }
   }
 </style>

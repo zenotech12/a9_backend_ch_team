@@ -22,6 +22,11 @@ const system = [{
     meta: { title: 'postageRule', icon: 'permission', code: '6_3' },
     component: () => import('@/views/system/postage')
   }, {
+    name: 'freeShiping',
+    path: 'freeShiping',
+    meta: { title: 'freeShipingSet', icon: 'permission', code: '6_7' },
+    component: () => import('@/views/system/freeShiping')
+  }, {
     name: 'address',
     path: 'address',
     meta: { title: 'address', icon: 'permission', code: '6_4' },

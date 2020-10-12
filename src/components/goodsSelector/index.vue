@@ -9,7 +9,7 @@
         <el-button icon="el-icon-search" :disabled="!disabled" @click="showGoodsTable1" size="mini"></el-button>
       </div>
       <div v-if="!showTag">
-        <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsTable1">选择商品</el-button>
+        <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsTable1">{{$t('operation.chooseGoods')}}</el-button>
       </div>
     </div>
     <el-dialog :title="$t('goods.selectorTitle')" v-if="dialogFormVisible" :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">

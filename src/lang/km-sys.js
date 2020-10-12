@@ -64,5 +64,11 @@ export default {
   payPasswordSet: 'ពាក្យសម្ងាត់ទូទាត់ប្រាក់',
   enterPayPasswordSet: 'សូមកំណត់ពាក្យសម្ងាត់ទូទាត់',
   pleaseEnterPayPasswordSet: 'សូមបញ្ចូលពាក្យសម្ងាត់ទូទាត់',
-  setPayPassSuccess: 'ពាក្យសម្ងាត់ទូទាត់ត្រូវបានកំណត់ដោយជោគជ័យ'
+  setPayPassSuccess: 'ពាក្យសម្ងាត់ទូទាត់ត្រូវបានកំណត់ដោយជោគជ័យ',
+  freeShipingDate: 'ថ្ងៃ​ដឺ​ក​ជញ្ជូន',
+  freeShipingTitle1: 'វិធីសាស្ត្រវាយតម្លៃ',
+  number: 'ចំនួន',
+  price: 'តម្លៃ',
+  allGoods: 'ផលិតផលទាំងអស់',
+  pleaseChooseFreeShipingDate: 'សូមជ្រើសរើសកាលបរិច្ឆេទដឹកជញ្ជូន'
 }

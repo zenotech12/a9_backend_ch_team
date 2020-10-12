@@ -137,5 +137,20 @@ export default {
   pushStreamAddress: 'Push stream address',
   startBroadcast: 'Start broadcast',
   endLiveBroadcast: 'End live broadcast',
-  pleaseClickBtnTip: 'Please click the save button before starting the broadcast'
+  pleaseClickBtnTip: 'Please click the save button before starting the broadcast',
+  puTongCoupon: 'Normal coupon',
+  liveCoupon: 'Live Coupon',
+  chooseCoupon: 'Choose a coupon',
+  number: 'Quantity',
+  coupon: 'coupon',
+  isLimitTime: 'Is it time limited',
+  received: 'Received',
+  recommend: 'recommend',
+  explain: 'explain',
+  unlimitedTime: 'Unlimited time',
+  limitFives: 'Limited time 5s',
+  couponSendSuccess: 'Coupon issued successfully',
+  goodsOffShelfSuccess: 'Goods removed successfully',
+  goodsOffshelf: 'Commodity off the shelf',
+  chooseGoods: 'Select product'
 }

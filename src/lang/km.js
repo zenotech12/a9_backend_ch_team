@@ -45,6 +45,7 @@ export default {
   panicBuys: 'ការបញ្ចុះតម្លៃមានកំណត់',
   cobuy: 'ការទិញឥវ៉ាន់ជាក្រុម',
   coupon: 'បណ្ណបញ្ចុះតម្លៃ',
+  cutGoods: 'ការចរចាដោយឥតគិតថ្លៃ',
   shopInfo: 'ពត៏មានផ្ទាល់របស់ហាង',
   financeMgr: 'ហិរញ្ញវត្ថុ',
   financeList: 'ពត៏មានហិរញ្ញវត្ថុផ្ទាល់ខ្លួន',
@@ -53,5 +54,6 @@ export default {
   chatRobot: 'សារស្វ័យប្រវត្ត',
   optLog: 'ចាកចេញ',
   cardMgr: 'គណនីធនាគារ',
-  liveBroadcast: 'ការគ្រប់គ្រងការផ្សាយផ្ទាល់'
+  liveBroadcast: 'ការគ្រប់គ្រងការផ្សាយផ្ទាល់',
+  freeShipingSet: 'ការកំណត់ការដឹកជញ្ជូនដោយឥតគិតថ្លៃ'
 }

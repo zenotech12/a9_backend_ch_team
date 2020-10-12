@@ -53,5 +53,6 @@ export default {
   chatRobot: '聊天机器人',
   optLog: '操作日志',
   cardMgr: '银行卡管理',
-  liveBroadcast: '直播管理'
+  liveBroadcast: '直播管理',
+  freeShipingSet: '包邮设置'
 }

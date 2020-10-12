@@ -64,5 +64,11 @@ export default {
   payPasswordSet: 'Payment password',
   enterPayPasswordSet: 'Please set payment password',
   pleaseEnterPayPasswordSet: 'Please enter payment password',
-  setPayPassSuccess: 'The payment password is set successfully'
+  setPayPassSuccess: 'The payment password is set successfully',
+  freeShipingDate: 'Shipping date',
+  freeShipingTitle1: 'Valuation method',
+  number: 'number',
+  price: 'price',
+  allGoods: 'all products',
+  pleaseChooseFreeShipingDate: 'Please select the shipping date'
 }

@@ -240,3 +240,20 @@ export function mobileCode(data) {
     data: data
   })
 }
+
+// 免邮设置.获取
+export function getFreePostage() {
+  return request({
+    url: 'free-postage',
+    method: 'get'
+  })
+}
+
+// 免邮设置.设置
+export function freePostageSet(data) {
+  return request({
+    url: 'free-postage',
+    method: 'put',
+    data: data
+  })
+}

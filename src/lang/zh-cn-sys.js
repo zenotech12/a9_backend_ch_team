@@ -76,5 +76,11 @@ export default {
   address1: '地址',
   googleMapError: 'google地图打开失败!',
   addressChoose: '地址选择',
-  selectAddress: '请选择地址'
+  selectAddress: '请选择地址',
+  freeShipingDate: '包邮日期',
+  freeShipingTitle1: '计价方式',
+  number: '件数',
+  price: '价格',
+  allGoods: '全部商品',
+  pleaseChooseFreeShipingDate: '请选择包邮日期'
 }
