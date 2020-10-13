@@ -12,6 +12,7 @@
               <span>{{$t('finance.toBeIncome')}}：<font>{{balanceDetail.to_be_income | price}}</font></span>
               <span>{{$t('finance.tixianing')}}：<font>{{balanceDetail.withdrawing | price}}</font></span>
               <span>{{$t('finance.tixianed')}}：<font>{{balanceDetail.withdrawed | price}}</font></span>
+              <span>{{$t('finance.cashIncome')}}：<font>{{balanceDetail.cash | price}}</font></span>
               <el-button type="primary" v-if="permissionCheck('opt')" size="mini" icon="el-icon-money" @click="addData" class="tx">提现</el-button>
             </el-card>
           </el-col>

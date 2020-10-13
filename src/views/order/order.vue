@@ -158,7 +158,8 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.status')" width="90">
                   <template slot-scope="scope">
-                    <el-tag >{{orderStatus[scope.row.status]}}</el-tag>
+                    <el-tag >{{orderStatus[scope.row.status]}} </el-tag>
+                    <span style="font-size: 12px" v-if="scope.row.status === 4 || scope.row.status === 5">(货到付款)</span>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.genTime')" width="180">
@@ -178,8 +179,11 @@
                 </el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "100" fixed="right"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
-                    <el-button v-if="scope.row.status === 4 || scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">
+                    <el-button v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2" type="text" @click="showExpressEditor(scope.row,1)" size="small">
                       {{scope.row.status === 4 ? $t('order.modifyExpress') : $t('order.express')}}
+                    </el-button>
+                    <el-button v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
+                      {{$t('order.confirmTransaction')}}
                     </el-button>
                     <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">
                       {{$t('order.modifyPrice')}}
@@ -329,7 +333,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo } from '@/api/order'
+  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm } from '@/api/order'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import areaInfo from '@/utils/areaInfo'
@@ -464,6 +468,12 @@
       }
     },
     methods: {
+      orderConfirmFunc(id) {
+        orderConfirm(id).then(res => {
+          this.$message.success('确认交易成功')
+          this.getDataListFun()
+        })
+      },
       payWay(data) {
         let str = ''
         this.listV.forEach(v => {

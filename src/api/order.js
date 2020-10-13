@@ -152,3 +152,11 @@ export function evaluationsCount() {
     method: 'get'
   })
 }
+
+// 订单.货到付款确认
+export function orderConfirm(id) {
+  return request({
+    url: 'orders/' + id + '/confirm',
+    method: 'put'
+  })
+}

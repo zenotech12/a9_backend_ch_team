@@ -25,5 +25,8 @@ export default {
   txStatus3: 'Canceled',
   tixianTip1: 'Please set the withdrawal amount correctly',
   tixianTip2: 'Please select the bank card corresponding to withdrawal',
-  tixianTip3: 'Please set up the bank first'
+  tixianTip3: 'Please set up the bank first',
+  timeSpan: 'Time period',
+  moneyChange: 'Change amount',
+  cashIncome: 'Cash income'
 }

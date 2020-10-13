@@ -27,5 +27,6 @@ export default {
   tixianTip2: '请选择提现对应银行卡',
   tixianTip3: '请先设置银行',
   timeSpan: '时段',
-  moneyChange: '变化金额'
+  moneyChange: '变化金额',
+  cashIncome: '现金收入'
 }
