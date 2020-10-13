@@ -41,7 +41,7 @@
               <el-col :span="24">
                 <el-tabs v-model="tabGoods" @tab-click="tabChooseFunc">
                   <el-tab-pane :label="$t('operation.goods')" name="goods"></el-tab-pane>
-                  <el-tab-pane :label="$t('operation.liveCoupon')" name="coupon"></el-tab-pane>
+                  <el-tab-pane :label="$t('operation.liveCoupon')" v-if="currentLive.status === 2" name="coupon"></el-tab-pane>
                 </el-tabs>
               </el-col>
               <!--商品表格-->

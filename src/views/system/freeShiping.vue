@@ -206,6 +206,8 @@
           }
         })
         this.getGoodsList()
+        // this.spu_ids = ''
+        console.log('this.supid', this.spu_ids)
       },
       saveAdFunc() {
         if (this.form.bt === '') {
