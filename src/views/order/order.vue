@@ -718,9 +718,9 @@
         })
         this.optionsAddress.push(obj)
       })
-      // this.$nextTick(() => {
-      //   this.currentPage = 2
-      // })
+      this.$nextTick(() => {
+        this.currentPage = 2
+      })
 
       if (this.searchParam[this.searchParamKey]) {
         this.searchForm = this.searchParam[this.searchParamKey]
@@ -739,6 +739,9 @@
       if (this.$route.params.bt || this.$route.params.et) {
         this.orderTimes = [this.$route.params.bt, this.$route.params.et]
       }
+      // console.log('optionsAddress', this.optionsAddress)
+      // this.searchForm.order_status = this.$route.params.order_status ? this.$route.params.order_status : 0
+      // this.tab_order_status = this.searchForm.order_status + ''
       const key = this.$route.query.k
       if (key !== undefined && key !== '' && key !== null) {
         this.searchForm.key = key

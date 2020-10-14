@@ -465,6 +465,7 @@
     },
     data() {
       return {
+        searchParamKey: 'goodsList',
         batchWeight: 0,
         batchInventory: 0,
         batchPrice: 0,
@@ -600,7 +601,8 @@
         propsImageEditIndex: 0,
         propsImageEditTitle: '',
         tab_shelf_status: '2',
-        multipleSelection: []
+        multipleSelection: [],
+        doWatch: true
       }
     },
     created() {
@@ -608,6 +610,13 @@
       // this.$store.state.user.pathRouter = false
     },
     mounted() {
+      if (this.searchParam[this.searchParamKey]) {
+        this.searchForm = this.searchParam[this.searchParamKey]
+        this.currentPage = parseInt((this.searchForm.skip / this.pageSize) + 1)
+        this.tab_shelf_status = this.searchForm.shelf_status + ''
+        this.doWatch = false
+      }
+      console.log('search', this.$store.state.app.searchParam.goodsList)
       this.getTableData()
       this.getTypeList()
       this.getSysType()
@@ -615,6 +624,9 @@
     },
     watch: {
       tab_shelf_status(val) {
+        if (!this.doWatch) {
+          return
+        }
         this.searchForm.skip = 0
         this.searchForm.limit = this.pageSize
         this.searchForm.shelf_status = parseInt(val)
@@ -714,7 +726,7 @@
     },
     computed: {
       ...mapGetters([
-        'shopInfo'
+        'shopInfo', 'searchParam'
       ]),
       propPreviewImages() {
         const result = []
@@ -990,11 +1002,13 @@
         } else {
           this.searchForm.deleted = false
         }
+        this.$store.dispatch('SetSearchParam', { key: this.searchParamKey, value: this.searchForm })
         spusList(this.searchForm).then(response => {
           if (response.meta === 0) {
             this.tableData.loading = false
             this.itemCount = response.total
             this.tableData.body = response.items
+            this.doWatch = true
           }
         })
       },
