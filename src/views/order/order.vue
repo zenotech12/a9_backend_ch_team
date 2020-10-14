@@ -106,6 +106,10 @@
                   <template slot-scope="scope" >
                     <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
                     <span>({{$t('order.includePostage')}}：{{scope.row.postage | price}})</span>
+                    <div class="ui">
+                      <span>{{$t('order.payMethod')}}：</span>
+                      {{payMethod[scope.row.pay_way_top - 1]}}
+                    </div>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
@@ -123,10 +127,6 @@
                     <div class="ui">
                       <span>{{$t('order.deliveryMethod')}}：</span>
                       {{deliveryMethod[scope.row.post_way - 1]}}
-                    </div>
-                    <div class="ui">
-                      <span>{{$t('order.payMethod')}}：</span>
-                      {{payMethod[scope.row.pay_way_top - 1]}}
                     </div>
                     <div class="ui" v-if="scope.row.express.novar">
                       <span>{{$t('order.expressNo')}}：</span>

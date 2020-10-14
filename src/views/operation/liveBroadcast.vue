@@ -132,7 +132,7 @@
                         <el-table-column :label="$t('tools.opt')">
                           <template slot-scope="scope">
                             <i class="el-icon-delete" style="font-size: 18px;cursor: pointer" v-if="!modifyDisabled" @click="delCurrentGoods(scope.row.id)"></i>
-                            <el-button type="text" v-if="currentLive.status === 2" @click="goodsOffShelf(scope.row.id, scope.$index)">{{$t('operation.goodsOffshelf')}}</el-button>
+                            <el-button type="text" v-if="currentLive.status === 2 && scope.row.recommend === false && scope.row.explain === false" @click="goodsOffShelf(scope.row.id, scope.$index)">{{$t('operation.goodsOffshelf')}}</el-button>
                           </template>
                         </el-table-column>
                       </el-table>
