@@ -214,7 +214,7 @@
                   &nbsp;
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
-                  <el-pagination
+                  <el-pagination v-if="itemCount > 0"
                     :current-page.sync="currentPage"
                     :page-size.sync="pageSize"
                     :page-sizes="[10, 30, 50, 100, 500]"
@@ -362,6 +362,7 @@
       const pz = 10
       return {
         searchParamKey: 'orderList',
+        doWatch: true,
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
@@ -460,6 +461,9 @@
     },
     watch: {
       tab_order_status(val) {
+        if (!this.doWatch) {
+          return
+        }
         if (this.searchForm.skip !== 0 || this.searchForm.order_status !== parseInt(val)) {
           // console.log(this.searchForm, 'gg', val)
           // console.log(this.searchForm.skip, this.searchForm.skip !== 0, 'gg', this.searchForm.order_status !== parseInt(val))
@@ -471,6 +475,9 @@
         }
       },
       currentPage(val) {
+        if (!this.doWatch) {
+          return
+        }
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
@@ -684,6 +691,7 @@
         this.$store.dispatch('SetSearchParam', { key: this.searchParamKey, value: this.searchForm })
         console.log('SetSearchParam', this.$store.state.app.searchParam)
         ordersList(this.searchForm).then(res => {
+          this.doWatch = true
           this.tableData = res.items
           this.itemCount = res.total
         })
@@ -718,13 +726,12 @@
         })
         this.optionsAddress.push(obj)
       })
-      this.$nextTick(() => {
-        this.currentPage = 2
-      })
-
+      
       if (this.searchParam[this.searchParamKey]) {
+        this.doWatch = false
         this.searchForm = this.searchParam[this.searchParamKey]
         this.currentPage = parseInt((this.searchForm.skip / this.pageSize) + 1)
+        this.orderTimes = [this.searchForm.bt, this.searchForm.et]
       }
       if (this.$route.params.order_status) {
         if (this.$route.params.order_status !== this.searchForm.order_status) {
@@ -732,8 +739,6 @@
           this.currentPage = 1
           this.searchForm.order_status = this.$route.params.order_status
         }
-      } else {
-        this.searchForm.order_status = 0
       }
       this.tab_order_status = this.searchForm.order_status + ''
       if (this.$route.params.bt || this.$route.params.et) {
@@ -746,11 +751,8 @@
       if (key !== undefined && key !== '' && key !== null) {
         this.searchForm.key = key
       }
-      if (this.currentPage === 1) {
-        this.getDataListFun()
-      }
+      this.getDataListFun()
       this.getOrderCount()
-      console.log('current', this.currentPage)
     },
     created() {
     }
