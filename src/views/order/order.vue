@@ -214,7 +214,7 @@
                   &nbsp;
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
-                  <el-pagination
+                  <el-pagination v-if="itemCount > 0"
                     :current-page.sync="currentPage"
                     :page-size.sync="pageSize"
                     :page-sizes="[10, 30, 50, 100, 500]"
@@ -718,9 +718,6 @@
         })
         this.optionsAddress.push(obj)
       })
-      // this.$nextTick(() => {
-      //   this.currentPage = 2
-      // })
 
       if (this.searchParam[this.searchParamKey]) {
         this.searchForm = this.searchParam[this.searchParamKey]
@@ -743,6 +740,7 @@
       if (key !== undefined && key !== '' && key !== null) {
         this.searchForm.key = key
       }
+
       if (this.currentPage === 1) {
         this.getDataListFun()
       }
