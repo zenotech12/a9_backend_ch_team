@@ -5,7 +5,7 @@
       <div class="rightbox">
         <el-row>
           <el-col :span="24">
-            <el-tabs style="height: 40px" v-model="tab_status">
+            <el-tabs style="height: 40px" v-if="showTab" v-model="tab_status">
               <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatusTab"  :key="k" v-if="item.label" :label="item.label" :name="k + ''"></el-tab-pane>
             </el-tabs>
           </el-col>
@@ -93,7 +93,7 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <div style="text-align: right;margin-top: 10px">
+              <div style="text-align: right;margin-top: 10px" v-if="itemCount > 0">
                 <el-pagination
                   :current-page.sync="currentPage"
                   :page-size="pageSize"
@@ -225,7 +225,7 @@
           type: 0, // 1退货 2换货 3只退钱 4退货和只退钱
           order_no: '',
           status: 0,
-          skip: '',
+          skip: 0,
           limit: pz
         },
         tab_status: '0',
@@ -244,44 +244,62 @@
         addressList: [],
         expressageList: expressage,
         pay_pass: '',
-        tabList: []
+        tabList: [],
+        showTab: false,
+        searchParamKey: '',
+        doWatch: true
       }
     },
     computed: {
       ...mapGetters([
-        'userInfo'
+        'userInfo', 'searchParam'
       ])
     },
     watch: {
       tab_status(val) {
         console.log('val', val)
+        if (!this.doWatch) {
+          return
+        }
         this.searchForm.skip = 0
         this.searchForm.limit = this.pageSize
         this.searchForm.status = parseInt(val)
+        this.currentPage = 1
         this.getDataListFun()
       },
       currentPage(val) {
+        if (!this.doWatch) {
+          return
+        }
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
       },
-      '$route.path': function(newVal, oldVal) {
-        // console.log(newVal + '---' + oldVal)
-        if (newVal === '/order/orderExchange') { // 换货
-          this.searchForm.type = 2
+      '$route.path': {
+        handler(newVal) {
+          const str = newVal.split('/')[2]
+          this.showTab = false
+          this.searchParamKey = str
+          if (this.searchParam[this.searchParamKey]) {
+            this.doWatch = false
+            this.searchForm = this.searchParam[this.searchParamKey]
+            this.currentPage = parseInt((this.searchForm.skip / this.pageSize) + 1)
+            this.tab_status = this.searchForm.status + ''
+          }
+          if (str === 'orderExchange') { // 换货
+            this.searchForm.type = 2
+            this.tabList = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
+              { value: '5', label: this.$t('order.returnStatus5') }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
+          } else if (str === 'orderReturn') { // 退货
+            this.searchForm.type = 4
+            this.tabList = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
+              { value: '9', label: '' }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
+          }
           this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
-          this.tabList = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
-            { value: '5', label: this.$t('order.returnStatus5') }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
           this.getDataListFun()
           this.getAfterSalesCount()
-        } else if (newVal === '/order/orderReturn') { // 退货
-          this.searchForm.type = 4
-          this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
-          this.tabList = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
-            { value: '9', label: '' }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
-          this.getDataListFun()
-          this.getAfterSalesCount()
-        }
+        },
+        immediate: true
       }
     },
     methods: {
@@ -297,6 +315,7 @@
               })
             })
           }
+          this.showTab = true
         })
       },
       goodsPreview(row) {
@@ -325,9 +344,11 @@
         })
       },
       getDataListFun() {
+        this.$store.dispatch('SetSearchParam', { key: this.searchParamKey, value: JSON.parse(JSON.stringify(this.searchForm)) })
         orderAfterSales(this.searchForm).then(res => {
           this.tableData = res.items
           this.itemCount = res.total
+          this.doWatch = true
         })
       },
       getAddressListFunc() {
@@ -340,6 +361,8 @@
         })
       },
       search() {
+        this.currentPage = 1
+        this.searchForm.skip = 0
         this.getDataListFun()
         this.getAfterSalesCount()
       },
@@ -348,21 +371,20 @@
       }
     },
     mounted() {
-      const currentRouter = this.$router.currentRoute.name
-      if (currentRouter === 'orderExchange') {
-        this.searchForm.type = 2
-      } else if (currentRouter === 'orderReturn') {
-        this.searchForm.type = 4
-        this.orderStatusTab = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
-          { value: '9', label: '' }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
-      }
-      console.log(this.$route.params)
-      this.tabList = JSON.parse(JSON.stringify(this.orderStatusTab))
-      this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
-      this.getDataListFun()
-      this.getAfterSalesCount()
+      // const currentRouter = this.$router.currentRoute.name
+      // if (currentRouter === 'orderExchange') {
+      //   this.searchForm.type = 2
+      // } else if (currentRouter === 'orderReturn') {
+      //   this.searchForm.type = 4
+      //   this.orderStatusTab = [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
+      //     { value: '9', label: '' }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }]
+      // }
+      // this.tabList = JSON.parse(JSON.stringify(this.orderStatusTab))
+      // this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
+      // this.getDataListFun()
+      // this.getAfterSalesCount()
       this.getAddressListFunc()
-      console.log(1111)
+      // console.log(1111)
     },
     created() {
     }

@@ -611,10 +611,10 @@
     },
     mounted() {
       if (this.searchParam[this.searchParamKey]) {
+        this.doWatch = false
         this.searchForm = this.searchParam[this.searchParamKey]
         this.currentPage = parseInt((this.searchForm.skip / this.pageSize) + 1)
         this.tab_shelf_status = this.searchForm.shelf_status + ''
-        this.doWatch = false
       }
       console.log('search', this.$store.state.app.searchParam.goodsList)
       this.getTableData()
@@ -630,6 +630,7 @@
         this.searchForm.skip = 0
         this.searchForm.limit = this.pageSize
         this.searchForm.shelf_status = parseInt(val)
+        this.currentPage = 1
         this.getTableData()
       },
       batchWeight(val) {
@@ -664,6 +665,9 @@
         deep: true
       },
       currentPage(val) {
+        if (!this.doWatch) {
+          return
+        }
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getTableData()

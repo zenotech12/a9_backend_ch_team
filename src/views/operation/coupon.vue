@@ -34,7 +34,7 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100vh - 185px)">
+            <div style="height: calc(100vh - 235px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column prop="name" :label="$t('operation.name')"></el-table-column>
                 <el-table-column :label="$t('operation.couponType')">

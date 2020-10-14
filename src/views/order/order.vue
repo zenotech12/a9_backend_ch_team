@@ -5,7 +5,7 @@
       <div class="rightbox">
         <el-row>
           <el-col :span="24">
-            <el-tabs style="height: 40px" v-model="tab_order_status">
+            <el-tabs v-if="showTab" style="height: 40px" v-model="tab_order_status">
               <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatusTab" :key="k" v-if="item" :label="item.label" :name="item.value"></el-tab-pane>
             </el-tabs>
           </el-col>
@@ -363,6 +363,7 @@
       return {
         searchParamKey: 'orderList',
         doWatch: true,
+        showTab: false,
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
@@ -469,6 +470,7 @@
           // console.log(this.searchForm.skip, this.searchForm.skip !== 0, 'gg', this.searchForm.order_status !== parseInt(val))
           this.searchForm.skip = 0
           this.searchForm.limit = this.pageSize
+          this.currentPage = 1
           this.searchForm.order_status = parseInt(val)
           this.getDataListFun()
           console.log(111)
@@ -532,6 +534,7 @@
               })
             })
           }
+          this.showTab = true
         })
       },
       goodsPreview(row) {
@@ -726,7 +729,7 @@
         })
         this.optionsAddress.push(obj)
       })
-      
+
       if (this.searchParam[this.searchParamKey]) {
         this.doWatch = false
         this.searchForm = this.searchParam[this.searchParamKey]
