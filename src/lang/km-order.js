@@ -109,5 +109,13 @@ export default {
   provinceCityArea: '省市区',
   repliedResponded: 'ការឆ្លើយតបត្រូវបានឆ្លើយតប',
   notRespondingReviews: 'មិនឆ្លើយតបនឹងការពិនិត្យ',
-  replyReviews: 'ឆ្លើយតបទៅការពិនិត្យឡើងវិញ'
+  replyReviews: 'ឆ្លើយតបទៅការពិនិត្យឡើងវិញ',
+  cashOnDelivery: 'សាច់ប្រាក់នៅពេលដឹកជញ្ជូន',
+  confirmTransaction: 'បញ្ជាក់ប្រតិបត្តិការ',
+  deliveryMethod: 'វិធី​សា​ស្រ្ត​ដឹកជញ្ជូន',
+  payMethod: 'វិធី​សា​ស្រ្ត​ទូទាត់',
+  expressDelivery: 'ដឹកជញ្ជូន​ឆាប់រហ័ស',
+  selfMention: 'ការលើកឡើងអំពីខ្លួនឯង',
+  rider: 'អ្នកជិះ',
+  onlinePay: 'ការទូទាត់តាមអ៊ីនធឺណិត'
 }

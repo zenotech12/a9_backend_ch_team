@@ -126,6 +126,14 @@ export default {
   provinceCityArea: '省市区',
   repliedResponded: 'Reviews responded',
   notRespondingReviews: 'Not responding to reviews',
-  replyReviews: 'Reply to reviews'
+  replyReviews: 'Reply to reviews',
+  confirmTransaction: 'Confirm transaction',
+  deliveryMethod: 'Delivery method',
+  payMethod: 'payment method',
+  expressDelivery: 'express delivery',
+  selfMention: 'Self mention',
+  rider: 'Rider',
+  onlinePay: 'Online Payment',
+  cashOnDelivery: 'Cash on delivery'
 
 }
