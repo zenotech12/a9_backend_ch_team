@@ -7,6 +7,7 @@ const getters = {
   username: state => state.user.username,
   password: state => state.user.password,
   roles: state => state.user.roles,
+  searchParam: state => state.app.searchParam,
   routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
   authority: state => state.user.authority,

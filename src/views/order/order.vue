@@ -120,6 +120,14 @@
                       {{scope.row.shipping_address.contacter_name}}&nbsp;&nbsp;
                       {{scope.row.shipping_address.mobile}}
                     </div>
+                    <div class="ui">
+                      <span>{{$t('order.deliveryMethod')}}：</span>
+                      {{deliveryMethod[scope.row.post_way - 1]}}
+                    </div>
+                    <div class="ui">
+                      <span>{{$t('order.payMethod')}}：</span>
+                      {{payMethod[scope.row.pay_way_top - 1]}}
+                    </div>
                     <div class="ui" v-if="scope.row.express.novar">
                       <span>{{$t('order.expressNo')}}：</span>
                       <el-popover placement="left" width="300" trigger="click" v-if="scope.row.express.company === 'zto' || scope.row.express.company === 'rider'">
@@ -159,7 +167,7 @@
                 <el-table-column :label="$t('order.status')" width="90">
                   <template slot-scope="scope">
                     <el-tag >{{orderStatus[scope.row.status]}} </el-tag>
-                    <span style="font-size: 12px" v-if="scope.row.status === 4 || scope.row.status === 5">(货到付款)</span>
+                    <span style="font-size: 12px" v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2">({{$t('order.cashOnDelivery')}})</span>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.genTime')" width="180">
@@ -182,7 +190,10 @@
                     <el-button v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2" type="text" @click="showExpressEditor(scope.row,1)" size="small">
                       {{scope.row.status === 4 ? $t('order.modifyExpress') : $t('order.express')}}
                     </el-button>
-                    <el-button v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
+                    <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
+                      {{$t('order.confirmTransaction')}}
+                    </el-button>
+                    <el-button v-if="scope.row.status === 4 && scope.row.pay_way_top === 2 && scope.row.post_way !== 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
                       {{$t('order.confirmTransaction')}}
                     </el-button>
                     <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">
@@ -243,6 +254,12 @@
               {{expressOrder.shipping_address.address.province + expressOrder.shipping_address.address.city + expressOrder.shipping_address.address.district}}&nbsp;{{expressOrder.shipping_address.address.addr}}
               <br/>
               {{expressOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{expressOrder.shipping_address.mobile}}
+            </el-form-item>
+            <el-form-item :label="$t('order.deliveryMethod')">
+              {{deliveryMethod[expressOrder.post_way - 1]}}
+            </el-form-item>
+            <el-form-item :label="$t('order.payMethod')">
+              {{payMethod[expressOrder.pay_way_top - 1]}}
             </el-form-item>
             <el-form-item :label="$t('order.userBz')">
               {{userComment}}
@@ -344,10 +361,13 @@
     data() {
       const pz = 10
       return {
+        searchParamKey: 'orderList',
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
         orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
+          { value: '10', label: this.$t('order.status10') }, { value: '7', label: this.$t('order.status7') }],
+        orderStatusTabList: [{ value: '0', label: this.$t('tools.all') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
           { value: '10', label: this.$t('order.status10') }, { value: '7', label: this.$t('order.status7') }],
         searchForm: {
           key: '',
@@ -428,12 +448,14 @@
             value: 'yue',
             label: this.$t('lang.balance')
           }
-        ]
+        ],
+        deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
+        payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')]
       }
     },
     computed: {
       ...mapGetters([
-        'userInfo'
+        'userInfo', 'searchParam'
       ])
     },
     watch: {
@@ -445,17 +467,20 @@
           this.searchForm.limit = this.pageSize
           this.searchForm.order_status = parseInt(val)
           this.getDataListFun()
+          console.log(111)
         }
       },
       currentPage(val) {
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
+        console.log(2222, val)
       },
       pageSize(val) {
         this.searchForm.skip = 0
         this.searchForm.limit = val
         this.getDataListFun()
+        console.log(333)
       },
       orderTimes(val) {
         if (val && val.length === 2) {
@@ -472,6 +497,7 @@
         orderConfirm(id).then(res => {
           this.$message.success('确认交易成功')
           this.getDataListFun()
+          this.getOrderCount()
         })
       },
       payWay(data) {
@@ -488,6 +514,7 @@
       },
       getOrderCount() {
         const statuses = [0, 2, 4, 5, 7, 8, 10]
+        this.orderStatusTab = JSON.parse(JSON.stringify(this.orderStatusTabList))
         ordersCount({ 'statuses': JSON.stringify(statuses) }).then(res => {
           if (res.meta === 0) {
             res.items.forEach(item => {
@@ -604,6 +631,7 @@
             this.$message.success(this.$t('order.expressTip'))
             this.submitDisabled = false
             this.getDataListFun()
+            this.getOrderCount()
             this.formEditDialog = false
           }).catch(() => {
             this.submitDisabled = false
@@ -613,6 +641,7 @@
             this.$message.success(this.$t('order.price4Tip1'))
             this.submitDisabled = false
             this.getDataListFun()
+            this.getOrderCount()
             this.formEditDialog = false
           }).catch(() => {
             this.submitDisabled = false
@@ -633,6 +662,7 @@
             this.$message.success(this.$t('order.changeS'))
             this.submitDisabled = false
             this.getDataListFun()
+            this.getOrderCount()
             this.formEditDialog = false
           }).catch(() => {
             this.submitDisabled = false
@@ -642,6 +672,7 @@
             this.$message.success(this.$t('order.changeS'))
             this.submitDisabled = false
             this.getDataListFun()
+            this.getOrderCount()
             this.formEditDialog = false
           }).catch(() => {
             this.submitDisabled = false
@@ -649,13 +680,19 @@
         }
       },
       getDataListFun() {
+        // this.getOrderCount()
+        this.$store.dispatch('SetSearchParam', { key: this.searchParamKey, value: this.searchForm })
+        console.log('SetSearchParam', this.$store.state.app.searchParam)
         ordersList(this.searchForm).then(res => {
           this.tableData = res.items
           this.itemCount = res.total
         })
       },
       search() {
+        this.searchForm.skip = 0
+        this.currentPage = 1
         this.getDataListFun()
+        this.getOrderCount()
       }
     },
     mounted() {
@@ -681,8 +718,23 @@
         })
         this.optionsAddress.push(obj)
       })
-      // console.log('optionsAddress', this.optionsAddress)
-      this.searchForm.order_status = this.$route.params.order_status ? this.$route.params.order_status : 0
+      // this.$nextTick(() => {
+      //   this.currentPage = 2
+      // })
+
+      if (this.searchParam[this.searchParamKey]) {
+        this.searchForm = this.searchParam[this.searchParamKey]
+        this.currentPage = parseInt((this.searchForm.skip / this.pageSize) + 1)
+      }
+      if (this.$route.params.order_status) {
+        if (this.$route.params.order_status !== this.searchForm.order_status) {
+          this.searchForm.skip = 0
+          this.currentPage = 1
+          this.searchForm.order_status = this.$route.params.order_status
+        }
+      } else {
+        this.searchForm.order_status = 0
+      }
       this.tab_order_status = this.searchForm.order_status + ''
       if (this.$route.params.bt || this.$route.params.et) {
         this.orderTimes = [this.$route.params.bt, this.$route.params.et]
@@ -691,8 +743,11 @@
       if (key !== undefined && key !== '' && key !== null) {
         this.searchForm.key = key
       }
+      if (this.currentPage === 1) {
+        this.getDataListFun()
+      }
       this.getOrderCount()
-      this.getDataListFun()
+      console.log('current', this.currentPage)
     },
     created() {
     }

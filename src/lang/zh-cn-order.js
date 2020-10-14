@@ -130,5 +130,12 @@ export default {
   repliedResponded: '已回复评价',
   notRespondingReviews: '未回复评价',
   replyReviews: '回复评价',
-  confirmTransaction: '确认交易'
+  confirmTransaction: '确认交易',
+  deliveryMethod: '配送方式',
+  payMethod: '支付方式',
+  expressDelivery: '快递',
+  selfMention: '自提',
+  rider: '骑手',
+  onlinePay: '在线支付',
+  cashOnDelivery: '货到付款'
 }

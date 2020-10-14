@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Cookies from 'js-cookie'
 import i18n from '@/utils/i18n'
 
@@ -6,7 +7,8 @@ const app = {
     sidebar: {
       opened: !+Cookies.get('sidebarStatus')
     },
-    lang: i18n.locale
+    lang: i18n.locale,
+    searchParam: {}
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -23,11 +25,17 @@ const app = {
         i18n.locale = data
         state.lang = data
       }
+    },
+    SETSEARCHPARAM(state, data) {
+      Vue.set(state.searchParam, data.key, data.value)
     }
   },
   actions: {
     ToggleSideBar: ({ commit }) => {
       commit('TOGGLE_SIDEBAR')
+    },
+    SetSearchParam: ({ commit }, data) => {
+      commit('SETSEARCHPARAM', data)
     }
   }
 }
