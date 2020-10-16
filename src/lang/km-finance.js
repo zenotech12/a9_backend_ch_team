@@ -30,5 +30,7 @@ export default {
   moneyChange: 'ផ្លាស់ប្តូរចំនួនទឹកប្រាក់',
   cashIncome: 'ប្រាក់ចំណូលជាសាច់ប្រាក់',
   totalTrans: 'ផលបូកដុំ',
-  distributionDeduction: 'ការកាត់បន្ថយការចែកចាយ'
+  distributionDeduction: 'ការកាត់បន្ថយការចែកចាយ',
+  cash: 'សាច់ប្រាក់',
+  nonCash: 'មិនមែនសាច់ប្រាក់'
 }

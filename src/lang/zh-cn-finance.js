@@ -30,5 +30,7 @@ export default {
   moneyChange: '变化金额',
   cashIncome: '现金收入',
   totalTrans: '总额',
-  distributionDeduction: '分销扣减'
+  distributionDeduction: '分销扣减',
+  cash: '现金',
+  nonCash: '非现金'
 }

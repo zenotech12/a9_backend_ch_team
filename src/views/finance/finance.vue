@@ -43,6 +43,16 @@
                   </el-col>
                 </el-row>
               </el-form-item>
+              <el-form-item :label="$t('order.payMethod')">
+                <el-select v-model="searchForm.pay_type">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
               </el-form-item>
@@ -59,12 +69,13 @@
                 </el-table-column>
                 <el-table-column  :label="$t('finance.change')">
                   <template  slot-scope="scope">
-                    {{scope.row.change | price}}
+                    {{scope.row.change | price}} <span v-if="scope.row.pay_type === 7">({{$t('finance.cash')}})</span>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('finance.balance')">
                   <template slot-scope="scope">
-                    {{scope.row.balance + scope.row.change | price}}
+                    <span v-if="scope.row.pay_type !== 7">{{scope.row.balance + scope.row.change | price}}</span>
+                    <span v-if="scope.row.pay_type === 7">{{scope.row.balance | price}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('finance.genTime')">
@@ -143,9 +154,24 @@
           change_min: 0,
           change_max: 0,
           skip: 0,
-          limit: pz
+          limit: pz,
+          pay_type: 0 // 7 现金 100 非现金
         },
-        pay_pass: ''
+        pay_pass: '',
+        options: [
+          {
+            label: this.$t('goods.all'),
+            value: 0
+          },
+          {
+            label: this.$t('finance.cash'),
+            value: 7
+          },
+          {
+            label: this.$t('finance.nonCash'),
+            value: 100
+          }
+        ]
       }
     },
     computed: {

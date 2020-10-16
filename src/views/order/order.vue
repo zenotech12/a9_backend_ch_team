@@ -193,7 +193,7 @@
                     <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
                       {{$t('order.confirmTransaction')}}
                     </el-button>
-                    <el-button v-if="scope.row.status === 4 && scope.row.pay_way_top === 2 && scope.row.post_way !== 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
+                    <el-button v-if="scope.row.status === 4 && scope.row.pay_way_top === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
                       {{$t('order.confirmTransaction')}}
                     </el-button>
                     <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">

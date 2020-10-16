@@ -30,5 +30,7 @@ export default {
   moneyChange: 'Change amount',
   cashIncome: 'Cash income',
   totalTrans: 'Total',
-  distributionDeduction: 'Distribution deduction'
+  distributionDeduction: 'Distribution deduction',
+  cash: 'Cash',
+  nonCash: 'Non-cash'
 }
