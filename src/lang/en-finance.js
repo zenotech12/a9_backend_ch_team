@@ -28,5 +28,7 @@ export default {
   tixianTip3: 'Please set up the bank first',
   timeSpan: 'Time period',
   moneyChange: 'Change amount',
-  cashIncome: 'Cash income'
+  cashIncome: 'Cash income',
+  totalTrans: 'Total',
+  distributionDeduction: 'Distribution deduction'
 }

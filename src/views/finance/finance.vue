@@ -6,6 +6,7 @@
         <el-row>
           <el-col :span ="24">
             <el-card shadow="always" class="balance-info">
+              <span>{{$t('finance.totalTrans')}}：<font>{{balanceDetail.total_trans | price}}</font></span>
               <span>{{$t('finance.balance')}}：<font>{{balanceDetail.balance | price}}</font></span>
               <span>{{$t('finance.balance1')}}：<font>{{balanceDetail.can_withdraw_balance | price}}</font></span>
               <span>{{$t('finance.totalIncome')}}：<font>{{balanceDetail.accumulated_income | price}}</font></span>
@@ -52,7 +53,8 @@
               <el-table stripe border :data="tableData" height="calc(100% - 50px)">
                 <el-table-column  :label="$t('finance.type')">
                   <template  slot-scope="scope">
-                    {{optType[scope.row.type - 1].name}}
+                    <span v-if="scope.row.type === 13">{{$t('finance.distributionDeduction')}}</span>
+                    <span v-else>{{optType[scope.row.type - 1].name}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column  :label="$t('finance.change')">

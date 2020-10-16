@@ -28,5 +28,7 @@ export default {
   tixianTip3: 'សូមបង្កើតគណនីធនាគារជាមុនសិន',
   timeSpan: 'រយៈពេល',
   moneyChange: 'ផ្លាស់ប្តូរចំនួនទឹកប្រាក់',
-  cashIncome: 'ប្រាក់ចំណូលជាសាច់ប្រាក់'
+  cashIncome: 'ប្រាក់ចំណូលជាសាច់ប្រាក់',
+  totalTrans: 'ផលបូកដុំ',
+  distributionDeduction: 'ការកាត់បន្ថយការចែកចាយ'
 }

@@ -28,5 +28,7 @@ export default {
   tixianTip3: '请先设置银行',
   timeSpan: '时段',
   moneyChange: '变化金额',
-  cashIncome: '现金收入'
+  cashIncome: '现金收入',
+  totalTrans: '总额',
+  distributionDeduction: '分销扣减'
 }
