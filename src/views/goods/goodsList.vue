@@ -25,6 +25,9 @@
                        :show-checkbox="false"
                        :props="defaultProps"
                        @node-click="typeChangeFunc"
+                       @node-expand="nodeOpen"
+                       @node-collapse="nodeClose"
+                       :default-expanded-keys="defaultExpanded"
                        :expand-on-click-node="false"
                        :render-content="renderContent"
               >
@@ -602,7 +605,11 @@
         propsImageEditTitle: '',
         tab_shelf_status: '2',
         multipleSelection: [],
-        doWatch: true
+        doWatch: true,
+        defaultExpanded: [],
+        maxNumber: 0,
+        funcTreeWidth: 0,
+        funcBoxWidth: 0
       }
     },
     created() {
@@ -620,6 +627,8 @@
       this.getTableData()
       this.getTypeList()
       this.getSysType()
+      this.funcTreeWidth = $('.funcTree').width()
+      this.funcBoxWidth = $('.funcBox').width()
       // this.getPartner()
     },
     watch: {
@@ -751,6 +760,22 @@
       }
     },
     methods: {
+      nodeOpen(data, node, obj) {
+        this.defaultExpanded.push(data.id)
+        if (node.level > this.maxNumber) {
+          this.maxNumber = node.level
+          const addWidth = 18 * this.maxNumber
+          const funcTreeWidth1 = this.funcTreeWidth
+          const funcBoxWidth1 = this.funcBoxWidth
+          const addClassWidth = funcTreeWidth1 + addWidth
+          const reduceWidth = funcBoxWidth1 - addWidth
+          $('.funcTree').width(addClassWidth)
+          $('.funcBox').width(reduceWidth)
+        }
+      },
+      nodeClose(data, node, obj) {
+        this.defaultExpanded.splice(this.defaultExpanded.indexOf(data.id), 1)
+      },
       inventoryTableSpanMethod({ row, column, rowIndex, columnIndex }) {
         let spanColumn = 7
         if (this.goodsData.id !== '') {

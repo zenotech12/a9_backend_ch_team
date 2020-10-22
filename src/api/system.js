@@ -286,7 +286,7 @@ export function freePostagesDel(id) {
 // 免邮设置.添加
 export function freePostageUpsert(data) {
   return request({
-    url: 'free-postage',
+    url: 'free-postages',
     method: 'post',
     data: data
   })
@@ -295,7 +295,7 @@ export function freePostageUpsert(data) {
 // 免邮设置.修改
 export function freePostageModify(id, data) {
   return request({
-    url: 'free-postage/' + id,
+    url: 'free-postages/' + id,
     method: 'put',
     data: data
   })

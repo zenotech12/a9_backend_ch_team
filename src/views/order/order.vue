@@ -126,7 +126,7 @@
                     </div>
                     <div class="ui">
                       <span>{{$t('order.deliveryMethod')}}：</span>
-                      {{deliveryMethod[scope.row.post_way - 1]}}
+                      {{deliveryMethod[scope.row.post_way - 1]}} <span v-if="scope.row.post_way === 2">({{scope.row.check_code}})</span>
                     </div>
                     <div class="ui" v-if="scope.row.express.novar">
                       <span>{{$t('order.expressNo')}}：</span>
@@ -256,7 +256,7 @@
               {{expressOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{expressOrder.shipping_address.mobile}}
             </el-form-item>
             <el-form-item :label="$t('order.deliveryMethod')">
-              {{deliveryMethod[expressOrder.post_way - 1]}}
+              {{deliveryMethod[expressOrder.post_way - 1]}}<span v-if="expressOrder.post_way === 2">({{expressOrder.check_code}})</span>
             </el-form-item>
             <el-form-item :label="$t('order.payMethod')">
               {{payMethod[expressOrder.pay_way_top - 1]}}
