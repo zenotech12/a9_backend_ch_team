@@ -67,8 +67,10 @@ export default {
   setPayPassSuccess: 'The payment password is set successfully',
   freeShipingDate: 'Shipping date',
   freeShipingTitle1: 'Valuation method',
-  number: 'number',
-  price: 'price',
-  allGoods: 'all products',
-  pleaseChooseFreeShipingDate: 'Please select the shipping date'
+  number: 'Number',
+  price: 'Price',
+  allGoods: 'All products',
+  pleaseChooseFreeShipingDate: 'Please select the shipping date',
+  yes: 'Yes',
+  no: 'No'
 }

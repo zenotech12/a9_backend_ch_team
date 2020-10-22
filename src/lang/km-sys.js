@@ -70,5 +70,7 @@ export default {
   number: 'ចំនួន',
   price: 'តម្លៃ',
   allGoods: 'ផលិតផលទាំងអស់',
-  pleaseChooseFreeShipingDate: 'សូមជ្រើសរើសកាលបរិច្ឆេទដឹកជញ្ជូន'
+  pleaseChooseFreeShipingDate: 'សូមជ្រើសរើសកាលបរិច្ឆេទដឹកជញ្ជូន',
+  yes: 'ត្រូវហើយ',
+  no: 'ទេ'
 }

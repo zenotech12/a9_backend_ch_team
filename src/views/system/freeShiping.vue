@@ -70,7 +70,7 @@
                 v-model="freeShipingTime"
                 type="datetimerange"
                 value-format = "yyyy-MM-dd HH:mm"
-                :range-separator="$t('operation.to')"
+                range-separator="~"
                 :start-placeholder="$t('tools.startDate')"
                 :end-placeholder="$t('tools.endDate')"
                 align="right">
