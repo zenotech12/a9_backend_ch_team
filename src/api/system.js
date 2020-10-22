@@ -257,3 +257,46 @@ export function freePostageSet(data) {
     data: data
   })
 }
+
+// 免邮设置.列表
+export function freePostagesList(param) {
+  return request({
+    url: 'free-postages',
+    method: 'get',
+    params: param
+  })
+}
+
+// 免邮设置.获取详情
+export function freePostagesInfo(id) {
+  return request({
+    url: 'free-postages/' + id,
+    method: 'get'
+  })
+}
+
+// 免邮设置.删除
+export function freePostagesDel(id) {
+  return request({
+    url: 'free-postages/' + id,
+    method: 'delete'
+  })
+}
+
+// 免邮设置.添加
+export function freePostageUpsert(data) {
+  return request({
+    url: 'free-postage',
+    method: 'post',
+    data: data
+  })
+}
+
+// 免邮设置.修改
+export function freePostageModify(id, data) {
+  return request({
+    url: 'free-postage/' + id,
+    method: 'put',
+    data: data
+  })
+}

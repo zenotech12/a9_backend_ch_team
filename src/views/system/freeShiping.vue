@@ -2,109 +2,263 @@
   <div class="sys-body">
     <div class="sys-neiBody">
       <!-- 搜索 -->
-      <div class="rightbox">
-        <el-row class="liveBox">
-          <el-col :span="24">
-            <el-row>
-              <el-col :span="24" class="liveBigBoxCurrent">
-                <el-form ref="form" :inline="true" :model="form" label-width="120px">
-                  <el-form-item :label="$t('sys.freeShipingDate')">
-                    <el-date-picker
-                      v-model="freeShipingTime"
-                      type="datetimerange"
-                      value-format = "yyyy-MM-dd HH:mm"
-                      :range-separator="$t('operation.to')"
-                      :start-placeholder="$t('tools.startDate')"
-                      :end-placeholder="$t('tools.endDate')"
-                      align="right">
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item :label="$t('sys.freeShipingTitle1')">
-                    <el-radio-group v-model="form.cond_type" @change="typeChange">
-                      <el-radio :label="1">{{$t('sys.number')}}</el-radio>
-                      <el-radio :label="2">{{$t('sys.price')}}</el-radio>
-                    </el-radio-group>
-                  </el-form-item>
-                  <el-form-item :label="$t('sys.number')" v-if="form.cond_type === 1">
-                    <el-input v-model.number="form.cond_val"></el-input>
-                  </el-form-item>
-                  <el-form-item :label="$t('sys.price')" v-if="form.cond_type === 2">
-                    <price-input v-model="form.cond_val"></price-input>
-                  </el-form-item>
-                  <el-form-item :label="$t('sys.allGoods')">
-                    <el-switch
-                      v-model="form.all"
-                      active-color="#13ce66"
-                      inactive-color="#ff4949">
-                    </el-switch>
-                  </el-form-item>
-                </el-form>
-              </el-col>
+      <!--<div class="rightbox">-->
+        <!--<el-row class="liveBox">-->
+          <!--<el-col :span="24">-->
+            <!--<el-row>-->
+              <!--<el-col :span="24" class="liveBigBoxCurrent">-->
+                <!--<el-form ref="form" :inline="true" :model="form" label-width="120px">-->
+                  <!--<el-form-item :label="$t('sys.freeShipingDate')">-->
+                    <!--<el-date-picker-->
+                      <!--v-model="freeShipingTime"-->
+                      <!--type="datetimerange"-->
+                      <!--value-format = "yyyy-MM-dd HH:mm"-->
+                      <!--:range-separator="$t('operation.to')"-->
+                      <!--:start-placeholder="$t('tools.startDate')"-->
+                      <!--:end-placeholder="$t('tools.endDate')"-->
+                      <!--align="right">-->
+                    <!--</el-date-picker>-->
+                  <!--</el-form-item>-->
+                  <!--<el-form-item :label="$t('sys.freeShipingTitle1')">-->
+                    <!--<el-radio-group v-model="form.cond_type" @change="typeChange">-->
+                      <!--<el-radio :label="1">{{$t('sys.number')}}</el-radio>-->
+                      <!--<el-radio :label="2">{{$t('sys.price')}}</el-radio>-->
+                    <!--</el-radio-group>-->
+                  <!--</el-form-item>-->
+                  <!--<el-form-item :label="$t('sys.number')" v-if="form.cond_type === 1">-->
+                    <!--<el-input v-model.number="form.cond_val"></el-input>-->
+                  <!--</el-form-item>-->
+                  <!--<el-form-item :label="$t('sys.price')" v-if="form.cond_type === 2">-->
+                    <!--<price-input v-model="form.cond_val"></price-input>-->
+                  <!--</el-form-item>-->
+                  <!--<el-form-item :label="$t('sys.allGoods')">-->
+                    <!--<el-switch-->
+                      <!--v-model="form.all"-->
+                      <!--active-color="#13ce66"-->
+                      <!--inactive-color="#ff4949">-->
+                    <!--</el-switch>-->
+                  <!--</el-form-item>-->
+                <!--</el-form>-->
+              <!--</el-col>-->
               <!--商品表格-->
-              <el-col :span="24" v-if="form.all === false">
-                <el-row>
-                  <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
-                    <div class="boxFuncBtn">
-                      <goods-selector :mulit="true" :trigger="false" :showTag="false" v-model="spu_ids" :notSpuIds="JSON.stringify(notSpuIds)" @selectChanged="addNewGoods" :approve_status="2" :shelf_status="2"></goods-selector>
-                    </div>
-                  </el-col>
-                  <el-col :span="24">
-                    <div style="height: calc(100vh - 270px)">
-                      <el-table stripe border :data="tableData" height="calc(100% - -10px)">
-                        <el-table-column>
-                          <template slot="header" slot-scope="scope">
-                            <el-input
-                              v-model="searchKey"
-                              size="mini"
-                              clearable
-                              :placeholder="$t('goods.name')"/>
-                          </template>
-                          <template  slot-scope="scope">
-                            <a class="goods-item" target="_blank" style="cursor: pointer">
-                              <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
-                              <div class="g-info">
-                                <p>{{scope.row.name}}
-                                  <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
-                                  <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                                </p>
-                              </div>
-                            </a>
-                          </template>
-                        </el-table-column>
-                        <el-table-column :label="$t('goods.price')">
-                          <template  slot-scope="scope">
-                            <template v-if="scope.row.type === 3">
-                              <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                              <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>
-                              <span v-else>{{scope.row.min_price}}</span>
-                            </template>
-                            <template v-else>
-                              <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
-                              <span v-else>{{scope.row.min_price | price}}</span>
-                            </template>
-                          </template>
-                        </el-table-column>
-                        <el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>
-                        <el-table-column prop="sales" :label="$t('goods.saled')"></el-table-column>
-                        <el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>
-                        <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
-                          <template slot-scope="scope">
-                            <i class="el-icon-delete" style="font-size: 18px;cursor: pointer" @click="delCurrentGoods(scope.row.id)"></i>
-                          </template>
-                        </el-table-column>
-                      </el-table>
-                    </div>
-                  </el-col>
-                </el-row>
-              </el-col>
-            </el-row>
-            <el-row class="optBtnStyle">
-              <el-col :span="24" style="margin-top: 20px">
-                <confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="permissionCheck('opt')" :confirmButtonInfor="$t('tools.save')"></confirm-button>
-              </el-col>
-            </el-row>
+              <!--<el-col :span="24" v-if="form.all === false">-->
+                <!--<el-row>-->
+                  <!--<el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">-->
+                    <!--<div class="boxFuncBtn">-->
+                      <!--<goods-selector :mulit="true" :trigger="false" :showTag="false" v-model="spu_ids" :notSpuIds="JSON.stringify(notSpuIds)" @selectChanged="addNewGoods" :approve_status="2" :shelf_status="2"></goods-selector>-->
+                    <!--</div>-->
+                  <!--</el-col>-->
+                  <!--<el-col :span="24">-->
+                    <!--<div style="height: calc(100vh - 270px)">-->
+                      <!--<el-table stripe border :data="tableData" height="calc(100% - -10px)">-->
+                        <!--<el-table-column>-->
+                          <!--<template slot="header" slot-scope="scope">-->
+                            <!--<el-input-->
+                              <!--v-model="searchKey"-->
+                              <!--size="mini"-->
+                              <!--clearable-->
+                              <!--:placeholder="$t('goods.name')"/>-->
+                          <!--</template>-->
+                          <!--<template  slot-scope="scope">-->
+                            <!--<a class="goods-item" target="_blank" style="cursor: pointer">-->
+                              <!--<el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>-->
+                              <!--<div class="g-info">-->
+                                <!--<p>{{scope.row.name}}-->
+                                  <!--<el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>-->
+                                  <!--<el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>-->
+                                <!--</p>-->
+                              <!--</div>-->
+                            <!--</a>-->
+                          <!--</template>-->
+                        <!--</el-table-column>-->
+                        <!--<el-table-column :label="$t('goods.price')">-->
+                          <!--<template  slot-scope="scope">-->
+                            <!--<template v-if="scope.row.type === 3">-->
+                              <!--<el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>-->
+                              <!--<span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>-->
+                              <!--<span v-else>{{scope.row.min_price}}</span>-->
+                            <!--</template>-->
+                            <!--<template v-else>-->
+                              <!--<span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>-->
+                              <!--<span v-else>{{scope.row.min_price | price}}</span>-->
+                            <!--</template>-->
+                          <!--</template>-->
+                        <!--</el-table-column>-->
+                        <!--<el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>-->
+                        <!--<el-table-column prop="sales" :label="$t('goods.saled')"></el-table-column>-->
+                        <!--<el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>-->
+                        <!--<el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">-->
+                          <!--<template slot-scope="scope">-->
+                            <!--<i class="el-icon-delete" style="font-size: 18px;cursor: pointer" @click="delCurrentGoods(scope.row.id)"></i>-->
+                          <!--</template>-->
+                        <!--</el-table-column>-->
+                      <!--</el-table>-->
+                    <!--</div>-->
+                  <!--</el-col>-->
+                <!--</el-row>-->
+              <!--</el-col>-->
+            <!--</el-row>-->
+            <!--<el-row class="optBtnStyle">-->
+              <!--<el-col :span="24" style="margin-top: 20px">-->
+                <!--<confirm-button @confirmButton="saveAdFunc" :disabled="submitDisabled" v-if="permissionCheck('opt')" :confirmButtonInfor="$t('tools.save')"></confirm-button>-->
+              <!--</el-col>-->
+            <!--</el-row>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
+      <!--</div>-->
+      <div class="rightbox">
+        <el-row  v-if="permissionCheck('opt')">
+          <el-col :span="24" class="funcList">
+            <div class="boxFuncBtn" @click="addData">
+              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+            </div>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="24">
+            <div style="height: calc(100vh - 185px)">
+              <el-table stripe border :data="data.body" height="calc(100% - 5px)">
+                <el-table-column prop="name" :label="$t('sys.name')"></el-table-column>
+                <el-table-column :label="$t('sys.freeShipingDate')">
+                  <template slot-scope="scope">
+                    {{scope.row.bt + '~' + scope.row.et}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('sys.freeShipingTitle1')">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.cond_type === 1">{{$t('sys.number')}}</span>
+                    <span v-if="scope.row.cond_type === 2">{{$t('sys.price')}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="Value">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.cond_type === 1">{{$t('sys.number')}}: {{scope.row.cond_val}}</span>
+                    <span v-if="scope.row.cond_type === 2">{{$t('sys.price')}}: {{scope.row.cond_val | price}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('sys.allGoods')">
+                  <template slot-scope="scope">
+                    <el-tag :type="scope.row.all ? 'success': 'danger'">{{scope.row.all ? $t('sys.yes'): $t('sys.no')}}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
+                    <span class="xiexian">/</span>
+                    <delete-button  @delData="deleteDataFunc(scope.row)"></delete-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <template v-if="itemCount !== 0">
+                <div style="text-align: right;margin-top: 10px">
+                  <el-pagination
+                    @size-change="sizeChangeFunc"
+                    @current-change="pageChangeFunc"
+                    :current-page.sync="currentPage"
+                    :page-size="10"
+                    layout="total, prev, pager, next, jumper"
+                    :total="itemCount">
+                  </el-pagination>
+                </div>
+              </template>
+            </div>
+          </el-col>
+        </el-row>
+        <el-dialog :title="$t('global.freeShipingSet')" width="80%" @close="formEditDialog = false" :visible.sync="formEditDialog" :close-on-click-modal="false" center style="top: -8vh;">
+          <el-form ref="form" :inline="true" :model="form" label-width="120px">
+            <el-form-item :label="$t('sys.name')">
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('sys.freeShipingDate')">
+              <el-date-picker
+                v-model="freeShipingTime"
+                type="datetimerange"
+                value-format = "yyyy-MM-dd HH:mm"
+                :range-separator="$t('operation.to')"
+                :start-placeholder="$t('tools.startDate')"
+                :end-placeholder="$t('tools.endDate')"
+                align="right">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item :label="$t('sys.freeShipingTitle1')">
+              <el-radio-group v-model="form.cond_type" @change="typeChange">
+                <el-radio :label="1">{{$t('sys.number')}}</el-radio>
+                <el-radio :label="2">{{$t('sys.price')}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item :label="$t('sys.number')" v-if="form.cond_type === 1">
+              <el-input v-model.number="form.cond_val"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('sys.price')" v-if="form.cond_type === 2">
+              <price-input v-model="form.cond_val"></price-input>
+            </el-form-item>
+            <el-form-item :label="$t('sys.allGoods')">
+              <el-switch
+                v-model="form.all"
+                active-color="#13ce66"
+                inactive-color="#ff4949">
+              </el-switch>
+            </el-form-item>
+          </el-form>
+          <el-row v-if="form.all === false">
+                <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
+                  <div class="boxFuncBtn">
+                    <goods-selector :mulit="true" :trigger="false" :showTag="false" v-model="spu_ids" :notSpuIds="JSON.stringify(notSpuIds)" @selectChanged="addNewGoods" :approve_status="2" :shelf_status="2"></goods-selector>
+                  </div>
+                </el-col>
+                <el-col :span="24">
+                  <div style="height: calc(100vh - 390px)">
+                    <el-table stripe border :data="tableData" height="calc(100% - -10px)">
+                      <el-table-column>
+                        <template slot="header" slot-scope="scope">
+                          <el-input
+                            v-model="searchKey"
+                            size="mini"
+                            clearable
+                            :placeholder="$t('goods.name')"/>
+                        </template>
+                        <template  slot-scope="scope">
+                          <a class="goods-item" target="_blank" style="cursor: pointer">
+                            <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
+                            <div class="g-info">
+                              <p>{{scope.row.name}}
+                                <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
+                                <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                              </p>
+                            </div>
+                          </a>
+                        </template>
+                      </el-table-column>
+                      <el-table-column :label="$t('goods.price')">
+                        <template  slot-scope="scope">
+                          <template v-if="scope.row.type === 3">
+                            <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                            <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>
+                            <span v-else>{{scope.row.min_price}}</span>
+                          </template>
+                          <template v-else>
+                            <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
+                            <span v-else>{{scope.row.min_price | price}}</span>
+                          </template>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>
+                      <el-table-column prop="sales" :label="$t('goods.saled')"></el-table-column>
+                      <el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>
+                      <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
+                        <template slot-scope="scope">
+                          <i class="el-icon-delete" style="font-size: 18px;cursor: pointer" @click="delCurrentGoods(scope.row.id)"></i>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
+                </el-col>
+              </el-row>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="saveAdFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -114,7 +268,7 @@
   import { mapGetters } from 'vuex'
   import goodsSelector from '@/components/goodsSelector'
   import { spusList } from '@/api/goods'
-  import { getFreePostage, freePostageSet } from '@/api/system'
+  import { getFreePostage, freePostageSet, freePostageUpsert, freePostageModify, freePostagesDel, freePostagesList, freePostagesInfo } from '@/api/system'
   export default {
     components: {
       goodsSelector
@@ -123,6 +277,8 @@
       return {
         tableData: [],
         form: {
+          id: '',
+          name: '',
           spu_ids: '', // ["xxxx","xxxxxxx"]商品ids
           bt: '', // 2019-01-01 15:34
           et: '',
@@ -138,7 +294,19 @@
         spu_ids: '',
         notSpuIds: [],
         submitDisabled: false,
-        freeShipingTime: [] // 包邮日期
+        freeShipingTime: [], // 包邮日期
+        formEditDialog: false,
+        searchForm: {
+          skip: 0,
+          limit: 10
+        },
+        pageSize: 20,
+        itemCount: 0,
+        currentPage: 1,
+        data: {
+          loading: true,
+          body: []
+        }
       }
     },
     computed: {
@@ -155,6 +323,11 @@
           this.form.bt = ''
           this.form.et = ''
         }
+      },
+      currentPage(val) {
+        this.searchForm.skip = (val - 1) * this.pageSize
+        this.searchForm.limit = this.pageSize
+        this.getTableData()
       },
       'form.all': function(val) {
         if (val) {
@@ -181,6 +354,34 @@
       }
     },
     methods: {
+      sizeChangeFunc(val) {
+        this.pageSize = val
+      },
+      pageChangeFunc(val) {
+        this.currentPage = val
+      },
+      getTableData() {
+        freePostagesList(this.searchForm).then(response => {
+          if (response.meta === 0) {
+            this.data.loading = false
+            this.itemCount = response.total
+            this.data.body = response.items
+          }
+        })
+      },
+      addData() {
+        this.formEditDialog = true
+        this.form.id = ''
+        this.form.name = ''
+        this.form.spu_ids = ''
+        this.form.bt = ''
+        this.form.et = ''
+        this.form.cond_type = 1
+        this.form.cond_val = 0
+        this.form.all = false
+        this.tableData = []
+        this.notSpuIds = []
+      },
       typeChange() {
         this.form.cond_val = 0
       },
@@ -221,13 +422,23 @@
           this.form.spu_ids = ''
         }
         // console.log('tu', this.form)
-        freePostageSet(this.form).then(res => {
-          this.getFreeShipingFunc()
-          this.$message.success(this.$t('operation.saveSuccess'))
-          this.submitDisabled = false
-        }).catch(() => {
-          this.submitDisabled = false
-        })
+        if (this.form.id === '') {
+          freePostageUpsert(this.form).then(res => {
+            this.getTableData()
+            this.$message.success(this.$t('operation.saveSuccess'))
+            this.submitDisabled = false
+          }).catch(() => {
+            this.submitDisabled = false
+          })
+        } else {
+          freePostageModify(this.form).then(res => {
+            this.getTableData()
+            this.$message.success(this.$t('operation.saveSuccess'))
+            this.submitDisabled = false
+          }).catch(() => {
+            this.submitDisabled = false
+          })
+        }
       },
       getFreeShipingFunc() {
         getFreePostage().then(res => {
@@ -256,9 +467,10 @@
       }
     },
     mounted() {
+      this.getTableData()
     },
     created() {
-      this.getFreeShipingFunc()
+      // this.getFreeShipingFunc()
     }
   }
 </script>

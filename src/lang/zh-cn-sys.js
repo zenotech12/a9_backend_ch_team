@@ -82,5 +82,7 @@ export default {
   number: '件数',
   price: '价格',
   allGoods: '全部商品',
-  pleaseChooseFreeShipingDate: '请选择包邮日期'
+  pleaseChooseFreeShipingDate: '请选择包邮日期',
+  yes: '是',
+  no: '否'
 }
