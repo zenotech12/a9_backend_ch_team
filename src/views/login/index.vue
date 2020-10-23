@@ -58,9 +58,10 @@
             <el-button type="primary" class="form-btn-login" :loading="loading" @click.native.prevent="handleLogin">
               {{$t('login.login')}}
             </el-button>
-            <div class="rTip">{{$t('login.registerTip1')}}<a >{{$t('login.registerTip')}}
+            <div class="rTip">{{$t('login.registerTip1')}}<a>{{$t('login.registerTip')}}
               <div class="qrtip">
-                <img src="https://a9app.idesum.com/data/app/v1/qrcode/conv?str=https://https://a9sys.idesum.com/apk/anine-seller-release1.1.1-202003311125.apk"/>
+                <img src="../../assets/images/downloadQr.png" alt="">
+                <!--<img src="https://a9app.idesum.com/data/app/v1/qrcode/conv?str=https://https://a9sys.idesum.com/apk/anine-seller-release1.1.1-202003311125.apk"/>-->
               </div>
             </a></div>
           </el-form-item>

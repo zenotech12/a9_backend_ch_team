@@ -39,4 +39,13 @@ export default {
       padding-right: 20px;
     }
   }
+  .el-table__row {
+    td:hover {
+      background-color: navy!important;
+    }
+  }
+  .el-table--enable-row-hover .el-table__body tr:hover>td {
+    //background-color: #F5F7FA;
+    background-color: red!important;
+  }
 </style>

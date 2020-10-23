@@ -762,6 +762,7 @@
     methods: {
       nodeOpen(data, node, obj) {
         this.defaultExpanded.push(data.id)
+        console.log('node', node)
         if (node.level > this.maxNumber) {
           this.maxNumber = node.level
           const addWidth = 18 * this.maxNumber
