@@ -15,7 +15,7 @@
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="data.body" height="calc(100% - 5px)">
                 <el-table-column prop="name" :label="$t('sys.name')"></el-table-column>
-                <el-table-column :label="$t('sys.freeShipingDate')">
+                <el-table-column :label="$t('sys.manjianDate')">
                   <template slot-scope="scope">
                     {{scope.row.bt + '~' + scope.row.et}}
                   </template>
@@ -24,6 +24,12 @@
                   <template slot-scope="scope">
                     <span v-if="scope.row.cond_type === 1">{{$t('sys.number')}}({{scope.row.cond_val}})</span>
                     <span v-if="scope.row.cond_type === 2">{{$t('sys.price')}}({{scope.row.cond_val | price}})</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('sys.youhuiMethod')">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.result_type === 2">{{$t('sys.zhekou')}}({{scope.row.result_val}}% off)</span>
+                    <span v-if="scope.row.result_type === 3">{{$t('sys.manjian')}}({{scope.row.result_val | price}})</span>
                   </template>
                 </el-table-column>
                 <!--<el-table-column label="Value">-->
@@ -60,12 +66,12 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('global.freeShipingSet')" width="80%" @close="formEditDialog = false" :visible.sync="formEditDialog" :close-on-click-modal="false" center style="top: -8vh;">
+        <el-dialog :title="$t('global.fullReductionSet')" width="80%" @close="formEditDialog = false" :visible.sync="formEditDialog" :close-on-click-modal="false" center style="top: -8vh;">
           <el-form ref="form" :inline="true" :model="form" label-width="120px">
             <el-form-item :label="$t('sys.name')">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('sys.freeShipingDate')">
+            <el-form-item :label="$t('sys.manjianDate')">
               <el-date-picker
                 v-model="freeShipingTime"
                 type="datetimerange"
@@ -88,6 +94,23 @@
             <el-form-item :label="$t('sys.price')" v-if="form.cond_type === 2">
               <price-input v-model="form.cond_val"></price-input>
             </el-form-item>
+
+            <el-form-item :label="$t('sys.youhuiMethod')">
+              <el-radio-group v-model="form.result_type" @change="typeChangeValue">
+                <el-radio :label="2">{{$t('sys.zhekou')}}</el-radio>
+                <el-radio :label="3">{{$t('sys.manjian')}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item v-if="form.result_type === 2">
+              <el-input style="width: 150px" v-model.number="form.result_val" @blur="resultValueChange(form.result_val)">
+                <template slot="append">% off</template>
+              </el-input>
+              (1~100)
+            </el-form-item>
+            <el-form-item v-if="form.result_type === 3">
+              <price-input v-model="form.result_val"></price-input>
+            </el-form-item>
+
             <el-form-item :label="$t('sys.allGoods')">
               <el-switch
                 v-model="form.all"
@@ -180,7 +203,7 @@
           cond_type: 1, // 1件数 2价格 计价方式
           cond_val: 0, // 值  cond_type 选1的话下面就是输入件数 单位件  选2就输入价格，价格按分  传的整数
           all: false, // true false 是否全部商品
-          result_type: 1, // 1包邮 2 %xx off 3满减
+          result_type: 2, // 1包邮 2 %xx off 3满减
           result_val: '' // tp2百分数 百分值 ；tp3满减金额，单位分
         },
         searchKey: '',
@@ -194,7 +217,7 @@
         searchForm: {
           skip: 0,
           limit: 10,
-          result_type: 1
+          result_type: 4
         },
         pageSize: 20,
         itemCount: 0,
@@ -250,6 +273,12 @@
       }
     },
     methods: {
+      resultValueChange(val) {
+        console.log('vll', val)
+        if (val > 100 || val < 1) {
+          this.form.result_val = 10
+        }
+      },
       sizeChangeFunc(val) {
         this.pageSize = val
       },
@@ -274,12 +303,17 @@
         this.form.et = ''
         this.form.cond_type = 1
         this.form.cond_val = 0
+        this.form.result_type = 2
+        this.form.result_val = ''
         this.form.all = false
         this.tableData = []
         this.notSpuIds = []
       },
       typeChange() {
         this.form.cond_val = 0
+      },
+      typeChangeValue() {
+        this.form.result_val = ''
       },
       delCurrentGoods(id) {
         const array = this.notSpuIds

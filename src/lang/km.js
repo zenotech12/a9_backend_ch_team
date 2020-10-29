@@ -55,5 +55,6 @@ export default {
   optLog: 'ចាកចេញ',
   cardMgr: 'គណនីធនាគារ',
   liveBroadcast: 'ការគ្រប់គ្រងការផ្សាយផ្ទាល់',
-  freeShipingSet: 'ការកំណត់ការដឹកជញ្ជូនដោយឥតគិតថ្លៃ'
+  freeShipingSet: 'ការកំណត់ការដឹកជញ្ជូនដោយឥតគិតថ្លៃ',
+  fullReductionSet: 'ការកាត់បន្ថយពេញលេញ'
 }

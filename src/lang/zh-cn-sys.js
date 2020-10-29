@@ -84,5 +84,9 @@ export default {
   allGoods: '全部商品',
   pleaseChooseFreeShipingDate: '请选择包邮日期',
   yes: '是',
-  no: '否'
+  no: '否',
+  zhekou: '折扣',
+  manjian: '满减',
+  youhuiMethod: '优惠方式',
+  manjianDate: '满减日期'
 }

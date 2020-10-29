@@ -27,6 +27,11 @@ const system = [{
     meta: { title: 'freeShipingSet', icon: 'permission', code: '6_7' },
     component: () => import('@/views/system/freeShiping')
   }, {
+    name: 'fullReduction',
+    path: 'fullReduction',
+    meta: { title: 'fullReductionSet', icon: 'permission', code: '6_8' },
+    component: () => import('@/views/system/fullReduction')
+  }, {
     name: 'address',
     path: 'address',
     meta: { title: 'address', icon: 'permission', code: '6_4' },

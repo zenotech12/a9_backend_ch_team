@@ -72,5 +72,9 @@ export default {
   allGoods: 'ផលិតផលទាំងអស់',
   pleaseChooseFreeShipingDate: 'សូមជ្រើសរើសកាលបរិច្ឆេទដឹកជញ្ជូន',
   yes: 'ត្រូវហើយ',
-  no: 'ទេ'
+  no: 'ទេ',
+  zhekou: 'បញ្ចុះតំលៃ',
+  manjian: 'ការកាត់បន្ថយពេញលេញ',
+  youhuiMethod: 'វិធីផ្សព្វផ្សាយ',
+  manjianDate: 'កាលបរិច្ឆេទដកពេញលេញ'
 }

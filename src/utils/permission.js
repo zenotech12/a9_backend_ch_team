@@ -29,6 +29,7 @@ export default [
     { 'name': '银行卡管理', 'lk': 'cardMgr', 'code': '6_2', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '邮费规则', 'lk': 'postageRule', 'code': '6_3', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '包邮设置', 'lk': 'freeShipingSet', 'code': '6_7', 'permissions': ['view', 'opt'], 'urls': [] },
+    { 'name': '满减设置', 'lk': 'fullReductionSet', 'code': '6_8', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '地址管理', 'lk': 'address', 'code': '6_4', 'permissions': ['view', 'opt'], 'urls': [] },
     // { 'name': '聊天机器人', 'lk': 'chatRobot', 'code': '6_5', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '操作日志', 'lk': 'optLog', 'code': '6_6', 'permissions': ['view'], 'urls': [] }

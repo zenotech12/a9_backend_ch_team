@@ -72,5 +72,9 @@ export default {
   allGoods: 'All products',
   pleaseChooseFreeShipingDate: 'Please select the shipping date',
   yes: 'Yes',
-  no: 'No'
+  no: 'No',
+  zhekou: 'Discount',
+  manjian: 'Full reduction',
+  youhuiMethod: 'Promotion method',
+  manjianDate: 'Full minus date'
 }

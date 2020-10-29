@@ -55,5 +55,6 @@ export default {
   optLog: 'Opt Log',
   cardMgr: 'Bank Card',
   liveBroadcast: 'Live Broadcast',
-  freeShipingSet: 'Free shipping settings'
+  freeShipingSet: 'Free shipping',
+  fullReductionSet: 'Full reduction'
 }
