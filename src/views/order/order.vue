@@ -378,25 +378,40 @@
             <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
-        <el-dialog title="发货记录" width="500px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
-            <el-form-item label="是否取消订单">
-              <el-switch
-                v-model="shengheForm.cancel"
-                active-text="是"
-                inactive-text="否">
-              </el-switch>
-            </el-form-item>
-            <el-form-item label="商品实际支付总价">
-              <price-input v-model="shengheForm.pay_price"></price-input>
-            </el-form-item>
-            <el-form-item label="邮费">
-              <price-input v-model="shengheForm.postage"></price-input>
-            </el-form-item>
-            <el-form-item :label="$t('order.note')" >
-              <el-input  type="textarea"  :rows="2"  v-model="shengheForm.comment" clearable :placeholder="$t('order.note')"></el-input>
-            </el-form-item>
-          </el-form>
+        <el-dialog title="发货记录" width="900px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
+          <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 280px)">
+            <el-table-column :label="$t('order.goods')" min-width="400">
+              <template  slot-scope="scope">
+                <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
+                  <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                  <div class="g-info">
+                    <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
+                      <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5" alt="">
+                      <el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
+                      <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.prevent="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
+                    </p>
+                    <p>
+                      <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
+                    </p>
+                    <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.expressCompany')" width="130">
+              <template slot-scope="scope" >
+                {{expressageList[scope.row.express.company]}}
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.expressNo')" width="130">
+              <template slot-scope="scope" >
+                {{scope.row.express.novar}}
+              </template>
+            </el-table-column>
+            <el-table-column label="发货时间" prop="time" width="180">
+            </el-table-column>
+          </el-table>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
