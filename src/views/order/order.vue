@@ -189,9 +189,14 @@
                 </el-table-column>
                 <el-table-column :label="$t('tools.opt')" width="150" fixed="right"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
-                    <el-button v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2" type="text" @click="showExpressEditor(scope.row,1)" size="small">
-                      {{scope.row.status === 4 ? $t('order.modifyExpress') : $t('order.express')}}
-                    </el-button>
+                    <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2">
+                      <el-button type="text" v-if="scope.row.status === 4" @click="showExpressEditor(scope.row,5)" size="small">
+                      {{$t('order.modifyExpress')}}
+                      </el-button>
+                      <el-button v-else type="text" @click="showExpressEditor(scope.row,1)" size="small">
+                      {{$t('order.express')}}
+                      </el-button>
+                    </span>
                     <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
                       {{$t('order.confirmTransaction')}}
                     </el-button>
@@ -240,9 +245,9 @@
               {{expressOrder.user_nick_name}}&nbsp;{{expressOrder.user_mobile}}
             </el-form-item>
             <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
-              <div><el-checkbox v-model="allGoodsSend">所有商品</el-checkbox></div>
+              <div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">所有商品</el-checkbox></div>
               <div class="goods-item" v-for="(gInfo,k) in expressOrder.merchant_item.goods_items" :key="k">
-                <div class="chooseCheck" v-if="!allGoodsSend">
+                <div class="chooseCheck" v-if="!allGoodsSend && gInfo.isHaveGoods">
                   <el-checkbox v-model="gInfo.chooseGoods" :key="k"></el-checkbox>
                 </div>
                 <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)" fit="cover"></el-image>
@@ -271,7 +276,8 @@
               {{payMethod[expressOrder.pay_way_top - 1]}}
             </el-form-item>
             <el-form-item label="发货记录">
-              <el-button type="primary" size="mini" @click="lookSendGoodsRecord">查看发货记录</el-button>
+              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">查看发货记录</el-button>
+              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-else>修改物流信息</el-button>
             </el-form-item>
             <el-form-item :label="$t('order.userBz')">
               {{userComment}}
@@ -286,10 +292,10 @@
                 </el-timeline-item>
               </el-timeline>
             </el-form-item>
-            <el-form-item :label="$t('order.note')" >
-              <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
-            </el-form-item>
             <template v-if="optType === 1">
+              <el-form-item :label="$t('order.note')" >
+                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
+              </el-form-item>
               <el-form-item :label="$t('order.expressInfo')" >
                 <el-row :gutter="20">
                   <el-col :span="8">
@@ -352,7 +358,8 @@
             </template>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <confirm-button @confirmButton="saveDataFunc()" v-if="optType !== 5 && optType !== 4" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <el-button type="primary" v-else size="small" @click="formEditDialog = false"> {{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
         <el-dialog title="代购订单审核" width="500px" @close="shengheShow = false" :visible.sync="shengheShow" :close-on-click-modal="false" center >
@@ -378,22 +385,16 @@
             <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
-        <el-dialog title="发货记录" width="900px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
+        <el-dialog title="发货记录" width="1200px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
           <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 280px)">
             <el-table-column :label="$t('order.goods')" min-width="400">
               <template  slot-scope="scope">
-                <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
-                  <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                <div @click="jumpGoodsPage(gInfo, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.sku_infos" :key="k">
+                  <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.sku_img, 100)"  fit="cover"></el-image>
                   <div class="g-info">
-                    <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
-                      <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5" alt="">
-                      <el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
-                      <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.prevent="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
+                    <p style="display: flex;align-items: center">{{gInfo.spu_name}}
+                      <img :src="otherLogo(gInfo.site_id)" class="otherShopLogo" alt="">
                     </p>
-                    <p>
-                      <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
-                    </p>
-                    <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                   </div>
                   <div class="clear"></div>
                 </div>
@@ -401,19 +402,63 @@
             </el-table-column>
             <el-table-column :label="$t('order.expressCompany')" width="130">
               <template slot-scope="scope" >
-                {{expressageList[scope.row.express.company]}}
+                {{expressageList[scope.row.company]}}
               </template>
             </el-table-column>
             <el-table-column :label="$t('order.expressNo')" width="130">
               <template slot-scope="scope" >
-                {{scope.row.express.novar}}
+                {{scope.row.novar}}
               </template>
             </el-table-column>
             <el-table-column label="发货时间" prop="time" width="180">
             </el-table-column>
+            <el-table-column :label="$t('tools.opt')" width="150" fixed="right" v-if="permissionCheck('opt') && (optType === 5 || optType === 4)">
+              <template slot-scope="scope">
+                <el-popover
+                  placement="top"
+                  width="400"
+                  trigger="click"
+                  >
+                  <div style="padding: 10px;">
+                    <el-form label-width="100px">
+                      <el-form-item :label="$t('order.expressCompany')" v-if="optType === 5">
+                        <el-select v-model="modifyExpressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
+                          <el-option
+                            v-for="(item, k) in expressageList"
+                            :key="k"
+                            v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "
+                            :label="item"
+                            :value="k">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item :label="$t('order.expressNo')"  v-if="optType === 5 && modifyExpressCompany !== 'noexpress' && !expressOrder.rider_post">
+                        <el-input v-model="modifyExpressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+                      </el-form-item>
+                      <el-form-item :label="$t('order.note')" v-if="optType === 4">
+                        <el-input type="textarea" :rows="2"  v-model="commentModify" clearable :placeholder="$t('order.note')"></el-input>
+                      </el-form-item>
+                    </el-form>
+                    <el-row>
+                      <el-col :span="24" align="right">
+                        <el-button type="primary" size="small" @click="confirmModifyExpress">
+                          {{$t('tools.confirm')}}
+                        </el-button>
+                      </el-col>
+                    </el-row>
+                  </div>
+                  <el-button slot="reference" v-if="optType === 5" @click="modifyCurrentExpress(scope.row)" type="text" size="small">
+                    {{$t('order.modifyExpress')}}
+                  </el-button>
+                  <el-button slot="reference" v-if="optType === 4" type="text" @click="modifyCurrentExpress(scope.row)" size="small">
+                    {{$t('order.price4Note')}}
+                  </el-button>
+                </el-popover>
+              </template>
+            </el-table-column>
           </el-table>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <el-button size="small" @click="sendGoodsRecord = false">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
       </div>
@@ -462,6 +507,9 @@
         itemCount: 0,
         expressCompany: '',
         expressNo: '',
+        modifyExpressCompany: '',
+        modifyExpressNo: '',
+        commentModify: '',
         editorTitle: '',
         optType: 1,
         dialogTitle: this.$t('order.express'),
@@ -536,7 +584,10 @@
         purchaseCheckId: '',
         sku_ids: [],
         allGoodsSend: true,
-        sendGoodsRecord: false
+        sendGoodsRecord: false,
+        visibleExpress: false,
+        express_id: '',
+        skuIds: []
       }
     },
     computed: {
@@ -586,6 +637,24 @@
       }
     },
     methods: {
+      modifyCurrentExpress(data) {
+        console.log('data', data)
+        this.modifyExpressCompany = data.company
+        this.modifyExpressNo = data.novar
+        this.commentModify = data.comment
+        this.express_id = data.id
+        this.skuIds = JSON.stringify(data.sku_ids)
+      },
+      confirmModifyExpress() { // 修改快递信息确认按钮
+        ordersExpress(this.expressOrder.id, { express_id: this.express_id, express_company: this.modifyExpressCompany, express_no: this.modifyExpressNo, comment: this.commentModify, sku_ids: this.skuIds }).then(res => {
+          this.$message.success('快递信息修改成功')
+          this.getDataListFun()
+          this.getOrderCount()
+          this.formEditDialog = false
+          this.sendGoodsRecord = false
+        }).catch(() => {
+        })
+      },
       lookSendGoodsRecord() {
         this.sendGoodsRecord = true
       },
@@ -622,11 +691,19 @@
         }
       },
       jumpGoodsPage(data, type) {
-        if (type === 5) { // 代购订单
-          // console.log('data.sku_url', data.sku_url)
-          window.open(data.sku_url)
+        if (type !== undefined) {
+          if (type === 5) { // 代购订单
+            // console.log('data.sku_url', data.sku_url)
+            window.open(data.sku_url)
+          } else {
+            window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')
+          }
         } else {
-          window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')
+          if (data.sku_url !== '') {
+            window.open(data.sku_url)
+          } else {
+            window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')
+          }
         }
       },
       orderConfirmFunc(id) {
@@ -730,12 +807,23 @@
       },
       showExpressEditor(data, ot) {
         this.expressOrder = data
-        this.expressOrder.merchant_item.goods_items.forEach(goods => {
-          // goods.chooseGoods = true
-          this.$set(goods, 'chooseGoods', false)
-        })
         this.optType = ot
         if (ot === 1) {
+          const sendId = []
+          data.expresses && data.expresses.forEach(ex => {
+            ex.sku_infos && ex.sku_infos.forEach(v => {
+              sendId.push(v.oid)
+            })
+          })
+          this.expressOrder.merchant_item.goods_items.forEach(goods => {
+            // goods.chooseGoods = true
+            if (sendId.indexOf(goods.goods_info.oid) === -1) {
+              this.$set(goods, 'chooseGoods', false)
+              this.$set(goods, 'isHaveGoods', true)
+            } else {
+              this.$set(goods, 'isHaveGoods', false)
+            }
+          })
           this.dialogTitle = this.$t('order.express')
           this.expressCompany = data.express.company ? data.express.company : (this.expressOrder.rider_post ? 'rider' : '')
           this.expressNo = data.express.novar
@@ -762,6 +850,12 @@
           this.dialogTitle = this.$t('order.price4Note')
           this.userComment = data.comment
           this.comment = data.merchant_comment
+        } else if (ot === 5) {
+          this.dialogTitle = this.$t('order.modifyExpress')
+          // this.expressCompany = data.express.company ? data.express.company : (this.expressOrder.rider_post ? 'rider' : '')
+          // this.expressNo = data.express.novar
+          // this.comment = data.merchant_comment
+          // this.userComment = data.comment
         }
         this.formEditDialog = true
       },
@@ -771,7 +865,7 @@
           this.sku_ids = []
           this.expressOrder.merchant_item.goods_items.forEach(goods => {
             if (!this.allGoodsSend) {
-              if (goods.chooseGoods) {
+              if (goods.chooseGoods && goods.isHaveGoods === true) {
                 if (goods.goods_info.sku_url !== '') {
                   this.sku_ids.push(goods.goods_info.sku_url)
                 } else {

@@ -137,5 +137,7 @@ export default {
   yes: '是',
   not: '否',
   lowMarginGoods: '低利润商品',
-  noLowMarginGoods: '非低利润商品'
+  noLowMarginGoods: '非低利润商品',
+  introGoods: '特色',
+  introDetail: '文字说明'
 }
