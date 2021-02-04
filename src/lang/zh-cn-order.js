@@ -137,5 +137,18 @@ export default {
   selfMention: '自提',
   rider: '骑手',
   onlinePay: '在线支付',
-  cashOnDelivery: '货到付款'
+  cashOnDelivery: '货到付款',
+  purchaseOrderReview: '代购订单审核',
+  deliveryRecord: '发货记录',
+  isCancelOrder: '是否取消订单',
+  yes: '是',
+  No: '否',
+  goodsPaidPrice: '商品实际支付总价',
+  postage: '邮费',
+  deliveryTime: '发货时间',
+  courierInfoModifySuccess: '快递信息修改成功',
+  confirmTransactionSuccess: '确认交易成功',
+  allGoods: '所有商品',
+  lookDeliveryRecord: '查看发货记录',
+  modifyWuLiuInfo: '修改物流信息'
 }

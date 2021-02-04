@@ -134,6 +134,19 @@ export default {
   selfMention: 'Self mention',
   rider: 'Rider',
   onlinePay: 'Online Payment',
-  cashOnDelivery: 'Cash on delivery'
+  cashOnDelivery: 'Cash on delivery',
+  purchaseOrderReview: 'Purchase review',
+  deliveryRecord: 'Delivery Record',
+  isCancelOrder: 'Whether to cancel the order',
+  yes: 'Yes',
+  No: 'No',
+  goodsPaidPrice: 'The actual total price paid for the goods',
+  postage: 'Postage',
+  deliveryTime: 'Delivery time',
+  courierInfoModifySuccess: 'Courier information modified successfully',
+  confirmTransactionSuccess: 'Confirm the transaction is successful',
+  allGoods: 'All goods',
+  lookDeliveryRecord: 'View shipping records',
+  modifyWuLiuInfo: 'Modify logistics information'
 
 }

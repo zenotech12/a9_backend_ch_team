@@ -213,7 +213,7 @@
                       {{$t('order.price4Note')}}
                     </el-button>
                     <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
-                      代购订单审核
+                      {{$t('order.purchaseOrderReview')}}
                     </el-button>
                   </template>
                 </el-table-column>
@@ -245,7 +245,7 @@
               {{expressOrder.user_nick_name}}&nbsp;{{expressOrder.user_mobile}}
             </el-form-item>
             <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
-              <div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">所有商品</el-checkbox></div>
+              <div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>
               <div class="goods-item" v-for="(gInfo,k) in expressOrder.merchant_item.goods_items" :key="k">
                 <div class="chooseCheck" v-if="!allGoodsSend && gInfo.isHaveGoods">
                   <el-checkbox v-model="gInfo.chooseGoods" :key="k"></el-checkbox>
@@ -275,9 +275,9 @@
             <el-form-item :label="$t('order.payMethod')">
               {{payMethod[expressOrder.pay_way_top - 1]}}
             </el-form-item>
-            <el-form-item label="发货记录">
-              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">查看发货记录</el-button>
-              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-else>修改物流信息</el-button>
+            <el-form-item :label="$t('order.deliveryRecord')">
+              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}}</el-button>
+              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-else>{{$t('order.modifyWuLiuInfo')}}</el-button>
             </el-form-item>
             <el-form-item :label="$t('order.userBz')">
               {{userComment}}
@@ -362,19 +362,19 @@
             <el-button type="primary" v-else size="small" @click="formEditDialog = false"> {{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
-        <el-dialog title="代购订单审核" width="500px" @close="shengheShow = false" :visible.sync="shengheShow" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('order.purchaseOrderReview')" width="500px" @close="shengheShow = false" :visible.sync="shengheShow" :close-on-click-modal="false" center >
           <el-form label-width="100px">
-            <el-form-item label="是否取消订单">
+            <el-form-item :label="$t('order.isCancelOrder')">
               <el-switch
                 v-model="shengheForm.cancel"
-                active-text="是"
-                inactive-text="否">
+                :active-text="$t('order.yes')"
+                :inactive-text="$t('order.No')">
               </el-switch>
             </el-form-item>
-            <el-form-item label="商品实际支付总价">
+            <el-form-item :label="$t('order.goodsPaidPrice')">
               <price-input v-model="shengheForm.pay_price"></price-input>
             </el-form-item>
-            <el-form-item label="邮费">
+            <el-form-item :label="$t('order.postage')">
               <price-input v-model="shengheForm.postage"></price-input>
             </el-form-item>
             <el-form-item :label="$t('order.note')" >
@@ -385,7 +385,7 @@
             <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
-        <el-dialog title="发货记录" width="1200px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('order.deliveryRecord')" width="1200px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
           <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 280px)">
             <el-table-column :label="$t('order.goods')" min-width="400">
               <template  slot-scope="scope">
@@ -410,55 +410,50 @@
                 {{scope.row.novar}}
               </template>
             </el-table-column>
-            <el-table-column label="发货时间" prop="time" width="180">
+            <el-table-column :label="$t('order.deliveryTime')" prop="time" width="180">
             </el-table-column>
             <el-table-column :label="$t('tools.opt')" width="150" fixed="right" v-if="permissionCheck('opt') && (optType === 5 || optType === 4)">
               <template slot-scope="scope">
-                <el-popover
-                  placement="top"
-                  width="400"
-                  trigger="click"
-                  >
-                  <div style="padding: 10px;">
-                    <el-form label-width="100px">
-                      <el-form-item :label="$t('order.expressCompany')" v-if="optType === 5">
-                        <el-select v-model="modifyExpressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
-                          <el-option
-                            v-for="(item, k) in expressageList"
-                            :key="k"
-                            v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "
-                            :label="item"
-                            :value="k">
-                          </el-option>
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item :label="$t('order.expressNo')"  v-if="optType === 5 && modifyExpressCompany !== 'noexpress' && !expressOrder.rider_post">
-                        <el-input v-model="modifyExpressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
-                      </el-form-item>
-                      <el-form-item :label="$t('order.note')" v-if="optType === 4">
-                        <el-input type="textarea" :rows="2"  v-model="commentModify" clearable :placeholder="$t('order.note')"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <el-row>
-                      <el-col :span="24" align="right">
-                        <el-button type="primary" size="small" @click="confirmModifyExpress">
-                          {{$t('tools.confirm')}}
-                        </el-button>
-                      </el-col>
-                    </el-row>
-                  </div>
                   <el-button slot="reference" v-if="optType === 5" @click="modifyCurrentExpress(scope.row)" type="text" size="small">
                     {{$t('order.modifyExpress')}}
                   </el-button>
                   <el-button slot="reference" v-if="optType === 4" type="text" @click="modifyCurrentExpress(scope.row)" size="small">
                     {{$t('order.price4Note')}}
                   </el-button>
-                </el-popover>
+                <!--</el-popover>-->
               </template>
             </el-table-column>
           </el-table>
           <div slot="footer" class="dialog-footer">
             <el-button size="small" @click="sendGoodsRecord = false">{{$t('tools.cancel')}}</el-button>
+          </div>
+        </el-dialog>
+        <el-dialog
+          width="30%"
+          :title="$t('order.modifyExpress')"
+          :visible.sync="innerVisible"
+          append-to-body>
+          <el-form label-width="100px">
+            <el-form-item :label="$t('order.expressCompany')" v-if="optType === 5">
+              <el-select v-model="modifyExpressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
+                <el-option
+                  v-for="(item, k) in expressageList"
+                  :key="k"
+                  v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "
+                  :label="item"
+                  :value="k">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('order.expressNo')"  v-if="optType === 5 && modifyExpressCompany !== 'noexpress' && !expressOrder.rider_post">
+              <el-input v-model="modifyExpressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('order.note')" v-if="optType === 4">
+              <el-input type="textarea" :rows="2"  v-model="commentModify" clearable :placeholder="$t('order.note')"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="primary" @click="confirmModifyExpress">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
       </div>
@@ -587,7 +582,8 @@
         sendGoodsRecord: false,
         visibleExpress: false,
         express_id: '',
-        skuIds: []
+        skuIds: [],
+        innerVisible: false
       }
     },
     computed: {
@@ -608,7 +604,7 @@
           this.currentPage = 1
           this.searchForm.order_status = parseInt(val)
           this.getDataListFun()
-          console.log(111)
+          // console.log(111)
         }
       },
       currentPage(val) {
@@ -638,7 +634,8 @@
     },
     methods: {
       modifyCurrentExpress(data) {
-        console.log('data', data)
+        // console.log('data', data)
+        this.innerVisible = true
         this.modifyExpressCompany = data.company
         this.modifyExpressNo = data.novar
         this.commentModify = data.comment
@@ -647,9 +644,10 @@
       },
       confirmModifyExpress() { // 修改快递信息确认按钮
         ordersExpress(this.expressOrder.id, { express_id: this.express_id, express_company: this.modifyExpressCompany, express_no: this.modifyExpressNo, comment: this.commentModify, sku_ids: this.skuIds }).then(res => {
-          this.$message.success('快递信息修改成功')
+          this.$message.success(this.$t('order.courierInfoModifySuccess'))
           this.getDataListFun()
           this.getOrderCount()
+          this.innerVisible = false
           this.formEditDialog = false
           this.sendGoodsRecord = false
         }).catch(() => {
@@ -708,7 +706,7 @@
       },
       orderConfirmFunc(id) {
         orderConfirm(id).then(res => {
-          this.$message.success('确认交易成功')
+          this.$message.success(this.$t('order.confirmTransactionSuccess'))
           this.getDataListFun()
           this.getOrderCount()
         })
