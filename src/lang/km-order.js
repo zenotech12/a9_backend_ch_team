@@ -117,5 +117,18 @@ export default {
   expressDelivery: 'ដឹកជញ្ជូន​ឆាប់រហ័ស',
   selfMention: 'ការលើកឡើងអំពីខ្លួនឯង',
   rider: 'អ្នកជិះ',
-  onlinePay: 'ការទូទាត់តាមអ៊ីនធឺណិត'
+  onlinePay: 'ការទូទាត់តាមអ៊ីនធឺណិត',
+  purchaseOrderReview: 'ពិនិត្យការបញ្ជាទិញការទិញ',
+  deliveryRecord: 'កំណត់ត្រាដឹកជញ្ជូន',
+  isCancelOrder: 'ថាតើត្រូវលុបចោលការបញ្ជាទិញ',
+  yes: 'ត្រូវហើយ',
+  No: 'ទេ',
+  goodsPaidPrice: 'តម្លៃសរុបជាក់ស្តែងសម្រាប់ទំនិញ',
+  postage: 'បិទផ្សាយ',
+  deliveryTime: 'ពេលវេលាដឹកជញ្ជូន',
+  courierInfoModifySuccess: 'ព័ត៌មានអ្នកនាំសំបុត្របានកែប្រែដោយជោគជ័យ',
+  confirmTransactionSuccess: 'បញ្ជាក់ប្រតិបត្តិការបានជោគជ័យ',
+  allGoods: 'ទំនិញទាំងអស់',
+  lookDeliveryRecord: 'មើលកំណត់ត្រាដឹកជញ្ជូន',
+  modifyWuLiuInfo: 'កែប្រែព័ត៌មានភ័ស្តុភារ'
 }

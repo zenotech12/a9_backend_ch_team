@@ -87,10 +87,12 @@
                 </el-table-column>
                 <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
-                    <a target="_blank" :href="goodsPreview(gInfo.goods_info)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
+                    <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
                       <div class="g-info">
-                        <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
+                        <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
+                          <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5" alt="">
+                          <el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
                           <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.prevent="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
                         </p>
                         <p>
@@ -99,7 +101,7 @@
                         <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                       </div>
                       <div class="clear"></div>
-                    </a>
+                    </div>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.price')" width="130">
@@ -185,11 +187,16 @@
                     </el-popover>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "100" fixed="right"  v-if="permissionCheck('opt')">
+                <el-table-column :label="$t('tools.opt')" width="150" fixed="right"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
-                    <el-button v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2" type="text" @click="showExpressEditor(scope.row,1)" size="small">
-                      {{scope.row.status === 4 ? $t('order.modifyExpress') : $t('order.express')}}
-                    </el-button>
+                    <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2">
+                      <el-button type="text" v-if="scope.row.status === 4" @click="showExpressEditor(scope.row,5)" size="small">
+                      {{$t('order.modifyExpress')}}
+                      </el-button>
+                      <el-button v-else type="text" @click="showExpressEditor(scope.row,1)" size="small">
+                      {{$t('order.express')}}
+                      </el-button>
+                    </span>
                     <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
                       {{$t('order.confirmTransaction')}}
                     </el-button>
@@ -204,6 +211,9 @@
                     </el-button>
                     <el-button v-if="scope.row.status !== 7"  type="text" @click="showExpressEditor(scope.row,4)" size="small" style="margin-left: 0">
                       {{$t('order.price4Note')}}
+                    </el-button>
+                    <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
+                      {{$t('order.purchaseOrderReview')}}
                     </el-button>
                   </template>
                 </el-table-column>
@@ -235,8 +245,12 @@
               {{expressOrder.user_nick_name}}&nbsp;{{expressOrder.user_mobile}}
             </el-form-item>
             <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
+              <div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>
               <div class="goods-item" v-for="(gInfo,k) in expressOrder.merchant_item.goods_items" :key="k">
-                <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                <div class="chooseCheck" v-if="!allGoodsSend && gInfo.isHaveGoods">
+                  <el-checkbox v-model="gInfo.chooseGoods" :key="k"></el-checkbox>
+                </div>
+                <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)" fit="cover"></el-image>
                 <div class="g-info">
                   <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
                   <p>
@@ -261,6 +275,10 @@
             <el-form-item :label="$t('order.payMethod')">
               {{payMethod[expressOrder.pay_way_top - 1]}}
             </el-form-item>
+            <el-form-item :label="$t('order.deliveryRecord')">
+              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}}</el-button>
+              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-else>{{$t('order.modifyWuLiuInfo')}}</el-button>
+            </el-form-item>
             <el-form-item :label="$t('order.userBz')">
               {{userComment}}
             </el-form-item>
@@ -274,10 +292,10 @@
                 </el-timeline-item>
               </el-timeline>
             </el-form-item>
-            <el-form-item :label="$t('order.note')" >
-              <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
-            </el-form-item>
             <template v-if="optType === 1">
+              <el-form-item :label="$t('order.note')" >
+                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
+              </el-form-item>
               <el-form-item :label="$t('order.expressInfo')" >
                 <el-row :gutter="20">
                   <el-col :span="8">
@@ -340,7 +358,102 @@
             </template>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <confirm-button @confirmButton="saveDataFunc()" v-if="optType !== 5 && optType !== 4" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <el-button type="primary" v-else size="small" @click="formEditDialog = false"> {{$t('tools.close')}}</el-button>
+          </div>
+        </el-dialog>
+        <el-dialog :title="$t('order.purchaseOrderReview')" width="500px" @close="shengheShow = false" :visible.sync="shengheShow" :close-on-click-modal="false" center >
+          <el-form label-width="100px">
+            <el-form-item :label="$t('order.isCancelOrder')">
+              <el-switch
+                v-model="shengheForm.cancel"
+                :active-text="$t('order.yes')"
+                :inactive-text="$t('order.No')">
+              </el-switch>
+            </el-form-item>
+            <el-form-item :label="$t('order.goodsPaidPrice')">
+              <price-input v-model="shengheForm.pay_price"></price-input>
+            </el-form-item>
+            <el-form-item :label="$t('order.postage')">
+              <price-input v-model="shengheForm.postage"></price-input>
+            </el-form-item>
+            <el-form-item :label="$t('order.note')" >
+              <el-input  type="textarea"  :rows="2"  v-model="shengheForm.comment" clearable :placeholder="$t('order.note')"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
+        <el-dialog :title="$t('order.deliveryRecord')" width="1200px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
+          <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 280px)">
+            <el-table-column :label="$t('order.goods')" min-width="400">
+              <template  slot-scope="scope">
+                <div @click="jumpGoodsPage(gInfo, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.sku_infos" :key="k">
+                  <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.sku_img, 100)"  fit="cover"></el-image>
+                  <div class="g-info">
+                    <p style="display: flex;align-items: center">{{gInfo.spu_name}}
+                      <img :src="otherLogo(gInfo.site_id)" class="otherShopLogo" alt="">
+                    </p>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.expressCompany')" width="130">
+              <template slot-scope="scope" >
+                {{expressageList[scope.row.company]}}
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.expressNo')" width="130">
+              <template slot-scope="scope" >
+                {{scope.row.novar}}
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('order.deliveryTime')" prop="time" width="180">
+            </el-table-column>
+            <el-table-column :label="$t('tools.opt')" width="150" fixed="right" v-if="permissionCheck('opt') && (optType === 5 || optType === 4)">
+              <template slot-scope="scope">
+                  <el-button slot="reference" v-if="optType === 5" @click="modifyCurrentExpress(scope.row)" type="text" size="small">
+                    {{$t('order.modifyExpress')}}
+                  </el-button>
+                  <el-button slot="reference" v-if="optType === 4" type="text" @click="modifyCurrentExpress(scope.row)" size="small">
+                    {{$t('order.price4Note')}}
+                  </el-button>
+                <!--</el-popover>-->
+              </template>
+            </el-table-column>
+          </el-table>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" @click="sendGoodsRecord = false">{{$t('tools.cancel')}}</el-button>
+          </div>
+        </el-dialog>
+        <el-dialog
+          width="30%"
+          :title="$t('order.modifyExpress')"
+          :visible.sync="innerVisible"
+          append-to-body>
+          <el-form label-width="100px">
+            <el-form-item :label="$t('order.expressCompany')" v-if="optType === 5">
+              <el-select v-model="modifyExpressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
+                <el-option
+                  v-for="(item, k) in expressageList"
+                  :key="k"
+                  v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "
+                  :label="item"
+                  :value="k">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('order.expressNo')"  v-if="optType === 5 && modifyExpressCompany !== 'noexpress' && !expressOrder.rider_post">
+              <el-input v-model="modifyExpressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('order.note')" v-if="optType === 4">
+              <el-input type="textarea" :rows="2"  v-model="commentModify" clearable :placeholder="$t('order.note')"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="primary" @click="confirmModifyExpress">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
       </div>
@@ -350,7 +463,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm } from '@/api/order'
+  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck } from '@/api/order'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import areaInfo from '@/utils/areaInfo'
@@ -389,6 +502,9 @@
         itemCount: 0,
         expressCompany: '',
         expressNo: '',
+        modifyExpressCompany: '',
+        modifyExpressNo: '',
+        commentModify: '',
         editorTitle: '',
         optType: 1,
         dialogTitle: this.$t('order.express'),
@@ -452,7 +568,22 @@
           }
         ],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
-        payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')]
+        payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
+        shengheShow: false,
+        shengheForm: {
+          cancel: false, // 是否取消订单true
+          pay_price: 0, // 商品需要实际支付总价
+          postage: 0, // 邮费
+          comment: '' // 备注
+        },
+        purchaseCheckId: '',
+        sku_ids: [],
+        allGoodsSend: true,
+        sendGoodsRecord: false,
+        visibleExpress: false,
+        express_id: '',
+        skuIds: [],
+        innerVisible: false
       }
     },
     computed: {
@@ -473,7 +604,7 @@
           this.currentPage = 1
           this.searchForm.order_status = parseInt(val)
           this.getDataListFun()
-          console.log(111)
+          // console.log(111)
         }
       },
       currentPage(val) {
@@ -502,9 +633,80 @@
       }
     },
     methods: {
+      modifyCurrentExpress(data) {
+        // console.log('data', data)
+        this.innerVisible = true
+        this.modifyExpressCompany = data.company
+        this.modifyExpressNo = data.novar
+        this.commentModify = data.comment
+        this.express_id = data.id
+        this.skuIds = JSON.stringify(data.sku_ids)
+      },
+      confirmModifyExpress() { // 修改快递信息确认按钮
+        ordersExpress(this.expressOrder.id, { express_id: this.express_id, express_company: this.modifyExpressCompany, express_no: this.modifyExpressNo, comment: this.commentModify, sku_ids: this.skuIds }).then(res => {
+          this.$message.success(this.$t('order.courierInfoModifySuccess'))
+          this.getDataListFun()
+          this.getOrderCount()
+          this.innerVisible = false
+          this.formEditDialog = false
+          this.sendGoodsRecord = false
+        }).catch(() => {
+        })
+      },
+      lookSendGoodsRecord() {
+        this.sendGoodsRecord = true
+      },
+      saveShenhe() {
+        orderPurchaseCheck(this.purchaseCheckId, this.shengheForm).then(res => {
+          this.getDataListFun()
+          this.shengheShow = false
+        })
+        // console.log('dform', this.shengheForm)
+      },
+      ordeShengheState(data) {
+        this.purchaseCheckId = data.id
+        this.shengheShow = true
+        this.shengheForm.cancel = false
+        this.shengheForm.pay_price = data.pay_price
+        this.shengheForm.postage = 0
+        this.shengheForm.comment = ''
+      },
+      otherLogo(text) {
+        if (text === 'JinDong') {
+          return require('../../assets/images/jingdong.png')
+        } else if (text === 'Tmal') {
+          return require('../../assets/images/tianmao.png')
+        } else if (text === 'Taobao') {
+          return require('../../assets/images/taobao.png')
+        } else if (text === 'Suning') {
+          return require('../../assets/images/suning.jpeg')
+        } else if (text === 'Kaola') {
+          return require('../../assets/images/kaola.jpeg')
+        } else if (text === 'Dangdang') {
+          return require('../../assets/images/dangdang.jpeg')
+        } else if (text === 'Amazon') {
+          return require('../../assets/images/yamaxun.png')
+        }
+      },
+      jumpGoodsPage(data, type) {
+        if (type !== undefined) {
+          if (type === 5) { // 代购订单
+            // console.log('data.sku_url', data.sku_url)
+            window.open(data.sku_url)
+          } else {
+            window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')
+          }
+        } else {
+          if (data.sku_url !== '') {
+            window.open(data.sku_url)
+          } else {
+            window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')
+          }
+        }
+      },
       orderConfirmFunc(id) {
         orderConfirm(id).then(res => {
-          this.$message.success('确认交易成功')
+          this.$message.success(this.$t('order.confirmTransactionSuccess'))
           this.getDataListFun()
           this.getOrderCount()
         })
@@ -605,6 +807,21 @@
         this.expressOrder = data
         this.optType = ot
         if (ot === 1) {
+          const sendId = []
+          data.expresses && data.expresses.forEach(ex => {
+            ex.sku_infos && ex.sku_infos.forEach(v => {
+              sendId.push(v.oid)
+            })
+          })
+          this.expressOrder.merchant_item.goods_items.forEach(goods => {
+            // goods.chooseGoods = true
+            if (sendId.indexOf(goods.goods_info.oid) === -1) {
+              this.$set(goods, 'chooseGoods', false)
+              this.$set(goods, 'isHaveGoods', true)
+            } else {
+              this.$set(goods, 'isHaveGoods', false)
+            }
+          })
           this.dialogTitle = this.$t('order.express')
           this.expressCompany = data.express.company ? data.express.company : (this.expressOrder.rider_post ? 'rider' : '')
           this.expressNo = data.express.novar
@@ -631,15 +848,40 @@
           this.dialogTitle = this.$t('order.price4Note')
           this.userComment = data.comment
           this.comment = data.merchant_comment
+        } else if (ot === 5) {
+          this.dialogTitle = this.$t('order.modifyExpress')
+          // this.expressCompany = data.express.company ? data.express.company : (this.expressOrder.rider_post ? 'rider' : '')
+          // this.expressNo = data.express.novar
+          // this.comment = data.merchant_comment
+          // this.userComment = data.comment
         }
         this.formEditDialog = true
       },
       saveDataFunc() {
         this.submitDisabled = true
         if (this.optType === 1) {
-          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment }).then(res => {
+          this.sku_ids = []
+          this.expressOrder.merchant_item.goods_items.forEach(goods => {
+            if (!this.allGoodsSend) {
+              if (goods.chooseGoods && goods.isHaveGoods === true) {
+                if (goods.goods_info.sku_url !== '') {
+                  this.sku_ids.push(goods.goods_info.sku_url)
+                } else {
+                  this.sku_ids.push(goods.goods_info.sku_id)
+                }
+              }
+            }
+          })
+          if (this.allGoodsSend) {
+            this.sku_ids = ''
+          } else {
+            this.sku_ids = JSON.stringify(this.sku_ids)
+          }
+          console.log('sku_ids', this.sku_ids)
+          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids }).then(res => {
             this.$message.success(this.$t('order.expressTip'))
             this.submitDisabled = false
+            this.allGoodsSend = true
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
@@ -776,6 +1018,7 @@
   .goods-item{
     border-bottom: 1px solid #e4e4e4;
     margin-bottom: 5px;
+    cursor: pointer;
     clear: both;
     &:last-child {
       border-bottom: none;
@@ -823,5 +1066,17 @@
     .el-cascader {
       width: 100%;
     }
+  }
+  .otherShopLogo {
+    width: 24px;
+    height: 24px;
+    margin-left: 8px;
+    border: none;
+  }
+  .chooseCheck {
+    float: left;
+    margin-right: 10px;
+    height: 100px;
+    line-height: 100px;
   }
 </style>

@@ -65,12 +65,12 @@
                       <el-table stripe border :data="tableData" height="calc(100% - -10px)">
                         <el-table-column prop="code">
                           <template slot="header" slot-scope="scope">
-                            <el-input
-                              v-model="searchCode"
-                              size="mini"
-                              clearable
-                              :placeholder="$t('operation.goodsCode')"/>
-                          </template>
+                          <el-input
+                            v-model="searchCode"
+                            size="mini"
+                            clearable
+                            :placeholder="$t('operation.goodsCode')"/>
+                        </template>
                         </el-table-column>
                         <el-table-column>
                           <template slot="header" slot-scope="scope">

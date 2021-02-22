@@ -131,5 +131,7 @@ export default {
   yes: 'Yes',
   not: 'No',
   lowMarginGoods: 'Low-margin goods',
-  noLowMarginGoods: 'Non-low-margin goods'
+  noLowMarginGoods: 'Non-low-margin goods',
+  introGoods: 'Features',
+  introDetail: 'Text description'
 }

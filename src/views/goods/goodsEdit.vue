@@ -20,6 +20,9 @@
               <el-form-item :label="$t('goods.name')" prop="name">
                 <el-input v-model="goodsData.name" style="max-width: 500px" auto-complete="off" clearable></el-input>
               </el-form-item>
+              <el-form-item :label="$t('goods.introGoods')" prop="intro">
+                <el-input v-model="goodsData.intro" style="max-width: 500px" auto-complete="off" clearable></el-input>
+              </el-form-item>
               <el-row v-if="goodsSysTypeFields.length > 0">
                 <el-col :span="24" style="text-align: center">{{$t('goods.sysTypeProp')}}</el-col>
                 <el-col :span="6" v-for="(v,k) in goodsSysTypeFields" :key="k" >
@@ -189,9 +192,9 @@
               <el-form-item :label="$t('goods.type')" required>
                 <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
               </el-form-item>
-              <el-form-item :label="$t('goods.intro')" style="display: none">
-                <el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>
-              </el-form-item>
+              <!--<el-form-item :label="$t('goods.intro')" style="display: none">-->
+                <!--<el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>-->
+              <!--</el-form-item>-->
               <el-form-item :label="$t('goods.goodsPic')" required>
                 <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
                   <draggable v-model="goodsData.images"  :options = "{animation:500}">
@@ -206,6 +209,9 @@
                   </draggable>
                 </div>
                 <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
+              </el-form-item>
+              <el-form-item :label="$t('goods.introDetail')">
+                <el-input v-model="goodsData.intro_detail" type="textarea" rows="2" auto-complete="off" clearable></el-input>
               </el-form-item>
               <el-form-item :label="$t('goods.picdes')">
                 <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
@@ -310,6 +316,9 @@
                 <el-form-item :label="$t('goods.name')" prop="name">
                   <el-input v-model="langInfo[currentLang].name" style="max-width: 500px" clearable></el-input>
                 </el-form-item>
+                <el-form-item :label="$t('goods.introGoods')" prop="intro">
+                  <el-input v-model="langInfo[currentLang].intro" style="max-width: 500px" auto-complete="off" clearable></el-input>
+                </el-form-item>
                 <el-form-item :label="$t('goods.sp')" >
                   <div  v-for="(v,k) in langInfo[currentLang].spectification_options" :key="k" class="prop-item">
                     <prop-selector :clang="currentLang" v-model="langInfo[currentLang].spectification_options[k].name" ></prop-selector>：
@@ -328,6 +337,9 @@
                     </div>
                   </div>
                   <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
+                </el-form-item>
+                <el-form-item :label="$t('goods.introDetail')">
+                  <el-input v-model="langInfo[currentLang].intro_detail" type="textarea" rows="2" auto-complete="off" clearable></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('goods.picdes')">
                   <ll-editor :content="langInfo[currentLang].desc" @contentChange="contentChangeFunc"></ll-editor>
@@ -492,6 +504,7 @@
           merchant_type_ids: [],
           name: '',
           intro: '',
+          intro_detail: '',
           type: 1,
           cobuy_person_count: 0,
           cobuy_group_valid_sec: 0,
@@ -708,6 +721,7 @@
           merchant_type_ids: data.merchant_type_ids,
           name: data.name,
           intro: data.intro,
+          intro_detail: data.intro_detail,
           type: data.type,
           cobuy_person_count: data.cobuy ? data.cobuy.person_count : 0,
           cobuy_group_valid_sec: data.cobuy ? data.cobuy.cobuy_group_valid_sec : 0,
@@ -730,7 +744,7 @@
         this.goodsProps = data.spectification_options
       },
       saveGoodsTime() {
-        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: this.goodsData.merchant_type_ids, name: this.goodsData.name, intro: this.goodsData.intro,
+        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: this.goodsData.merchant_type_ids, name: this.goodsData.name, intro: this.goodsData.intro, intro_detail: this.goodsData.intro_detail,
           type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: this.goodsData.images,
           buy_limit: this.goodsData.buy_limit, buy_limit_day: this.goodsData.buy_limit_day, desc: this.goodsData.desc }
         goodsItem['postage_setting_id'] = this.goodsData.postage_setting_id
@@ -830,7 +844,7 @@
         const lk = Object.keys(this.languages)
         lk.forEach(l => {
           if (!this.langInfo[l]) {
-            this.$set(this.langInfo, l, { name: this.goodsData.name, spectification_options: JSON.parse(JSON.stringify(this.goodsProps)), images: JSON.parse(JSON.stringify(this.goodsData.images)), desc: this.goodsData.desc })
+            this.$set(this.langInfo, l, { name: this.goodsData.name, intro: this.goodsData.intro, intro_detail: this.goodsData.intro_detail, spectification_options: JSON.parse(JSON.stringify(this.goodsProps)), images: JSON.parse(JSON.stringify(this.goodsData.images)), desc: this.goodsData.desc })
           }
         })
         this.repaireLangSet()
@@ -1028,6 +1042,7 @@
             merchant_type_ids: data.merchant_type_ids,
             name: data.name,
             intro: data.intro,
+            intro_detail: data.intro_detail,
             type: data.type,
             cobuy_person_count: data.cobuy ? data.cobuy.person_count : 0,
             cobuy_group_valid_sec: data.cobuy ? data.cobuy.cobuy_group_valid_sec : 0,
@@ -1066,6 +1081,7 @@
             merchant_type_ids: [],
             name: '',
             intro: '',
+            intro_detail: '',
             type: 1,
             cobuy_person_count: 0,
             cobuy_group_valid_sec: 0,
@@ -1156,7 +1172,7 @@
         }
       },
       updateGoodsFunc() {
-        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, intro: this.goodsData.intro,
+        const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, intro: this.goodsData.intro, intro_detail: this.goodsData.intro_detail,
           type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images),
           buy_limit: this.goodsData.buy_limit, buy_limit_day: this.goodsData.buy_limit_day, desc: this.goodsData.desc }
         goodsItem['postage_setting_id'] = this.goodsData.postage_setting_id

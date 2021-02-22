@@ -121,5 +121,7 @@ export default {
   yes: 'ត្រូវហើយ',
   not: 'ទេ',
   lowMarginGoods: 'ទំនិញមានកំរិតទាប',
-  noLowMarginGoods: 'ទំនិញដែលមិនមានរឹមទាប'
+  noLowMarginGoods: 'ទំនិញដែលមិនមានរឹមទាប',
+  introGoods: 'លក្ខណៈពិសេស',
+  introDetail: 'ការពិពណ៌នាអត្ថបទ'
 }

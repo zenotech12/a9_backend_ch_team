@@ -160,3 +160,12 @@ export function orderConfirm(id) {
     method: 'put'
   })
 }
+
+// 订单.代购订单审核
+export function orderPurchaseCheck(id, data) {
+  return request({
+    url: 'orders/' + id + '/purchase-check',
+    method: 'put',
+    data: data
+  })
+}
