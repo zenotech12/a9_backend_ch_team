@@ -150,5 +150,6 @@ export default {
   confirmTransactionSuccess: '确认交易成功',
   allGoods: '所有商品',
   lookDeliveryRecord: '查看发货记录',
-  modifyWuLiuInfo: '修改物流信息'
+  modifyWuLiuInfo: '修改物流信息',
+  purchasPendReview: '代购待审核'
 }

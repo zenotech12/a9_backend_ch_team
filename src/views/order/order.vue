@@ -168,7 +168,8 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.status')" width="90">
                   <template slot-scope="scope">
-                    <el-tag >{{orderStatus[scope.row.status]}} </el-tag>
+                    <el-tag v-if="scope.row.status !== 17">{{orderStatus[scope.row.status]}} </el-tag>
+                    <el-tag v-else>{{$t('order.purchasPendReview')}}</el-tag>
                     <span style="font-size: 12px" v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2">({{$t('order.cashOnDelivery')}})</span>
                   </template>
                 </el-table-column>
@@ -209,7 +210,7 @@
                     <el-button v-if="scope.row.status === 2 || scope.row.status === 5"  type="text" @click="showExpressEditor(scope.row,3)" size="small" style="margin-left: 0">
                       {{$t('order.changeAddress')}}
                     </el-button>
-                    <el-button v-if="scope.row.status !== 7"  type="text" @click="showExpressEditor(scope.row,4)" size="small" style="margin-left: 0">
+                    <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17"  type="text" @click="showExpressEditor(scope.row,4)" size="small" style="margin-left: 0">
                       {{$t('order.price4Note')}}
                     </el-button>
                     <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
@@ -414,10 +415,10 @@
             </el-table-column>
             <el-table-column :label="$t('tools.opt')" width="150" fixed="right" v-if="permissionCheck('opt') && (optType === 5 || optType === 4)">
               <template slot-scope="scope">
-                  <el-button slot="reference" v-if="optType === 5" @click="modifyCurrentExpress(scope.row)" type="text" size="small">
+                  <el-button slot="reference" v-if="optType === 5" @click="modifyCurrentExpress(scope.row, 'wuliu')" type="text" size="small">
                     {{$t('order.modifyExpress')}}
                   </el-button>
-                  <el-button slot="reference" v-if="optType === 4" type="text" @click="modifyCurrentExpress(scope.row)" size="small">
+                  <el-button slot="reference" type="text" @click="modifyCurrentExpress(scope.row, 'note')" size="small">
                     {{$t('order.price4Note')}}
                   </el-button>
                 <!--</el-popover>-->
@@ -434,7 +435,7 @@
           :visible.sync="innerVisible"
           append-to-body>
           <el-form label-width="100px">
-            <el-form-item :label="$t('order.expressCompany')" v-if="optType === 5">
+            <el-form-item :label="$t('order.expressCompany')" v-if="optType === 5 && openNoteState === 'wuliu'">
               <el-select v-model="modifyExpressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
                 <el-option
                   v-for="(item, k) in expressageList"
@@ -445,10 +446,10 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('order.expressNo')"  v-if="optType === 5 && modifyExpressCompany !== 'noexpress' && !expressOrder.rider_post">
+            <el-form-item :label="$t('order.expressNo')"  v-if="optType === 5 && modifyExpressCompany !== 'noexpress' && !expressOrder.rider_post && openNoteState === 'wuliu'">
               <el-input v-model="modifyExpressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('order.note')" v-if="optType === 4">
+            <el-form-item :label="$t('order.note')" v-if="optType === 4 || openNoteState === 'note'">
               <el-input type="textarea" :rows="2"  v-model="commentModify" clearable :placeholder="$t('order.note')"></el-input>
             </el-form-item>
           </el-form>
@@ -583,7 +584,8 @@
         visibleExpress: false,
         express_id: '',
         skuIds: [],
-        innerVisible: false
+        innerVisible: false,
+        openNoteState: ''
       }
     },
     computed: {
@@ -633,9 +635,10 @@
       }
     },
     methods: {
-      modifyCurrentExpress(data) {
+      modifyCurrentExpress(data, text) {
         // console.log('data', data)
         this.innerVisible = true
+        this.openNoteState = text
         this.modifyExpressCompany = data.company
         this.modifyExpressNo = data.novar
         this.commentModify = data.comment

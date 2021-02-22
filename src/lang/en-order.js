@@ -147,6 +147,7 @@ export default {
   confirmTransactionSuccess: 'Confirm the transaction is successful',
   allGoods: 'All goods',
   lookDeliveryRecord: 'View shipping records',
-  modifyWuLiuInfo: 'Modify logistics information'
+  modifyWuLiuInfo: 'Modify logistics information',
+  purchasPendReview: 'Purchasing pending review'
 
 }

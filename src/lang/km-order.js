@@ -130,5 +130,6 @@ export default {
   confirmTransactionSuccess: 'បញ្ជាក់ប្រតិបត្តិការបានជោគជ័យ',
   allGoods: 'ទំនិញទាំងអស់',
   lookDeliveryRecord: 'មើលកំណត់ត្រាដឹកជញ្ជូន',
-  modifyWuLiuInfo: 'កែប្រែព័ត៌មានភ័ស្តុភារ'
+  modifyWuLiuInfo: 'កែប្រែព័ត៌មានភ័ស្តុភារ',
+  purchasPendReview: 'ការទិញរង់ចាំមើល'
 }
