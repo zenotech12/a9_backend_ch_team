@@ -169,3 +169,12 @@ export function orderPurchaseCheck(id, data) {
     data: data
   })
 }
+
+// 订单.添加物流记录
+export function orderTransRecords(id, data) {
+  return request({
+    url: 'orders/' + id + '/trans-records',
+    method: 'post',
+    data: data
+  })
+}

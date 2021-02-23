@@ -148,6 +148,10 @@ export default {
   allGoods: 'All goods',
   lookDeliveryRecord: 'View shipping records',
   modifyWuLiuInfo: 'Modify logistics information',
-  purchasPendReview: 'Purchasing pending review'
+  purchasPendReview: 'Purchasing pending review',
+  addWuLiuRecord: 'Add logistics records',
+  DateTime: 'Date time',
+  pleaseChooseTime: 'Please select date and time',
+  wuLiuRecord: 'Logistics records'
 
 }

@@ -151,5 +151,10 @@ export default {
   allGoods: '所有商品',
   lookDeliveryRecord: '查看发货记录',
   modifyWuLiuInfo: '修改物流信息',
-  purchasPendReview: '代购待审核'
+  purchasPendReview: '代购待审核',
+  addWuLiuRecord: '添加物流记录',
+  wuLiuRecord: '物流记录',
+  DateTime: '日期时间',
+  pleaseChooseTime: '请选择日期时间'
+
 }

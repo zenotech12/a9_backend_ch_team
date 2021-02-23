@@ -131,5 +131,9 @@ export default {
   allGoods: 'ទំនិញទាំងអស់',
   lookDeliveryRecord: 'មើលកំណត់ត្រាដឹកជញ្ជូន',
   modifyWuLiuInfo: 'កែប្រែព័ត៌មានភ័ស្តុភារ',
-  purchasPendReview: 'ការទិញរង់ចាំមើល'
+  purchasPendReview: 'ការទិញរង់ចាំមើល',
+  addWuLiuRecord: 'បន្ថែមកំណត់ត្រាភ័ស្តុភារ',
+  DateTime: 'ពេល​ណាត់ជួប',
+  pleaseChooseTime: 'សូមជ្រើសរើសកាលបរិច្ឆេទនិងពេលវេលា',
+  wuLiuRecord: 'កំណត់ត្រាភ័ស្តុភារ'
 }

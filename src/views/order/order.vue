@@ -387,7 +387,7 @@
           </div>
         </el-dialog>
         <el-dialog :title="$t('order.deliveryRecord')" width="1200px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
-          <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 280px)">
+          <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 320px)">
             <el-table-column :label="$t('order.goods')" min-width="400">
               <template  slot-scope="scope">
                 <div @click="jumpGoodsPage(gInfo, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.sku_infos" :key="k">
@@ -411,6 +411,26 @@
                 {{scope.row.novar}}
               </template>
             </el-table-column>
+            <el-table-column :label="$t('order.wuLiuRecord')" width="130">
+              <template slot-scope="scope" >
+                <el-popover placement="left" width="300" trigger="click">
+                  <el-timeline style="margin-top: 10px">
+                    <el-timeline-item
+                      v-for="(record, index) in scope.row.trans_records"
+                      :key="index"
+                      :timestamp="record.time">
+                      <div class="ui">
+                        <span>{{record.operator_name}}</span>
+                      </div>
+                      <div class="ui">
+                        <span>{{record.comment}}</span>
+                      </div>
+                    </el-timeline-item>
+                  </el-timeline>
+                  <a slot="reference" class="gt" v-if="scope.row.trans_records.length > 0"><i class="el-icon-arrow-left"></i>{{$t('order.wuLiuRecord')}}</a>
+                </el-popover>
+              </template>
+            </el-table-column>
             <el-table-column :label="$t('order.deliveryTime')" prop="time" width="180">
             </el-table-column>
             <el-table-column :label="$t('tools.opt')" width="150" fixed="right" v-if="permissionCheck('opt') && (optType === 5 || optType === 4)">
@@ -421,6 +441,9 @@
                   <el-button slot="reference" type="text" @click="modifyCurrentExpress(scope.row, 'note')" size="small">
                     {{$t('order.price4Note')}}
                   </el-button>
+                <el-button slot="reference" type="text" @click="addWuLiuBtn(scope.row)" size="small">
+                  {{$t('order.addWuLiuRecord')}}
+                </el-button>
                 <!--</el-popover>-->
               </template>
             </el-table-column>
@@ -457,6 +480,30 @@
             <el-button size="small" type="primary" @click="confirmModifyExpress">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
+        <el-dialog
+          width="30%"
+          :title="$t('order.addWuLiuRecord')"
+          :visible.sync="addWuLiuShow"
+          append-to-body>
+          <el-form label-width="100px">
+            <el-form-item :label="$t('order.DateTime')">
+              <el-date-picker
+                v-model="addWuLiuRecordForm.record_t"
+                format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm"
+                type="datetime"
+                :placeholder="$t('order.pleaseChooseTime')">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item :label="$t('order.note')">
+              <el-input type="textarea" :rows="2"  v-model="addWuLiuRecordForm.comment" clearable :placeholder="$t('order.note')"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="primary" @click="confirmAddWuliuJiLu">{{$t('tools.confirm')}}</el-button>
+          </div>
+        </el-dialog>
+
       </div>
     </div>
   </div>
@@ -464,7 +511,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck } from '@/api/order'
+  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords } from '@/api/order'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import areaInfo from '@/utils/areaInfo'
@@ -585,7 +632,13 @@
         express_id: '',
         skuIds: [],
         innerVisible: false,
-        openNoteState: ''
+        openNoteState: '',
+        addWuLiuRecordForm: {
+          express_id: '',
+          record_t: '',
+          comment: ''
+        },
+        addWuLiuShow: false
       }
     },
     computed: {
@@ -635,6 +688,21 @@
       }
     },
     methods: {
+      confirmAddWuliuJiLu() {
+        // console.log('form', this.addWuLiuRecordForm)
+        orderTransRecords(this.expressOrder.id, this.addWuLiuRecordForm).then(res => {
+          this.addWuLiuShow = false
+          this.formEditDialog = false
+          this.sendGoodsRecord = false
+          this.getDataListFun()
+        })
+      },
+      addWuLiuBtn(data) {
+        this.addWuLiuShow = true
+        this.addWuLiuRecordForm.express_id = data.id
+        this.addWuLiuRecordForm.record_t = ''
+        this.addWuLiuRecordForm.comment = ''
+      },
       modifyCurrentExpress(data, text) {
         // console.log('data', data)
         this.innerVisible = true
