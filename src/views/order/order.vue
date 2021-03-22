@@ -528,9 +528,9 @@
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
-        orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
+        orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '17', label: this.$t('order.status1') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
           { value: '10', label: this.$t('order.status10') }, { value: '7', label: this.$t('order.status7') }],
-        orderStatusTabList: [{ value: '0', label: this.$t('tools.all') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
+        orderStatusTabList: [{ value: '0', label: this.$t('tools.all') }, { value: '17', label: this.$t('order.status1') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
           { value: '10', label: this.$t('order.status10') }, { value: '7', label: this.$t('order.status7') }],
         searchForm: {
           key: '',
@@ -795,7 +795,7 @@
         console.log('val', val)
       },
       getOrderCount() {
-        const statuses = [0, 2, 4, 5, 7, 8, 10]
+        const statuses = [0, 17, 2, 4, 5, 7, 8, 10]
         this.orderStatusTab = JSON.parse(JSON.stringify(this.orderStatusTabList))
         ordersCount({ 'statuses': JSON.stringify(statuses) }).then(res => {
           if (res.meta === 0) {
