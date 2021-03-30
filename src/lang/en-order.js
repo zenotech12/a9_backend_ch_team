@@ -104,7 +104,7 @@ export default {
   userPhone: 'Mobile',
   zwddwl: 'No order logistics information',
   modifyExpress: 'Modify Express',
-  includePostage: 'Including Freight',
+  includePostage: 'Delivery fee',
   businessBz: 'Merchant notes',
   orderNumber: 'Number Of Order',
   customerPrice: 'Customer price',
