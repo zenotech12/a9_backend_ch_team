@@ -14,6 +14,18 @@
               <el-form-item :label="$t('order.returnOrder')">
                 <el-input v-model="searchForm.order_no" style="width: 250px" clearable></el-input>
               </el-form-item>
+              <!-- <el-form-item>
+                <el-date-picker
+                  value-format="yyyy-MM-dd"
+                  v-model="Sdate"
+                  type="daterange"
+                  align="right"
+                  unlink-panels
+                  :range-separator="$t('tools.to')"
+                  :start-placeholder="$t('tools.startDate')"
+                  :end-placeholder="$t('tools.endDate')">
+                </el-date-picker>
+              </el-form-item> -->
               <el-form-item v-if="searchForm.type !== 2">
                 <el-select v-model="searchForm.type" clearable>
                   <el-option
@@ -64,7 +76,7 @@
                   <template slot-scope="scope">
                     {{scope.row.amount | price}}
                   </template>
-                </el-table-column>
+                </el-table-column>0
                 <el-table-column prop="order_no" :label="$t('order.returnOrder')" width="180">
                 </el-table-column>
                 <el-table-column :label="$t('order.status')" width="100">
@@ -226,8 +238,9 @@
           order_no: '',
           status: 0,
           skip: 0,
-          limit: pz
+          limit: pz,
         },
+        Sdate:[],
         tab_status: '0',
         tableData: [],
         currentPage: 1,
@@ -363,8 +376,10 @@
       search() {
         this.currentPage = 1
         this.searchForm.skip = 0
+
         this.getDataListFun()
         this.getAfterSalesCount()
+        console.log(JSON.stringify(this.Sdate));
       },
       getKuaidi100Url(com, nu) {
         return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
@@ -387,6 +402,7 @@
       // console.log(1111)
     },
     created() {
+      
     }
   }
 </script>

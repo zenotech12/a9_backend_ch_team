@@ -49,14 +49,15 @@
               <el-table stripe border :data="tableData" height="calc(100% - 40px)" @selection-change="handleSelectionChange">
                 <el-table-column
                   type="selection"
-                  width="55">
+                  width="45">
                 </el-table-column>
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
                     <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
                     <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===3" size="mini">{{$t('order.orderType3')}}</el-tag>
                     <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===4" size="mini">{{$t('order.orderType4')}}</el-tag>
-                    {{scope.row.no}}<br/>
+                    No:{{scope.row.no}}<br/>
+                    <span class="f12">Id:{{scope.row.id}}</span><br/>
                     <el-popover v-if="scope.row.comment || (scope.row.merchant_comments && scope.row.merchant_comments.length > 0)" placement="right" width="300" trigger="click">
                       <template v-if="scope.row.comment">
                         <el-divider content-position="left">{{$t('order.userBz')}}</el-divider>
@@ -93,7 +94,7 @@
                         <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
                           <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5" alt="">
                           <el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
-                          <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.prevent="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
+                          <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.stop="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
                         </p>
                         <p>
                           <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
@@ -173,7 +174,7 @@
                     <span style="font-size: 12px" v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2">({{$t('order.cashOnDelivery')}})</span>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.genTime')" width="180">
+                <el-table-column :label="$t('order.genTime')" width="170">
                   <template slot-scope="scope" >
                     <el-popover placement="left" width="300" trigger="click">
                       <el-timeline style="margin-top: 10px">
@@ -223,6 +224,7 @@
                 <el-col :span="6">
                   <el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>
                   &nbsp;
+                <span class="allprice">订单总额 : <span>{{allprice | price}}</span></span>
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
                   <el-pagination v-if="itemCount > 0"
@@ -394,7 +396,7 @@
                   <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.sku_img, 100)"  fit="cover"></el-image>
                   <div class="g-info">
                     <p style="display: flex;align-items: center">{{gInfo.spu_name}}
-                      <img :src="otherLogo(gInfo.site_id)" class="otherShopLogo" alt="">
+                      <img :src="otherLogo(gInfo.site_id)" class="otherShopLogo" alt="" v-if="gInfo.site_id">
                     </p>
                   </div>
                   <div class="clear"></div>
@@ -503,7 +505,6 @@
             <el-button size="small" type="primary" @click="confirmAddWuliuJiLu">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
-
       </div>
     </div>
   </div>
@@ -542,6 +543,7 @@
           bt: '',
           et: ''
         },
+        allprice:0,
         tab_order_status: '0',
         orderTimes: [],
         tableData: [],
@@ -644,7 +646,7 @@
     computed: {
       ...mapGetters([
         'userInfo', 'searchParam'
-      ])
+      ]),
     },
     watch: {
       tab_order_status(val) {
@@ -1005,8 +1007,9 @@
       getDataListFun() {
         // this.getOrderCount()
         this.$store.dispatch('SetSearchParam', { key: this.searchParamKey, value: this.searchForm })
-        console.log('SetSearchParam', this.$store.state.app.searchParam)
+        // console.log('SetSearchParam', this.$store.state.app.searchParam)
         ordersList(this.searchForm).then(res => {
+          this.allprice = res.total_money
           this.doWatch = true
           this.tableData = res.items
           this.itemCount = res.total
@@ -1076,6 +1079,20 @@
 </script>
 
 <style lang="scss" scoped>
+.f12{
+  font-size: 12px;
+}
+.allprice{
+  border-radius: 3px;
+  padding: 5px;
+  border: 1px solid #DCDFE6;
+  display: inline-block;
+  color: #606266;
+  font-size: 14px;
+  >span{
+    font-size: 20px;
+  }
+}
   .rate-item{
     span{
       display: inline-block;
