@@ -152,6 +152,7 @@ export default {
   addWuLiuRecord: 'Add logistics records',
   DateTime: 'Date time',
   pleaseChooseTime: 'Please select date and time',
+  Totalprice: 'Totalprice',
   wuLiuRecord: 'Logistics records'
 
 }
