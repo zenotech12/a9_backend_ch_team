@@ -94,6 +94,7 @@ export default {
   batchReply: '批量回复',
   batchReplyTip: '请选择您要回复的评论',
   batchExportTip: '请选择您要导出的订单',
+  BatchExportTip: '导出最大条数为20条',
   changeAddress: '修改地址',
   changeS: '修改成功',
   userBz: '用户备注',
@@ -155,6 +156,7 @@ export default {
   addWuLiuRecord: '添加物流记录',
   wuLiuRecord: '物流记录',
   DateTime: '日期时间',
-  pleaseChooseTime: '请选择日期时间'
+  pleaseChooseTime: '请选择日期时间',
+  Totalprice: '总价'
 
 }

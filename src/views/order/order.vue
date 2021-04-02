@@ -31,7 +31,7 @@
               <el-form-item>
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
                 <template v-if="permissionCheck('opt')">
-                  <el-button type="primary" @click="exportFunc([])" size="small" icon="el-icon-download"></el-button>
+                  <el-button type="primary" @click="exportFunc([], false)" size="small" icon="el-icon-download"></el-button>
                   <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
                     :action= "importUrl"
                     :show-file-list="false"
@@ -223,8 +223,9 @@
               <el-row style="margin-top: 10px">
                 <el-col :span="6">
                   <el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>
-                  &nbsp;
-                <span class="allprice">订单总额 : <span>{{allprice | price}}</span></span>
+                  <!-- &nbsp; -->
+                  <el-button size="mini" @click="batchDetailExportFunc">{{$t('tools.exportDetails')}}</el-button>
+                <span class="allprice">{{$t('order.Totalprice')}} : <span>{{allprice | price}}</span></span>
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
                   <el-pagination v-if="itemCount > 0"
@@ -239,6 +240,7 @@
             </div>
           </el-col>
         </el-row>
+        <!-- 修改信息模态框 -->
         <el-dialog :title="dialogTitle" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px">
             <el-form-item :label="$t('order.no')">
@@ -541,7 +543,8 @@
           skip: 0,
           limit: pz,
           bt: '',
-          et: ''
+          et: '',
+          invoice:true
         },
         allprice:0,
         tab_order_status: '0',
@@ -858,15 +861,30 @@
           this.$message.error(this.$t('order.batchExportTip'))
           return
         }
-        this.exportFunc(this.multipleSelection)
+        this.exportFunc(this.multipleSelection, false)
       },
-      exportFunc(ids) {
+      
+      batchDetailExportFunc(){
+        if(this.multipleSelection.length > 20){
+           this.$message.error(this.$t('order.BatchExportTip'))
+        }else if(this.multipleSelection.length < 1){
+           this.$message.error(this.$t('order.batchExportTip'))
+        }
+        else{
+          this.exportFunc(this.multipleSelection, true)
+        }
+      },
+
+      exportFunc(ids, invoice) {
         const sf = JSON.parse(JSON.stringify(this.searchForm))
+        console.log(sf);
         sf.skip = 0
-        sf.limit = 1000
+        sf.limit = 20
+        sf.invoice=invoice
         sf.ids = JSON.stringify(ids)
         exportOrder(sf).then(res => {
           window.location = res.url
+          // console.log(res);
         })
       },
       getKuaidi100Url(com, nu) {
@@ -1074,6 +1092,7 @@
       this.getOrderCount()
     },
     created() {
+  
     }
   }
 </script>
@@ -1090,7 +1109,7 @@
   color: #606266;
   font-size: 14px;
   >span{
-    font-size: 20px;
+    font-size: 18px;
   }
 }
   .rate-item{

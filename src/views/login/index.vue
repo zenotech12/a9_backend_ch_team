@@ -51,7 +51,7 @@
               <span class="show-pwd" v-if="!show">{{$t('login.areadySend')}}({{count}}s)</span>
             </el-form-item>
           </template>
-          <div class="opt-row"><a href="http://a9.idesum.com/forget.html?refer=https://a9partner.idesum.com/">{{$t('login.forget')}}</a>
+          <div class="opt-row"><a href="http://a9.idesum.com/forget.html?refer=https://p.a9kh.com/">{{$t('login.forget')}}</a>
             <a class="wayChange" @click="changeLoginWay">{{loginWay === 0 ? $t('login.loginWay1') :$t('login.loginWay2')}}</a>
           </div>
           <el-form-item class="form-btn">
@@ -67,7 +67,6 @@
           </el-form-item>
         </el-form>
         <div style="clear: both">
-
         </div>
       </div>
     </div>
