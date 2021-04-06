@@ -204,6 +204,7 @@
     methods: {
       getEvaluationsCount() {
         evaluationsCount().then(res => {
+          console.log(res);
           if (res.meta === 0) {
             this.commentReplied = [this.$t('tools.all'),
               this.$t('order.repliedResponded') + '(' + res.item.replied + ')',
@@ -221,6 +222,7 @@
         // this.currentGoods = appUrl + '/goods/info?id=' + row.id
         // this.commodityPreviewShow = true
       },
+      // 回复按钮
       showBatchReplyDialog() {
         if (this.multipleSelection.length < 1) {
           this.$message.error(this.$t('order.batchReplyTip'))
@@ -249,6 +251,7 @@
         // console.log(result)
         return result
       },
+      // 回复评价
       showReplyEditor(data) {
         this.replyData = data
         this.replyContent = ''
@@ -266,10 +269,12 @@
           this.submitDisabled = false
         })
       },
+      // 数据显示
       getDataListFun() {
         evalutionsList(this.searchForm).then(res => {
           this.tableData = res.items
           this.itemCount = res.total
+          console.log(res);
         })
       },
       search() {
@@ -281,6 +286,7 @@
       this.getDataListFun()
     },
     created() {
+      
     }
   }
 </script>

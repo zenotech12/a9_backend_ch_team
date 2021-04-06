@@ -270,7 +270,7 @@
     },
     watch: {
       tab_status(val) {
-        console.log('val', val)
+        // console.log('val', val)
         if (!this.doWatch) {
           return
         }
@@ -318,6 +318,7 @@
     methods: {
       getAfterSalesCount() {
         this.orderStatusTab = JSON.parse(JSON.stringify(this.tabList))
+
         afterSalesCount({ type: this.searchForm.type }).then(res => {
           if (res.meta === 0) {
             res.items.forEach(item => {
@@ -336,6 +337,7 @@
         // this.currentGoods = appUrl + '/goods/info?id=' + row.id
         // this.commodityPreviewShow = true
       },
+      // 详情
       showReturnOrderDetail(data) {
         this.returnOrder = data
         this.amount = data.amount
@@ -366,6 +368,7 @@
       },
       getAddressListFunc() {
         shippingAddressesList().then(res => {
+          console.log(res);
           this.addressList = res.items
           const defaultAddr = this.addressList.find(addr => {
             return addr.default === true
@@ -373,13 +376,13 @@
           this.defaultAddr = typeof (defaultAddr) !== 'undefined' ? defaultAddr.id : (this.addressList.length > 0 ? this.addressList[0].id : '')
         })
       },
+      // 查询
       search() {
         this.currentPage = 1
         this.searchForm.skip = 0
-
         this.getDataListFun()
         this.getAfterSalesCount()
-        console.log(JSON.stringify(this.Sdate));
+        // console.log(JSON.stringify(this.Sdate));
       },
       getKuaidi100Url(com, nu) {
         return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
@@ -402,7 +405,7 @@
       // console.log(1111)
     },
     created() {
-      
+   
     }
   }
 </script>

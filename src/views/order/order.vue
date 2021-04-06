@@ -92,7 +92,7 @@
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
                       <div class="g-info">
                         <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
-                          <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5" alt="">
+                          <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5 && gInfo.goods_info.site_id" alt="">
                           <el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
                           <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.stop="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
                         </p>
@@ -222,8 +222,9 @@
               </el-table>
               <el-row style="margin-top: 10px">
                 <el-col :span="6">
+                  <!-- 导出按钮 -->
                   <el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>
-                  <!-- &nbsp; -->
+                  <!-- 导出明细按钮 -->
                   <el-button size="mini" @click="batchDetailExportFunc">{{$t('tools.exportDetails')}}</el-button>
                 <span class="allprice">{{$t('order.Totalprice')}} : <span>{{allprice | price}}</span></span>
                 </el-col>
@@ -680,8 +681,9 @@
         this.searchForm.skip = 0
         this.searchForm.limit = val
         this.getDataListFun()
-        console.log(333)
+      
       },
+      // 按时间段查询订单
       orderTimes(val) {
         if (val && val.length === 2) {
           this.searchForm.bt = val[0]
@@ -708,8 +710,10 @@
         this.addWuLiuRecordForm.record_t = ''
         this.addWuLiuRecordForm.comment = ''
       },
+      // 修改备注
       modifyCurrentExpress(data, text) {
-        // console.log('data', data)
+        // console.log(data);
+        // console.log(text);
         this.innerVisible = true
         this.openNoteState = text
         this.modifyExpressCompany = data.company
@@ -729,6 +733,7 @@
         }).catch(() => {
         })
       },
+      // 查看发货记录
       lookSendGoodsRecord() {
         this.sendGoodsRecord = true
       },
@@ -766,10 +771,15 @@
       },
       jumpGoodsPage(data, type) {
         if (type !== undefined) {
+          // console.log(data);
           if (type === 5) { // 代购订单
             // console.log('data.sku_url', data.sku_url)
-            window.open(data.sku_url)
-          } else {
+            if(data.sku_url == ''){
+              window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')
+            }else{
+               window.open(data.sku_url)
+            }
+          } else{
             window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')
           }
         } else {
@@ -780,6 +790,7 @@
           }
         }
       },
+      // 确认交易
       orderConfirmFunc(id) {
         orderConfirm(id).then(res => {
           this.$message.success(this.$t('order.confirmTransactionSuccess'))
@@ -804,6 +815,7 @@
         this.orderStatusTab = JSON.parse(JSON.stringify(this.orderStatusTabList))
         ordersCount({ 'statuses': JSON.stringify(statuses) }).then(res => {
           if (res.meta === 0) {
+            console.log(res);
             res.items.forEach(item => {
               this.orderStatusTab.forEach((Z, k) => {
                 if (Z.value === item.order_status.toString()) {
@@ -841,8 +853,9 @@
           this.multipleSelection.push(item.id)
         })
       },
+      // 售后
       showReturn(row, gInfo) {
-        // console.log(gInfo)
+        console.log(gInfo);
         if (gInfo.after_sale_type === 1 || gInfo.after_sale_type === 3) {
           this.$router.push({ name: 'orderReturn', params: { order_no: row.no }})
         } else if (gInfo.after_sale_type === 2) {
@@ -856,6 +869,7 @@
       importError(res) {
         this.$message.error(res.error)
       },
+      // 导出按钮
       batchExportFunc() {
         if (this.multipleSelection.length < 1) {
           this.$message.error(this.$t('order.batchExportTip'))
@@ -863,10 +877,10 @@
         }
         this.exportFunc(this.multipleSelection, false)
       },
-      
+      // 导出明细按钮
       batchDetailExportFunc(){
         if(this.multipleSelection.length > 20){
-           this.$message.error(this.$t('order.BatchExportTip'))
+           this.$message.error(this.$t('order.batchDetailExportFunc'))
         }else if(this.multipleSelection.length < 1){
            this.$message.error(this.$t('order.batchExportTip'))
         }
@@ -874,17 +888,15 @@
           this.exportFunc(this.multipleSelection, true)
         }
       },
-
+      // 导出
       exportFunc(ids, invoice) {
         const sf = JSON.parse(JSON.stringify(this.searchForm))
-        console.log(sf);
         sf.skip = 0
         sf.limit = 20
         sf.invoice=invoice
         sf.ids = JSON.stringify(ids)
         exportOrder(sf).then(res => {
           window.location = res.url
-          // console.log(res);
         })
       },
       getKuaidi100Url(com, nu) {
@@ -894,9 +906,13 @@
           return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
         }
       },
+      // 操作
       showExpressEditor(data, ot) {
+        // data为商品数据 ot为一个值根据传过来不同的值做不同的操作
         this.expressOrder = data
         this.optType = ot
+        // console.log(data);
+        // console.log(ot);
         if (ot === 1) {
           const sendId = []
           data.expresses && data.expresses.forEach(ex => {
@@ -948,8 +964,10 @@
         }
         this.formEditDialog = true
       },
+      // 修改地址确定按钮
       saveDataFunc() {
         this.submitDisabled = true
+        console.log(this.optType);
         if (this.optType === 1) {
           this.sku_ids = []
           this.expressOrder.merchant_item.goods_items.forEach(goods => {
@@ -968,7 +986,7 @@
           } else {
             this.sku_ids = JSON.stringify(this.sku_ids)
           }
-          console.log('sku_ids', this.sku_ids)
+          // console.log('sku_ids', this.sku_ids)
           ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids }).then(res => {
             this.$message.success(this.$t('order.expressTip'))
             this.submitDisabled = false
@@ -990,6 +1008,7 @@
             this.submitDisabled = false
           })
         } else if (this.optType === 3) {
+          // 修改地址 确定
           const data = {
             province: this.addressArray[0],
             city: this.addressArray[1],
@@ -1022,6 +1041,7 @@
           })
         }
       },
+      // 订单列表
       getDataListFun() {
         // this.getOrderCount()
         this.$store.dispatch('SetSearchParam', { key: this.searchParamKey, value: this.searchForm })

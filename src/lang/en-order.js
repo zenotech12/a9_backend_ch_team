@@ -153,6 +153,7 @@ export default {
   DateTime: 'Date time',
   pleaseChooseTime: 'Please select date and time',
   Totalprice: 'Totalprice',
-  wuLiuRecord: 'Logistics records'
+  wuLiuRecord: 'Logistics records',
+  batchDetailExportFunc: 'The maximum number of exports is 20'
 
 }
