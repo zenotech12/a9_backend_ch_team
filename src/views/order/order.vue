@@ -51,13 +51,14 @@
                   type="selection"
                   width="45">
                 </el-table-column>
+                <!-- 单号 -->
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
                     <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
                     <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===3" size="mini">{{$t('order.orderType3')}}</el-tag>
                     <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===4" size="mini">{{$t('order.orderType4')}}</el-tag>
                     No:{{scope.row.no}}<br/>
-                    <span class="f12">Id:{{scope.row.id}}</span><br/>
+                    <span class="f12" v-if="scope.row.pay_id">Id:{{scope.row.pay_id}}</span><br/>
                     <el-popover v-if="scope.row.comment || (scope.row.merchant_comments && scope.row.merchant_comments.length > 0)" placement="right" width="300" trigger="click">
                       <template v-if="scope.row.comment">
                         <el-divider content-position="left">{{$t('order.userBz')}}</el-divider>
@@ -80,12 +81,30 @@
                     </el-popover>
                   </template>
                 </el-table-column>
+                <!-- 下单时间 -->
+                 <el-table-column :label="$t('order.genTime')" width="170">
+                  <template slot-scope="scope" >
+                    <el-popover placement="left" width="300" trigger="click">
+                      <el-timeline style="margin-top: 10px">
+                        <el-timeline-item
+                          v-for="(record, index) in scope.row.operation_records"
+                          :key="index"
+                          :timestamp="record.time">
+                          <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
+                        </el-timeline-item>
+                      </el-timeline>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.gen_time}}</a>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+                <!-- 用户 -->
                 <el-table-column :label="$t('order.user')" width="130">
                   <template slot-scope="scope">
                     <div class="ui">{{scope.row.user_nick_name}}</div>
                     <div class="ui">{{scope.row.user_mobile}}</div>
                   </template>
                 </el-table-column>
+                <!-- 商品 -->
                 <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
                     <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
@@ -105,6 +124,7 @@
                     </div>
                   </template>
                 </el-table-column>
+                <!-- 金额 -->
                 <el-table-column :label="$t('order.price')" width="130">
                   <template slot-scope="scope" >
                     <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
@@ -115,6 +135,7 @@
                     </div>
                   </template>
                 </el-table-column>
+                <!-- 地址 -->
                 <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
                   <template slot-scope="scope" >
                     <div class="ui">
@@ -167,6 +188,7 @@
                     </div>
                   </template>
                 </el-table-column>
+                <!-- 状态 -->
                 <el-table-column :label="$t('order.status')" width="90">
                   <template slot-scope="scope">
                     <el-tag v-if="scope.row.status !== 17">{{orderStatus[scope.row.status]}} </el-tag>
@@ -174,21 +196,7 @@
                     <span style="font-size: 12px" v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2">({{$t('order.cashOnDelivery')}})</span>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.genTime')" width="170">
-                  <template slot-scope="scope" >
-                    <el-popover placement="left" width="300" trigger="click">
-                      <el-timeline style="margin-top: 10px">
-                        <el-timeline-item
-                          v-for="(record, index) in scope.row.operation_records"
-                          :key="index"
-                          :timestamp="record.time">
-                          <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
-                        </el-timeline-item>
-                      </el-timeline>
-                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.gen_time}}</a>
-                    </el-popover>
-                  </template>
-                </el-table-column>
+                <!-- 操作 -->
                 <el-table-column :label="$t('tools.opt')" width="150" fixed="right"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2">
@@ -753,6 +761,7 @@
         this.shengheForm.comment = ''
       },
       otherLogo(text) {
+        // console.log(text);
         if (text === 'JinDong') {
           return require('../../assets/images/jingdong.png')
         } else if (text === 'Tmal') {
@@ -767,6 +776,10 @@
           return require('../../assets/images/dangdang.jpeg')
         } else if (text === 'Amazon') {
           return require('../../assets/images/yamaxun.png')
+        } else if(text === '1688'){
+          return require('../../assets/images/1688.png')
+        } else if(text === '1689'){
+          return require('../../assets/images/1689.png')
         }
       },
       jumpGoodsPage(data, type) {
@@ -1051,6 +1064,7 @@
           this.doWatch = true
           this.tableData = res.items
           this.itemCount = res.total
+          // console.log(this.tableData);
         })
       },
       search() {
@@ -1111,8 +1125,7 @@
       this.getDataListFun()
       this.getOrderCount()
     },
-    created() {
-  
+    created() {     
     }
   }
 </script>
