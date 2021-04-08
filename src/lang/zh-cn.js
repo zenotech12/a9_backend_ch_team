@@ -55,5 +55,7 @@ export default {
   cardMgr: '银行卡管理',
   liveBroadcast: '直播管理',
   freeShipingSet: '包邮设置',
-  fullReductionSet: '满减设置'
+  fullReductionSet: '满减设置',
+  warehouseMgr: '仓库管理',
+  
 }

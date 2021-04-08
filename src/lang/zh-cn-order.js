@@ -81,7 +81,7 @@ export default {
   note: '备注',
   opt2: '创建订单',
   opt4: '发货',
-  opt5: '完成支付',
+  opt5: '代发货',
   opt6: '未完成订单',
   opt7: '取消订单',
   opt8: '确认收货',

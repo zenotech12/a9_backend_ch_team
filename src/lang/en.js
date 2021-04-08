@@ -56,5 +56,6 @@ export default {
   cardMgr: 'Bank Card',
   liveBroadcast: 'Live Broadcast',
   freeShipingSet: 'Free shipping',
-  fullReductionSet: 'Full reduction'
+  fullReductionSet: 'Full reduction',
+  warehouseMgr: 'Warehouse management',
 }

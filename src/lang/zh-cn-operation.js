@@ -153,5 +153,5 @@ export default {
   couponSendSuccess: '优惠券发放成功',
   goodsOffShelfSuccess: '商品下架成功',
   goodsOffshelf: '商品下架',
-  chooseGoods: '选择商品'
+  chooseGoods: '选择商品',
 }

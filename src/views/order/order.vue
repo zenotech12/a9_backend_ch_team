@@ -760,6 +760,7 @@
         this.shengheForm.postage = 0
         this.shengheForm.comment = ''
       },
+      // 海外购图标显示
       otherLogo(text) {
         // console.log(text);
         if (text === 'JinDong') {
@@ -1137,7 +1138,7 @@
 .allprice{
   border-radius: 3px;
   padding: 5px;
-  border: 1px solid #DCDFE6;
+  border: 1px solid #dcdfe6;
   display: inline-block;
   color: #606266;
   font-size: 14px;

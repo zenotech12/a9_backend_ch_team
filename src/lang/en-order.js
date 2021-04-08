@@ -81,7 +81,7 @@ export default {
   note: 'Remarks',
   opt2: 'Create order',
   opt4: 'Deliver goods',
-  opt5: 'Payment completed',
+  opt5: 'To be delivered',
   opt6: 'Unfinished order',
   opt7: 'Cancellation of order',
   opt8: 'Confirm receipt',
