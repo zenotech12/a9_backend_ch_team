@@ -57,5 +57,7 @@ export default {
   freeShipingSet: '包邮设置',
   fullReductionSet: '满减设置',
   warehouseMgr: '仓库管理',
-  
+  warehouseList: '仓库列表',
+  suppliersMgr: '供应商',
+  purchasesMgr: '采购单'
 }
