@@ -56,5 +56,9 @@ export default {
   cardMgr: 'គណនីធនាគារ',
   liveBroadcast: 'ការគ្រប់គ្រងការផ្សាយផ្ទាល់',
   freeShipingSet: 'ការកំណត់ការដឹកជញ្ជូនដោយឥតគិតថ្លៃ',
-  fullReductionSet: 'ការកាត់បន្ថយពេញលេញ'
+  fullReductionSet: 'ការកាត់បន្ថយពេញលេញ',
+  warehouseMgr: 'ការគ្រប់គ្រងឃ្លាំង',
+  warehouseList: 'បញ្ជីឃ្លាំង',
+  suppliersMgr: 'អ្នកផ្គត់ផ្គង់',
+  purchasesMgr: 'បញ្ជា​រ​ទិញ'
 }

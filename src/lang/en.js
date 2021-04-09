@@ -58,4 +58,7 @@ export default {
   freeShipingSet: 'Free shipping',
   fullReductionSet: 'Full reduction',
   warehouseMgr: 'Warehouse management',
+  warehouseList: 'Warehouse list',
+  suppliersMgr: 'Supplier',
+  purchasesMgr: 'Purchase Order'
 }
