@@ -10,6 +10,7 @@ const warehouse = [{
     name: 'goodsList',
     meta: { title: 'warehouseMgr', icon: 'list', code: '2_1' },
     component: () => import('@/views/warehouse/warehouseList')
-  },]
+  },
+]
 }]
 export default warehouse

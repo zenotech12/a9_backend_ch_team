@@ -36,7 +36,9 @@ import kmOrder from '@/lang/km-order'
 import zhExpressage from '@/lang/zh-cn-expressage'
 import enExpressage from '@/lang/en-expressage'
 import kmExpressage from '@/lang/km-expressage'
-
+import zhWarehouse from '@/lang/zh-cn-warehouse'
+import enWarehouse from '@/lang/en-warehouse'
+import kmWarehouse from '@/lang/km-warehouse'
 const messages = {
   en: {
     expressage: {
@@ -68,6 +70,9 @@ const messages = {
     },
     sys: {
       ...enSys
+    },
+    warehouse: {
+      ...enWarehouse
     },
     ...enElement
   },
@@ -102,6 +107,9 @@ const messages = {
     sys: {
       ...zhSys
     },
+    warehouse: {
+      ...zhWarehouse
+    },
     ...zhElement
   },
   km: {
@@ -134,6 +142,9 @@ const messages = {
     },
     sys: {
       ...kmSys
+    },
+    warehouse: {
+      ...kmWarehouse
     },
     ...kmElement
   }

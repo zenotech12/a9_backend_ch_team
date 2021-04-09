@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 仓库详情
+// 仓库列表
 export function warehousesList(data) {
   return request({
     url: 'warehouses',
@@ -8,6 +8,15 @@ export function warehousesList(data) {
     params: data
   })
 }
+
+// 仓库详情
+export function warehousesInfo(id) {
+  return request({
+    url: 'warehouses/'+id,
+    method: 'get'
+  })
+}
+
 
 // 仓库添加
 export function warehousesAdd(data) {

@@ -15,14 +15,14 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="name" label="仓库名称"></el-table-column>
-                <el-table-column label="备注">
+                <el-table-column prop="name" :label="$t('warehouse.name')"></el-table-column>
+                <el-table-column :label="$t('warehouse.remarks')">
                   <template slot-scope="scope">{{scope.row.comment}}</template>
                 </el-table-column>
-                <el-table-column label="仓库简称">
+                <el-table-column :label="$t('warehouse.abbreviation')">
                   <template slot-scope="scope">{{scope.row.short_name}}</template>
                 </el-table-column>
-                <el-table-column label="仓库编号">
+                <el-table-column :label="$t('warehouse.num')">
                   <template slot-scope="scope">{{scope.row.no}}</template>
                 </el-table-column>
                 <el-table-column :label="$t('tools.opt')" width="140" v-if="permissionCheck('opt')">
@@ -49,7 +49,8 @@
           </el-col>
         </el-row>
         <el-dialog
-          title="添加仓库"
+          class="dialog"
+          :title="$t('warehouse.add')"
           width="700px"
           @close="formEditDialog=false"
           :visible.sync="formEditDialog"
@@ -57,28 +58,28 @@
           center
         >
           <el-form label-width="100px" :model="form">
-            <el-form-item label="仓库名称">
+            <el-form-item :label="$t('warehouse.name')">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="仓库编号">
+            <el-form-item :label="$t('warehouse.num')">
               <el-input v-model="form.no"></el-input>
             </el-form-item>
-            <el-form-item label="仓库简称">
+            <el-form-item :label="$t('warehouse.abbreviation')">
               <el-input v-model="form.short_name"></el-input>
             </el-form-item>
-            <el-form-item label="拼音码">
+            <el-form-item :label="$t('warehouse.Pinyin')">
               <el-input v-model="form.pinyin_code"></el-input>
             </el-form-item>
-            <el-form-item label="备注">
+            <el-form-item :label="$t('warehouse.remarks')">
               <el-input v-model="form.comment"></el-input>
             </el-form-item>
-            <el-form-item label="联系人名字">
+            <el-form-item :label="$t('warehouse.contacts')">
               <el-input v-model="form.contacter_name"></el-input>
             </el-form-item>
-            <el-form-item label="联系人手机">
+            <el-form-item :label="$t('warehouse.tel')">
               <el-input v-model="form.contacter_mobile"></el-input>
             </el-form-item>
-            <el-form-item label="邮编">
+            <el-form-item :label="$t('warehouse.Postcode')">
               <el-input v-model="form.postcode"></el-input>
             </el-form-item>
             <el-form-item class="start" :label="$t('sys.address1')">
@@ -101,12 +102,7 @@
 
 <script>
 // import { redEnvelopeAdd, redEnvelopeModify, redEnvelopeList, redEnvelopeDelete } from '@/api/operation'
-import {
-  warehousesAdd,
-  warehousesModify,
-  warehousesList,
-  warehousesDel,
-} from "@/api/warehouse";
+import { warehousesAdd, warehousesModify, warehousesList, warehousesDel, warehousesInfo} from "@/api/warehouse";
 export default {
   components: {},
   data() {
@@ -193,19 +189,19 @@ export default {
     showDataEditor(data) {
 
       this.form = this.setForm(data);
-      //  warehousesList(data.id).then((res) => {
-      //    console.log(res);
-      // });
+       warehousesInfo(data.id).then((res) => {
+        //  console.log(res);
+      });
       this.formEditDialog = true;
     },
     imageUploadSuccess(res) {
       this.form.image = res.md5;
-      console.log(res);
+      // console.log(res);
     },
 
     saveDataFunc() {
       this.submitDisabled = true;
-      console.log(this.form);
+      // console.log(this.form);
       this.address.coord = [this.address.lon, this.address.lat];
       this.placeCheck();
       this.form.address = JSON.stringify(this.address);
@@ -232,7 +228,7 @@ export default {
       }
     },
     deleteDataFunc(row) {
-      console.log(row.id);
+      // console.log(row.id);
       warehousesDel(row.id).then((res) => {
         this.getDataListFun();
       });
@@ -240,14 +236,17 @@ export default {
     getDataListFun() {
       warehousesList(this.searchForm).then((res) => {
         this.tableData = res.items;
-        console.log(res);
+        this.itemCount=res.total
+        // console.log(res);
       });
     },
   },
   mounted() {
     this.getDataListFun();
   },
-  created() {},
+  created() {
+    // console.log(this.form);
+  },
 };
 </script>
 
@@ -263,4 +262,5 @@ export default {
     width: 300px;
   }
 }
+
 </style>
