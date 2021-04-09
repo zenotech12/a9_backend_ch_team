@@ -12,7 +12,7 @@ export function warehousesList(data) {
 // 仓库详情
 export function warehousesInfo(id) {
   return request({
-    url: 'warehouses/'+id,
+    url: 'warehouses/' +id,
     method: 'get'
   })
 }
@@ -39,7 +39,7 @@ export function warehousesModify(id, data) {
 // 仓库删除
 export function warehousesDel(id) {
   return request({
-    url: 'warehouses/' + id ,
+    url: 'warehouses/' + id,
     method: 'delete'
   })
 }

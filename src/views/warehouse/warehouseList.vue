@@ -48,6 +48,7 @@
             </div>
           </el-col>
         </el-row>
+        <!-- 模态框 -->
         <el-dialog
           class="dialog"
           :title="$t('warehouse.add')"
@@ -102,7 +103,13 @@
 
 <script>
 // import { redEnvelopeAdd, redEnvelopeModify, redEnvelopeList, redEnvelopeDelete } from '@/api/operation'
-import { warehousesAdd, warehousesModify, warehousesList, warehousesDel, warehousesInfo} from "@/api/warehouse";
+import {
+  warehousesAdd,
+  warehousesModify,
+  warehousesList,
+  warehousesDel,
+  warehousesInfo,
+} from "@/api/warehouse";
 export default {
   components: {},
   data() {
@@ -151,10 +158,10 @@ export default {
       if (
         this.address.province !== "" &&
         this.address.city !== "" &&
-        this.address.area !== "" &&
         this.address.district !== "" &&
         this.address.addr !== "" &&
-        this.address.coord !== ""
+        this.address.lat !== '' && 
+        this.address.lon !== ''
       ) {
         this.placeShow = false;
         this.placeChecked = true;
@@ -187,9 +194,8 @@ export default {
       this.formEditDialog = true;
     },
     showDataEditor(data) {
-
       this.form = this.setForm(data);
-       warehousesInfo(data.id).then((res) => {
+      warehousesInfo(data.id).then((res) => {
         //  console.log(res);
       });
       this.formEditDialog = true;
@@ -205,6 +211,7 @@ export default {
       this.address.coord = [this.address.lon, this.address.lat];
       this.placeCheck();
       this.form.address = JSON.stringify(this.address);
+      console.log(this.form);
       if (this.form.id !== "") {
         warehousesModify(this.form.id, this.form)
           .then((res) => {
@@ -236,7 +243,7 @@ export default {
     getDataListFun() {
       warehousesList(this.searchForm).then((res) => {
         this.tableData = res.items;
-        this.itemCount=res.total
+        this.itemCount = res.total;
         // console.log(res);
       });
     },
@@ -245,7 +252,6 @@ export default {
     this.getDataListFun();
   },
   created() {
-    // console.log(this.form);
   },
 };
 </script>
@@ -262,5 +268,4 @@ export default {
     width: 300px;
   }
 }
-
 </style>
