@@ -3,7 +3,7 @@ export default{
   add: 'ការ​បន្ថែម​ទុក',
   remarks: 'អត្ថបទ',
   abbreviation: 'ការ​ខ្លី',
-  num: 'លេខ​ទុក',
+  num1: 'លេខ​ទុក',
   Pinyin: 'កូដ Pinyin',
   contacts: 'ទំនាក់ទំនង​ចល័តComment',
   tel: 'ទូរស័ព្ទ​ចល័ត',

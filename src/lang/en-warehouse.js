@@ -3,7 +3,7 @@ export default{
   add: 'Warehouse Add',
   remarks: 'remarks',
   abbreviation: 'abbreviation',
-  num: 'Warehouse number',
+  num1: 'Warehouse number',
   Pinyin: 'Pinyin code',
   contacts: 'MobileContacts',
   tel: 'Cell Phone',

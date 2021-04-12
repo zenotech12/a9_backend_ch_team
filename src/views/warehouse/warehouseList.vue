@@ -14,17 +14,23 @@
         <el-row>
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
+              <!-- 表格 -->
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <!-- 仓库名称 -->
                 <el-table-column prop="name" :label="$t('warehouse.name')"></el-table-column>
+                <!-- 备注 -->
                 <el-table-column :label="$t('warehouse.remarks')">
                   <template slot-scope="scope">{{scope.row.comment}}</template>
                 </el-table-column>
+                <!-- 简称 -->
                 <el-table-column :label="$t('warehouse.abbreviation')">
                   <template slot-scope="scope">{{scope.row.short_name}}</template>
                 </el-table-column>
-                <el-table-column :label="$t('warehouse.num')">
+                <!-- 数量 -->
+                <el-table-column :label="$t('warehouse.num1')">
                   <template slot-scope="scope">{{scope.row.no}}</template>
                 </el-table-column>
+                <!-- 操作 -->
                 <el-table-column :label="$t('tools.opt')" width="140" v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button
@@ -59,32 +65,41 @@
           center
         >
           <el-form label-width="100px" :model="form">
+            <!-- 仓库名称 -->
             <el-form-item :label="$t('warehouse.name')">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.num')">
+            <!-- 仓库编号 -->
+            <el-form-item :label="$t('warehouse.num1')">
               <el-input v-model="form.no"></el-input>
             </el-form-item>
+            <!-- 简称 -->
             <el-form-item :label="$t('warehouse.abbreviation')">
               <el-input v-model="form.short_name"></el-input>
             </el-form-item>
+            <!-- 拼音码 -->
             <el-form-item :label="$t('warehouse.Pinyin')">
               <el-input v-model="form.pinyin_code"></el-input>
             </el-form-item>
+            <!-- 备注 -->
             <el-form-item :label="$t('warehouse.remarks')">
               <el-input v-model="form.comment"></el-input>
             </el-form-item>
+            <!-- 手机联系人 -->
             <el-form-item :label="$t('warehouse.contacts')">
               <el-input v-model="form.contacter_name"></el-input>
             </el-form-item>
+            <!-- 联系人手机 -->
             <el-form-item :label="$t('warehouse.tel')">
               <el-input v-model="form.contacter_mobile"></el-input>
             </el-form-item>
+            <!-- 邮编 -->
             <el-form-item :label="$t('warehouse.Postcode')">
               <el-input v-model="form.postcode"></el-input>
             </el-form-item>
+            <!-- 地址选择 -->
             <el-form-item class="start" :label="$t('sys.address1')">
-              <map-selector v-model="address"></map-selector>
+              <map-selector v-model="formAddress"></map-selector>
               <div class="distpicker_error" v-if="placeShow">{{$t('sys.selectAddress')}}</div>
             </el-form-item>
           </el-form>
@@ -136,12 +151,13 @@ export default {
       form: formData,
       formEditDialog: false,
       submitDisabled: false,
-      address: {
+      formAddress: {
         province: "",
         city: "",
-        district: "",
-        addr: "",
-        coord: "",
+        area: "",
+        address: "",
+        lon: 104.917445,
+        lat: 11.558831,
       },
     };
   },
@@ -156,12 +172,12 @@ export default {
   methods: {
     placeCheck() {
       if (
-        this.address.province !== "" &&
-        this.address.city !== "" &&
-        this.address.district !== "" &&
-        this.address.addr !== "" &&
-        this.address.lat !== '' && 
-        this.address.lon !== ''
+        this.formAddress.province !== "" &&
+        this.formAddress.city !== "" &&
+        this.formAddress.district !== "" &&
+        this.formAddress.addr !== "" &&
+        this.formAddress.lat !== "" &&
+        this.formAddress.lon !== ""
       ) {
         this.placeShow = false;
         this.placeChecked = true;
@@ -184,7 +200,13 @@ export default {
           comment: "",
           contacter_name: "",
           contacter_mobile: "",
-          address: "",
+          address: {
+            province: "",
+            city: "",
+            district: "",
+            addr: "",
+            coord: [],
+          },
           postcode: "",
         };
       }
@@ -208,9 +230,14 @@ export default {
     saveDataFunc() {
       this.submitDisabled = true;
       // console.log(this.form);
-      this.address.coord = [this.address.lon, this.address.lat];
+      this.form.address.province = this.formAddress.province;
+      this.form.address.city = this.formAddress.city;
+      this.form.address.district = this.formAddress.area;
+      this.form.address.addr = this.formAddress.address;
+      this.form.address.coord.push(this.formAddress.lon, this.formAddress.lat);
       this.placeCheck();
-      this.form.address = JSON.stringify(this.address);
+      let arr = this.form.address;
+      this.form.address = JSON.stringify(arr);
       console.log(this.form);
       if (this.form.id !== "") {
         warehousesModify(this.form.id, this.form)
@@ -251,8 +278,7 @@ export default {
   mounted() {
     this.getDataListFun();
   },
-  created() {
-  },
+  created() {},
 };
 </script>
 
