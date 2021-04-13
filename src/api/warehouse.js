@@ -165,3 +165,38 @@ export function Paymentcomplete(id, data) {
     data: data
   })
 }
+
+// 仓库.库存信息
+export function warehouseInventories(data) {
+  return request({
+    url: 'warehouse-inventories',
+    method: 'get',
+    params: data
+  })
+}
+
+// 仓库.出库信息
+export function warehouseOutbounds(data) {
+  return request({
+    url: 'warehouse-outbounds',
+    method: 'get',
+    params: data
+  })
+}
+// 仓库.入库单.列表
+export function warehouseReceipts(data) {
+  return request({
+    url: 'warehouse-receipts',
+    method: 'get',
+    params: data
+  })
+}
+
+// 仓库.入库单.添加
+export function warehouseReceiptsAdd(data) {
+  return request({
+    url: 'warehouse-receipts',
+    method: 'post',
+    data: data
+  })
+}
