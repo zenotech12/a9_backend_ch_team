@@ -138,7 +138,6 @@ export default {
       ],
       timeValidSwitch: true,
       searchForm: {
-        time_valid: 1,
         skip: "",
         limit: pz,
       },
@@ -216,10 +215,19 @@ export default {
       this.formEditDialog = true;
     },
     showDataEditor(data) {
-      this.form = this.setForm(data);
-      warehousesInfo(data.id).then((res) => {
-        //  console.log(res);
-      });
+      // this.form = JSON.parse(JSON.stringify(data))
+      this.form.contacter_name = data.contacter.name
+      this.form.contacter_mobile = data.contacter.mobile
+      this.form.id = data.id
+      this.form.name = data.name
+      this.form.no = data.no
+      this.form.short_name = data.short_name
+      this.form.pinyin_code = data.pinyin_code
+      this.form.comment = data.comment
+      this.form.postcode = data.postcode
+      // warehousesInfo(data.id).then((res) => {
+      //   //  console.log(res);
+      // });
       this.formEditDialog = true;
     },
     imageUploadSuccess(res) {
@@ -287,11 +295,11 @@ export default {
   width: 100%;
   text-align: right;
 }
-.address {
-  display: flex;
-  flex-wrap: wrap;
-  > div {
-    width: 300px;
-  }
-}
+// .address {
+//   display: flex;
+//   flex-wrap: wrap;
+//   > div {
+//     width: 300px;
+//   }
+// }
 </style>

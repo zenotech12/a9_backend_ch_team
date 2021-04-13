@@ -120,3 +120,48 @@ export function purchaseModify(id, data) {
     data: data
   })
 }
+
+// 付款单列表
+export function paysList(data) {
+  return request({
+    url: 'warehouse-purchase-pays',
+    method: 'get',
+    params: data
+  })
+}
+
+// 获取单个付款单
+export function singlepaysList(id, data) {
+  return request({
+    url: 'warehouse-purchase-pays/' + id,
+    method: 'get',
+    params: data
+  })
+}
+
+// 付款单添加
+export function AddpaysList(data) {
+  return request({
+    url: 'warehouse-purchase-pays',
+    method: 'post',
+    data: data
+  })
+}
+
+// 付款单修改
+export function modifypaysList(id, data) {
+  return request({
+    url: 'warehouse-purchase-pays/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+// 采购单.支付完毕
+export function Paymentcomplete(id, data) {
+  return request({
+    url: 'warehouse-purchases/' + id + '/pay-complete',
+    method: 'put',
+    data: data
+  })
+}

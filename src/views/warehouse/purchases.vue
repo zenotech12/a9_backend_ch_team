@@ -48,8 +48,8 @@
                 <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                    <!--<span class="xiexian">/</span>-->
-                    <!--<delete-button  @delData="deleteDataFunc(scope.row)"></delete-button>-->
+                    <span class="xiexian">/</span>
+                    <el-button type="text" @click="paidListFunc(scope.row)" size="small">支付</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -136,6 +136,63 @@
             <confirm-button @confirmButton="saveDataFuncSkus()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
+        <!-- 付款单列表 -->
+        <el-dialog title="付款单列表" width="80%" @close="paidListDialog = false" :visible.sync="paidListDialog" :close-on-click-modal="false" center >
+          <el-row>
+            <el-col :span="24" class="funcList">
+              <div class="boxFuncBtn" @click="payaddData"  v-if="permissionCheck('opt')">
+                <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+                <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              </div>
+            </el-col>
+          </el-row>
+          <el-table stripe border :data="paidList" height="calc(100vh - 350px)">
+                <!-- <el-table-column prop="purchase_id" label="id"></el-table-column> -->
+                <el-table-column label="金额">
+                  <template  slot-scope="scope">
+                    {{scope.row.paid | price}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="pay_time" :label="$t('warehouse.OrderTime')" width="180"></el-table-column>
+                <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="PaymentEit(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPagePay"
+                  :page-size="pageSizePay"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCountPay">
+                </el-pagination>
+              </div>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="Paycomplete('1')" :disabled="submitDisabled" v-if="!this.paytype" confirmButtonInfor="完成付款" ></confirm-button>
+            <confirm-button @confirmButton="Paycomplete('2')" :disabled="submitDisabled" confirmButtonInfor="关闭"></confirm-button>
+          </div>
+        </el-dialog>
+        <!-- 付款单设置 -->
+        <el-dialog title="付款单设置" width="700px" append-to-body @close="payaddDialog = false" :visible.sync="payaddDialog" :close-on-click-modal="false" center >
+          <el-form label-width="100px" :model="skus">
+            <el-form-item :label="$t('warehouse.price')">
+              <price-input v-model="paiForm.paid"></price-input>
+            </el-form-item>
+            <el-form-item label="下单时间">
+            <el-date-picker
+              format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"
+              v-model="paiForm.pay_time"
+              type="datetime"
+              :placeholder="$t('order.pleaseChooseTime')">
+            </el-date-picker>
+            </el-form-item>
+           
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton=" toAdd()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -143,7 +200,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseAdd, purchaseModify, suppliersList, purchaseList } from '@/api/warehouse'
+  import { purchaseAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete ,AddpaysList, modifypaysList} from '@/api/warehouse'
   export default {
     components: {
     },
@@ -157,13 +214,17 @@
           skip: '',
           limit: pz
         },
+        paytype: false,
+        test:[],
         tableData: [],
         currentPage: 1,
         pageSize: pz,
         itemCount: 0,
         form: formData,
         formEditDialog: false,
+        formEditDialogpay: false,
         submitDisabled: false,
+        payaddDialog: false,
         skus: {
           name: '',
           origin: '',
@@ -178,7 +239,23 @@
         skusArray: [],
         skusDialog: false,
         skusEidtIndex: 0,
-        skuType: 'add'
+        skuType: 'add',
+        paidListDialog: false,
+        searchFormpay: {
+          purchase_id: '',
+          skip: '',
+          limit: pz
+        },
+        paidList: [],
+        currentPagePay: 1,
+        pageSizePay: pz,
+        itemCountPay: 0,
+        paiForm: {
+          id: '',
+          purchase_id: '',
+          paid: 0,
+          pay_time: ''
+        }
       }
     },
     computed: {
@@ -192,6 +269,11 @@
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
       },
+       currentPagePay(val) {
+        this.searchFormpay.skip = (val - 1) * this.pageSizePay
+        this.searchFormpay.limit = this.pageSizePay
+        this.getPayListFunc()
+      },
       'skus.unit_price': function(val) {
         this.skus.total_price = val * this.skus.count
       },
@@ -200,6 +282,21 @@
       }
     },
     methods: {
+      paidListFunc(data) {
+        // console.log(data);
+        this.paidListDialog = true
+        this.searchFormpay.purchase_id = data.id
+        this.paiForm.purchase_id = data.id
+        this.paytype = data.paid_complete
+        this.getPayListFunc()
+      },
+      getPayListFunc() {
+        paysList(this.searchFormpay).then(res => {
+          this.paidList = res.items
+          // console.log(res.items);
+          this.itemCountPay = res.total
+        })
+      },
       saveDataFuncSkus() {
         if (this.skus.name === '' || this.skus.origin === '') {
           this.$message.error('请输入完整!')
@@ -211,6 +308,37 @@
           this.$set(this.skusArray, this.skusEidtIndex, JSON.parse(JSON.stringify(this.skus)))
         }
         this.skusDialog = false
+      },
+      toAdd(){
+        // console.log('data', this.paiForm)
+        if(this.paiForm.id !== ''){
+          modifypaysList(this.paiForm.id, this.paiForm).then(res =>{
+          this.getPayListFunc()
+          })
+        } else {
+          AddpaysList(this.paiForm).then(res=>{
+            this.getPayListFunc()
+          })
+        }
+        this.payaddDialog = false
+      },
+      PaymentEit(data){
+        // console.log(this.paiForm);
+        this.paiForm.paid = data.paid
+        this.paiForm.id = data.id
+        this.paiForm.pay_time = data.pay_time
+        this.payaddDialog = true
+      },
+      Paycomplete(val){
+       if(val == 2){
+          this.paidListDialog = false
+       }else if(val == 1) {
+         Paymentcomplete(this.paiForm.purchase_id).then(res => {
+           this.getDataListFun()
+           this.paidListDialog = false
+         })
+   
+       }
       },
       eidtSkus(data, index) {
         this.skusEidtIndex = index
@@ -264,6 +392,12 @@
         this.skusArray = []
         this.formEditDialog = true
       },
+      payaddData() {
+        this.paiForm.id = ''
+        this.paiForm.paid = 0
+        this.paiForm.pay_time = ''
+        this.payaddDialog = true
+      },
       showDataEditor(data) {
         console.log(data)
         this.form = this.setForm(data)
@@ -300,6 +434,7 @@
         purchaseList(this.searchForm).then(res => {
           this.tableData = res.items
           this.itemCount = res.total
+          // console.log(res.items);
         })
       }
     },
