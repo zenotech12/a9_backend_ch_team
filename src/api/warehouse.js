@@ -200,3 +200,22 @@ export function warehouseReceiptsAdd(data) {
     data: data
   })
 }
+
+// 仓库.位置.批量添加
+export function warelocalAll(id, data) {
+  return request({
+    url: 'warehouses/'+ id +'/batch-positions',
+    method: 'post',
+    data: data
+  })
+}
+
+// 仓库.位置列表
+export function waregetlocallist(id, data) {
+  return request({
+    url: 'warehouses/'+ id +'/positions',
+    method: 'get',
+    params: data
+  })
+}
+

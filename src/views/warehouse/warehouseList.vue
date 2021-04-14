@@ -44,6 +44,8 @@
                     <el-button type="text" @click="showInventories(scope.row)" size="small">库存信息</el-button>
                     <span class="xiexian">/</span>
                     <el-button type="text" @click="showOutbounds(scope.row)" size="small">出入库日志</el-button>
+                    <span class="xiexian">/</span>
+                    <el-button type="text" @click="loclist(scope.row)" size="small">货位</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -258,7 +260,7 @@
                     <div v-for="(item, k) in scope.row.skus" :key="k">
                       商品名：<span>{{item.spu_name}}</span>
                       规格信息：<span>
-                              <span v-for="(sk, i) in Object.keys(item.specification)">
+                              <span v-for="(sk, i) in Object.keys(item.specification)" :key="i">
                                {{sk}}:{{i}}
                               </span>
                         </span>
@@ -318,6 +320,57 @@
             <confirm-button @confirmButton="chukuFuncSubmit" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
+        <!-- 货位列表 -->
+        <el-dialog
+          class="dialog"
+          title="货位列表"
+          width="px"
+          @close="locDialog = false"
+          :visible.sync="locDialog"
+          :close-on-click-modal="false"
+          center
+        >
+          <confirm-button @confirmButton="locallistAdd()" :disabled="submitDisabled" confirmButtonInfor="批量添加货位"></confirm-button>
+        <el-table
+          ref="multipleTable"
+          :data="locData"
+          tooltip-effect="dark"
+          style="width: 100%"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            type="selection">
+          </el-table-column>
+           <el-table-column label="日期"><template slot-scope="scope">{{ scope.row.date }}</template></el-table-column>
+         </el-table>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="saveDataFunc(row)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
+        <!-- 货位添加 -->
+        <el-dialog
+          class="dialog"
+          title="货位添加"
+          width="500px"
+          @close="locAddDialog = false"
+          :visible.sync="locAddDialog"
+          :close-on-click-modal="false"
+          center
+        >
+        <div class="localval">
+          <span>行</span>
+          <div><el-input v-model="linestar"></el-input></div>&nbsp;-&nbsp;
+          <div><el-input v-model="lineend"></el-input></div>
+        </div>
+        <div class="localval">
+          <span>列</span>
+          <div><el-input v-model="columnstar"></el-input></div>&nbsp;-&nbsp;
+          <div><el-input v-model="columnend"></el-input></div>
+        </div>
+        
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="wareLocaladd()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -335,7 +388,9 @@ import {
   warehouseReceiptsAdd,
   warehouseReceipts,
   purchaseList,
-  warehouseOutbounds
+  warehouseOutbounds,
+  warelocalAll,
+  waregetlocallist
 } from '@/api/warehouse'
 export default {
   components: {},
@@ -355,7 +410,10 @@ export default {
       },
       placeShow: false,
       placeChecked: false,
+      locDialog: false,
+      locAddDialog: false,
       tableData: [],
+      locData: [],
       currentPage: 1,
       pageSize: pz,
       itemCount: 0,
@@ -426,7 +484,12 @@ export default {
         tp: 2, // 2报废 3退回
         skus: ''
       },
-      chukuDlalog: false
+      chukuDlalog: false,
+      linestar: '',
+      lineend: '',
+      columnstar: '',
+      columnend: '',
+      Cid: []
     }
   },
 
@@ -661,6 +724,44 @@ export default {
         }
       })
     },
+    loclist(data){
+      this.Cid = data.id
+      this.locDialog = true
+      this.getlocalList(data.id)
+    },
+    locallistAdd(){
+       this.linestar = ''
+       this.lineend = ''
+       this.columnstar = ''
+       this.columnend = ''
+       this.locDialog = false
+       this.locAddDialog = true
+    },
+    getlocalList(id){
+      waregetlocallist(id).then(res=>{
+        console.log(res);
+      })
+    },
+    handleSelectionChange(val) {
+       console.log(val);
+    },
+    wareLocaladd(){
+      if(this.linestar < this.lineend && this.columnstar < this.columnend){
+        let positions = []
+        for(let i = this.linestar ; i <= this.lineend ; i ++){
+            for(let j = this.columnstar ; j <= this.columnend ; j ++){
+              positions.push(i + '-' +j)
+            }
+          }
+          console.log(this.Cid);
+          console.log(positions);
+          warelocalAll(this.Cid, positions).then(res=>{
+            
+        })
+      }else {
+        return
+      }
+      }
   },
   mounted() {
     this.getDataListFun()
@@ -695,6 +796,17 @@ export default {
 .goodsInfo {
   span {
     color: red;
+  }
+}
+.localval{
+  display: flex;
+  align-items: center;
+  >span{
+    margin-right: 5px;
+  }
+  >div{
+    margin-bottom: 5px;
+    width: 100px;
   }
 }
 // .address {
