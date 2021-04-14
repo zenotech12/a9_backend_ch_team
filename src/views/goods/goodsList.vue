@@ -98,19 +98,19 @@
                     width="55">
                   </el-table-column>
                   <el-table-column  :label="$t('goods.name')" min-width="300">
-                    <template  slot-scope="scope">
-                      <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
-                        <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
-                        <div class="g-info">
-                          <p>{{scope.row.name}}
-                            <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
-                            <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                            <!--<a class="el-icon-view"></a>-->
-                          </p>
-                        </div>
-                      </a>
-                    </template>
-                  </el-table-column>
+                  <template  slot-scope="scope">
+                    <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
+                      <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
+                      <div class="g-info">
+                        <p>{{scope.row.name}}
+                          <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
+                          <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                          <!--<a class="el-icon-view"></a>-->
+                        </p>
+                      </div>
+                    </a>
+                  </template>
+                </el-table-column>
                   <el-table-column :label="$t('goods.checkStatus')" width="110">
                     <template  slot-scope="scope">
                       <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">

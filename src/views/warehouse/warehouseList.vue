@@ -116,17 +116,37 @@
           </div>
         </el-dialog>
         <!--库存信息列表-->
-        <el-dialog class="dialog" title="库存信息" width="70%"
-          @close="inventoriesDialog=false"
-          :visible.sync="inventoriesDialog"
-          :close-on-click-modal="false"
-          center
-        >
-          <el-table stripe border :data="inventoriesList" height="calc(100% - 40px)">
+        <el-dialog class="dialog" title="库存信息" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
+          :close-on-click-modal="false" center >
+          <el-row>
+            <el-col :span="24">
+              <el-form :inline="true" :model="chuKuSearchForm">
+                <el-form-item>
+                  <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
+                                  v-model="orderTimes"
+                                  type="daterange"
+                                  align="right"
+                                  unlink-panels
+                                  :range-separator="$t('tools.to')"
+                                  :start-placeholder="$t('tools.startDate')"
+                                  :end-placeholder="$t('tools.endDate')">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <el-table stripe border :data="inventoriesList" height="calc(100vh - 360px)">
             <!-- 仓库名称 -->
             <el-table-column prop="name" label="名称"></el-table-column>
-            <el-table-column prop="origin" label="产地"></el-table-column>
-            <el-table-column prop="specification" label="规格"></el-table-column>
+            <!--<el-table-column prop="origin" label="产地"></el-table-column>-->
+            <el-table-column prop="specification" label="规格">
+              <template slot-scope="scope">
+                {{textFilter(scope.row.specification)}}
+              </template>
+            </el-table-column>
             <el-table-column prop="barcode" label="条形码"></el-table-column>
             <el-table-column prop="unit_price" label="单价">
               <template slot-scope="scope">{{scope.row.unit_price | price}}</template>
@@ -177,21 +197,24 @@
                   </div>
                 </el-col>
               </el-row>
-              <el-table stripe border :data="rukuData" height="calc(100% - 40px)">
-                <el-table-column prop="unit_price" label="商品信息">
+              <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
+                <el-table-column prop="warehouse_name" label="仓库名称" width="200px"></el-table-column>
+                <el-table-column prop="supplier_name" label="供应商名称" width="150px"></el-table-column>
+                <el-table-column prop="no" label="编号" width="150px"></el-table-column>
+                <el-table-column label="商品信息">
                   <template slot-scope="scope">
-                    <div v-for="(item, k) in scope.row.skus" :key="k">
-                      商品名：<span>{{item.spu_name}}</span>
-                      规格信息：<span>
-                              <span v-for="(sk, i) in Object.keys(item.specification)">
-                               {{sk}}:{{i}}
-                              </span>
-                        </span>
-                      数量： {{item.count}}
-                    </div>
+                      <div v-for="(item, k) in scope.row.skus" :key="k" class="goodsInfo">
+                        商品名：<span>{{item.name}}</span>
+                        位置：<span>{{item.position}}</span>
+                        规格：<span>{{textFilter(item.specification)}}</span>
+                        条形码：<span>{{item.barcode}}</span>
+                        单价：<span>{{item.unit_price | price}}</span>
+                        数量：<span>{{item.count}}</span>
+                        总价：<span>{{item.total_price | price}}</span>
+                      </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" label="时间"></el-table-column>
+                <el-table-column prop="gen_time" label="时间" width="160px"></el-table-column>
               </el-table>
               <div style="text-align: right;margin-top: 10px">
                 <el-pagination
@@ -223,10 +246,10 @@
                   </el-form>
                 </el-col>
                 <el-col :span="4" align="right">
-                  <!--<div class="boxFuncBtn2" @click="rukuFunc" v-if="permissionCheck('opt')">-->
-                    <!--<img src="../../assets/images/icon/icon_add.png" alt class="icon_add" />-->
-                    <!--<el-button type="text" size="small">{{$t('tools.add')}}</el-button>-->
-                  <!--</div>-->
+                  <div class="boxFuncBtn2" @click="chukuFunc" v-if="permissionCheck('opt')">
+                    <img src="../../assets/images/icon/icon_add.png" alt class="icon_add" />
+                    <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+                  </div>
                 </el-col>
               </el-row>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
@@ -260,7 +283,7 @@
             <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
-        <el-dialog title="入库单设置" width="60%" @close="rukuDialog=false" append-to-body :visible.sync="rukuDialog" :close-on-click-modal="false" center >
+        <el-dialog title="入库单设置" width="80%" @close="rukuDialog=false" append-to-body :visible.sync="rukuDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="rukuForm">
             <el-form-item label="类型">
               <el-radio-group v-model="rukuForm.tp" @change="tpChange">
@@ -268,38 +291,31 @@
                 <el-radio :label="2">退换货</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="订单">
-              <order-selector style="width: 400px;"></order-selector>
+            <el-form-item label="备注">
+              <el-input v-model="rukuForm.comment" type="textarea"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.pecifications')">
-              <el-table :data="skusArray" style="width: 100%">
-                <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
-                <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
-                <el-table-column prop="specification" :label="$t('warehouse.pecifications')"></el-table-column>
-                <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
-                <el-table-column prop="unit_price" :label="$t('warehouse.price')">
-                  <template slot-scope="scope">
-                    {{scope.row.unit_price | price}}
-                  </template>
-                </el-table-column>
-                <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
-                <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
-                  <template slot-scope="scope">
-                    {{scope.row.total_price | price}}
-                  </template>
-                </el-table-column>
-                <el-table-column :label="$t('warehouse.operation')">
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="eidtSkus(scope.row, scope.$index)" size="small">{{$t('tools.edit')}}</el-button>
-                    <span class="xiexian">/</span>
-                    <el-button type="text" @click="delSkus(scope.$index)" size="small">{{$t('tools.delete')}}</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
+            <el-form-item label="订单">
+              <show-sku-table v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <confirm-button @confirmButton="addRuKuForm" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
+        <el-dialog title="出库信息设置" width="80%" @close="chukuDlalog=false" append-to-body :visible.sync="chukuDlalog" :close-on-click-modal="false" center >
+          <el-form label-width="100px" :model="chukuForm">
+            <el-form-item label="类型">
+              <el-radio-group v-model="chukuForm.tp" @change="tpChange">
+                <el-radio :label="2">报废</el-radio>
+                <el-radio :label="3">退回</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="库存信息">
+                <goods-selector style="width: 300px" v-model="chukuForm.skus"></goods-selector>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="chukuFuncSubmit" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
       </div>
@@ -357,6 +373,8 @@ export default {
       // 库存信息
       inventoriesSearchForm: {
         warehouse_id: '',
+        position: '',
+        sku_uid: '',
         skip: 0,
         limit: pz
       },
@@ -370,7 +388,7 @@ export default {
         tp: 2, // 1采购单入库 2退换货
         purchase_id: '',
         warehouse_id: '',
-        skus: '',
+        skus: [],
         comment: ''
       },
       purchaseListData: [],
@@ -402,6 +420,13 @@ export default {
       currentPageruku: 1,
       pageSizeruku: pz,
       itemCountruku: 0,
+      orderId: '',
+      chukuForm: {
+        warehouse_id: '',
+        tp: 2, // 2报废 3退回
+        skus: ''
+      },
+      chukuDlalog: false
     }
   },
 
@@ -437,6 +462,36 @@ export default {
     }
   },
   methods: {
+    chukuFunc() {
+      this.chukuDlalog = true
+      this.chukuForm.tp = 2
+      this.chukuForm.skus = ''
+    },
+    chukuFuncSubmit() {
+
+    },
+    textFilter(data) {
+      let str = ''
+      const text = JSON.parse(data)
+      Object.keys(text).forEach((v, i) => {
+        if (i === 0) {
+          str = v + ':' + text[v] + ';'
+        } else {
+          str = str + v + ':' + text[v] + ';'
+        }
+      })
+      return str
+    },
+    addRuKuForm() {
+      console.log('form', this.rukuForm)
+      this.rukuForm.skus = JSON.stringify(this.rukuForm.skus)
+      warehouseReceiptsAdd(this.rukuForm).then(res => {
+        if (res.meta === 0) {
+          this.rukuDialog = false
+          this.getRuKuData()
+        }
+      })
+    },
     rukuFunc() {
       this.rukuDialog = true
     },
@@ -635,6 +690,11 @@ export default {
   .el-upload {
     display: flex;
     align-items: center;
+  }
+}
+.goodsInfo {
+  span {
+    color: red;
   }
 }
 // .address {
