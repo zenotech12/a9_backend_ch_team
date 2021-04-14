@@ -42,5 +42,12 @@ export default {
   add2: '添加',
   operation: '操作',
   SpecificationsSetup: '规格设置',
-  SupplierSettings: '供应商设置'
+  SupplierSettings: '供应商设置',
+  payment2: '支付',
+  paymentslist: '付款单列表',
+  money: '金额',
+  payset: '付款单设置',
+  close: '关闭',
+  Cpayment: '完成付款',
+  Msg: '请输入完整'
 }

@@ -31,7 +31,7 @@
                   <template slot-scope="scope">{{scope.row.no}}</template>
                 </el-table-column>
                 <!-- 操作 -->
-                <el-table-column :label="$t('tools.opt')" width="140" v-if="permissionCheck('opt')">
+                <el-table-column :label="$t('tools.opt')" width="200" v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button
                       type="text"
@@ -40,6 +40,8 @@
                     >{{$t('tools.edit')}}</el-button>
                     <span class="xiexian">/</span>
                     <delete-button @delData="deleteDataFunc(scope.row)"></delete-button>
+                    <span class="xiexian">/</span>
+                    <el-button type="text" @click="CargoArea(scope.row)" size="small">货区货位</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -111,19 +113,69 @@
             ></confirm-button>
           </div>
         </el-dialog>
+        <!-- 货区货位 -->
+        <el-dialog
+          class="dialog"
+          title="货区货位"
+          width="1200px"
+          @close="CargoAreaDialog=false"
+          :visible.sync="CargoAreaDialog"
+          :close-on-click-modal="false"
+          center
+        >
+        <confirm-button confirmButtonInfor="批量新建货位" @confirmButton="CargoAreaadd()"></confirm-button>
+        <el-table
+          ref="multipleTable"
+          :data="locData"
+          tooltip-effect="dark"
+          style="width: 100%"
+          @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column label="货位"><template slot-scope="scope">{{ scope.row.date }}</template></el-table-column>
+        </el-table>
+          <div slot="footer" class="dialog-footer">
+            <el-button size='small'>批量删除</el-button>
+            <confirm-button :disabled="submitDisabled" @confirmButton="confir()" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
+        <!-- 新建货位 -->
+        <el-dialog
+          class="dialog"
+          title="新建货位"
+          width="500px"
+          @close="CargoAreaDialog2=false"
+          :visible.sync="CargoAreaDialog2"
+          :close-on-click-modal="false"
+          center
+        >
+            <div class="carg">
+              <span>行</span>
+              <div><el-input v-model="linestar"></el-input></div>&nbsp;-&nbsp;
+              <div><el-input v-model="lineend"></el-input></div>
+            </div>
+            <div class="carg">
+              <span>列</span>
+              <div><el-input v-model="columnstar"></el-input></div>&nbsp;-&nbsp;
+              <div><el-input v-model="columnend"></el-input></div>
+            </div>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="CargoAreafun()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import { redEnvelopeAdd, redEnvelopeModify, redEnvelopeList, redEnvelopeDelete } from '@/api/operation'
 import {
-  warehousesAdd,
-  warehousesModify,
-  warehousesList,
-  warehousesDel,
-  warehousesInfo,
+  warehousesAdd, 
+  warehousesModify, 
+  warehousesList, 
+  warehousesDel, 
+  CwarehouseAdd, 
+  Locationlist, 
+  LocationDel
 } from "@/api/warehouse";
 export default {
   components: {},
@@ -144,20 +196,29 @@ export default {
       placeShow: false,
       placeChecked: false,
       tableData: [],
+      locData: [],
       currentPage: 1,
       pageSize: pz,
       itemCount: 0,
       form: formData,
+      CargoAreaDialog: false,
+      CargoAreaDialog2: false,
       formEditDialog: false,
       submitDisabled: false,
       formAddress: {
-        province: "",
-        city: "",
-        area: "",
-        address: "",
+        province: '',
+        city: '',
+        area: '',
+        address: '',
         lon: 104.917445,
         lat: 11.558831,
       },
+      positions: [],
+      linestar: '',
+      lineend: '',
+      columnstar: '',
+      columnend: '',
+      Cid: ''
     };
   },
 
@@ -216,15 +277,15 @@ export default {
     },
     showDataEditor(data) {
       // this.form = JSON.parse(JSON.stringify(data))
-      this.form.contacter_name = data.contacter.name
-      this.form.contacter_mobile = data.contacter.mobile
-      this.form.id = data.id
-      this.form.name = data.name
-      this.form.no = data.no
-      this.form.short_name = data.short_name
-      this.form.pinyin_code = data.pinyin_code
-      this.form.comment = data.comment
-      this.form.postcode = data.postcode
+      this.form.contacter_name = data.contacter.name;
+      this.form.contacter_mobile = data.contacter.mobile;
+      this.form.id = data.id;
+      this.form.name = data.name;
+      this.form.no = data.no;
+      this.form.short_name = data.short_name;
+      this.form.pinyin_code = data.pinyin_code;
+      this.form.comment = data.comment;
+      this.form.postcode = data.postcode;
       // warehousesInfo(data.id).then((res) => {
       //   //  console.log(res);
       // });
@@ -234,7 +295,7 @@ export default {
       this.form.image = res.md5;
       // console.log(res);
     },
-
+    
     saveDataFunc() {
       this.submitDisabled = true;
       // console.log(this.form);
@@ -275,18 +336,58 @@ export default {
         this.getDataListFun();
       });
     },
+    CargoArea(data) {
+      this.Cid = data.id
+      console.log(this.Cid)
+      this.CargoAreaDialog = true
+      this.getLocationlist(data.id)
+    },
+    CargoAreaadd() {
+      this.linestar = ''
+      this.lineend = ''
+      this.columnstar = ''
+      this.columnend = ''
+      this.CargoAreaDialog = false;
+      this.CargoAreaDialog2 = true;
+    },
+    getLocationlist(id){
+      Locationlist(id).then(res=>{
+       console.log(res);
+       this.locData = res.items
+     })
+    },
+    CargoAreafun(){
+      let positions = []
+      for (let i =this.linestar;i <= this.lineend; i++){
+        for (let j =this.columnstar;j < this.columnend; j++){
+            positions.push(i + "-" + j)
+        }
+      }
+      CwarehouseAdd(this.Cid, {positions: JSON.stringify(positions)}).then(res=>{
+        console.log(res);
+      })
+      this.getDataListFun()  
+      this.CargoAreaDialog2 = false
+    },
     getDataListFun() {
       warehousesList(this.searchForm).then((res) => {
-        this.tableData = res.items;
-        this.itemCount = res.total;
-        // console.log(res);
+        this.tableData = res.items
+        this.itemCount = res.total
+        // console.log(res.items);
       });
     },
+    handleSelectionChange(val) {
+      console.log(val)
+    },
+    confir(){
+      this.CargoAreaDialog = false
+    }
   },
   mounted() {
     this.getDataListFun();
   },
-  created() {},
+  created() {
+  },
 };
 </script>
 
@@ -295,11 +396,15 @@ export default {
   width: 100%;
   text-align: right;
 }
-// .address {
-//   display: flex;
-//   flex-wrap: wrap;
-//   > div {
-//     width: 300px;
-//   }
-// }
+  .carg {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    >span{
+      margin-right: 5px;
+    }
+    >div{
+      width: 100px;
+    }
+}
 </style>

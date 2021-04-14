@@ -41,5 +41,12 @@ export default{
   add2: 'បន្ថែម​ទៅ​',
   operation: 'ប្រតិបត្តិការ',
   SpecificationsSetup: 'ការ​កំណត់​បញ្ជាក់',
-  SupplierSettings: 'ការ​កំណត់​កម្មវិធី​ផ្ដល់'
+  SupplierSettings: 'ការ​កំណត់​កម្មវិធី​ផ្ដល់',
+  payment2: 'ផ្តល់',
+  paymentslist: 'បញ្ជី​ផ្តល់',
+  money: 'ចំនួន​រូបិយប័ណ្ណ',
+  payset: 'ការ​កំណត់​លំដាប់​ផ្លាយ',
+  close: 'បិទ',
+  Cpayment: 'ការ​ផ្តល់​ពេញលេញ',
+  Msg: 'សូម​បញ្ចូល​បាន​បញ្ចប់'
 }

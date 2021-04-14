@@ -22,7 +22,7 @@
                       {{$t('warehouse.name2')}}:<span>{{item.name}}</span>
                       {{$t('warehouse.PlaceofOrigin')}}:<span>{{item.origin}}</span>
                       {{$t('warehouse.pecifications')}}:<span>{{item.specification}}</span>
-                      {{$t('warehouse.pecifications')}}:<span>{{item.barcode}}</span>
+                      {{$t('warehouse.barCode')}}:<span>{{item.barcode}}</span>
                       {{$t('warehouse.price')}}: <span>{{item.unit_price | price}}</span>
                       {{$t('warehouse.num')}}: <span>{{item.count}}</span>
                       {{$t('warehouse.allprice')}}: <span>{{item.total_price | price}}</span>
@@ -49,7 +49,7 @@
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <span class="xiexian">/</span>
-                    <el-button type="text" @click="paidListFunc(scope.row)" size="small">支付</el-button>
+                    <el-button type="text" @click="paidListFunc(scope.row)" size="small">{{$t('warehouse.payment2')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -137,7 +137,7 @@
           </div>
         </el-dialog>
         <!-- 付款单列表 -->
-        <el-dialog title="付款单列表" width="80%" @close="paidListDialog = false" :visible.sync="paidListDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.paymentslist')" width="80%" @close="paidListDialog = false" :visible.sync="paidListDialog" :close-on-click-modal="false" center >
           <el-row>
             <el-col :span="24" class="funcList">
               <div class="boxFuncBtn" @click="payaddData"  v-if="permissionCheck('opt')">
@@ -148,7 +148,7 @@
           </el-row>
           <el-table stripe border :data="paidList" height="calc(100vh - 350px)">
                 <!-- <el-table-column prop="purchase_id" label="id"></el-table-column> -->
-                <el-table-column label="金额">
+                <el-table-column :label="$t('warehouse.money')">
                   <template  slot-scope="scope">
                     {{scope.row.paid | price}}
                   </template>
@@ -169,17 +169,17 @@
                 </el-pagination>
               </div>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="Paycomplete('1')" :disabled="submitDisabled" v-if="!this.paytype" confirmButtonInfor="完成付款" ></confirm-button>
-            <confirm-button @confirmButton="Paycomplete('2')" :disabled="submitDisabled" confirmButtonInfor="关闭"></confirm-button>
+            <confirm-button @confirmButton="Paycomplete(1)" :disabled="submitDisabled" v-if="!this.paytype" :confirmButtonInfor="$t('warehouse.Cpayment')" ></confirm-button>
+            <confirm-button @confirmButton="Paycomplete(2)" :disabled="submitDisabled" :confirmButtonInfor="$t('warehouse.close')"></confirm-button>
           </div>
         </el-dialog>
         <!-- 付款单设置 -->
-        <el-dialog title="付款单设置" width="700px" append-to-body @close="payaddDialog = false" :visible.sync="payaddDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.payset')" width="700px" append-to-body @close="payaddDialog = false" :visible.sync="payaddDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="skus">
             <el-form-item :label="$t('warehouse.price')">
               <price-input v-model="paiForm.paid"></price-input>
             </el-form-item>
-            <el-form-item label="下单时间">
+            <el-form-item :label="$t('warehouse.OrderTime')">
             <el-date-picker
               format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"
               v-model="paiForm.pay_time"
@@ -299,7 +299,7 @@
       },
       saveDataFuncSkus() {
         if (this.skus.name === '' || this.skus.origin === '') {
-          this.$message.error('请输入完整!')
+          this.$message.error($t('warehoues.Msg'))
           return false
         }
         if (this.skuType === 'add') {
@@ -330,9 +330,9 @@
         this.payaddDialog = true
       },
       Paycomplete(val){
-       if(val == 2){
+       if(val === 2){
           this.paidListDialog = false
-       }else if(val == 1) {
+       }else if(val === 1) {
          Paymentcomplete(this.paiForm.purchase_id).then(res => {
            this.getDataListFun()
            this.paidListDialog = false
