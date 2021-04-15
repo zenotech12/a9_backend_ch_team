@@ -18,6 +18,7 @@ import SingleFileUpload from './SingleFileUpload'
 import orderSelector from './orderSelector'
 import showSkuTable from './showSkuTable'
 import goodsSelector from './goodsSelector'
+import showSkuOrder from './showSkuOrder'
 
 // 形成组件库
 const components = [
@@ -37,7 +38,8 @@ const components = [
   MapSelector,
   orderSelector,
   showSkuTable,
-  goodsSelector
+  goodsSelector,
+  showSkuOrder
 ]
 
 // 注册全局组件

@@ -29,8 +29,9 @@
               <el-table stripe border v-loading="tableData.loading" :data="tableData.body" :row-key="productRowKey" highlight-current-row height="calc(100vh - 390px)" @current-change="selectionChange">
                 <el-table-column  :label="$t('goods.name')" min-width="300">
                   <template  slot-scope="scope">
-                    <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
-                      <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
+                    <!--<a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">-->
+                    <div class="goods-item">
+                    <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
                       <div class="g-info">
                         <p>{{scope.row.name}}
                           <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
@@ -38,7 +39,8 @@
                           <!--<a class="el-icon-view"></a>-->
                         </p>
                       </div>
-                    </a>
+                    </div>
+                    <!--</a>-->
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('goods.checkStatus')" width="110">
@@ -178,10 +180,13 @@
           this.getDataListFun()
         }
       },
-      goodId(val) {
-        if (this.orderInfo.id !== val) {
-          // this.getProductInfo()
-        }
+      goodId: {
+        handler(val) {
+          if (val === '') {
+            this.orderInfo.name = ''
+          }
+        },
+        deep: true
       }
     },
     mounted() {

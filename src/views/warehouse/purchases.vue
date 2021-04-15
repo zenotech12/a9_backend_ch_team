@@ -64,7 +64,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('warehouse.setUp')" width="1000px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.setUp')" width="70%" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
             <el-form-item :label="$t('warehouse.supplier')">
               <el-select v-model="form.supplier_id" clearable :placeholder="$t('warehouse.choice')">
@@ -76,61 +76,146 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.pecifications')">
-              <el-button type="primary" @click="addSkus" size="mini">{{$t('warehouse.add2')}}</el-button>
-              <el-table :data="skusArray" style="width: 100%">
+            <el-form-item label="采购清单">
+              <!--<el-button type="primary" @click="addSkus" size="mini">{{$t('warehouse.add2')}}</el-button>-->
+              <el-table :data="skusArray" height="calc(100vh - 440px)" style="width: 100%">
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
-                <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
-                <el-table-column prop="specification" :label="$t('warehouse.pecifications')"></el-table-column>
-                <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+                <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.origin"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
+                  <template slot-scope="scope">
+                    {{scope.row.specification}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="barcode" :label="$t('warehouse.barCode')">
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.barcode"></el-input>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="unit_price" :label="$t('warehouse.price')">
                   <template slot-scope="scope">
-                    {{scope.row.unit_price | price}}
+                    <price-input v-model="scope.row.unit_price"></price-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
+                <el-table-column prop="count" label="数量">
+                  <template slot-scope="scope">
+                    {{scope.row.nowCount}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="count" label="采购数量">
+                  <template slot-scope="scope">
+                    <el-input v-model.number="scope.row.count"></el-input>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
                   <template slot-scope="scope">
-                    {{scope.row.total_price | price}}
+                    <price-input v-model="scope.row.total_price"></price-input>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('warehouse.operation')">
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="eidtSkus(scope.row, scope.$index)" size="small">{{$t('tools.edit')}}</el-button>
-                    <span class="xiexian">/</span>
-                    <el-button type="text" @click="delSkus(scope.$index)" size="small">{{$t('tools.delete')}}</el-button>
-                  </template>
-                </el-table-column>
+                <!--<el-table-column :label="$t('warehouse.operation')">-->
+                  <!--<template slot-scope="scope">-->
+                    <!--<el-button type="text" @click="eidtSkus(scope.row, scope.$index)" size="small">{{$t('tools.edit')}}</el-button>-->
+                    <!--<span class="xiexian">/</span>-->
+                    <!--<el-button type="text" @click="delSkus(scope.$index)" size="small">{{$t('tools.delete')}}</el-button>-->
+                  <!--</template>-->
+                <!--</el-table-column>-->
               </el-table>
+              <a class="add-btn" @click="addSkus">新增</a>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
-        <el-dialog :title="$t('warehouse.SpecificationsSetup')" width="700px" append-to-body @close="skusDialog = false" :visible.sync="skusDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px" :model="skus">
-            <el-form-item :label="$t('warehouse.name2')">
-              <el-input v-model="skus.name"></el-input>
+        <el-dialog title="采购设置" width="80%" append-to-body @close="skusDialog = false" :visible.sync="skusDialog" :close-on-click-modal="false" center >
+          <el-form label-width="100px">
+            <el-form-item label="来源">
+              <el-radio-group v-model="source" @change="laiyuanChange">
+                <el-radio :label="1">商品</el-radio>
+                <el-radio :label="2">订单</el-radio>
+              </el-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.PlaceofOrigin')">
-              <el-input v-model="skus.origin"></el-input>
+            <el-form-item label="商品" v-if="source === 1">
+              <goods-selector style="width: 300px" v-model="goodsId"></goods-selector>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.pecifications')">
-              <el-input v-model="skus.specification"></el-input>
+            <el-form-item label="订单" v-if="source === 2">
+              <order-selector v-model="orderId" style="width: 300px;"></order-selector>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.barCode')">
-              <el-input v-model="skus.barcode"></el-input>
+            <el-form-item label="商品规格" v-if="source === 1">
+              <el-table :data="goodsInventoryTable" row-key="id"  @selection-change="handleSelectionChange" style="width: 100%">
+                <el-table-column
+                  type="selection"
+                  width="55">
+                </el-table-column>
+                <el-table-column prop="name" label="商品名"></el-table-column>
+                <el-table-column :label="$t('goods.sp')">
+                  <template  slot-scope="scope">
+                    {{scope.row.title}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="barcode" :label="$t('goods.barcode')">
+                  <template slot-scope="scope">
+                    <el-input v-model.number="scope.row.barcode"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="产地">
+                  <template slot-scope="scope">
+                    <el-input v-model.number="scope.row.origin"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
+                <el-table-column label="数量">
+                  <template slot="header" slot-scope="scope">
+                    数量
+                    <el-popover placement="bottom"
+                                width="200"
+                                trigger="click">
+                      <el-input v-model.number="batchCount">
+                      </el-input>
+                      <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                    </el-popover>
+                  </template>
+                  <template  slot-scope="scope">
+                    <el-input v-model.number="scope.row.count"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="单价">
+                  <template slot="header" slot-scope="scope">
+                    {{$t('goods.price')}}
+                    <el-popover placement="bottom"
+                                width="200"
+                                trigger="click">
+                      <price-input v-model="batchPrice"></price-input>
+                      <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                    </el-popover>
+                  </template>
+                  <template  slot-scope="scope">
+                    <price-input v-model="scope.row.unit_price"></price-input>
+                    <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                  </template>
+                </el-table-column>
+                <el-table-column label="总价">
+                  <template slot="header" slot-scope="scope">
+                    {{$t('goods.originalPrice')}}
+                    <el-popover placement="bottom"
+                                width="200"
+                                trigger="click">
+                      <price-input v-model="batchTotalPrice"></price-input>
+                      <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                    </el-popover>
+                  </template>
+                  <template  slot-scope="scope">
+                    <price-input v-model="scope.row.total_price"></price-input>
+                    <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                  </template>
+                </el-table-column>
+              </el-table>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.price')">
-              <price-input v-model="skus.unit_price"></price-input>
-            </el-form-item>
-            <el-form-item :label="$t('warehouse.num')">
-              <el-input v-model.number="skus.count"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('warehouse.allprice')">
-              <price-input v-model="skus.total_price"></price-input>
-            </el-form-item>
+
+
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFuncSkus()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -200,7 +285,9 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete ,AddpaysList, modifypaysList} from '@/api/warehouse'
+  import { purchaseAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList } from '@/api/warehouse'
+  import { ordersInfo } from '@/api/order'
+  import { spusSkusList, spusInfo } from '@/api/goods'
   export default {
     components: {
     },
@@ -255,7 +342,17 @@
           purchase_id: '',
           paid: 0,
           pay_time: ''
-        }
+        },
+        source: 1,
+        orderId: '',
+        goodsId: '',
+        goodsInventoryTable: [],
+        goodsInventoryData: [],
+        goodsProps: [],
+        batchCount: 0,
+        batchPrice: 0,
+        batchTotalPrice: 0,
+        multipleSelection: []
       }
     },
     computed: {
@@ -274,14 +371,183 @@
         this.searchFormpay.limit = this.pageSizePay
         this.getPayListFunc()
       },
-      'skus.unit_price': function(val) {
-        this.skus.total_price = val * this.skus.count
+      batchCount(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'count', val)
+          this.$set(item, 'total_price', item.count * item.unit_price)
+        })
       },
-      'skus.count': function(val) {
-        this.skus.total_price = val * this.skus.unit_price
+      batchPrice(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'unit_price', val)
+          this.$set(item, 'total_price', item.count * item.unit_price)
+        })
+      },
+      batchTotalPrice(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'total_price', val)
+        })
+      },
+      goodsProps: {
+        handler(val) {
+          // val.forEach((item) => {
+          //   this.goodsInventoryTable.push()
+          // })
+          this.goodsInventoryTable = []
+          const skus = this.getTreePath(0)
+          skus.forEach(item => {
+            const tableItem = { id: '', name: val[0].goodsName, origin: '', sku_uid: '', specification: this.textFilter(item), unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
+            let str = ''
+            val.forEach(gi => {
+              if (gi.name !== '' && gi.items.length > 0) {
+                str += gi.name + ':' + item[gi.name] + ';'
+              }
+            })
+            tableItem['title'] = str
+            for (let i = 0; i < this.goodsInventoryData.length; i++) {
+              const keys = Object.keys(item)
+              let isEque = true
+              for (let j = 0; j < keys.length; j++) {
+                if (this.goodsInventoryData[i].specifications[keys[j]] !== item[keys[j]]) {
+                  isEque = false
+                  break
+                }
+              }
+              if (isEque) {
+                tableItem.sku_uid = this.goodsInventoryData[i].id
+                tableItem.id = this.goodsInventoryData[i].id + str
+                tableItem.barcode = this.goodsInventoryData[i].barcode
+                tableItem.no = this.goodsInventoryData[i].no
+                tableItem.count = this.goodsInventoryData[i].inventory
+                tableItem.unit_price = this.goodsInventoryData[i].price
+                tableItem.barcode = this.goodsInventoryData[i].barcode
+                tableItem.total_price = this.goodsInventoryData[i].inventory * this.goodsInventoryData[i].price
+              }
+            }
+            this.goodsInventoryTable.push(tableItem)
+          })
+        },
+        deep: true
+      },
+      goodsInventoryTable: {
+        handler(val) {
+          if (val.length > 0) {
+            val.forEach(item => {
+              this.$set(item, 'total_price', item.count * item.unit_price)
+            })
+          }
+        },
+        deep: true
+      },
+      skusArray: {
+        handler(val) {
+          if (val.length > 0) {
+            val.forEach(item => {
+              this.$set(item, 'total_price', item.count * item.unit_price)
+            })
+          }
+        },
+        deep: true
+      },
+      goodsId(val) {
+        if (val !== '') {
+          this.getGoodsSkus(val)
+        }
       }
     },
     methods: {
+      laiyuanChange() {
+        this.goodsInventoryTable = []
+      },
+      getGoodsSkus(id) {
+        spusSkusList(id, { skip: 0, limit: -1 }).then(res => {
+          this.goodsInventoryData = res.items
+          this.getGoodsInfo(id)
+        })
+      },
+      getGoodsInfo(id) {
+        spusInfo(id).then(res => {
+          this.goodsProps = []
+          if (res.meta === 0) {
+            res.item.specification_options && res.item.specification_options.forEach((op) => {
+              this.goodsProps.push({ name: op.name, items: op.items, goodsName: res.item.name })
+            })
+          }
+        })
+      },
+      handleSelectionChange(val) {
+        // console.log('er', val)
+        this.multipleSelection = []
+        this.multipleSelection = val
+        // val.forEach((item) => {
+        //   this.multipleSelection.push(item.id)
+        // })
+      },
+      getTreePath(k) {
+        const path = []
+        if (k > this.goodsProps.length - 1 || !this.goodsProps[k] || !this.goodsProps[k].items || this.goodsProps[k].items < 1) {
+          return path
+        }
+        for (let i = 0; i < this.goodsProps[k].items.length; i++) {
+          const child = this.getTreePath(k + 1)
+          if (child.length < 1) {
+            const item = {}
+            item[this.goodsProps[k].name] = this.goodsProps[k].items[i]
+            path.push(item)
+            // this.getTreePath(k++)
+          } else {
+            for (let j = 0; j < child.length; j++) {
+              const ni = JSON.parse(JSON.stringify(child[j]))
+              ni[this.goodsProps[k].name] = this.goodsProps[k].items[i]
+              path.push(ni)
+            }
+          }
+        }
+        return path
+      },
+      textFilter(data) {
+        let str = ''
+        const text = data
+        Object.keys(text).forEach((v, i) => {
+          if (i === 0) {
+            str = v + ':' + text[v] + ';'
+          } else {
+            str = str + v + ':' + text[v] + ';'
+          }
+        })
+        return str
+      },
+      getOrderInfo(id) {
+        ordersInfo(id).then(res => {
+          if (res.meta === 0) {
+            // this.skusArray = []
+            const array = res.item.merchant_item.goods_items
+            array && array.forEach(value => {
+              const goodsinfo = value.goods_info
+              const obj = {
+                id: (goodsinfo.sku_url !== '' ? goodsinfo.sku_url : goodsinfo.sku_id) + this.textFilter(goodsinfo.specifications),
+                name: goodsinfo.spu_name,
+                origin: '',
+                specification: this.textFilter(goodsinfo.specifications),
+                sku_uid: goodsinfo.sku_url !== '' ? goodsinfo.sku_url : goodsinfo.sku_id,
+                barcode: goodsinfo.barcode,
+                unit_price: goodsinfo.unit_pay_price,
+                count: goodsinfo.count,
+                nowCount: goodsinfo.count,
+                total_price: goodsinfo.pay_price
+              }
+              const index = this.skusArray.findIndex(z => {
+                if (z.id === obj.id) {
+                  return z
+                }
+              })
+              if (index === -1) {
+                this.skusArray.push(obj)
+              }
+            })
+          }
+        })
+      },
       paidListFunc(data) {
         // console.log(data);
         this.paidListDialog = true
@@ -298,15 +564,29 @@
         })
       },
       saveDataFuncSkus() {
-        if (this.skus.name === '' || this.skus.origin === '') {
-          this.$message.error('请输入完整!')
-          return false
+        if (this.source === 1) {
+          if (this.goodsId === '') {
+            this.$message.error('请选择商品')
+            return
+          }
+          this.multipleSelection.forEach((item, k) => {
+            const index = this.skusArray.findIndex(v => {
+              if (v.id === item.id) {
+                return v
+              }
+            })
+            if (index === -1) {
+              this.skusArray.push(this.multipleSelection[k])
+            }
+          })
+        } else if (this.source === 2) {
+          if (this.orderId === '') {
+            this.$message.error('请选择订单')
+            return
+          }
+          this.getOrderInfo(this.orderId)
         }
-        if (this.skuType === 'add') {
-          this.skusArray.push(JSON.parse(JSON.stringify(this.skus)))
-        } else if (this.skuType === 'edit') {
-          this.$set(this.skusArray, this.skusEidtIndex, JSON.parse(JSON.stringify(this.skus)))
-        }
+        console.log('array', this.skusArray)
         this.skusDialog = false
       },
       toAdd() {
@@ -339,33 +619,12 @@
           })
         }
       },
-      eidtSkus(data, index) {
-        this.skusEidtIndex = index
-        this.skuType = 'edit'
-        this.skusDialog = true
-        this.skus.name = data.name
-        this.skus.origin = data.origin
-        this.skus.specification = data.specification
-        this.skus.sku_uid = data.sku_uid
-        this.skus.barcode = data.barcode
-        this.skus.unit_price = data.unit_price
-        this.skus.count = data.count
-        this.skus.total_price = data.total_price
-      },
-      delSkus(index) {
-        this.skusArray.splice(index, 1)
-      },
       addSkus() {
         this.skusDialog = true
-        this.skuType = 'add'
-        this.skus.name = ''
-        this.skus.origin = ''
-        this.skus.specification = ''
-        this.skus.sku_uid = ''
-        this.skus.barcode = ''
-        this.skus.unit_price = 0
-        this.skus.count = 0
-        this.skus.total_price = 0
+        this.source = 1
+        this.orderId = ''
+        this.goodsId = ''
+        this.goodsInventoryTable = []
       },
       setForm(data) {
         if (data) {
@@ -400,6 +659,9 @@
       showDataEditor(data) {
         console.log(data)
         this.form = this.setForm(data)
+        data.skus && data.skus.forEach(value => {
+          value['id'] = value.sku_uid + value.specification
+        })
         this.skusArray = data.skus
         this.formEditDialog = true
       },
@@ -450,6 +712,18 @@
 .goodSkusBox {
   span {
     color: red;
+  }
+}
+.add-btn{
+  display: block;
+  width: 100%;
+  background-color: #f6f7f9;
+  line-height: 50px;
+  text-align: center;
+  font-size: 14px;
+  color: #88898a;
+  &:hover{
+    color: rgb(30, 66, 121);
   }
 }
 </style>
