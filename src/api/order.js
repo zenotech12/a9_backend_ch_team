@@ -17,6 +17,13 @@ export function ordersList(data) {
     params: data
   })
 }
+// 订单.详情
+export function ordersInfo(id) {
+  return request({
+    url: 'orders/' + id,
+    method: 'get'
+  })
+}
 
 // 订单.发货
 export function ordersExpress(id, data) {
@@ -178,3 +185,5 @@ export function orderTransRecords(id, data) {
     data: data
   })
 }
+
+

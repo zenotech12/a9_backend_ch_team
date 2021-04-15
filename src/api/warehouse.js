@@ -166,7 +166,7 @@ export function Paymentcomplete(id, data) {
   })
 }
 
-<<<<<<< HEAD
+
 // 仓库.位置.批量添加
 export function CwarehouseAdd(id, data) {
   return request({
@@ -180,7 +180,12 @@ export function CwarehouseAdd(id, data) {
 export function Locationlist(id, data) {
   return request({
     url: 'warehouses/' + id + '/positions',
-=======
+    method: 'get',
+    params: data
+  })
+}
+
+
 // 仓库.库存信息
 export function warehouseInventories(data) {
   return request({
@@ -202,22 +207,21 @@ export function warehouseOutbounds(data) {
 export function warehouseReceipts(data) {
   return request({
     url: 'warehouse-receipts',
->>>>>>> 1bbf45786259848692068e1fd7ff6708aff3e334
     method: 'get',
     params: data
   })
 }
 
-<<<<<<< HEAD
+
 // 仓库.位置.批量删除
 export function LocationDel(id, data) {
   return request({
     url: 'warehouses/' + id + '/batch-positions',
     method: 'delete',
-    data: data
+    params: data
   })
 }
-=======
+
 // 仓库.入库单.添加
 export function warehouseReceiptsAdd(data) {
   return request({
@@ -226,4 +230,22 @@ export function warehouseReceiptsAdd(data) {
     data: data
   })
 }
->>>>>>> 1bbf45786259848692068e1fd7ff6708aff3e334
+
+// 仓库.位置.批量添加
+export function warelocalAll(id, data) {
+  return request({
+    url: 'warehouses/'+ id +'/batch-positions',
+    method: 'post',
+    data: data
+  })
+}
+
+// 仓库.位置列表
+export function waregetlocallist(id, data) {
+  return request({
+    url: 'warehouses/'+ id +'/positions',
+    method: 'get',
+    params: data
+  })
+}
+

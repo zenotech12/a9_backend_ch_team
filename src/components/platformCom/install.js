@@ -16,6 +16,8 @@ import propSelector from './propSelector'
 import MapSelector from './MapSelector'
 import SingleFileUpload from './SingleFileUpload'
 import orderSelector from './orderSelector'
+import showSkuTable from './showSkuTable'
+import goodsSelector from './goodsSelector'
 
 // 形成组件库
 const components = [
@@ -33,7 +35,9 @@ const components = [
   expressSelector,
   propSelector,
   MapSelector,
-  orderSelector
+  orderSelector,
+  showSkuTable,
+  goodsSelector
 ]
 
 // 注册全局组件
