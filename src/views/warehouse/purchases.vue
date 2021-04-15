@@ -187,7 +187,7 @@
               :placeholder="$t('order.pleaseChooseTime')">
             </el-date-picker>
             </el-form-item>
-           
+
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton=" toAdd()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -215,7 +215,7 @@
           limit: pz
         },
         paytype: false,
-        test:[],
+        test: [],
         tableData: [],
         currentPage: 1,
         pageSize: pz,
@@ -269,7 +269,7 @@
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
       },
-       currentPagePay(val) {
+      currentPagePay(val) {
         this.searchFormpay.skip = (val - 1) * this.pageSizePay
         this.searchFormpay.limit = this.pageSizePay
         this.getPayListFunc()
@@ -309,26 +309,27 @@
         }
         this.skusDialog = false
       },
-      toAdd(){
+      toAdd() {
         // console.log('data', this.paiForm)
-        if(this.paiForm.id !== ''){
-          modifypaysList(this.paiForm.id, this.paiForm).then(res =>{
-          this.getPayListFunc()
+        if (this.paiForm.id !== '') {
+          modifypaysList(this.paiForm.id, this.paiForm).then(res => {
+            this.getPayListFunc()
           })
         } else {
-          AddpaysList(this.paiForm).then(res=>{
+          AddpaysList(this.paiForm).then(res => {
             this.getPayListFunc()
           })
         }
         this.payaddDialog = false
       },
-      PaymentEit(data){
+      PaymentEit(data) {
         // console.log(this.paiForm);
         this.paiForm.paid = data.paid
         this.paiForm.id = data.id
         this.paiForm.pay_time = data.pay_time
         this.payaddDialog = true
       },
+<<<<<<< HEAD
       Paycomplete(val){
        if(val === 2){
           this.paidListDialog = false
@@ -339,6 +340,17 @@
          })
    
        }
+=======
+      Paycomplete(val) {
+        if (val === 2) {
+          this.paidListDialog = false
+        } else if (val === 1) {
+          Paymentcomplete(this.paiForm.purchase_id).then(res => {
+            this.getDataListFun()
+            this.paidListDialog = false
+          })
+        }
+>>>>>>> 1bbf45786259848692068e1fd7ff6708aff3e334
       },
       eidtSkus(data, index) {
         this.skusEidtIndex = index

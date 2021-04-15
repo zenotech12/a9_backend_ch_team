@@ -11,36 +11,36 @@
           </el-col>
           <el-col :span ="24">
             <el-form :inline="true" :model="searchForm">
-              <el-form-item :label="$t('order.searchKey')">
-                <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 250px" clearable></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('order.no')">
-                <el-input v-model="searchForm.no" style="width: 250px" clearable></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('order.orderTime')">
-                <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
-                  v-model="orderTimes"
-                  type="daterange"
-                  align="right"
-                  unlink-panels
-                  :range-separator="$t('tools.to')"
-                  :start-placeholder="$t('tools.startDate')"
-                  :end-placeholder="$t('tools.endDate')">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
-                <template v-if="permissionCheck('opt')">
-                  <el-button type="primary" @click="exportFunc([], false)" size="small" icon="el-icon-download"></el-button>
-                  <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
-                    :action= "importUrl"
-                    :show-file-list="false"
-                    :on-success="importSuccess" :on-error="importError">
-                    <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
-                  </el-upload>
-                </template>
-              </el-form-item>
-            </el-form>
+            <el-form-item :label="$t('order.searchKey')">
+              <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 250px" clearable></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('order.no')">
+              <el-input v-model="searchForm.no" style="width: 250px" clearable></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('order.orderTime')">
+              <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
+                              v-model="orderTimes"
+                              type="daterange"
+                              align="right"
+                              unlink-panels
+                              :range-separator="$t('tools.to')"
+                              :start-placeholder="$t('tools.startDate')"
+                              :end-placeholder="$t('tools.endDate')">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+              <template v-if="permissionCheck('opt')">
+                <el-button type="primary" @click="exportFunc([], false)" size="small" icon="el-icon-download"></el-button>
+                <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
+                           :action= "importUrl"
+                           :show-file-list="false"
+                           :on-success="importSuccess" :on-error="importError">
+                  <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
+                </el-upload>
+              </template>
+            </el-form-item>
+          </el-form>
           </el-col>
         </el-row>
         <el-row>
@@ -553,9 +553,9 @@
           limit: pz,
           bt: '',
           et: '',
-          invoice:true
+          invoice: true
         },
-        allprice:0,
+        allprice: 0,
         tab_order_status: '0',
         orderTimes: [],
         tableData: [],
@@ -689,7 +689,6 @@
         this.searchForm.skip = 0
         this.searchForm.limit = val
         this.getDataListFun()
-      
       },
       // 按时间段查询订单
       orderTimes(val) {
@@ -1126,7 +1125,7 @@
       this.getDataListFun()
       this.getOrderCount()
     },
-    created() {     
+    created() {
     }
   }
 </script>
