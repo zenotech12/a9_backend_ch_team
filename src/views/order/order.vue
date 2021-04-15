@@ -479,7 +479,7 @@
                 <el-option
                   v-for="(item, k) in expressageList"
                   :key="k"
-                  v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "
+                  v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post)"
                   :label="item"
                   :value="k">
                 </el-option>
