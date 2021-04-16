@@ -133,5 +133,6 @@ export default {
   lowMarginGoods: 'Low-margin goods',
   noLowMarginGoods: 'Non-low-margin goods',
   introGoods: 'Features',
-  introDetail: 'Text description'
+  introDetail: 'Text description',
+  goodslist: 'Product list'
 }

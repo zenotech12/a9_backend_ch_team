@@ -1,9 +1,9 @@
 <template>
     <div>
-        <el-input readonly placeholder="请选择订单" clearable v-model="orderInfo.no" @clear="clearInput">
+        <el-input readonly :placeholder="$t('warehouse.TipsMsg2')" clearable v-model="orderInfo.no" @clear="clearInput">
             <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
         </el-input>
-        <el-dialog title="订单列表" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
+        <el-dialog :title="$('operation.orderList')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
             <v-pageSearch style="padding: 0px;">
               <el-form :inline="true" :model="searchForm">
                 <el-form-item :label="$t('order.searchKey')">
@@ -287,8 +287,8 @@
         }
       },
       goodId(val) {
-        if (this.orderInfo.id !== val) {
-          // this.getProductInfo()
+        if (val === '') {
+          this.orderInfo.no = ''
         }
       }
     },

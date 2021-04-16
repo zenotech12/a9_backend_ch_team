@@ -139,5 +139,6 @@ export default {
   lowMarginGoods: '低利润商品',
   noLowMarginGoods: '非低利润商品',
   introGoods: '特色',
-  introDetail: '文字说明'
+  introDetail: '文字说明',
+  goodslist: '商品列表'
 }

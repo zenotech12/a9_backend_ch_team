@@ -19,9 +19,17 @@
                 <el-input v-model="scope.row.barcode"></el-input>
               </template>
             </el-table-column>
-            <el-table-column label="位置">
+            <el-table-column :abel="$t('warehouse.position')">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.position"></el-input>
+                <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
+                  <el-option
+                    v-for="item in position"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.name">
+                  </el-option>
+                </el-select>
+                <!--<el-input v-model="scope.row.position"></el-input>-->
               </template>
             </el-table-column>
             <el-table-column prop="unit_price" :label="$t('warehouse.price')">
@@ -29,12 +37,12 @@
                 {{scope.row.unit_price | price}}
               </template>
             </el-table-column>
-            <el-table-column prop="count" label="订单数量">
+            <el-table-column prop="count" :label="$t('warehouse.ordernum')">
               <template slot-scope="scope">
                 {{scope.row.nowCount}}
               </template>
             </el-table-column>
-            <el-table-column prop="count" label="退换货数量">
+            <el-table-column prop="count" :label="$t('warehouse.Returnquantity')">
               <template slot-scope="scope">
                 <el-input-number v-model="scope.row.count" :min="1" :max="scope.row.count"></el-input-number>
               </template>
@@ -69,6 +77,18 @@
         default: function() {
           return []
         }
+      },
+      position: {
+        type: Array,
+        default: function() {
+          return []
+        }
+      },
+      resetForm: {
+        type: Boolean,
+        default: function() {
+          return false
+        }
       }
     },
     watch: {
@@ -80,12 +100,26 @@
       skus: {
         handler(val) {
           this.skusArray = val
+          if (val.length === 0) {
+            this.orderId = ''
+            this.skusArray = []
+          }
         },
         deep: true
       },
       skusArray: {
         handler(val) {
           this.$emit('onchange', val)
+        },
+        deep: true
+      },
+      resetForm: {
+        handler(val) {
+          console.log('vvvvv', val)
+          if (val === true) {
+            this.orderId = ''
+            this.skusArray = []
+          }
         },
         deep: true
       }

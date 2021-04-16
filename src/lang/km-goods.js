@@ -123,5 +123,6 @@ export default {
   lowMarginGoods: 'ទំនិញមានកំរិតទាប',
   noLowMarginGoods: 'ទំនិញដែលមិនមានរឹមទាប',
   introGoods: 'លក្ខណៈពិសេស',
-  introDetail: 'ការពិពណ៌នាអត្ថបទ'
+  introDetail: 'ការពិពណ៌នាអត្ថបទ',
+  goodslist: 'បញ្ជី​លទ្ធផល'
 }

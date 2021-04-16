@@ -160,5 +160,6 @@ export default {
   Totalprice: '总价',
   Delivery: '出库信息',
   Relatedorders: '相关订单ID',
-  Msg: '暂无信息'
+  Msg: '暂无信息',
+  
 }

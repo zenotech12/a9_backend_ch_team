@@ -22,8 +22,7 @@
                       {{$t('warehouse.name2')}}:<span>{{item.name}}</span>
                       {{$t('warehouse.PlaceofOrigin')}}:<span>{{item.origin}}</span>
                       {{$t('warehouse.pecifications')}}:<span>{{item.specification}}</span>
-                      {{$t('warehouse.barCode')}}:<span>{{item.barcode}}</span>
-                      {{$t('warehouse.price')}}: <span>{{item.unit_price | price}}</span>
+                      {{$t('warehouse.barCode')}}:<span>{{item.barcode}}</span> {{$t('warehouse.price')}}: <span>{{item.unit_price | price}}</span>
                       {{$t('warehouse.num')}}: <span>{{item.count}}</span>
                       {{$t('warehouse.allprice')}}: <span>{{item.total_price | price}}</span>
                     </div>
@@ -573,6 +572,7 @@
         } else if (this.skuType === 'edit') {
           this.$set(this.skusArray, this.skusEidtIndex, JSON.parse(JSON.stringify(this.skus)))
         }
+
         if (this.source === 1) {
           if (this.goodsId === '') {
             this.$message.error(this.$t('warehouse.TipsMsg'))
@@ -594,9 +594,8 @@
             return
           }
           this.getOrderInfo(this.orderId)
-
         }
-        console.log('array', this.skusArray)
+        // console.log('array', this.skusArray)
         this.skusDialog = false
       },
       toAdd() {

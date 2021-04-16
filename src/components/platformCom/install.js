@@ -19,6 +19,7 @@ import orderSelector from './orderSelector'
 import showSkuTable from './showSkuTable'
 import goodsSelector from './goodsSelector'
 import showSkuOrder from './showSkuOrder'
+import stockSelect from './stockSelect'
 
 // 形成组件库
 const components = [
@@ -39,7 +40,8 @@ const components = [
   orderSelector,
   showSkuTable,
   goodsSelector,
-  showSkuOrder
+  showSkuOrder,
+  stockSelect
 ]
 
 // 注册全局组件

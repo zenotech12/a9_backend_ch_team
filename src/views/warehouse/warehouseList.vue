@@ -122,20 +122,19 @@
           :close-on-click-modal="false" center >
           <el-row>
             <el-col :span="24">
-              <el-form :inline="true" :model="chuKuSearchForm">
+              <el-form :inline="true" :model="inventoriesSearchForm">
                 <el-form-item>
-                  <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
-                    v-model="orderTimes"
-                    type="daterange"
-                    align="right"
-                    unlink-panels
-                    :range-separator="$t('tools.to')"
-                    :start-placeholder="$t('tools.startDate')"
-                    :end-placeholder="$t('tools.endDate')">
-                  </el-date-picker>
+                  <el-select v-model="inventoriesSearchForm.position" clearable :placeholder="$t('warehouse.Pleaseselect')">
+                    <el-option
+                      v-for="item in positionList"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.name">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                  <el-button type="primary" @click="searchInStorckList" size="small" icon="el-icon-search"></el-button>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -171,6 +170,7 @@
             <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
+        <!--出入库信息-->
         <el-dialog class="dialog" :title="$t('warehouse.information')" width="70%"
                    @close="chuRuKuDialog=false"
                    :visible.sync="chuRuKuDialog"
@@ -255,20 +255,27 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
-                <el-table-column prop="unit_price" :label="$t('warehouse.Productinformation')">
+                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
+                <el-table-column :label="$t('warehouse.type')" width="200px">
                   <template slot-scope="scope">
-                    <div v-for="(item, k) in scope.row.skus" :key="k">
-                      {{$t('warehouse.Tradename')}}:<span>{{item.spu_name}}</span>
-                      {{$t('warehouse.SpecificationsMsg')}}:<span>
-                              <span v-for="(sk, i) in Object.keys(item.specification)" :key="i">
-                               {{sk}}:{{i}}
-                              </span>
-                        </span>
-                      {{$t('warehouse.num')}}: {{item.count}}
+                      <span v-if="scope.row.tp === 2">{{$t('warehouse.Scrap')}}</span>
+                      <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('warehouse.Productinformation')">
+                  <template slot-scope="scope">
+                    <div v-for="(item, k) in scope.row.skus" :key="k" class="goodsInfo">
+                      {{$t('warehouse.Tradename')}}:<span>{{item.name}}</span>
+                      {{$t('warehouse.position')}}:<span>{{item.position}}</span>
+                      {{$t('warehouse.pecifications')}}:<span>{{textFilter(item.specification)}}</span>
+                      {{$t('warehouse.barCode')}}:<span>{{item.barcode}}</span>
+                      {{$t('warehouse.price')}}:<span>{{item.unit_price | price}}</span>
+                      {{$t('warehouse.num')}}:<span>{{item.count}}</span>
+                      {{$t('warehouse.allprice')}}:<span>{{item.total_price | price}}</span>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" :label="$t('warehouse.time')"></el-table-column>
+                <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="200px"></el-table-column>
               </el-table>
               <div style="text-align: right;margin-top: 10px">
                 <el-pagination
@@ -284,7 +291,8 @@
             <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
-        <el-dialog :title="$t('warehouse.StockinorderSet')" width="80%" @close="rukuDialog=false" append-to-body :visible.sync="rukuDialog" :close-on-click-modal="false" center >
+        <!--入库设置-->
+        <el-dialog :title="$t('warehouse.StockinorderSet')" @close="resetOrder1" width="80%" append-to-body :visible.sync="rukuDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="rukuForm">
             <el-form-item :label="$t('warehouse.type')">
               <el-radio-group v-model="rukuForm.tp" @change="tpChange">
@@ -296,13 +304,14 @@
               <el-input v-model="rukuForm.comment" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('warehouse.order')">
-              <show-sku-table v-model="rukuForm.skus"></show-sku-table>
+              <show-sku-table :resetForm="resetForm" :position="positionList" v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="addRuKuForm" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
+        <!--出库信息设置-->
         <el-dialog :title="$t('warehouse.DeliverySet')" width="80%" @close="chukuDlalog=false" append-to-body :visible.sync="chukuDlalog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="chukuForm">
             <el-form-item :label="$t('warehouse.type')">
@@ -312,7 +321,32 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('warehouse.stockmsg')">
-                <goods-selector style="width: 300px" v-model="chukuForm.skus"></goods-selector>
+              <stock-select style="width: 300px;" :warehouseId="cangkuId" @goodSelectedInfo="currentKuncun" v-model="stockId"></stock-select>
+              <el-table :data="chukuArrayData" style="width: 100%" class="inputNumber">
+                <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+                <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
+                  <template slot-scope="scope">
+                    {{textFilter(scope.row.specification)}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+                <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
+                <el-table-column prop="unit_price" :label="$t('warehouse.price')">
+                  <template slot-scope="scope">
+                    {{scope.row.unit_price | price}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="count" :label="$t('warehouse.num')">
+                  <template slot-scope="scope">
+                    <el-input-number v-model="scope.row.count" :min="1" :max="scope.row.count"></el-input-number>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
+                  <template slot-scope="scope">
+                    {{scope.row.total_price | price}}
+                  </template>
+                </el-table-column>
+              </el-table>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -392,6 +426,7 @@ import {
   warehouseReceipts,
   purchaseList,
   warehouseOutbounds,
+  warehouseOutboundsAdd,
   warelocalAll,
   waregetlocallist,
   LocationDel
@@ -501,7 +536,12 @@ export default {
       lineend: '',
       columnstar: '',
       columnend: '',
-      Cid: ''
+      Cid: '',
+      positionList: [],
+      resetForm: false,
+      stockId: '',
+      cangkuId: '',
+      chukuArrayData: []
     }
   },
 
@@ -537,13 +577,39 @@ export default {
     }
   },
   methods: {
+    currentKuncun(data) {
+      console.log('data', data)
+      this.chukuArrayData.push(data)
+    },
+    searchInStorckList() {
+      this.inventoriesSearchForm.skip = 0
+      this.currentPageKuCun = 1
+      this.getInventoriesList()
+    },
     chukuFunc() {
       this.chukuDlalog = true
       this.chukuForm.tp = 2
       this.chukuForm.skus = ''
+      this.stockId = ''
+      this.chukuArrayData = []
     },
     chukuFuncSubmit() {
-
+      this.chukuForm.skus = JSON.stringify(this.chukuArrayData)
+      warehouseOutboundsAdd(this.chukuForm).then(res => {
+        if (res.meta === 0) {
+          this.getChuKuData()
+          this.chukuDlalog = false
+        }
+      })
+    },
+    resetOrder() {
+      this.rukuForm.comment = ''
+      this.rukuForm.skus = []
+      this.resetForm = true
+    },
+    resetOrder1() {
+      this.resetOrder()
+      this.rukuDialog = false
     },
     textFilter(data) {
       let str = ''
@@ -564,15 +630,18 @@ export default {
         if (res.meta === 0) {
           this.rukuDialog = false
           this.getRuKuData()
+          this.resetOrder()
         }
       })
     },
     rukuFunc() {
+      this.resetForm = false
       this.rukuDialog = true
     },
     showInventories(data) {
       this.inventoriesSearchForm.warehouse_id = data.id
       this.getInventoriesList()
+      this.getPositionList(data.id)
       this.inventoriesDialog = true
     },
     getInventoriesList() {
@@ -659,7 +728,7 @@ export default {
       this.form.image = res.md5
       // console.log(res)
     },
-    closeDialog(){
+    closeDialog() {
       this.locDialog = false
     },
     saveDataFunc() {
@@ -726,9 +795,17 @@ export default {
       this.rukuForm.warehouse_id = data.id
       this.chuKuSearchForm.warehouse_id = data.id
       this.rukuSearchForm.warehouse_id = data.id
+      this.cangkuId = data.id
+      this.chukuForm.warehouse_id = data.id
       this.getRuKuData()
       this.getChuKuData()
+      this.getPositionList(data.id)
       this.chuRuKuDialog = true
+    },
+    getPositionList(id) {
+      waregetlocallist(id).then(res => {
+        this.positionList = res.items
+      })
     },
     getRuKuData() {
       warehouseReceipts(this.rukuSearchForm).then(res => {
@@ -738,40 +815,40 @@ export default {
         }
       })
     },
-    loclist(data){
+    loclist(data) {
       this.locsearchFrom.id = data.id
       this.getlocalList()
       this.locDialog = true
       this.ids = []
     },
-    locallistAdd(){
-       this.linestar = ''
-       this.lineend = ''
-       this.columnstar = ''
-       this.columnend = ''
-       this.locDialog = false
-       this.locAddDialog = true
+    locallistAdd() {
+      this.linestar = ''
+      this.lineend = ''
+      this.columnstar = ''
+      this.columnend = ''
+      this.locDialog = false
+      this.locAddDialog = true
     },
-    getlocalList(){
-      waregetlocallist(this.locsearchFrom.id).then(res=>{
+    getlocalList() {
+      waregetlocallist(this.locsearchFrom.id).then(res => {
         this.locData = res.items
         this.itemCountloc = res.total
       })
     },
     handleSelectionChange(val) {
-      for(let item of val){
-         this.ids.push(item.id)
+      for (const item of val) {
+        this.ids.push(item.id)
       }
     },
-    wareLocaladd(){
-      if(this.linestar < this.lineend && this.columnstar < this.columnend){
-        let positions = []
-        for(let i = this.linestar ; i <= this.lineend ; i ++){
-            for(let j = this.columnstar ; j <= this.columnend ; j ++){
-              positions.push(i + '-' +j)
-            }
+    wareLocaladd() {
+      if (this.linestar < this.lineend && this.columnstar < this.columnend) {
+        const positions = []
+        for (let i = this.linestar; i <= this.lineend; i++) {
+          for (let j = this.columnstar; j <= this.columnend; j++) {
+            positions.push(i + '-' + j)
+          }
         }
-        warelocalAll(this.locsearchFrom.id, {positions:JSON.stringify(positions)}).then(res=>{
+        warelocalAll(this.locsearchFrom.id, { positions: JSON.stringify(positions) }).then(res => {
           this.getlocalList()
         })
         this.locAddDialog = false
@@ -790,12 +867,12 @@ export default {
          position_ids.push(item)
         }
         // console.log(position_ids);
-        LocationDel(this.locsearchFrom.id, {position_ids:JSON.stringify(position_ids)}).then(res=>{
-          if(res.meta == 0){
+        LocationDel(this.locsearchFrom.id, { position_ids: JSON.stringify(position_ids) }).then(res => {
+          if (res.meta === 0) {
             this.getlocalList()
             this.ids = []
           }
-      })
+        })
       }
     }
   },
@@ -854,4 +931,12 @@ export default {
 //     width: 300px
 //   }
 // }
+.inputNumber {
+  /deep/ {
+    .el-input-number {
+      line-height: 26px;
+      width: 100%;
+    }
+  }
+}
 </style>

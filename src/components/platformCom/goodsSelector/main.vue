@@ -1,9 +1,9 @@
 <template>
     <div>
-        <el-input readonly placeholder="请选择商品" clearable v-model="orderInfo.name" @clear="clearInput">
+        <el-input readonly :placeholder="$t('goods.placeholder')" clearable v-model="orderInfo.name" @clear="clearInput">
             <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
         </el-input>
-        <el-dialog title="商品列表" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
+        <el-dialog :title="$t('goods.goodslist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
             <v-pageSearch style="padding: 0px;">
               <el-form :inline="true" :model="searchForm">
                 <el-form-item>

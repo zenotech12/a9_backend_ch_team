@@ -87,4 +87,10 @@ export default{
   commodityspe: 'ការបញ្ជាក់ផលិតផល',
   TipsMsg: 'សូមជ្រើសរើសផលិតផល',
   TipsMsg2: 'សូមជ្រើសរើសការបញ្ជាទិញ',
+  Seemsg: 'មើល​ព័ត៌មាន',
+  Pleaseselect: 'សូម​ជ្រើស',
+  ordernum: 'ចំនួន​លំដាប់',
+  Returnquantity: 'ត្រឡប់​ចំនួន',
+  Pleaseselect2: 'សូម​ជ្រើស​ធាតុ​ថ្នាក់',
+  informationlist: 'បញ្ជី​ព័ត៌មាន​មូលដ្ឋាន'
 }

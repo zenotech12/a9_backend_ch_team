@@ -19,7 +19,7 @@
                 <el-input v-model="scope.row.barcode"></el-input>
               </template>
             </el-table-column>
-            <el-table-column label="位置">
+            <el-table-column :label="$t('warehouse.position')">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.position"></el-input>
               </template>
@@ -29,12 +29,12 @@
                 {{scope.row.unit_price | price}}
               </template>
             </el-table-column>
-            <el-table-column prop="count" label="订单数量">
+            <el-table-column prop="count" :label="$t('warehouse.ordernum')">
               <template slot-scope="scope">
                 {{scope.row.nowCount}}
               </template>
             </el-table-column>
-            <el-table-column prop="count" label="退换货数量">
+            <el-table-column prop="count" :label="$t('warehouse.Returnquantity')">
               <template slot-scope="scope">
                 <el-input-number v-model="scope.row.count" :min="1" :max="scope.row.count"></el-input-number>
               </template>

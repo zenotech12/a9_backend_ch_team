@@ -87,4 +87,10 @@ export default{
   commodityspe: 'Product specifications',
   TipsMsg: 'Please select a commodity',
   TipsMsg2: 'Please select order',
+  Seemsg: 'see information',
+  Pleaseselect: 'Please select',
+  ordernum: 'Order quantity',
+  Returnquantity: 'Return quantity',
+  Pleaseselect2: 'Please select stock item',
+  informationlist: 'Inventory information list'
 }

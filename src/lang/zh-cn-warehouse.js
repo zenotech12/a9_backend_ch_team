@@ -88,4 +88,10 @@ export default {
   commodityspe: '商品规格',
   TipsMsg: '请选择商品',
   TipsMsg2: '请选择订单',
+  Seemsg: '查看信息',
+  Pleaseselect: '请选择',
+  ordernum: '订单数量',
+  Returnquantity: '退换货数量',
+  Pleaseselect2: '请选择库存商品',
+  informationlist: '库存信息列表'
 }

@@ -413,6 +413,11 @@
                           <img v-else @click="editorProppImageFunc(scope.$index)" :src="getImageUrl(scope.row.images[0], 20,20)"/>
                         </template>
                       </el-table-column>
+                      <el-table-column :label="$t('warehouse.stockmsg')">
+                        <template  slot-scope="scope">
+                          <el-button type="text" @click="showKuCunInfo(scope.row)" size="small">{{$t('warehouse.Seemsg')}}</el-button>
+                        </template>
+                      </el-table-column>
                     </el-table>
                   </el-form-item>
                 </template>
@@ -448,6 +453,41 @@
                 <el-button @click="commodityPreviewShow = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
               </div>
             </el-dialog>
+            <!--库存信息列表-->
+            <el-dialog class="dialog" :title="$t('warehouse.stockmsg')" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
+                       :close-on-click-modal="false" center >
+              <el-table stripe border :data="inventoriesList" height="calc(100vh - 360px)">
+                <!-- 仓库名称 -->
+                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
+                <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+                <!--<el-table-column prop="origin" label="产地"></el-table-column>-->
+                <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
+                  <template slot-scope="scope">
+                    {{textFilter(scope.row.specification)}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+                <el-table-column prop="unit_price" :label="$t('warehouse.price')">
+                  <template slot-scope="scope">{{scope.row.unit_price | price}}</template>
+                </el-table-column>
+                <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
+                <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
+                  <template slot-scope="scope">{{scope.row.total_price | price}}</template>
+                </el-table-column>
+                <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
+              </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPageKuCun"
+                  :page-size="pageSizeKuCun"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCountKuCun"
+                ></el-pagination>
+              </div>
+              <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
+              </div>
+            </el-dialog>
           </div>
         </el-col>
       </el-row>
@@ -456,6 +496,7 @@
 </template>
 
 <script>
+  import { warehouseInventories } from '@/api/warehouse'
   import { spusAdd, spusShelf, spusList, spusDel, spusModify, spuTypesUpsert, spuTypesmodify, spuTypesList, spuTypesDel, spusSkusModify, spusSkusList, goodsRestore, spusBatchDel, spusBatchShelf, spusBatchRestore } from '@/api/goods'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
@@ -609,7 +650,21 @@
         defaultExpanded: [],
         maxNumber: 0,
         funcTreeWidth: 0,
-        funcBoxWidth: 0
+        funcBoxWidth: 0,
+        // 库存信息
+        inventoriesSearchForm: {
+          warehouse_id: '',
+          position: '',
+          sku_uid: '',
+          skip: 0,
+          limit: 10
+        },
+        inventoriesList: [],
+        currentPageKuCun: 1,
+
+        pageSizeKuCun: 10,
+        itemCountKuCun: 0,
+        inventoriesDialog: false
       }
     },
     created() {
@@ -694,6 +749,11 @@
           this.forms.parent_id = val[val.length - 1]
         }
       },
+      currentPageKuCun(val) {
+        this.inventoriesSearchForm.skip = (val - 1) * this.pageSizeKuCun
+        this.inventoriesSearchForm.limit = this.pageSizeKuCun
+        this.getInventoriesList()
+      },
       goodsProps: {
         handler(val) {
           // val.forEach((item) => {
@@ -721,6 +781,7 @@
               }
               if (isEque) {
                 tableItem.inventory = this.goodsInventoryData[i].inventory
+                tableItem.id = this.goodsInventoryData[i].id
                 tableItem.weight = this.goodsInventoryData[i].weight
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.no = this.goodsInventoryData[i].no
@@ -760,6 +821,20 @@
       }
     },
     methods: {
+      showKuCunInfo(data) {
+        console.log('data', data)
+        this.inventoriesSearchForm.sku_uid = data.id
+        this.getInventoriesList()
+        this.inventoriesDialog = true
+      },
+      getInventoriesList() {
+        warehouseInventories(this.inventoriesSearchForm).then(res => {
+          if (res.meta === 0) {
+            this.inventoriesList = res.items
+            this.itemCountKuCun = res.total
+          }
+        })
+      },
       nodeOpen(data, node, obj) {
         this.defaultExpanded.push(data.id)
         console.log('node', node)
