@@ -166,6 +166,26 @@ export function Paymentcomplete(id, data) {
   })
 }
 
+
+// 仓库.位置.批量添加
+export function CwarehouseAdd(id, data) {
+  return request({
+    url: 'warehouses/' + id + '/batch-positions',
+    method: 'post',
+    data: data
+  })
+}
+
+// 仓库.位置列表
+export function Locationlist(id, data) {
+  return request({
+    url: 'warehouses/' + id + '/positions',
+    method: 'get',
+    params: data
+  })
+}
+
+
 // 仓库.库存信息
 export function warehouseInventories(data) {
   return request({
@@ -188,6 +208,16 @@ export function warehouseReceipts(data) {
   return request({
     url: 'warehouse-receipts',
     method: 'get',
+    params: data
+  })
+}
+
+
+// 仓库.位置.批量删除
+export function LocationDel(id, data) {
+  return request({
+    url: 'warehouses/' + id + '/batch-positions',
+    method: 'delete',
     params: data
   })
 }

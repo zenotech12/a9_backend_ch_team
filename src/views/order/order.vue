@@ -222,6 +222,9 @@
                     <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17"  type="text" @click="showExpressEditor(scope.row,4)" size="small" style="margin-left: 0">
                       {{$t('order.price4Note')}}
                     </el-button>
+                     <el-button type="text" @click="deliveryMsg(scope.row)" size="small" style="margin-left: 0">
+                      出库信息
+                    </el-button>
                     <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
                       {{$t('order.purchaseOrderReview')}}
                     </el-button>
@@ -476,7 +479,7 @@
                 <el-option
                   v-for="(item, k) in expressageList"
                   :key="k"
-                  v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "
+                  v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post)"
                   :label="item"
                   :value="k">
                 </el-option>
@@ -516,6 +519,26 @@
             <el-button size="small" type="primary" @click="confirmAddWuliuJiLu">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
+        <el-dialog
+          width="70%"
+          title="出库信息"
+          :visible.sync="DeliveryMsgDialog"
+          append-to-body>
+           <div>
+             <div v-for="(item,key) in this.warehousedata" :key="key">
+               <div class="wtitle">仓库名称 : {{item.warehouse_name}}</div>
+                <div class="witems" v-for="(val,i) in item.skus" :key="i">
+                  <div>名称 : {{val.name}}</div>
+                  <div>规格信息 : {{val.specification}}</div>
+                  <div>数量 : {{val.count}}</div>
+                  <div>条形码 : {{val.barcode}}</div>
+                </div>
+             </div>
+           </div>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="primary">{{$t('tools.confirm')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -524,6 +547,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords } from '@/api/order'
+  import { warehouseOutbounds } from '@/api/warehouse'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import areaInfo from '@/utils/areaInfo'
@@ -573,6 +597,7 @@
         expressOrder: { shipping_address: { address: {}}},
         formEditDialog: false,
         submitDisabled: false,
+        DeliveryMsgDialog: false,
         expressageList: expressage,
         payPrice: 0,
         comment: '',
@@ -594,6 +619,8 @@
         expressRiderInfo: [],
         addressArray: [],
         optionsAddress: [],
+        warehousedata: '',
+        Waredata : [],
         typeProp: { value: 'name', label: 'name', children: 'children' },
         listV: [
           {
@@ -1072,6 +1099,14 @@
         this.currentPage = 1
         this.getDataListFun()
         this.getOrderCount()
+      },
+      deliveryMsg(data){
+        data.id = ''
+        warehouseOutbounds({order_id:data.id}).then(res=>{
+          this.warehousedata = res.items
+          console.log(this.warehousedata);
+        })
+        this.DeliveryMsgDialog = true
       }
     },
     mounted() {
@@ -1218,5 +1253,14 @@
     margin-right: 10px;
     height: 100px;
     line-height: 100px;
+  }
+  .wtitle{
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  .witems{
+    >div{
+      margin-left: 20px;
+    }
   }
 </style>

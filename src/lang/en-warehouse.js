@@ -41,5 +41,12 @@ export default{
   add2: 'add to',
   operation: 'operation',
   SpecificationsSetup: 'Specification setting',
-  SupplierSettings: 'Supplier settings'
+  SupplierSettings: 'Supplier settings',
+  payment2: 'payment',
+  paymentslist: 'Payment list',
+  money: 'amount of money',
+  payset: 'Payment order settings',
+  close: 'Close',
+  Cpayment: 'Complete payment',
+  Msg: 'Please input complete'
 }

@@ -41,11 +41,11 @@
                     <span class="xiexian">/</span>
                     <delete-button @delData="deleteDataFunc(scope.row)"></delete-button>
                     <span class="xiexian">/</span>
-                    <el-button type="text" @click="showInventories(scope.row)" size="small">库存信息</el-button>
+                    <el-button type="text" @click="showInventories(scope.row)" size="small">{{$t('warehouse.stockmsg')}}</el-button>
                     <span class="xiexian">/</span>
-                    <el-button type="text" @click="showOutbounds(scope.row)" size="small">出入库日志</el-button>
+                    <el-button type="text" @click="showOutbounds(scope.row)" size="small">{{$t('warehouse.journal')}}</el-button>
                     <span class="xiexian">/</span>
-                    <el-button type="text" @click="loclist(scope.row)" size="small">货位</el-button>
+                    <el-button type="text" @click="loclist(scope.row)" size="small">{{$t('warehouse.location')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -111,27 +111,27 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button
-              @confirmButton="saveDataFunc(row)"
+              @confirmButton="saveDataFunc()"
               :disabled="submitDisabled"
               :confirmButtonInfor="$t('tools.confirm')"
             ></confirm-button>
           </div>
         </el-dialog>
         <!--库存信息列表-->
-        <el-dialog class="dialog" title="库存信息" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
+        <el-dialog class="dialog" :title="$t('warehouse.stockmsg')" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
           :close-on-click-modal="false" center >
           <el-row>
             <el-col :span="24">
               <el-form :inline="true" :model="chuKuSearchForm">
                 <el-form-item>
                   <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
-                                  v-model="orderTimes"
-                                  type="daterange"
-                                  align="right"
-                                  unlink-panels
-                                  :range-separator="$t('tools.to')"
-                                  :start-placeholder="$t('tools.startDate')"
-                                  :end-placeholder="$t('tools.endDate')">
+                    v-model="orderTimes"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    :range-separator="$t('tools.to')"
+                    :start-placeholder="$t('tools.startDate')"
+                    :end-placeholder="$t('tools.endDate')">
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item>
@@ -142,22 +142,22 @@
           </el-row>
           <el-table stripe border :data="inventoriesList" height="calc(100vh - 360px)">
             <!-- 仓库名称 -->
-            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
             <!--<el-table-column prop="origin" label="产地"></el-table-column>-->
-            <el-table-column prop="specification" label="规格">
+            <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
               <template slot-scope="scope">
                 {{textFilter(scope.row.specification)}}
               </template>
             </el-table-column>
-            <el-table-column prop="barcode" label="条形码"></el-table-column>
-            <el-table-column prop="unit_price" label="单价">
+            <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+            <el-table-column prop="unit_price" :label="$t('warehouse.price')">
               <template slot-scope="scope">{{scope.row.unit_price | price}}</template>
             </el-table-column>
-            <el-table-column prop="count" label="数量"></el-table-column>
-            <el-table-column prop="total_price" label="总价">
+            <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
+            <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
               <template slot-scope="scope">{{scope.row.total_price | price}}</template>
             </el-table-column>
-            <el-table-column prop="position" label="位置"></el-table-column>
+            <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
           </el-table>
           <div style="text-align: right;margin-top: 10px">
             <el-pagination
@@ -171,15 +171,15 @@
             <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
-        <el-dialog class="dialog" title="出入库信息" width="70%"
+        <el-dialog class="dialog" :title="$t('warehouse.information')" width="70%"
                    @close="chuRuKuDialog=false"
                    :visible.sync="chuRuKuDialog"
                    :close-on-click-modal="false"
                    center
         >
           <el-tabs v-model="activeChuRuKu">
-            <el-tab-pane label="入库列表" name="1"></el-tab-pane>
-            <el-tab-pane label="出库列表" name="2"></el-tab-pane>
+            <el-tab-pane :label="$t('warehouse.enterlist')" name="1"></el-tab-pane>
+            <el-tab-pane :label="$t('warehouse.outlist')" name="2"></el-tab-pane>
             <div v-if="activeChuRuKu === '1'">
               <el-row>
                 <el-col :span="20">
@@ -200,23 +200,23 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
-                <el-table-column prop="warehouse_name" label="仓库名称" width="200px"></el-table-column>
-                <el-table-column prop="supplier_name" label="供应商名称" width="150px"></el-table-column>
-                <el-table-column prop="no" label="编号" width="150px"></el-table-column>
-                <el-table-column label="商品信息">
+                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
+                <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
+                <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
+                <el-table-column :label="$t('warehouse.Productinformation')">
                   <template slot-scope="scope">
                       <div v-for="(item, k) in scope.row.skus" :key="k" class="goodsInfo">
-                        商品名：<span>{{item.name}}</span>
-                        位置：<span>{{item.position}}</span>
-                        规格：<span>{{textFilter(item.specification)}}</span>
-                        条形码：<span>{{item.barcode}}</span>
-                        单价：<span>{{item.unit_price | price}}</span>
-                        数量：<span>{{item.count}}</span>
-                        总价：<span>{{item.total_price | price}}</span>
+                        {{$t('warehouse.Tradename')}}:<span>{{item.name}}</span>
+                        {{$t('warehouse.position')}}:<span>{{item.position}}</span>
+                        {{$t('warehouse.pecifications')}}:<span>{{textFilter(item.specification)}}</span>
+                        {{$t('warehouse.barCode')}}:<span>{{item.barcode}}</span>
+                        {{$t('warehouse.price')}}:<span>{{item.unit_price | price}}</span>
+                        {{$t('warehouse.num')}}:<span>{{item.count}}</span>
+                        {{$t('warehouse.allprice')}}:<span>{{item.total_price | price}}</span>
                       </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" label="时间" width="160px"></el-table-column>
+                <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="160px"></el-table-column>
               </el-table>
               <div style="text-align: right;margin-top: 10px">
                 <el-pagination
@@ -255,20 +255,20 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
-                <el-table-column prop="unit_price" label="商品信息">
+                <el-table-column prop="unit_price" :label="$t('warehouse.Productinformation')">
                   <template slot-scope="scope">
                     <div v-for="(item, k) in scope.row.skus" :key="k">
-                      商品名：<span>{{item.spu_name}}</span>
-                      规格信息：<span>
+                      {{$t('warehouse.Tradename')}}:<span>{{item.spu_name}}</span>
+                      {{$t('warehouse.SpecificationsMsg')}}:<span>
                               <span v-for="(sk, i) in Object.keys(item.specification)" :key="i">
                                {{sk}}:{{i}}
                               </span>
                         </span>
-                      数量： {{item.count}}
+                      {{$t('warehouse.num')}}: {{item.count}}
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" label="时间"></el-table-column>
+                <el-table-column prop="gen_time" :label="$t('warehouse.time')"></el-table-column>
               </el-table>
               <div style="text-align: right;margin-top: 10px">
                 <el-pagination
@@ -285,18 +285,18 @@
             <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
-        <el-dialog title="入库单设置" width="80%" @close="rukuDialog=false" append-to-body :visible.sync="rukuDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.StockinorderSet')" width="80%" @close="rukuDialog=false" append-to-body :visible.sync="rukuDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="rukuForm">
-            <el-form-item label="类型">
+            <el-form-item :label="$t('warehouse.type')">
               <el-radio-group v-model="rukuForm.tp" @change="tpChange">
                 <!--<el-radio :label="1">采购单入库</el-radio>-->
-                <el-radio :label="2">退换货</el-radio>
+                <el-radio :label="2">{{$t('warehouse.Returnexchange')}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="备注">
+            <el-form-item :label="$t('warehouse.remarks')">
               <el-input v-model="rukuForm.comment" type="textarea"></el-input>
             </el-form-item>
-            <el-form-item label="订单">
+            <el-form-item :label="$t('warehouse.order')">
               <show-sku-table v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
           </el-form>
@@ -304,15 +304,15 @@
             <confirm-button @confirmButton="addRuKuForm" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
-        <el-dialog title="出库信息设置" width="80%" @close="chukuDlalog=false" append-to-body :visible.sync="chukuDlalog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.DeliverySet')" width="80%" @close="chukuDlalog=false" append-to-body :visible.sync="chukuDlalog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="chukuForm">
-            <el-form-item label="类型">
+            <el-form-item :label="$t('warehouse.type')">
               <el-radio-group v-model="chukuForm.tp" @change="tpChange">
-                <el-radio :label="2">报废</el-radio>
-                <el-radio :label="3">退回</el-radio>
+                <el-radio :label="2">{{$t('warehouse.Scrap')}}</el-radio>
+                <el-radio :label="3">{{$t('warehouse.return')}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="库存信息">
+            <el-form-item :label="$t('warehouse.stockmsg')">
                 <goods-selector style="width: 300px" v-model="chukuForm.skus"></goods-selector>
             </el-form-item>
           </el-form>
@@ -323,33 +323,38 @@
         <!-- 货位列表 -->
         <el-dialog
           class="dialog"
-          title="货位列表"
+          :title="$t('warehouse.locationList')"
           width="px"
           @close="locDialog = false"
           :visible.sync="locDialog"
           :close-on-click-modal="false"
           center
         >
-          <confirm-button @confirmButton="locallistAdd()" :disabled="submitDisabled" confirmButtonInfor="批量添加货位"></confirm-button>
-        <el-table
-          ref="multipleTable"
-          :data="locData"
-          tooltip-effect="dark"
-          style="width: 100%"
-          @selection-change="handleSelectionChange">
-          <el-table-column
-            type="selection">
-          </el-table-column>
-           <el-table-column label="日期"><template slot-scope="scope">{{ scope.row.date }}</template></el-table-column>
-         </el-table>
+          <confirm-button @confirmButton="locallistAdd()" :disabled="submitDisabled" :confirmButtonInfor="$t('warehouse.batchAdd')"></confirm-button>
+          <el-table
+            ref="multipleTable"
+            :data="locData"
+            tooltip-effect="dark"
+            style="width: 100%"
+            @selection-change="handleSelectionChange">
+            <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
+            <el-table-column
+              :label="$t('warehouse.location2')">
+              <template slot-scope="scope">{{ scope.row.name }}</template>
+            </el-table-column>
+          </el-table>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="saveDataFunc(row)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <confirm-button @confirmButton="saveDataDel()" :disabled="submitDisabled" :confirmButtonInfor="$t('warehouse.batchDel')"></confirm-button>
+            <confirm-button @confirmButton="closeDialog()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
         <!-- 货位添加 -->
         <el-dialog
           class="dialog"
-          title="货位添加"
+          :title="$t('warehouse.location2Add')"
           width="500px"
           @close="locAddDialog = false"
           :visible.sync="locAddDialog"
@@ -357,16 +362,15 @@
           center
         >
         <div class="localval">
-          <span>行</span>
+          <span>{{$t('warehouse.line')}}</span>
           <div><el-input v-model="linestar"></el-input></div>&nbsp;-&nbsp;
           <div><el-input v-model="lineend"></el-input></div>
         </div>
         <div class="localval">
-          <span>列</span>
+          <span>{{$t('warehouse.column')}}</span>
           <div><el-input v-model="columnstar"></el-input></div>&nbsp;-&nbsp;
           <div><el-input v-model="columnend"></el-input></div>
         </div>
-        
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="wareLocaladd()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
@@ -390,7 +394,8 @@ import {
   purchaseList,
   warehouseOutbounds,
   warelocalAll,
-  waregetlocallist
+  waregetlocallist,
+  LocationDel
 } from '@/api/warehouse'
 export default {
   components: {},
@@ -408,6 +413,7 @@ export default {
         skip: '',
         limit: pz
       },
+      ids: [],
       placeShow: false,
       placeChecked: false,
       locDialog: false,
@@ -438,6 +444,7 @@ export default {
       },
       inventoriesList: [],
       currentPageKuCun: 1,
+
       pageSizeKuCun: pz,
       itemCountKuCun: 0,
       inventoriesDialog: false,
@@ -474,10 +481,16 @@ export default {
         skip: '',
         limit: ''
       },
+      locsearchFrom: {
+        id: '',
+        skip: 0,
+        limit: pz
+      },
       rukuData: [],
       currentPageruku: 1,
       pageSizeruku: pz,
       itemCountruku: 0,
+      itemCountloc: 0,
       orderId: '',
       chukuForm: {
         warehouse_id: '',
@@ -489,7 +502,7 @@ export default {
       lineend: '',
       columnstar: '',
       columnend: '',
-      Cid: []
+      Cid: ''
     }
   },
 
@@ -647,7 +660,9 @@ export default {
       this.form.image = res.md5
       // console.log(res)
     },
-
+    closeDialog(){
+      this.locDialog = false
+    },
     saveDataFunc() {
       this.submitDisabled = true
       // console.log(this.form)
@@ -725,9 +740,10 @@ export default {
       })
     },
     loclist(data){
-      this.Cid = data.id
+      this.locsearchFrom.id = data.id
+      this.getlocalList()
       this.locDialog = true
-      this.getlocalList(data.id)
+      this.ids = []
     },
     locallistAdd(){
        this.linestar = ''
@@ -737,13 +753,16 @@ export default {
        this.locDialog = false
        this.locAddDialog = true
     },
-    getlocalList(id){
-      waregetlocallist(id).then(res=>{
-        console.log(res);
+    getlocalList(){
+      waregetlocallist(this.locsearchFrom.id).then(res=>{
+        this.locData = res.items
+        this.itemCountloc = res.total
       })
     },
     handleSelectionChange(val) {
-       console.log(val);
+      for(let item of val){
+         this.ids.push(item.id)
+      }
     },
     wareLocaladd(){
       if(this.linestar < this.lineend && this.columnstar < this.columnend){
@@ -752,16 +771,33 @@ export default {
             for(let j = this.columnstar ; j <= this.columnend ; j ++){
               positions.push(i + '-' +j)
             }
-          }
-          console.log(this.Cid);
-          console.log(positions);
-          warelocalAll(this.Cid, positions).then(res=>{
-            
+        }
+        warelocalAll(this.locsearchFrom.id, {positions:JSON.stringify(positions)}).then(res=>{
+          this.getlocalList()
         })
+        this.locAddDialog = false
+        this.locDialog = true
       }else {
         return
       }
+    },
+    saveDataDel(){
+      if(this.ids.length < 1){
+        this.$message.error('请选择要删除的货位')
+      }else{
+        let position_ids = []
+        for(let item of this.ids){
+         position_ids.push(item)
+        }
+        // console.log(position_ids);
+        LocationDel(this.locsearchFrom.id, {position_ids:JSON.stringify(position_ids)}).then(res=>{
+          if(res.meta == 0){
+            this.getlocalList()
+            this.ids = []
+          }
+      })
       }
+    }
   },
   mounted() {
     this.getDataListFun()
@@ -798,6 +834,7 @@ export default {
     color: red;
   }
 }
+
 .localval{
   display: flex;
   align-items: center;
