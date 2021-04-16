@@ -76,7 +76,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="采购清单">
+            <el-form-item :label="$t('warehouse.Purchaselist')">
               <!--<el-button type="primary" @click="addSkus" size="mini">{{$t('warehouse.add2')}}</el-button>-->
               <el-table :data="skusArray" height="calc(100vh - 440px)" style="width: 100%">
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
@@ -100,12 +100,12 @@
                     <price-input v-model="scope.row.unit_price"></price-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="count" label="数量">
+                <el-table-column prop="count" :label="$t('warehouse.num')">
                   <template slot-scope="scope">
                     {{scope.row.nowCount}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="count" label="采购数量">
+                <el-table-column prop="count" :label="$t('warehouse.Purchasenum')">
                   <template slot-scope="scope">
                     <el-input v-model.number="scope.row.count"></el-input>
                   </template>
@@ -123,34 +123,34 @@
                   <!--</template>-->
                 <!--</el-table-column>-->
               </el-table>
-              <a class="add-btn" @click="addSkus">新增</a>
+              <a class="add-btn" @click="addSkus">{{$t('warehouse.Newadd')}}</a>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
-        <el-dialog title="采购设置" width="80%" append-to-body @close="skusDialog = false" :visible.sync="skusDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.PurchaseSet')" width="80%" append-to-body @close="skusDialog = false" :visible.sync="skusDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px">
-            <el-form-item label="来源">
+            <el-form-item :label="$t('warehouse.source')">
               <el-radio-group v-model="source" @change="laiyuanChange">
-                <el-radio :label="1">商品</el-radio>
-                <el-radio :label="2">订单</el-radio>
+                <el-radio :label="1">{{$t('warehouse.commodity')}}</el-radio>
+                <el-radio :label="2">{{$t('warehouse.order')}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="商品" v-if="source === 1">
+            <el-form-item :label="$t('warehouse.commodity')" v-if="source === 1">
               <goods-selector style="width: 300px" v-model="goodsId"></goods-selector>
             </el-form-item>
-            <el-form-item label="订单" v-if="source === 2">
+            <el-form-item :label="$t('warehouse.order')" v-if="source === 2">
               <order-selector v-model="orderId" style="width: 300px;"></order-selector>
             </el-form-item>
-            <el-form-item label="商品规格" v-if="source === 1">
+            <el-form-item :label="$t('warehouse.commodityspe')" v-if="source === 1">
               <el-table :data="goodsInventoryTable" row-key="id"  @selection-change="handleSelectionChange" style="width: 100%">
                 <el-table-column
                   type="selection"
                   width="55">
                 </el-table-column>
-                <el-table-column prop="name" label="商品名"></el-table-column>
+                <el-table-column prop="name" :label="$t('warehouse.commodity')"></el-table-column>
                 <el-table-column :label="$t('goods.sp')">
                   <template  slot-scope="scope">
                     {{scope.row.title}}
@@ -161,15 +161,15 @@
                     <el-input v-model.number="scope.row.barcode"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="产地">
+                <el-table-column :label="$t('warehouse.PlaceofOrigin')">
                   <template slot-scope="scope">
                     <el-input v-model.number="scope.row.origin"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                <el-table-column label="数量">
+                <el-table-column :label="$t('warehouse.num')">
                   <template slot="header" slot-scope="scope">
-                    数量
+                    {{$t('warehouse.num')}}
                     <el-popover placement="bottom"
                                 width="200"
                                 trigger="click">
@@ -182,7 +182,7 @@
                     <el-input v-model.number="scope.row.count"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="单价">
+                <el-table-column :label="$t('warehouse.price')">
                   <template slot="header" slot-scope="scope">
                     {{$t('goods.price')}}
                     <el-popover placement="bottom"
@@ -197,7 +197,7 @@
                     <!--<el-input v-model.number="scope.row.price"></el-input>-->
                   </template>
                 </el-table-column>
-                <el-table-column label="总价">
+                <el-table-column :label="$t('warehouse.allprice')">
                   <template slot="header" slot-scope="scope">
                     {{$t('goods.originalPrice')}}
                     <el-popover placement="bottom"
@@ -564,19 +564,18 @@
         })
       },
       saveDataFuncSkus() {
-<<<<<<< HEAD
         if (this.skus.name === '' || this.skus.origin === '') {
-          this.$message.error($t('warehoues.Msg'))
+          this.$message.error(this.$t('warehoues.Msg'))
           return false
         }
         if (this.skuType === 'add') {
           this.skusArray.push(JSON.parse(JSON.stringify(this.skus)))
         } else if (this.skuType === 'edit') {
           this.$set(this.skusArray, this.skusEidtIndex, JSON.parse(JSON.stringify(this.skus)))
-=======
+        }
         if (this.source === 1) {
           if (this.goodsId === '') {
-            this.$message.error('请选择商品')
+            this.$message.error(this.$t('warehouse.TipsMsg'))
             return
           }
           this.multipleSelection.forEach((item, k) => {
@@ -591,11 +590,11 @@
           })
         } else if (this.source === 2) {
           if (this.orderId === '') {
-            this.$message.error('请选择订单')
+            this.$message.error(this.$t('warehouse.TipsMsg2'))
             return
           }
           this.getOrderInfo(this.orderId)
->>>>>>> 00d8681c72c1366bee8fafd346fc2f404533d543
+
         }
         console.log('array', this.skusArray)
         this.skusDialog = false

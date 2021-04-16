@@ -279,7 +279,6 @@
                 ></el-pagination>
               </div>
             </div>
-
           </el-tabs>
           <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
@@ -778,12 +777,13 @@ export default {
         this.locAddDialog = false
         this.locDialog = true
       }else {
+        this.$message.error(this.$t('warehouse.parameterMsg'))
         return
       }
     },
     saveDataDel(){
       if(this.ids.length < 1){
-        this.$message.error('请选择要删除的货位')
+        this.$message.error(this.$t('warehouse.Delmsg'))
       }else{
         let position_ids = []
         for(let item of this.ids){
@@ -839,6 +839,7 @@ export default {
   display: flex;
   align-items: center;
   >span{
+    min-width: 50px;
     margin-right: 5px;
   }
   >div{

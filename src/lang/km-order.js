@@ -135,5 +135,9 @@ export default {
   addWuLiuRecord: 'បន្ថែមកំណត់ត្រាភ័ស្តុភារ',
   DateTime: 'ពេល​ណាត់ជួប',
   pleaseChooseTime: 'សូមជ្រើសរើសកាលបរិច្ឆេទនិងពេលវេលា',
-  wuLiuRecord: 'កំណត់ត្រាភ័ស្តុភារ'
+  wuLiuRecord: 'កំណត់ត្រាភ័ស្តុភារ',
+  Totalprice: 'តម្លៃ​សរុប',
+  Delivery: 'ព័ត៌មានក្រៅស្រុក',
+  Relatedorders: 'លេខសម្គាល់លំដាប់ដែលទាក់ទង',
+  Msg: 'គ្មានព័ត៌មាន'
 }

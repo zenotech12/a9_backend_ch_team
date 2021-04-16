@@ -154,6 +154,9 @@ export default {
   pleaseChooseTime: 'Please select date and time',
   Totalprice: 'Totalprice',
   wuLiuRecord: 'Logistics records',
-  batchDetailExportFunc: 'The maximum number of exports is 20'
+  batchDetailExportFunc: 'The maximum number of exports is 20',
+  Delivery: 'Delivery information',
+  Relatedorders: 'Related order ID',
+  Msg: 'No information'
 
 }

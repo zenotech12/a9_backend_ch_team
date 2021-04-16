@@ -157,6 +157,8 @@ export default {
   wuLiuRecord: '物流记录',
   DateTime: '日期时间',
   pleaseChooseTime: '请选择日期时间',
-  Totalprice: '总价'
-
+  Totalprice: '总价',
+  Delivery: '出库信息',
+  Relatedorders: '相关订单ID',
+  Msg: '暂无信息'
 }

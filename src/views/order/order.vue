@@ -116,7 +116,7 @@
                           <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.stop="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
                         </p>
                         <p>
-                          <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
+                          <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
                         </p>
                         <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                       </div>
@@ -223,7 +223,7 @@
                       {{$t('order.price4Note')}}
                     </el-button>
                      <el-button type="text" @click="deliveryMsg(scope.row)" size="small" style="margin-left: 0">
-                      出库信息
+                      {{$t('order.Delivery')}}
                     </el-button>
                     <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
                       {{$t('order.purchaseOrderReview')}}
@@ -271,7 +271,7 @@
                 <div class="g-info">
                   <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
                   <p>
-                    <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
+                    <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
                   </p>
                   <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price | price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                 </div>
@@ -520,23 +520,25 @@
           </div>
         </el-dialog>
         <el-dialog
-          width="70%"
-          title="出库信息"
+          width="50%"
+          :title="$t('order.Delivery')"
           :visible.sync="DeliveryMsgDialog"
           append-to-body>
-           <div>
+           <div v-if="warehousedata">
              <div v-for="(item,key) in this.warehousedata" :key="key">
-               <div class="wtitle">仓库名称 : {{item.warehouse_name}}</div>
+               <div class="wtitle">{{$t('warehouse.name')}} : {{item.warehouse_name}}</div>
+               <div class="num">{{$t('order.Relatedorders')}} : <span @click="idsearch(item.relation_order_id)">{{item.relation_order_id}}</span></div>
                 <div class="witems" v-for="(val,i) in item.skus" :key="i">
-                  <div>名称 : {{val.name}}</div>
-                  <div>规格信息 : {{val.specification}}</div>
-                  <div>数量 : {{val.count}}</div>
-                  <div>条形码 : {{val.barcode}}</div>
+                  <div>{{$t('warehouse.name2')}} : {{val.name}}</div>
+                  <div>{{$t('warehouse.SpecificationsMsg')}} : {{val.specification}}</div>
+                  <div>{{$t('warehouse.num')}} : {{val.count}}</div>
+                  <div>{{$t('warehouse.barCode')}} : {{val.barcode}}</div>
                 </div>
              </div>
            </div>
+           <div v-if="warehousedata == ''" class="msg">{{$t('order.Msg')}}</div>
           <div slot="footer" class="dialog-footer">
-            <el-button size="small" type="primary">{{$t('tools.confirm')}}</el-button>
+            <el-button size="small" type="primary" @click="DeliveryMsgDialog = false">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
       </div>
@@ -1100,13 +1102,19 @@
         this.getDataListFun()
         this.getOrderCount()
       },
+      // 出库信息
       deliveryMsg(data){
-        data.id = ''
+        // data.id = ''
         warehouseOutbounds({order_id:data.id}).then(res=>{
           this.warehousedata = res.items
-          console.log(this.warehousedata);
+        
         })
         this.DeliveryMsgDialog = true
+      },
+      idsearch(data){
+        this.DeliveryMsgDialog = false
+        this.searchForm.no = data
+        this. getDataListFun()
       }
     },
     mounted() {
@@ -1255,12 +1263,26 @@
     line-height: 100px;
   }
   .wtitle{
+    font-weight: bold;
     font-size: 18px;
     margin-top: 10px;
+    margin-bottom: 5px;
+  }
+  .msg{
+    text-align: center;
   }
   .witems{
     >div{
+      font-size: 16px;
       margin-left: 20px;
+      margin-bottom: 5px;
+    }
+  }
+  .num{
+    margin-bottom: 5px;
+    >span{
+      color: rgb(53, 123, 226);
+      cursor: pointer;
     }
   }
 </style>

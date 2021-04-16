@@ -76,5 +76,16 @@ export default {
   batchDel: '批量删除',
   location2Add: '货位添加',
   line: '行',
-  column: '列'
+  column: '列',
+  Delmsg: '请选择要删除的货位',
+  parameterMsg: '参数错误',
+  Purchaselist: '采购清单',
+  Purchasenum: '采购单数量',
+  Newadd: '新增',
+  PurchaseSet: '采购设置',
+  source: '来源',
+  commodity: '商品',
+  commodityspe: '商品规格',
+  TipsMsg: '请选择商品',
+  TipsMsg2: '请选择订单',
 }
