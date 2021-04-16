@@ -203,6 +203,16 @@ export function warehouseOutbounds(data) {
     params: data
   })
 }
+
+// 仓库.出库信息*添加
+export function warehouseOutboundsAdd(data) {
+  return request({
+    url: 'warehouse-outbounds',
+    method: 'post',
+    data: data
+  })
+}
+
 // 仓库.入库单.列表
 export function warehouseReceipts(data) {
   return request({
@@ -211,7 +221,6 @@ export function warehouseReceipts(data) {
     params: data
   })
 }
-
 
 // 仓库.位置.批量删除
 export function LocationDel(id, data) {

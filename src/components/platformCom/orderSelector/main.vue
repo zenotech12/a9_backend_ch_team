@@ -287,8 +287,8 @@
         }
       },
       goodId(val) {
-        if (this.orderInfo.id !== val) {
-          // this.getProductInfo()
+        if (val === '') {
+          this.orderInfo.no = ''
         }
       }
     },

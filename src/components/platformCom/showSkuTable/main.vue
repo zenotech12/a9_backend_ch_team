@@ -21,7 +21,15 @@
             </el-table-column>
             <el-table-column label="位置">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.position"></el-input>
+                <el-select v-model="scope.row.position" placeholder="请选择">
+                  <el-option
+                    v-for="item in position"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.name">
+                  </el-option>
+                </el-select>
+                <!--<el-input v-model="scope.row.position"></el-input>-->
               </template>
             </el-table-column>
             <el-table-column prop="unit_price" :label="$t('warehouse.price')">
@@ -69,6 +77,18 @@
         default: function() {
           return []
         }
+      },
+      position: {
+        type: Array,
+        default: function() {
+          return []
+        }
+      },
+      resetForm: {
+        type: Boolean,
+        default: function() {
+          return false
+        }
       }
     },
     watch: {
@@ -80,12 +100,26 @@
       skus: {
         handler(val) {
           this.skusArray = val
+          if (val.length === 0) {
+            this.orderId = ''
+            this.skusArray = []
+          }
         },
         deep: true
       },
       skusArray: {
         handler(val) {
           this.$emit('onchange', val)
+        },
+        deep: true
+      },
+      resetForm: {
+        handler(val) {
+          console.log('vvvvv', val)
+          if (val === true) {
+            this.orderId = ''
+            this.skusArray = []
+          }
         },
         deep: true
       }
