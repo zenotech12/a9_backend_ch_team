@@ -22,7 +22,7 @@
                       {{$t('warehouse.name2')}}:<span>{{item.name}}</span>
                       {{$t('warehouse.PlaceofOrigin')}}:<span>{{item.origin}}</span>
                       {{$t('warehouse.pecifications')}}:<span>{{item.specification}}</span>
-                      {{$t('warehouse.pecifications')}}:<span>{{item.barcode}}</span>
+                      条形码:<span>{{item.barcode}}</span>
                       {{$t('warehouse.price')}}: <span>{{item.unit_price | price}}</span>
                       {{$t('warehouse.num')}}: <span>{{item.count}}</span>
                       {{$t('warehouse.allprice')}}: <span>{{item.total_price | price}}</span>
