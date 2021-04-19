@@ -92,5 +92,6 @@ export default{
   ordernum: 'Order quantity',
   Returnquantity: 'Return quantity',
   Pleaseselect2: 'Please select stock item',
-  informationlist: 'Inventory information list'
+  informationlist: 'Inventory information list',
+  selectinventory: 'Please select inventory information'
 }

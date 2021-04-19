@@ -519,6 +519,7 @@
             <el-button size="small" type="primary" @click="confirmAddWuliuJiLu">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
+        <!-- 出库信息 -->
         <el-dialog
           width="50%"
           :title="$t('order.Delivery')"

@@ -93,5 +93,6 @@ export default {
   ordernum: '订单数量',
   Returnquantity: '退换货数量',
   Pleaseselect2: '请选择库存商品',
-  informationlist: '库存信息列表'
+  informationlist: '库存信息列表',
+  selectinventory: '请选择库存信息'
 }

@@ -133,7 +133,7 @@
       },
       submitSelect() {
         if (this.selectedProduct.sku_uid === undefined) {
-          this.$message.error('请选择库存信息')
+          this.$message.error(this.$t('warehouse.selectinventory'))
           return
         }
         this.orderInfo = JSON.parse(JSON.stringify(this.selectedProduct))

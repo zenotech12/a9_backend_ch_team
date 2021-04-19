@@ -92,5 +92,6 @@ export default{
   ordernum: 'ចំនួន​លំដាប់',
   Returnquantity: 'ត្រឡប់​ចំនួន',
   Pleaseselect2: 'សូម​ជ្រើស​ធាតុ​ថ្នាក់',
-  informationlist: 'បញ្ជី​ព័ត៌មាន​មូលដ្ឋាន'
+  informationlist: 'បញ្ជី​ព័ត៌មាន​មូលដ្ឋាន',
+  selectinventory: 'សូមជ្រើសរើសព័ត៌មានស្តុក'
 }

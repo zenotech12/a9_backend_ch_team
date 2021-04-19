@@ -23,7 +23,7 @@
                                 placement="right"
                                 title=""
                                 trigger="click">
-                      <img :src="imgUrl + scope.row.business_license"height="480"/>
+                      <img :src="imgUrl + scope.row.business_license" height="480"/>
                       <img slot="reference" :src="imgUrl + scope.row.business_license" style="margin-right:8px;max-height: 60px;max-width: 120px">
                     </el-popover>
                   </template>
