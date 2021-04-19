@@ -3,7 +3,7 @@
         <el-input readonly :placeholder="$t('warehouse.TipsMsg2')" clearable v-model="orderInfo.no" @clear="clearInput">
             <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
         </el-input>
-        <el-dialog :title="$('operation.orderList')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
+        <el-dialog :title="$t('operation.orderList')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
             <v-pageSearch style="padding: 0px;">
               <el-form :inline="true" :model="searchForm">
                 <el-form-item :label="$t('order.searchKey')">

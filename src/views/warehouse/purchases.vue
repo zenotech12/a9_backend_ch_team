@@ -564,7 +564,7 @@
       },
       saveDataFuncSkus() {
         if (this.skus.name === '' || this.skus.origin === '') {
-          this.$message.error(this.$t('warehoues.Msg'))
+          this.$message.error(this.$t('warehouse.Msg'))
           return false
         }
         if (this.skuType === 'add') {
