@@ -563,16 +563,6 @@
         })
       },
       saveDataFuncSkus() {
-        if (this.skus.name === '' || this.skus.origin === '') {
-          this.$message.error(this.$t('warehouse.Msg'))
-          return false
-        }
-        if (this.skuType === 'add') {
-          this.skusArray.push(JSON.parse(JSON.stringify(this.skus)))
-        } else if (this.skuType === 'edit') {
-          this.$set(this.skusArray, this.skusEidtIndex, JSON.parse(JSON.stringify(this.skus)))
-        }
-
         if (this.source === 1) {
           if (this.goodsId === '') {
             this.$message.error(this.$t('warehouse.TipsMsg'))
