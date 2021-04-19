@@ -157,7 +157,7 @@
                 </el-table-column>
                 <el-table-column prop="barcode" :label="$t('goods.barcode')">
                   <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.barcode"></el-input>
+                    <el-input v-model="scope.row.barcode"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.PlaceofOrigin')">
