@@ -104,7 +104,8 @@
       },
       goodId: {
         handler(val) {
-          if (val === '') {
+          console.log('vaa', val)
+          if (val === '1') {
             this.orderInfo.name = ''
           }
         },
