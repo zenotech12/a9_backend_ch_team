@@ -590,7 +590,7 @@ export default {
       this.chukuDlalog = true
       this.chukuForm.tp = 2
       this.chukuForm.skus = ''
-      this.stockId = ''
+      this.stockId = '1'
       this.chukuArrayData = []
     },
     chukuFuncSubmit() {
@@ -599,6 +599,7 @@ export default {
         if (res.meta === 0) {
           this.getChuKuData()
           this.chukuDlalog = false
+          this.stockId = '1'
         }
       })
     },
