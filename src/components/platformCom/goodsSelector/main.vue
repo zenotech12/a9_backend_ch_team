@@ -26,7 +26,7 @@
             </v-pageSearch>
           <el-row>
             <el-col :span="24">
-              <el-table stripe border v-loading="tableData.loading" :data="tableData.body" :row-key="productRowKey" highlight-current-row height="calc(100vh - 390px)" @current-change="selectionChange">
+              <el-table stripe border v-loading="tableData.loading" :data="tableData.body" :row-key="productRowKey" highlight-current-row height="calc(100vh - 420px)" @current-change="selectionChange">
                 <el-table-column  :label="$t('goods.name')" min-width="300">
                   <template  slot-scope="scope">
                     <!--<a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">-->

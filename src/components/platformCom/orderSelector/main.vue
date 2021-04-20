@@ -19,7 +19,7 @@
             </v-pageSearch>
           <el-row>
             <el-col :span="24">
-              <el-table stripe border :data="tableData" :row-key="productRowKey" highlight-current-row height="calc(100vh - 390px)" @current-change="selectionChange">
+              <el-table stripe border :data="tableData" :row-key="productRowKey" highlight-current-row height="calc(100vh - 420px)" @current-change="selectionChange">
                 <!-- 单号 -->
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">

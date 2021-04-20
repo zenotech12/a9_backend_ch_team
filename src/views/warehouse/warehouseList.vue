@@ -139,7 +139,7 @@
               </el-form>
             </el-col>
           </el-row>
-          <el-table stripe border :data="inventoriesList" height="calc(100vh - 360px)">
+          <el-table stripe border :data="inventoriesList" height="calc(100vh - 400px)">
             <!-- 仓库名称 -->
             <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
             <!--<el-table-column prop="origin" label="产地"></el-table-column>-->
@@ -412,7 +412,6 @@
     </div>
   </div>
 </template>
-
 <script>
 // import { redEnvelopeAdd, redEnvelopeModify, redEnvelopeList, redEnvelopeDelete } from '@/api/operation'
 import {

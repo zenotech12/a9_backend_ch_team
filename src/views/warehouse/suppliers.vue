@@ -20,9 +20,9 @@
                 <el-table-column prop="business_license" :label="$t('warehouse.License')">
                   <template  slot-scope="scope">
                     <el-popover v-if="scope.row.business_license" class="pointer"
-                                placement="right"
-                                title=""
-                                trigger="click">
+                      placement="right"
+                      title=""
+                      trigger="click">
                       <img :src="imgUrl + scope.row.business_license" height="480"/>
                       <img slot="reference" :src="imgUrl + scope.row.business_license" style="margin-right:8px;max-height: 60px;max-width: 120px">
                     </el-popover>

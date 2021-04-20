@@ -213,8 +213,6 @@
                 </el-table-column>
               </el-table>
             </el-form-item>
-
-
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFuncSkus()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
