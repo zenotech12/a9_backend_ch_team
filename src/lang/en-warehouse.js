@@ -2,7 +2,7 @@ export default{
   name: 'Warehouse name',
   add: 'Warehouse Add',
   remarks: 'remarks',
-  abbreviation: 'abbreviation',
+  abbreviation: 'shortname',
   num1: 'Warehouse number',
   Pinyin: 'Pinyin code',
   contacts: 'MobileContacts',

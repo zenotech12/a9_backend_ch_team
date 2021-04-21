@@ -836,6 +836,7 @@ export default {
       })
     },
     handleSelectionChange(val) {
+      this.ids = []
       for (const item of val) {
         this.ids.push(item.id)
       }
@@ -911,7 +912,6 @@ export default {
     color: red;
   }
 }
-
 .localval{
   display: flex;
   align-items: center;

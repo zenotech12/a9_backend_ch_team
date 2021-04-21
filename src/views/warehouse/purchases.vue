@@ -82,7 +82,7 @@
                 <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.origin"></el-input>
-                  </template>
+                  </template> 
                 </el-table-column>
                 <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
                   <template slot-scope="scope">
