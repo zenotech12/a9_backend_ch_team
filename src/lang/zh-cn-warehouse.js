@@ -16,7 +16,7 @@ export default {
   MainBusiness: '主营业务',
   mainProducts: '主要产品',
   mainClass: '主要类目',
-  WarehouseAddress: '经验仓库地址',
+  WarehouseAddress: '仓库地址',
   contactsName: '联系人名字',
   addtime: '添加时间',
   FileUpload: '商品申请文件',

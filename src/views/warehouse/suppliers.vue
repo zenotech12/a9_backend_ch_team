@@ -16,8 +16,12 @@
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column prop="no" :label="$t('warehouse.SupplierNum')"></el-table-column>
+                <el-table-column prop="company_name" :label="$t('warehouse.corporateName')"></el-table-column>
+                <el-table-column prop="business_scope" :label="$t('warehouse.MainBusiness')"></el-table-column>
+                <el-table-column prop="warehouse_business_addr" :label="$t('warehouse.WarehouseAddress')"></el-table-column>
+                <el-table-column prop="contacter_name" :label="$t('warehouse.contactsName')"></el-table-column>
                 <el-table-column prop="mobile" :label="$t('warehouse.Tel2')"></el-table-column>
-                <el-table-column prop="business_license" :label="$t('warehouse.License')">
+                <!-- <el-table-column prop="business_license" :label="$t('warehouse.License')">
                   <template  slot-scope="scope">
                     <el-popover v-if="scope.row.business_license" class="pointer"
                       placement="right"
@@ -27,14 +31,10 @@
                       <img slot="reference" :src="imgUrl + scope.row.business_license" style="margin-right:8px;max-height: 60px;max-width: 120px">
                     </el-popover>
                   </template>
-                </el-table-column>
-                <el-table-column prop="company_name" :label="$t('warehouse.corporateName')"></el-table-column>
-                <el-table-column prop="business_scope" :label="$t('warehouse.MainBusiness')"></el-table-column>
-                <el-table-column prop="business_goods" :label="$t('warehouse.mainProducts')"></el-table-column>
-                <el-table-column prop="business_type" :label="$t('warehouse.mainClass')"></el-table-column>
-                <el-table-column prop="warehouse_business_addr" :label="$t('warehouse.WarehouseAddress')"></el-table-column>
-                <el-table-column prop="contacter_name" :label="$t('warehouse.contactsName')"></el-table-column>
-                <el-table-column prop="gen_time" :label="$t('warehouse.addtime')"></el-table-column>
+                </el-table-column> -->
+                <!-- <el-table-column prop="business_goods" :label="$t('warehouse.mainProducts')"></el-table-column> -->
+                <!-- <el-table-column prop="business_type" :label="$t('warehouse.mainClass')"></el-table-column>
+                <el-table-column prop="gen_time" :label="$t('warehouse.addtime')"></el-table-column> -->
                 <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>

@@ -15,17 +15,23 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="240"></el-table-column>
+                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="140"></el-table-column>
                 <el-table-column :label="$t('warehouse.Purchasing')">
                   <template  slot-scope="scope">
-                    <div v-for="(item, k) in scope.row.skus" :key="k" class="goodSkusBox">
-                      {{$t('warehouse.name2')}}:<span>{{item.name}}</span>
-                      {{$t('warehouse.PlaceofOrigin')}}:<span>{{item.origin}}</span>
-                      {{$t('warehouse.pecifications')}}:<span>{{item.specification}}</span>
-                      {{$t('warehouse.barCode')}}:<span>{{item.barcode}}</span> {{$t('warehouse.price')}}: <span>{{item.unit_price | price}}</span>
-                      {{$t('warehouse.num')}}: <span>{{item.count}}</span>
-                      {{$t('warehouse.allprice')}}: <span>{{item.total_price | price}}</span>
-                    </div>
+                    <table class="tabletitle">
+                      <tr>
+                        <th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>
+                      </tr>
+                      <tr v-for="(val,k) in scope.row.skus" :key="k">
+                        <td>{{val.name}}</td>
+                        <td>{{val.origin}}</td>
+                        <td>{{val.specification}}</td>
+                        <td>{{val.barcode}}</td>
+                        <td>{{val.unit_price | price}}</td>
+                        <td>{{val.count}}</td>
+                        <td>{{val.total_price | price}}</td>
+                      </tr>
+                    </table>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.payment')" width="120">
@@ -349,7 +355,16 @@
         batchCount: 0,
         batchPrice: 0,
         batchTotalPrice: 0,
-        multipleSelection: []
+        multipleSelection: [],
+        tabletitle:[
+          this.$t('warehouse.name2'),
+          this.$t('warehouse.PlaceofOrigin'),
+          this.$t('warehouse.pecifications'),
+          this.$t('warehouse.barCode'),
+          this.$t('warehouse.price'),
+          this.$t('warehouse.num'),
+          this.$t('warehouse.allprice')
+        ]
       }
     },
     computed: {
@@ -707,6 +722,7 @@
 
 <style lang="scss" scoped>
 .goodSkusBox {
+  cursor: pointer;
   span {
     color: red;
   }
@@ -721,6 +737,18 @@
   color: #88898a;
   &:hover{
     color: rgb(30, 66, 121);
+  }
+}
+.tabletitle{
+  width: 100%;
+  border: 1px solid #f2f2f2;
+  border-collapse: collapse;
+  td{
+    width: 100px;
+    border: 1px solid #f2f2f2;
+  }
+  th{
+    text-align: center;
   }
 }
 </style>

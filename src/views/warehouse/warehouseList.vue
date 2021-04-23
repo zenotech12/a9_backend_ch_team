@@ -142,17 +142,16 @@
           <el-table stripe border :data="inventoriesList" height="calc(100vh - 400px)">
             <!-- 仓库名称 -->
             <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
-            <!--<el-table-column prop="origin" label="产地"></el-table-column>-->
             <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
               <template slot-scope="scope">
                 {{textFilter(scope.row.specification)}}
               </template>
             </el-table-column>
             <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+            <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
             <el-table-column prop="unit_price" :label="$t('warehouse.price')">
               <template slot-scope="scope">{{scope.row.unit_price | price}}</template>
             </el-table-column>
-            <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
             <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
               <template slot-scope="scope">{{scope.row.total_price | price}}</template>
             </el-table-column>
