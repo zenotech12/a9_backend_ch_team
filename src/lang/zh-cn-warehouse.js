@@ -94,5 +94,6 @@ export default {
   Returnquantity: '退换货数量',
   Pleaseselect2: '请选择库存商品',
   informationlist: '库存信息列表',
-  selectinventory: '请选择库存信息'
+  selectinventory: '请选择库存信息',
+  ware: '仓库'
 }

@@ -331,6 +331,16 @@
                   </el-col>
                 </el-row>
               </el-form-item>
+              <el-form-item :label="$t('warehouse.ware')">
+                 <el-select v-model="wareid" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
+                      <el-option
+                        v-for="(item, k) in wareData2"
+                        :key="k"
+                        :label="item.name"
+                        :value="item.id">
+                      </el-option>
+                    </el-select>
+              </el-form-item>
 <!--              <el-form-item :label="$t('order.note')" >-->
 <!--                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>-->
 <!--              </el-form-item>-->
@@ -371,6 +381,7 @@
                 <el-form-item :label="$t('order.userPhone')" style="display: inline-block" >
                   <el-input v-model="userPhone" :placeholder="$t('order.userPhone')" style="width: 200px"></el-input>
                 </el-form-item>
+                
 <!--              </div>-->
             </template>
           </el-form>
@@ -550,7 +561,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords } from '@/api/order'
-  import { warehouseOutbounds } from '@/api/warehouse'
+  import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import areaInfo from '@/utils/areaInfo'
@@ -595,6 +606,12 @@
         modifyExpressNo: '',
         commentModify: '',
         editorTitle: '',
+        wareid: '',
+        wareForm: {
+        skip: '',
+        limit: pz
+        },
+        wareData2:[],
         optType: 1,
         dialogTitle: this.$t('order.express'),
         expressOrder: { shipping_address: { address: {}}},
@@ -957,6 +974,11 @@
         // console.log(data);
         // console.log(ot);
         if (ot === 1) {
+          this.wareid = ''
+          this.wareData2 = []
+          warehousesList(this.wareForm).then(res=>{
+            this.wareData2 = res.items
+          })
           const sendId = []
           data.expresses && data.expresses.forEach(ex => {
             ex.sku_infos && ex.sku_infos.forEach(v => {
@@ -1030,7 +1052,7 @@
             this.sku_ids = JSON.stringify(this.sku_ids)
           }
           // console.log('sku_ids', this.sku_ids)
-          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids }).then(res => {
+          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids, warehouse_id:this.wareid}).then(res => {
             this.$message.success(this.$t('order.expressTip'))
             this.submitDisabled = false
             this.allGoodsSend = true
