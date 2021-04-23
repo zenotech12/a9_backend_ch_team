@@ -332,7 +332,7 @@
                 </el-row>
               </el-form-item>
               <el-form-item :label="$t('warehouse.ware')">
-                 <el-select v-model="wareid" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
+                 <el-select v-model="wareid" :disabled="expressOrder.rider_post" :placeholder="$t('warehouse.ware')">
                       <el-option
                         v-for="(item, k) in wareData2"
                         :key="k"
