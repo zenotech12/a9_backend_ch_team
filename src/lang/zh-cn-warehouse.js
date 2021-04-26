@@ -16,7 +16,7 @@ export default {
   MainBusiness: '主营业务',
   mainProducts: '主要产品',
   mainClass: '主要类目',
-  WarehouseAddress: '仓库地址',
+  WarehouseAddress: '经验仓库地址',
   contactsName: '联系人名字',
   addtime: '添加时间',
   FileUpload: '商品申请文件',
@@ -94,6 +94,5 @@ export default {
   Returnquantity: '退换货数量',
   Pleaseselect2: '请选择库存商品',
   informationlist: '库存信息列表',
-  selectinventory: '请选择库存信息',
-  ware: '仓库'
+  selectinventory: '请选择库存信息'
 }
