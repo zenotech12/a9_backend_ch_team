@@ -644,7 +644,6 @@ export default {
       console.log(this.rukuForm);
     },
     rukuFunc() {
-      console.log(66666);
       this.resetForm = false
       this.rukuDialog = true
     },

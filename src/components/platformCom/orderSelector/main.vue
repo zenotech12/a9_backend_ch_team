@@ -169,11 +169,11 @@
               <el-row style="margin-top: 10px">
                 <el-col :span="24" style="text-align: right;">
                   <el-pagination v-if="itemCount > 0"
-                                 :current-page.sync="currentPage"
-                                 :page-size.sync="pageSize"
-                                 :page-sizes="[10, 30, 50, 100, 500]"
-                                 layout="total, prev, pager, next, jumper,sizes"
-                                 :total="itemCount">
+                    :current-page.sync="currentPage"
+                    :page-size.sync="pageSize"
+                    :page-sizes="[10, 30, 50, 100, 500]"
+                    layout="total, prev, pager, next, jumper,sizes"
+                    :total="itemCount">
                   </el-pagination>
                 </el-col>
               </el-row>
@@ -188,10 +188,12 @@
 </template>
 <script>
   import { ordersList } from '@/api/order'
+  import expressage from '@/utils/expressage'
   export default {
     name: 'orderSelector',
     data() {
       return {
+        expressageList: expressage,
         orderInfo: { no: '' },
         dialogFormVisible: false,
         productTableData: {
@@ -334,7 +336,7 @@
       },
       submitSelect() {
         if (this.selectedProduct.id === undefined) {
-          this.$message.error('请选择订单')
+          this.$message.error(this.$t('warehouse.TipsMsg2'))
           return
         }
         this.orderInfo = JSON.parse(JSON.stringify(this.selectedProduct))
@@ -378,12 +380,16 @@
           this.allprice = res.total_money
           this.tableData = res.items
           this.itemCount = res.total
+          console.log(this.tableData,'order');
         })
       },
       search() {
         this.searchForm.skip = 0
         this.currentPage = 1
         this.getDataListFun()
+      },
+      getKuaidi100Url(com, nu) {
+        return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
       },
       selectionChange(val) {
         // console.log('val', val)
