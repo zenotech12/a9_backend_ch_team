@@ -118,6 +118,8 @@
     },
     methods: {
       textFilter(data) {
+        let index = data.indexOf('{')
+        if(index != -1){
         let str = ''
         const text = JSON.parse(data)
         Object.keys(text).forEach((v, i) => {
@@ -128,6 +130,9 @@
           }
         })
         return str
+      }else{
+        return data
+      }
       },
       clearInput() {
         this.$emit('goodSelectedChange', this.cesiId)

@@ -97,5 +97,6 @@ export default{
   ware: 'warehouse',
   pulist: 'Purchase order list',
   inpuWarehouse: 'Purchase order warehousing',
-  Singlenumber: 'Order number'
+  Singlenumber: 'Order number',
+  arrive_count: 'arrive Count'
 }

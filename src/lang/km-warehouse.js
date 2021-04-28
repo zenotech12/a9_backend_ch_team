@@ -97,5 +97,7 @@ export default{
   ware: 'ឃ្លាំង',
   pulist: 'បញ្ជីបញ្ជាទិញ',
   inpuWarehouse: 'ទិញកន្លែងផ្ទុកបញ្ជាទិញ',
-  Singlenumber: 'លេខទោល'
+  Singlenumber: 'លេខទោល',
+  arrive_count: 'បរិមាណមកដល់'
+
 }

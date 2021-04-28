@@ -15,6 +15,7 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="180"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="140"></el-table-column>
                 <el-table-column :label="$t('warehouse.Purchasing')">
                   <template  slot-scope="scope">
@@ -29,6 +30,7 @@
                         <td>{{val.barcode}}</td>
                         <td>{{val.unit_price | price}}</td>
                         <td>{{val.count}}</td>
+                        <td>{{val.arrive_count}}</td>
                         <td>{{val.total_price | price}}</td>
                       </tr>
                     </table>
@@ -50,7 +52,6 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="180"></el-table-column>
-                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="180"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
@@ -364,6 +365,7 @@
           this.$t('warehouse.barCode'),
           this.$t('warehouse.price'),
           this.$t('warehouse.num'),
+          this.$t('warehouse.arrive_count'),
           this.$t('warehouse.allprice')
         ]
       }

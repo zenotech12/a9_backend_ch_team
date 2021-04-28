@@ -98,5 +98,6 @@ export default {
   ware: '仓库',
   pulist: '采购单列表',
   inpuWarehouse: '采购单入库',
-  Singlenumber: '单号'
+  Singlenumber: '单号',
+  arrive_count: '到达数量'
 }

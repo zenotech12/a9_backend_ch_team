@@ -199,9 +199,9 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
+                <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
-                <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
                 <el-table-column :label="$t('warehouse.Productinformation')">
                   <template slot-scope="scope">
                       <div v-for="(item, k) in scope.row.skus" :key="k" class="goodsInfo">
@@ -254,6 +254,7 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
+                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="200px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="200px">
                   <template slot-scope="scope">
@@ -287,7 +288,7 @@
             </div>
           </el-tabs>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
+            <el-button type="primary" @click="closeDialog2" size="small">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
         <!--入库设置-->
@@ -720,6 +721,9 @@ export default {
     addData() {
       this.form = this.setForm()
       this.formEditDialog = true
+    },
+    closeDialog2(){
+      this.chuRuKuDialog = false
     },
     showDataEditor(data) {
       console.log(data);
