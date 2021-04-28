@@ -295,15 +295,18 @@
           <el-form label-width="100px" :model="rukuForm">
             <el-form-item :label="$t('warehouse.type')">
               <el-radio-group v-model="rukuForm.tp" @change="tpChange">
-                <!--<el-radio :label="1">采购单入库</el-radio>-->
+                <el-radio :label="1">{{$t('warehouse.inpuWarehouse')}}</el-radio>
                 <el-radio :label="2">{{$t('warehouse.Returnexchange')}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('warehouse.remarks')">
               <el-input v-model="rukuForm.comment" type="textarea"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.order')">
+            <el-form-item :label="$t('warehouse.order')" v-if="istype == true">
               <show-sku-table :resetForm="resetForm" :position="positionList" v-model="rukuForm.skus"></show-sku-table>
+            </el-form-item>
+            <el-form-item label="采购单" v-if="istype == false">
+               <show-sku-plist @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -474,6 +477,7 @@ export default {
         skip: 0,
         limit: pz
       },
+      istype: true,
       inventoriesList: [],
       currentPageKuCun: 1,
 
@@ -611,19 +615,24 @@ export default {
       this.rukuDialog = false
     },
     textFilter(data) {
-      let str = ''
-      const text = JSON.parse(data)
-      Object.keys(text).forEach((v, i) => {
-        if (i === 0) {
-          str = v + ':' + text[v] + ';'
-        } else {
-          str = str + v + ':' + text[v] + ';'
-        }
-      })
-      return str
+      let index = data.indexOf('{')
+      if(index != -1){
+        let str = ''
+        const text = JSON.parse(data)
+        Object.keys(text).forEach((v, i) => {
+          if (i === 0) {
+            str = v + ':' + text[v] + ';'
+          } else {
+            str = str + v + ':' + text[v] + ';'
+          }
+        })
+        return str
+      }else{
+        return data
+      }
     },
     addRuKuForm() {
-      console.log('form', this.rukuForm)
+      // console.log('form', this.rukuForm)
       this.rukuForm.skus = JSON.stringify(this.rukuForm.skus)
       warehouseReceiptsAdd(this.rukuForm).then(res => {
         if (res.meta === 0) {
@@ -632,8 +641,10 @@ export default {
           this.resetOrder()
         }
       })
+      console.log(this.rukuForm);
     },
     rukuFunc() {
+      console.log(66666);
       this.resetForm = false
       this.rukuDialog = true
     },
@@ -652,7 +663,11 @@ export default {
       })
     },
     tpChange(e) {
-      console.log(e)
+      if(e == 1){
+        this.istype = false
+      }else if(e == 2){
+        this.istype = true
+      }
       this.rukuForm.purchase_id = ''
     },
     getPurchaseList() {
@@ -708,6 +723,7 @@ export default {
       this.formEditDialog = true
     },
     showDataEditor(data) {
+      console.log(data);
       // this.form = JSON.parse(JSON.stringify(data))
       this.form.contacter_name = data.contacter.name
       this.form.contacter_mobile = data.contacter.mobile
@@ -874,11 +890,25 @@ export default {
           }
         })
       }
+    },
+    pulist(data){
+     if(data != undefined){
+       this.rukuForm.skus = data
+       console.log(data);
+     }
+    },
+    getid(id){
+       if(id != undefined){
+        this.rukuForm.purchase_id = id
+        this.rukuForm.tp = 1
+       }
     }
   },
   mounted() {
     this.getDataListFun()
     this.getPurchaseList()
+    this.pulist()
+    this.getid()
   },
   created() {}
 }

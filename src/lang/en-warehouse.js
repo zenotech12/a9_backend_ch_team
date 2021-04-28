@@ -5,8 +5,8 @@ export default{
   abbreviation: 'Abbreviation',
   num1: 'Warehouse number',
   Pinyin: 'Pinyin code',
-  contacts: 'Phone contact',
-  tel: 'Contact person phone',
+  contacts: 'contacts',
+  tel: 'Telephone',
   Postcode: 'Postcode',
   SupplierNum: 'Supplier code',
   Tel2: 'Phone number',
@@ -30,7 +30,7 @@ export default{
   name2: 'Name',
   PlaceofOrigin: 'Place of production',
   pecifications: 'specification',
-  barCode: 'Bar code',
+  barCode: 'Barcode',
   price: 'Unit Price',
   num: 'Quantity',
   allprice: 'Total price',
@@ -93,5 +93,9 @@ export default{
   Returnquantity: 'Returned product quantity',
   Pleaseselect2: 'Please select product in inventory',
   informationlist: 'Inventory information list',
-  selectinventory: 'Please select inventory information'
+  selectinventory: 'Please select inventory information',
+  ware: 'warehouse',
+  pulist: 'Purchase order list',
+  inpuWarehouse: 'Purchase order warehousing',
+  Singlenumber: 'Order number'
 }

@@ -6,8 +6,8 @@ export default {
   abbreviation: '简称',
   num1: '仓库编号',
   Pinyin: '拼音码',
-  contacts: '联系人',
-  tel: '电话',
+  contacts: '手机联系人',
+  tel: '联系人手机',
   Postcode: '邮编',
   SupplierNum: '供应商编号',
   Tel2: '手机号',
@@ -95,8 +95,5 @@ export default {
   Pleaseselect2: '请选择库存商品',
   informationlist: '库存信息列表',
   selectinventory: '请选择库存信息',
-  ware: '仓库',
-  pulist: '采购单列表',
-  inpuWarehouse: '采购单入库',
-  Singlenumber: '单号'
+  ware: '仓库'
 }

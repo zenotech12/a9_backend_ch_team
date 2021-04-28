@@ -93,9 +93,5 @@ export default{
   Returnquantity: 'បរិមាណត្រឡប់មកវិញ',
   Pleaseselect2: 'សូមជ្រើសរើសផលិតផលស្តុក',
   informationlist: 'បញ្ជីព័ត៌មានបញ្ជីសារពើភណ្ឌ',
-  selectinventory: 'សូមជ្រើសរើសព័ត៌មានស្តុក',
-  ware: 'ឃ្លាំង',
-  pulist: 'បញ្ជីបញ្ជាទិញ',
-  inpuWarehouse: 'ទិញកន្លែងផ្ទុកបញ្ជាទិញ',
-  Singlenumber: 'លេខទោល'
+  selectinventory: 'សូមជ្រើសរើសព័ត៌មានស្តុក'
 }

@@ -85,7 +85,7 @@
                           <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini">{{$t('order.afterSale')}}</el-tag>
                         </p>
                         <p>
-                          <span v-for="(v,k) in gInfo.goods_info.specifications"> {{k}}：<font>{{v}}</font></span>
+                          <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
                         </p>
                         <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                       </div>

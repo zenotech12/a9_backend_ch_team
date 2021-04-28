@@ -35,7 +35,7 @@
                 <!-- <el-table-column prop="business_goods" :label="$t('warehouse.mainProducts')"></el-table-column> -->
                 <!-- <el-table-column prop="business_type" :label="$t('warehouse.mainClass')"></el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.addtime')"></el-table-column> -->
-                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
+                <el-table-column :label="$t('warehouse.operation')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <span class="xiexian">/</span>
