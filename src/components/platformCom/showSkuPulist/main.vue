@@ -19,7 +19,14 @@
         </el-table-column>
         <el-table-column :label="$t('warehouse.location')">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.position"></el-input>
+             <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
+                  <el-option
+                    v-for="item in position"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.name">
+                  </el-option>
+                </el-select>
           </template>
         </el-table-column>
         <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
@@ -36,7 +43,7 @@
   </div>
 </template>
 <script>
-import { purchaseInfo } from '../../../api/warehouse'
+import { purchaseInfo, waregetlocallist } from '../../../api/warehouse'
 export default {
   name: "showSkuPlist",
   data() {
@@ -45,7 +52,7 @@ export default {
       tableData:[],
       bcode:'',
       key:'',
-      Ty:false
+      Ty:false,
     };
   },
   methods: {

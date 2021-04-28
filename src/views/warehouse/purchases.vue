@@ -36,7 +36,7 @@
                     </table>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('warehouse.payment')" width="120">
+                <el-table-column :label="$t('warehouse.payment')" width="100">
                   <template  slot-scope="scope">
                     {{scope.row.paid_complete ? $t('warehouse.yes') : $t('warehouse.no')}}
                   </template>

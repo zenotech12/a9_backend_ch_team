@@ -255,8 +255,8 @@
               </el-row>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="200px"></el-table-column>
-                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
-                <el-table-column :label="$t('warehouse.type')" width="200px">
+                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
+                <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">
                       <span v-if="scope.row.tp === 2">{{$t('warehouse.Scrap')}}</span>
                       <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
@@ -273,6 +273,26 @@
                       {{$t('warehouse.num')}}:<span>{{item.count}}</span>
                       {{$t('warehouse.allprice')}}:<span>{{item.total_price | price}}</span>
                     </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="shipping_address" label="地址信息" width="200px">
+                  <template slot-scope="scope" @click="test">
+                    <span @click="test" v-if="scope.row.shipping_address != null">
+                      {{scope.row.shipping_address.address.province}}-
+                      {{scope.row.shipping_address.address.city}}-
+                      {{scope.row.shipping_address.address.district}}-
+                      {{scope.row.shipping_address.address.addr}}
+                      </span>
+                    <span @click="test" v-if="scope.row.shipping_address == null">暂无信息</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="shipping_address" label="快递信息">
+                  <template slot-scope="scope" @click="test">
+                    <span @click="test" v-if="scope.row.express == null">暂无信息</span>
+                    <span @click="test" v-if="scope.row.express != null">
+                      <div>公司: {{scope.row.express.company}}</div>
+                      <div>单号: {{scope.row.express.novar}}</div>
+                    </span>
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="200px"></el-table-column>
@@ -307,7 +327,7 @@
               <show-sku-table :resetForm="resetForm" :position="positionList" v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
             <el-form-item label="采购单" v-if="istype == false">
-               <show-sku-plist @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
+               <show-sku-plist  @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -450,6 +470,7 @@ export default {
         limit: pz
       },
       ids: [],
+      wareId:'',
       placeShow: false,
       placeChecked: false,
       locDialog: false,
@@ -580,6 +601,9 @@ export default {
     }
   },
   methods: {
+    test(){
+      console.log(this.chukuData);
+    },
     currentKuncun(data) {
       console.log('data', data)
       this.chukuArrayData.push(data)
@@ -810,6 +834,8 @@ export default {
       this.getChuKuData()
     },
     showOutbounds(data) {
+      this.wareId = data.id
+      console.log(this.wareId);
       this.rukuForm.warehouse_id = data.id
       this.chuKuSearchForm.warehouse_id = data.id
       this.rukuSearchForm.warehouse_id = data.id
