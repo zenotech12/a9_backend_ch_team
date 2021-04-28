@@ -687,6 +687,7 @@
         },
         purchaseCheckId: '',
         sku_ids: [],
+        sku_specifications:[],
         allGoodsSend: true,
         sendGoodsRecord: false,
         visibleExpress: false,
@@ -1035,12 +1036,17 @@
         console.log(this.optType);
         if (this.optType === 1) {
           this.sku_ids = []
+          this.sku_specifications = []
           this.expressOrder.merchant_item.goods_items.forEach(goods => {
             if (!this.allGoodsSend) {
               if (goods.chooseGoods && goods.isHaveGoods === true) {
                 if (goods.goods_info.sku_url !== '') {
                   this.sku_ids.push(goods.goods_info.sku_url)
+                  // 把规格组装进去
+                  this.sku_specifications.push(JSON.stringify(goods.goods_info.specifications))
                 } else {
+                  // 空也要推进去，占位，避免长度和sku_ids不同
+                  this.sku_specifications.push('') 
                   this.sku_ids.push(goods.goods_info.sku_id)
                 }
               }
@@ -1048,11 +1054,13 @@
           })
           if (this.allGoodsSend) {
             this.sku_ids = ''
+            this.sku_specifications = ''
           } else {
             this.sku_ids = JSON.stringify(this.sku_ids)
+            this.sku_specifications = JSON.stringify(this.sku_specifications) 
           }
           // console.log('sku_ids', this.sku_ids)
-          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids, warehouse_id:this.wareid}).then(res => {
+          ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids,sku_specifications:this.sku_specifications, warehouse_id:this.wareid}).then(res => {
             this.$message.success(this.$t('order.expressTip'))
             this.submitDisabled = false
             this.allGoodsSend = true
