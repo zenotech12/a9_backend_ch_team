@@ -5,9 +5,15 @@
       <div class="rightbox">
         <el-row>
           <el-col :span="24" class="funcList">
-            <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
-              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+            <div class="box">
+               <div style="width:200px" class="searchbtn">
+                 <el-input v-model="searchForm.no"></el-input>
+                 <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
+               </div>
+              <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
+                <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+                <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              </div>
             </div>
           </el-col>
         </el-row>
@@ -15,26 +21,53 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="160"></el-table-column>
+                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="130"></el-table-column>
-                <el-table-column :label="$t('warehouse.Purchasing')">
-                  <template  slot-scope="scope">
-                    <div v-if="scope.row.skus.length < 0"></div>
-                    <table class="tabletitle" v-if="scope.row.skus.length > 0">
-                      <tr>
-                        <th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>
-                      </tr>
-                      <tr v-for="(val,k) in scope.row.skus" :key="k">
-                        <td>{{val.name}}</td>
-                        <td>{{val.origin}}</td>
-                        <td>{{val.specification}}</td>
-                        <td>{{val.barcode}}</td>
-                        <td>{{val.unit_price | price}}</td>
-                        <td>{{val.count}}</td>
-                        <td>{{val.arrive_count}}</td>
-                        <td>{{val.total_price | price}}</td>
-                      </tr>
-                    </table>
+                <el-table-column>
+                  <!--<template  slot-scope="scope">-->
+                    <!--<div v-if="scope.row.skus.length < 0"></div>-->
+                    <!--<table class="tabletitle" v-if="scope.row.skus.length > 0">-->
+                      <!--<tr>-->
+                        <!--<th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>-->
+                      <!--</tr>-->
+                      <!--<tr v-for="(val,k) in scope.row.skus" :key="k">-->
+                        <!--<td>{{val.name}}</td>-->
+                        <!--<td>{{val.origin}}</td>-->
+                        <!--<td>{{val.specification}}</td>-->
+                        <!--<td>{{val.barcode}}</td>-->
+                        <!--<td>{{val.unit_price | price}}</td>-->
+                        <!--<td>{{val.count}}</td>-->
+                        <!--<td>{{val.arrive_count}}</td>-->
+                        <!--<td>{{val.total_price | price}}</td>-->
+                      <!--</tr>-->
+                    <!--</table>-->
+                  <!--</template>-->
+
+                  <template slot="header" slot-scope="scope">
+                    <el-row style="width: 100%">
+                      <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.arrive_count')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
+                    </el-row>
+                  </template>
+                  <template slot-scope="scope">
+                    <div class="goods">
+                      <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                        <el-col :span="8">{{item.name}}</el-col>
+                        <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
+                        <el-col :span="3" style="text-align: center">{{item.specification}}</el-col>
+                        <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.arrive_count}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
+                      </el-row>
+                    </div>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.payment')" width="100">
@@ -93,7 +126,7 @@
                 <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.origin"></el-input>
-                  </template> 
+                  </template>
                 </el-table-column>
                 <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
                   <template slot-scope="scope">
@@ -291,9 +324,17 @@
          <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
              <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
-            <el-table-column property="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+            <el-table-column :label="$t('warehouse.PlaceofOrigin')">
+              <template slot-scope="scope">
+                  <el-input v-model="scope.row.origin"></el-input>
+              </template>
+            </el-table-column>
             <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
-            <el-table-column property="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+            <el-table-column :label="$t('warehouse.barCode')">
+              <template  slot-scope="scope">
+                  <el-input v-model="scope.row.barcode"></el-input>
+              </template>
+            </el-table-column>
             <el-table-column property="unit_price" :label="$t('warehouse.price')"></el-table-column>
             <el-table-column :label="$t('warehouse.num')">
               <template slot-scope="scope">
@@ -302,10 +343,10 @@
             </el-table-column>
             <el-table-column property="total_price" :label="$t('warehouse.allprice')"></el-table-column>
           </el-table>
-          <div style="margin-top: 10px;">
-              <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input> 
-            <div style="margin-top: 10px;">
-             <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
+           <div style="margin-top: 10px;">
+           <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input>
+             <div style="margin-top: 10px;">
+               <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
                 v-for="item in warelist"
                 :key="item.value"
@@ -324,11 +365,12 @@
                 :disabled="item.disabled">
               </el-option>
             </el-select>
-           </div>
+             </div>
           </div>
           <div style="display:" slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="inwarehouseAdd" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
+
         </el-dialog>
       </div>
     </div>
@@ -351,7 +393,8 @@
         timeValidSwitch: true,
         searchForm: {
           skip: '',
-          limit: pz
+          limit: pz,
+          no : ''
         },
         warelist: [],
         inwarehouseFrom:{
@@ -365,7 +408,8 @@
         posttion: '',
         searchForm: {
         skip: '',
-        limit: pz
+        limit: pz,
+        no : ''
         },
         locas:[],
         wareId: '',
@@ -788,9 +832,6 @@
         console.log(data);
         this.inwarehouseData = data.skus
       },
-      inwarehouseAdd1(){
-       
-      },
       onchange(e){
           this.getlocationList()
       },
@@ -819,10 +860,12 @@
         warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
           console.log(res);
         })
-        console.log(this.inwarehouseFrom.skus);
         this.commentlog = false
         this.inwarehouselog = false
         this.$message(this.$t('tools.addSuccess'));
+      },
+      Searchlist(){
+        this.getDataListFun()
       }
     },
     mounted() {
@@ -864,5 +907,21 @@
   th{
     text-align: center;
   }
+}
+.goods{
+  .odd{
+    border-top: 1px solid #ccc;
+    &:first-child{
+      border: 0 none;
+    }
+  }
+}
+.box{
+  display: flex;
+  justify-content: space-between;
+}
+.searchbtn{
+  display: flex;
+  align-items: center;
 }
 </style>
