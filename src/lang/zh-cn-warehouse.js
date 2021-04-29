@@ -105,5 +105,6 @@ export default {
   Informationperfect: '信息完善',
   Address: '地址',
   noinformation: '暂无信息',
-  Courierinformation: '快递信息'
+  Courierinformation: '快递信息',
+  Msgt: '商品不能为0'
 }

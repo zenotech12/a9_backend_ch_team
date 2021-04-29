@@ -104,5 +104,6 @@ export default{
   Informationperfect: 'Information perfect',
   Address: 'Address',
   noinformation: 'No information',
-  Courierinformation: 'Courier information'
+  Courierinformation: 'Courier information',
+  Msgt: 'Product cannot be 0'
 }

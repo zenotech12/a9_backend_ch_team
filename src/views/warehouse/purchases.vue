@@ -854,12 +854,19 @@
         this.inwarehouseFrom.warehouse_id = this.wareId
         this.inwarehouseFrom.skus.forEach(item => {
           item.position = this.posttion
-         console.log(item);
+        
         });
-        this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
-        warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-          console.log(res);
-        })
+        this.inwarehouseFrom.skus.forEach(item => {
+          if(item.count>0){
+            this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
+            warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
+            })
+          }else{
+            this.$message('商品数量不能为0');
+          }
+          console.log(item.count);
+        });
+        // console.log(this.inwarehouseFrom.skus);
         this.commentlog = false
         this.inwarehouselog = false
         this.$message(this.$t('tools.addSuccess'));

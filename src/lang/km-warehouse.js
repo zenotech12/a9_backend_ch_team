@@ -104,5 +104,6 @@ export default{
   Informationperfect: 'ព័ត៌មានល្អឥតខ្ចោះ',
   Address: 'អាសយដ្ឋាន',
   noinformation: 'គ្មានព័ត៌មាន',
-  Courierinformation: 'ព័ត៌មានអ្នកនាំសំបុត្រ'
+  Courierinformation: 'ព័ត៌មានអ្នកនាំសំបុត្រ',
+  Msgt: 'ផលិតផលមិនអាចជា ០'
 }
