@@ -15,26 +15,53 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="160"></el-table-column>
+                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="130"></el-table-column>
-                <el-table-column :label="$t('warehouse.Purchasing')">
-                  <template  slot-scope="scope">
-                    <div v-if="scope.row.skus.length < 0"></div>
-                    <table class="tabletitle" v-if="scope.row.skus.length > 0">
-                      <tr>
-                        <th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>
-                      </tr>
-                      <tr v-for="(val,k) in scope.row.skus" :key="k">
-                        <td>{{val.name}}</td>
-                        <td>{{val.origin}}</td>
-                        <td>{{val.specification}}</td>
-                        <td>{{val.barcode}}</td>
-                        <td>{{val.unit_price | price}}</td>
-                        <td>{{val.count}}</td>
-                        <td>{{val.arrive_count}}</td>
-                        <td>{{val.total_price | price}}</td>
-                      </tr>
-                    </table>
+                <el-table-column>
+                  <!--<template  slot-scope="scope">-->
+                    <!--<div v-if="scope.row.skus.length < 0"></div>-->
+                    <!--<table class="tabletitle" v-if="scope.row.skus.length > 0">-->
+                      <!--<tr>-->
+                        <!--<th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>-->
+                      <!--</tr>-->
+                      <!--<tr v-for="(val,k) in scope.row.skus" :key="k">-->
+                        <!--<td>{{val.name}}</td>-->
+                        <!--<td>{{val.origin}}</td>-->
+                        <!--<td>{{val.specification}}</td>-->
+                        <!--<td>{{val.barcode}}</td>-->
+                        <!--<td>{{val.unit_price | price}}</td>-->
+                        <!--<td>{{val.count}}</td>-->
+                        <!--<td>{{val.arrive_count}}</td>-->
+                        <!--<td>{{val.total_price | price}}</td>-->
+                      <!--</tr>-->
+                    <!--</table>-->
+                  <!--</template>-->
+
+                  <template slot="header" slot-scope="scope">
+                    <el-row style="width: 100%">
+                      <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.arrive_count')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
+                    </el-row>
+                  </template>
+                  <template slot-scope="scope">
+                    <div class="goods">
+                      <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                        <el-col :span="8">{{item.name}}</el-col>
+                        <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
+                        <el-col :span="3" style="text-align: center">{{item.specification}}</el-col>
+                        <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.arrive_count}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
+                      </el-row>
+                    </div>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.payment')" width="100">
@@ -93,7 +120,7 @@
                 <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.origin"></el-input>
-                  </template> 
+                  </template>
                 </el-table-column>
                 <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
                   <template slot-scope="scope">
@@ -303,7 +330,7 @@
           </div>
         </el-dialog>
         <el-dialog :title="$t('warehouse.Informationperfect')" width="70%" @close="commentlog=false" :visible.sync="commentlog" :close-on-click-modal="false" center >
-          <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input> 
+          <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input>
            <div style="margin-top: 10px;">
              <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
@@ -863,6 +890,14 @@
   }
   th{
     text-align: center;
+  }
+}
+.goods{
+  .odd{
+    border-top: 1px solid #ccc;
+    &:first-child{
+      border: 0 none;
+    }
   }
 }
 </style>

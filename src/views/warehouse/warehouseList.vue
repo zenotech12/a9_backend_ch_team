@@ -170,7 +170,7 @@
           </div>
         </el-dialog>
         <!--出入库信息-->
-        <el-dialog class="dialog" :title="$t('warehouse.information')" width="70%"
+        <el-dialog class="dialog" :title="$t('warehouse.information')" width="85%"
                    @close="chuRuKuDialog=false"
                    :visible.sync="chuRuKuDialog"
                    :close-on-click-modal="false"
@@ -202,17 +202,31 @@
                 <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
-                <el-table-column :label="$t('warehouse.Productinformation')">
+                <el-table-column >
+                  <template slot="header" slot-scope="scope">
+                    <el-row style="width: 100%">
+                      <el-col :span="10">{{$t('warehouse.Tradename')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.position')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
+                    </el-row>
+                  </template>
                   <template slot-scope="scope">
-                      <div v-for="(item, k) in scope.row.skus" :key="k" class="goodsInfo">
-                        {{$t('warehouse.Tradename')}}:<span>{{item.name}}</span>
-                        {{$t('warehouse.position')}}:<span>{{item.position}}</span>
-                        {{$t('warehouse.pecifications')}}:<span>{{textFilter(item.specification)}}</span>
-                        {{$t('warehouse.barCode')}}:<span>{{item.barcode}}</span>
-                        {{$t('warehouse.price')}}:<span>{{item.unit_price | price}}</span>
-                        {{$t('warehouse.num')}}:<span>{{item.count}}</span>
-                        {{$t('warehouse.allprice')}}:<span>{{item.total_price | price}}</span>
-                      </div>
+                    <div class="goods">
+                      <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                        <el-col :span="10">{{item.name}}</el-col>
+                        <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
+                        <el-col :span="3" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                        <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
+                      </el-row>
+                    </div>
+
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="160px"></el-table-column>
@@ -254,7 +268,7 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="200px"></el-table-column>
+                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">
@@ -262,16 +276,29 @@
                       <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('warehouse.Productinformation')">
+                <el-table-column>
+                  <template slot="header" slot-scope="scope">
+                    <el-row style="width: 100%">
+                      <el-col :span="10">{{$t('warehouse.Tradename')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.position')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
+                    </el-row>
+                  </template>
                   <template slot-scope="scope">
-                    <div v-for="(item, k) in scope.row.skus" :key="k" class="goodsInfo">
-                      {{$t('warehouse.Tradename')}}:<span>{{item.name}}</span>
-                      {{$t('warehouse.position')}}:<span>{{item.position}}</span>
-                      {{$t('warehouse.pecifications')}}:<span>{{textFilter(item.specification)}}</span>
-                      {{$t('warehouse.barCode')}}:<span>{{item.barcode}}</span>
-                      {{$t('warehouse.price')}}:<span>{{item.unit_price | price}}</span>
-                      {{$t('warehouse.num')}}:<span>{{item.count}}</span>
-                      {{$t('warehouse.allprice')}}:<span>{{item.total_price | price}}</span>
+                    <div class="goods">
+                      <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                        <el-col :span="10">{{item.name}}</el-col>
+                        <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
+                        <el-col :span="3" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                        <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                        <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
+                      </el-row>
                     </div>
                   </template>
                 </el-table-column>
@@ -286,7 +313,7 @@
                     <span @click="test" v-if="scope.row.shipping_address == null">{{$t('warehouse.noinformation')}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="shipping_address" :label="$t('warehouse.Courierinformation')">
+                <el-table-column prop="shipping_address" :label="$t('warehouse.Courierinformation')" width="200px">
                   <template slot-scope="scope" @click="test">
                     <span @click="test" v-if="scope.row.express == null">{{$t('warehouse.noinformation')}}</span>
                     <span @click="test" v-if="scope.row.express != null">
@@ -295,7 +322,7 @@
                     </span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="200px"></el-table-column>
+                <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="150px"></el-table-column>
               </el-table>
               <div style="text-align: right;margin-top: 10px">
                 <el-pagination
@@ -995,6 +1022,14 @@ export default {
     .el-input-number {
       line-height: 26px;
       width: 100%;
+    }
+  }
+}
+.goods{
+  .odd{
+    border-top: 1px solid #ccc;
+    &:first-child{
+      border: 0 none;
     }
   }
 }
