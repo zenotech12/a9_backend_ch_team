@@ -105,5 +105,4 @@ export default{
   Address: 'អាសយដ្ឋាន',
   noinformation: 'គ្មានព័ត៌មាន',
   Courierinformation: 'ព័ត៌មានអ្នកនាំសំបុត្រ'
-
 }

@@ -288,23 +288,23 @@
         </el-dialog>
         <!-- 入库 -->
         <el-dialog :title="$t('warehouse.Warehousing')" width="70%" @close="inwarehouselog=false" :visible.sync="inwarehouselog" :close-on-click-modal="false" center >
-         <el-table ref="singleTable" :data="inwarehouseData" border stripe highlight-current-row @current-change="handleCurrentChange">
-            <el-table-column type="index" width="50"></el-table-column>
+         <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
             <el-table-column property="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
             <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
             <el-table-column property="barcode" :label="$t('warehouse.barCode')"></el-table-column>
             <el-table-column property="unit_price" :label="$t('warehouse.price')"></el-table-column>
-            <el-table-column property="count" :label="$t('warehouse.num')"></el-table-column>
+            <el-table-column :label="$t('warehouse.num')">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.count"></el-input>
+              </template>
+            </el-table-column>
             <el-table-column property="total_price" :label="$t('warehouse.allprice')"></el-table-column>
           </el-table>
-          <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="inwarehouseAdd1" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
-          </div>
-        </el-dialog>
-        <el-dialog :title="$t('warehouse.Informationperfect')" width="70%" @close="commentlog=false" :visible.sync="commentlog" :close-on-click-modal="false" center >
-          <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input> 
-           <div style="margin-top: 10px;">
+          <div style="margin-top: 10px;">
+              <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input> 
+            <div style="margin-top: 10px;">
              <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
                 v-for="item in warelist"
@@ -325,7 +325,8 @@
               </el-option>
             </el-select>
            </div>
-          <div slot="footer" class="dialog-footer">
+          </div>
+          <div style="display:" slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="inwarehouseAdd" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
@@ -779,21 +780,16 @@
         })
       },
       warehousing(data){
+        warehousesList(this.searchForm).then(res=>{
+          this.warelist = res.items
+          console.log(this.warelist);
+        })
         this.inwarehouselog = true
         console.log(data);
         this.inwarehouseData = data.skus
       },
       inwarehouseAdd1(){
-        if(this.inwarehouseFrom.skus.length>0){
-          this.commentlog = true
-          warehousesList(this.searchForm).then(res=>{
-            this.warelist = res.items
-            console.log(this.warelist);
-          })
-
-        }else{
-          this.$message(this.$t('warehouse.TipsMsg'))
-        }
+       
       },
       onchange(e){
           this.getlocationList()
@@ -806,20 +802,24 @@
           })
          }
       },
-      handleCurrentChange(val) {
-        this.currentRow = val
+      handleSelectionChange(val) {
+        this.inwarehouseFrom.skus = []
         this.inwarehouseFrom.skus.push(val)
+        this.inwarehouseFrom.skus = this.inwarehouseFrom.skus[0]
         console.log(this.inwarehouseFrom);
       },
       // 确定入库
       inwarehouseAdd(){
         this.inwarehouseFrom.warehouse_id = this.wareId
-        this.inwarehouseFrom.skus[0].position = this.posttion
+        this.inwarehouseFrom.skus.forEach(item => {
+          item.position = this.posttion
+         console.log(item);
+        });
         this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
         warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
           console.log(res);
         })
-        console.log(this.inwarehouseFrom);
+        console.log(this.inwarehouseFrom.skus);
         this.commentlog = false
         this.inwarehouselog = false
         this.$message(this.$t('tools.addSuccess'));
