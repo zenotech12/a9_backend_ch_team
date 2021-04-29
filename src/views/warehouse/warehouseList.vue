@@ -275,7 +275,7 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column prop="shipping_address" label="地址信息" width="200px">
+                <el-table-column prop="shipping_address" :label="$t('warehouse.Address')" width="200px">
                   <template slot-scope="scope" @click="test">
                     <span @click="test" v-if="scope.row.shipping_address != null">
                       {{scope.row.shipping_address.address.province}}-
@@ -283,15 +283,15 @@
                       {{scope.row.shipping_address.address.district}}-
                       {{scope.row.shipping_address.address.addr}}
                       </span>
-                    <span @click="test" v-if="scope.row.shipping_address == null">暂无信息</span>
+                    <span @click="test" v-if="scope.row.shipping_address == null">{{$t('warehouse.noinformation')}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="shipping_address" label="快递信息">
+                <el-table-column prop="shipping_address" :label="$t('warehouse.Courierinformation')">
                   <template slot-scope="scope" @click="test">
-                    <span @click="test" v-if="scope.row.express == null">暂无信息</span>
+                    <span @click="test" v-if="scope.row.express == null">{{$t('warehouse.noinformation')}}</span>
                     <span @click="test" v-if="scope.row.express != null">
-                      <div>公司: {{scope.row.express.company}}</div>
-                      <div>单号: {{scope.row.express.novar}}</div>
+                      <div>{{$t('warehouse.corporateName')}}: {{scope.row.express.company}}</div>
+                      <div>{{$t('warehouse.Singlenumber')}}: {{scope.row.express.novar}}</div>
                     </span>
                   </template>
                 </el-table-column>

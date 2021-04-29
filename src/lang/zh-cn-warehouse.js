@@ -100,5 +100,10 @@ export default {
   inpuWarehouse: '采购单入库',
   Singlenumber: '单号',
   arrive_count: '到达数量',
-  Purchaseorder: '采购单'
+  Purchaseorder: '采购单',
+  Warehousing: '入库',
+  Informationperfect: '信息完善',
+  Address: '地址',
+  noinformation: '暂无信息',
+  Courierinformation: '快递信息'
 }

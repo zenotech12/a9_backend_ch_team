@@ -59,7 +59,7 @@
                     <span class="xiexian">/</span>
                     <el-button type="text" @click="paidListFunc(scope.row)" size="small">{{$t('warehouse.payment2')}}</el-button>
                     <span class="xiexian">/</span>
-                    <el-button type="text" @click="warehousing(scope.row)" size="small">入库</el-button>
+                    <el-button type="text" @click="warehousing(scope.row)" size="small">{{$t('warehouse.Warehousing')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -287,25 +287,25 @@
           </div>
         </el-dialog>
         <!-- 入库 -->
-        <el-dialog title="入库" width="70%" @close="inwarehouselog=false" :visible.sync="inwarehouselog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.Warehousing')" width="70%" @close="inwarehouselog=false" :visible.sync="inwarehouselog" :close-on-click-modal="false" center >
          <el-table ref="singleTable" :data="inwarehouseData" border stripe highlight-current-row @current-change="handleCurrentChange">
             <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column property="name" label="名称"></el-table-column>
-            <el-table-column property="origin" label="产地"></el-table-column>
-            <el-table-column property="specification" label="规格"></el-table-column>
-            <el-table-column property="barcode" label="条形码"></el-table-column>
-            <el-table-column property="unit_price" label="单价"></el-table-column>
-            <el-table-column property="count" label="数量"></el-table-column>
-            <el-table-column property="total_price" label="总价"></el-table-column>
+            <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
+            <el-table-column property="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+            <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
+            <el-table-column property="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+            <el-table-column property="unit_price" :label="$t('warehouse.price')"></el-table-column>
+            <el-table-column property="count" :label="$t('warehouse.num')"></el-table-column>
+            <el-table-column property="total_price" :label="$t('warehouse.allprice')"></el-table-column>
           </el-table>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="inwarehouseAdd1" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
-        <el-dialog title="完善信息" width="70%" @close="commentlog=false" :visible.sync="commentlog" :close-on-click-modal="false" center >
-          <el-input placeholder="填写备注" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input> 
+        <el-dialog :title="$t('warehouse.Informationperfect')" width="70%" @close="commentlog=false" :visible.sync="commentlog" :close-on-click-modal="false" center >
+          <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input> 
            <div style="margin-top: 10px;">
-             <el-select v-model="wareId" @change="onchange" placeholder="请选择">
+             <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
                 v-for="item in warelist"
                 :key="item.value"
@@ -315,7 +315,7 @@
               </el-option>
             </el-select>
             -
-             <el-select v-model="posttion" placeholder="请选择">
+             <el-select v-model="posttion" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
                 v-for="item in locas"
                 :key="item.value"
@@ -792,7 +792,7 @@
           })
 
         }else{
-          this.$message('请选择入库商品')
+          this.$message(this.$t('warehouse.TipsMsg'))
         }
       },
       onchange(e){
@@ -822,7 +822,7 @@
         console.log(this.inwarehouseFrom);
         this.commentlog = false
         this.inwarehouselog = false
-        this.$message('添加成功');
+        this.$message(this.$t('tools.addSuccess'));
       }
     },
     mounted() {

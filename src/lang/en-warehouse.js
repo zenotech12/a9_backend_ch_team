@@ -99,5 +99,10 @@ export default{
   inpuWarehouse: 'Purchase order warehousing',
   Singlenumber: 'Order number',
   arrive_count: 'Arrive Count',
-  Purchaseorder: 'Purchase order'
+  Purchaseorder: 'Purchase order',
+  Warehousing: 'Warehousing',
+  Informationperfect: 'Information perfect',
+  Address: 'Address',
+  noinformation: 'No information',
+  Courierinformation: 'Courier information'
 }

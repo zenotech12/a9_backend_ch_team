@@ -99,6 +99,11 @@ export default{
   inpuWarehouse: 'ទិញកន្លែងផ្ទុកបញ្ជាទិញ',
   Singlenumber: 'លេខទោល',
   arrive_count: 'បរិមាណមកដល់',
-  Purchaseorder: 'បញ្ជា​រ​ទិញ'
+  Purchaseorder: 'បញ្ជា​រ​ទិញ',
+  Warehousing: 'ឃ្លាំង',
+  Informationperfect: 'ព័ត៌មានល្អឥតខ្ចោះ',
+  Address: 'អាសយដ្ឋាន',
+  noinformation: 'គ្មានព័ត៌មាន',
+  Courierinformation: 'ព័ត៌មានអ្នកនាំសំបុត្រ'
 
 }
