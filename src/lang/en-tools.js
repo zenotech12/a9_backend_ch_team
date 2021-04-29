@@ -1,7 +1,7 @@
 ﻿// 通用操作按钮
 export default {
   add: 'add',
-  edit: 'edit',
+  edit: 'Edit',
   new: 'Newly added',
   delete: 'delete',
   confirm: 'confirm',
@@ -10,7 +10,7 @@ export default {
   agree: 'agree',
   refuse: 'refuse',
   detail: 'detail',
-  opt: 'operation',
+  opt: 'Operation',
   prompt: 'prompt',
   search: 'search',
   inventory: 'inventory',

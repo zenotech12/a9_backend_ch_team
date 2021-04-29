@@ -98,6 +98,7 @@ export default{
   pulist: 'បញ្ជីបញ្ជាទិញ',
   inpuWarehouse: 'ទិញកន្លែងផ្ទុកបញ្ជាទិញ',
   Singlenumber: 'លេខទោល',
-  arrive_count: 'បរិមាណមកដល់'
+  arrive_count: 'បរិមាណមកដល់',
+  Purchaseorder: 'បញ្ជា​រ​ទិញ'
 
 }

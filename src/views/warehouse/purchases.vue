@@ -15,11 +15,12 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="180"></el-table-column>
-                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="140"></el-table-column>
+                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="160"></el-table-column>
+                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="130"></el-table-column>
                 <el-table-column :label="$t('warehouse.Purchasing')">
                   <template  slot-scope="scope">
-                    <table class="tabletitle">
+                    <div v-if="scope.row.skus.length < 0"></div>
+                    <table class="tabletitle" v-if="scope.row.skus.length > 0">
                       <tr>
                         <th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>
                       </tr>
@@ -51,12 +52,14 @@
                     {{scope.row.money | price}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="180"></el-table-column>
+                <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="160"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <span class="xiexian">/</span>
                     <el-button type="text" @click="paidListFunc(scope.row)" size="small">{{$t('warehouse.payment2')}}</el-button>
+                    <span class="xiexian">/</span>
+                    <el-button type="text" @click="warehousing(scope.row)" size="small">入库</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -175,7 +178,7 @@
                 </el-table-column>
                 <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
                 <el-table-column :label="$t('warehouse.num')">
-                  <template slot="header" slot-scope="scope">
+                  <template slot="header">
                     {{$t('warehouse.num')}}
                     <el-popover placement="bottom"
                                 width="200"
@@ -190,7 +193,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.price')">
-                  <template slot="header" slot-scope="scope">
+                  <template slot="header">
                     {{$t('goods.price')}}
                     <el-popover placement="bottom"
                                 width="200"
@@ -205,7 +208,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.allprice')">
-                  <template slot="header" slot-scope="scope">
+                  <template slot="header">
                     {{$t('goods.originalPrice')}}
                     <el-popover placement="bottom"
                                 width="200"
@@ -283,6 +286,49 @@
             <confirm-button @confirmButton=" toAdd()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
+        <!-- 入库 -->
+        <el-dialog title="入库" width="70%" @close="inwarehouselog=false" :visible.sync="inwarehouselog" :close-on-click-modal="false" center >
+         <el-table ref="singleTable" :data="inwarehouseData" border stripe highlight-current-row @current-change="handleCurrentChange">
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column property="name" label="名称"></el-table-column>
+            <el-table-column property="origin" label="产地"></el-table-column>
+            <el-table-column property="specification" label="规格"></el-table-column>
+            <el-table-column property="barcode" label="条形码"></el-table-column>
+            <el-table-column property="unit_price" label="单价"></el-table-column>
+            <el-table-column property="count" label="数量"></el-table-column>
+            <el-table-column property="total_price" label="总价"></el-table-column>
+          </el-table>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="inwarehouseAdd1" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
+        <el-dialog title="完善信息" width="70%" @close="commentlog=false" :visible.sync="commentlog" :close-on-click-modal="false" center >
+          <el-input placeholder="填写备注" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input> 
+           <div style="margin-top: 10px;">
+             <el-select v-model="wareId" @change="onchange" placeholder="请选择">
+              <el-option
+                v-for="item in warelist"
+                :key="item.value"
+                :label="item.name"
+                :value="item.id"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
+            -
+             <el-select v-model="posttion" placeholder="请选择">
+              <el-option
+                v-for="item in locas"
+                :key="item.value"
+                :label="item.name"
+                :value="item.name"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
+           </div>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="inwarehouseAdd" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -290,7 +336,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList } from '@/api/warehouse'
+  import { purchaseAdd, Locationlist, warehouseReceiptsAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo } from '@/api/goods'
   export default {
@@ -306,8 +352,27 @@
           skip: '',
           limit: pz
         },
+        warelist: [],
+        inwarehouseFrom:{
+          tp: 1,
+          purchase_id: '',
+          warehouse_id: '',
+          skus:[],
+          comment: ''
+
+        },
+        posttion: '',
+        searchForm: {
+        skip: '',
+        limit: pz
+        },
+        locas:[],
+        wareId: '',
+        inwarehouseData:[],
+        inwarehouselog :false,
         paytype: false,
         test: [],
+        commentlog: false,
         tableData: [],
         currentPage: 1,
         pageSize: pz,
@@ -712,6 +777,52 @@
           this.itemCount = res.total
           // console.log(res.items);
         })
+      },
+      warehousing(data){
+        this.inwarehouselog = true
+        console.log(data);
+        this.inwarehouseData = data.skus
+      },
+      inwarehouseAdd1(){
+        if(this.inwarehouseFrom.skus.length>0){
+          this.commentlog = true
+          warehousesList(this.searchForm).then(res=>{
+            this.warelist = res.items
+            console.log(this.warelist);
+          })
+
+        }else{
+          this.$message('请选择入库商品')
+        }
+      },
+      onchange(e){
+          this.getlocationList()
+      },
+      // 仓库位置
+      getlocationList(){
+         if(this.wareId != ''){
+            Locationlist(this.wareId).then(res=>{
+            this.locas = res.items
+          })
+         }
+      },
+      handleCurrentChange(val) {
+        this.currentRow = val
+        this.inwarehouseFrom.skus.push(val)
+        console.log(this.inwarehouseFrom);
+      },
+      // 确定入库
+      inwarehouseAdd(){
+        this.inwarehouseFrom.warehouse_id = this.wareId
+        this.inwarehouseFrom.skus[0].position = this.posttion
+        this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
+        warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
+          console.log(res);
+        })
+        console.log(this.inwarehouseFrom);
+        this.commentlog = false
+        this.inwarehouselog = false
+        this.$message('添加成功');
       }
     },
     mounted() {

@@ -326,8 +326,8 @@
             <el-form-item :label="$t('warehouse.order')" v-if="istype == true">
               <show-sku-table :resetForm="resetForm" :position="positionList" v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
-            <el-form-item label="采购单" v-if="istype == false">
-               <show-sku-plist  @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
+            <el-form-item :label="$t('warehouse.Purchaseorder')" v-if="istype == false">
+               <show-sku-plist :warehouseId2="wareId" @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -666,9 +666,10 @@ export default {
           this.resetOrder()
         }
       })
-      console.log(this.rukuForm);
+      this.rukuForm = {}
     },
     rukuFunc() {
+      this.rukuForm.tp = 2
       this.resetForm = false
       this.rukuDialog = true
     },
