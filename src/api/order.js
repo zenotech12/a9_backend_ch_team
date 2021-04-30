@@ -168,6 +168,23 @@ export function orderConfirm(id) {
   })
 }
 
+// 订单.认领
+export function orderOwnerShipGet(id) {
+  return request({
+      url: 'orders/' +id +"/get-ownership",
+      method:"post"
+    })
+}
+
+// 订单.转让
+export function orderOwnerShipTrans(id, data) {
+  return request({
+    url: 'orders/' + id + '/trans-ownership',
+    method: "post",
+    data:data
+  })
+}
+
 // 订单.代购订单审核
 export function orderPurchaseCheck(id, data) {
   return request({

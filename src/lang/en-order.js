@@ -128,6 +128,8 @@ export default {
   notRespondingReviews: 'Not responding to reviews',
   replyReviews: 'Reply to reviews',
   confirmTransaction: 'Confirm transaction',
+  ownerShipGet: 'Ownership get',
+  transOwnerShip: 'Trans Ownership',
   deliveryMethod: 'Delivery method',
   payMethod: 'payment method',
   expressDelivery: 'express delivery',

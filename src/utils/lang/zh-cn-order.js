@@ -86,6 +86,8 @@ export default {
   opt7: '取消订单',
   opt8: '确认收货',
   opt9: '修改价格',
+  servicerOpt1: '认领',
+  servicerOpt2: '转让',
   returnTip: '同意退换货申请',
   gift: '兑换',
   afterSale: '售后',
