@@ -343,17 +343,17 @@
           <el-form label-width="100px" :model="rukuForm">
             <el-form-item :label="$t('warehouse.type')">
               <el-radio-group v-model="rukuForm.tp" @change="tpChange">
-                <el-radio :label="1">{{$t('warehouse.inpuWarehouse')}}</el-radio>
-                <el-radio :label="2">{{$t('warehouse.Returnexchange')}}</el-radio>
+                <el-radio :label="2">{{$t('warehouse.inpuWarehouse')}}</el-radio>
+                <el-radio :label="1">{{$t('warehouse.Returnexchange')}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('warehouse.remarks')">
               <el-input v-model="rukuForm.comment" type="textarea"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.order')" v-if="istype == true">
+            <el-form-item :label="$t('warehouse.order')" v-if="istype == false">
               <show-sku-table :resetForm="resetForm" :position="positionList" v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.Purchaseorder')" v-if="istype == false">
+            <el-form-item :label="$t('warehouse.Purchaseorder')" v-if="istype == true">
                <show-sku-plist :warehouseId2="wareId" @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
             </el-form-item>
           </el-form>
@@ -535,7 +535,7 @@ export default {
       inventoriesDialog: false,
       rukuDialog: false,
       rukuForm: {
-        tp: 2, // 1采购单入库 2退换货
+        tp: 1, // 1采购单入库 2退换货
         purchase_id: '',
         warehouse_id: '',
         skus: [],

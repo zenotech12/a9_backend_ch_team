@@ -321,6 +321,15 @@
         </el-dialog>
         <!-- 入库 -->
         <el-dialog :title="$t('warehouse.Warehousing')" width="70%" @close="inwarehouselog=false" :visible.sync="inwarehouselog" :close-on-click-modal="false" center >
+          <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
+              <el-option
+                v-for="item in warelist"
+                :key="item.value"
+                :label="item.name"
+                :value="item.id"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
          <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
              <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
@@ -335,6 +344,19 @@
                   <el-input v-model="scope.row.barcode"></el-input>
               </template>
             </el-table-column>
+            <el-table-column :label="$t('warehouse.location')">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.posttion" :placeholder="$t('warehouse.Pleaseselect')">
+              <el-option
+                v-for="item in locas"
+                :key="item.value"
+                :label="item.name"
+                :value="item.name"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
+              </template>
+            </el-table-column>
             <el-table-column property="unit_price" :label="$t('warehouse.price')"></el-table-column>
             <el-table-column :label="$t('warehouse.num')">
               <template slot-scope="scope">
@@ -345,32 +367,10 @@
           </el-table>
            <div style="margin-top: 10px;">
            <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input>
-             <div style="margin-top: 10px;">
-               <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
-              <el-option
-                v-for="item in warelist"
-                :key="item.value"
-                :label="item.name"
-                :value="item.id"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-            -
-             <el-select v-model="posttion" :placeholder="$t('warehouse.Pleaseselect')">
-              <el-option
-                v-for="item in locas"
-                :key="item.value"
-                :label="item.name"
-                :value="item.name"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-             </div>
           </div>
           <div style="display:" slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="inwarehouseAdd" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
-
         </el-dialog>
       </div>
     </div>
@@ -852,17 +852,17 @@
       // 确定入库
       inwarehouseAdd(){
         this.inwarehouseFrom.warehouse_id = this.wareId
-        this.inwarehouseFrom.skus.forEach(item => {
-          item.position = this.posttion
+        // this.inwarehouseFrom.skus.forEach(item => {
+        //   item.position = this.posttion
         
-        });
+        // });
         this.inwarehouseFrom.skus.forEach(item => {
           if(item.count>0){
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
             warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
             })
           }else{
-            this.$message('商品数量不能为0');
+            this.$message(this.$t('warehouse.Msgt'));
           }
           console.log(item.count);
         });
