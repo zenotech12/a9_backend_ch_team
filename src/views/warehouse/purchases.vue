@@ -846,9 +846,9 @@
       PaymentEit(data) {
         // console.log(data);
         // console.log(this.ispaid_complete);
-        if(this.ispaid_complete == false){
+        // if(this.ispaid_complete == false){
           this.paytype = false
-        }
+        // }
         // console.log(this.paiForm);
         this.paiForm.paid = data.paid
         this.paiForm.id = data.id
@@ -893,11 +893,11 @@
         this.formEditDialog = true
       },
       payaddData() {
+        this.paytype = false
         this.paiForm.id = ''
         this.paiForm.paid = 0
         this.paiForm.pay_time = ''
         this.payaddDialog = true
-        this.paytype = true
       },
       showDataEditor(data) {
         console.log(data)
