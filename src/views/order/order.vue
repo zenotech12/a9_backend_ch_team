@@ -97,6 +97,22 @@
                     </el-popover>
                   </template>
                 </el-table-column>
+                 <!-- 所有者 -->
+                 <el-table-column :label="$t('order.servicer_id')" width="170">
+                  <template slot-scope="scope" >
+                    <el-popover placement="left" width="300" trigger="click">
+                      <el-timeline style="margin-top: 10px">
+                        <el-timeline-item
+                          v-for="(record, index) in scope.row.servicer_operations"
+                          :key="index"
+                          :timestamp="record.time">
+                          <div class="ui"><span>{{record.receiver_name}}</span>{{servicerOptArr[record.tp]}}</div>
+                        </el-timeline-item>
+                      </el-timeline>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.servicer_operations ? scope.row.servicer_operations[scope.row.servicer_operations.length-1].receiver_name:''}}</a>
+                    </el-popover>
+                  </template>
+                </el-table-column>
                 <!-- 用户 -->
                 <el-table-column :label="$t('order.user')" width="130">
                   <template slot-scope="scope">
@@ -207,6 +223,23 @@
                       {{$t('order.express')}}
                       </el-button>
                     </span>
+                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id)" size="small">
+                      {{$t('order.ownerShipGet')}}
+                    </el-button>
+                    <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
+                      <el-select v-model="ownerShipSelectUserId" placeholder="请选择">
+                        <el-option
+                          v-for="item in customerMgrList"
+                          :key="item.user_nick_name"
+                          :label="item.user_nick_name"
+                          :value="item.user_id">
+                        </el-option>
+                      </el-select>
+                      <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
+                        {{$t('tools.confirm')}}
+                      </el-button>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                    </el-popover>
                     <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
                       {{$t('order.confirmTransaction')}}
                     </el-button>
@@ -560,8 +593,9 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords } from '@/api/order'
+  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans} from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
+  import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import areaInfo from '@/utils/areaInfo'
@@ -575,6 +609,7 @@
         searchParamKey: 'orderList',
         doWatch: true,
         showTab: false,
+        servicerOptArr:{1:this.$t('order.servicerOpt1'), 2:this.$t('order.servicerOpt2')},
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
@@ -621,6 +656,7 @@
         expressageList: expressage,
         payPrice: 0,
         comment: '',
+        customerMgrList:[],
         importUrl: serverConfig.api_url + '/app/v1/merchant/orders-import',
         fileUploadHeader: { 'X-Access-Token': store.state.user.token },
         multipleSelection: [],
@@ -635,6 +671,7 @@
         expressInfo: [],
         pageX: '',
         pageY: '',
+        ownerShipSelectUserId:'',
         showOrderStatus: false,
         expressRiderInfo: [],
         addressArray: [],
@@ -857,6 +894,27 @@
           this.$message.success(this.$t('order.confirmTransactionSuccess'))
           this.getDataListFun()
           this.getOrderCount()
+        })
+      },
+      // 认领订单
+      orderOwnerShipGetFunc(id) {
+         orderOwnerShipGet(id).then(res => {
+           this.$message.success("success")
+           this.getDataListFun()
+           this.getOrderCount()
+         })
+      },
+      // 转让订单
+      orderOwnerShipTransFunc(id) {
+        orderOwnerShipTrans(id,{'user_id':this.ownerShipSelectUserId}).then(res => {
+           this.$message.success("success")
+           this.getDataListFun()
+           this.getOrderCount()
+        })
+      },
+      getMgrUerList() {
+        customerServicesList().then(res=>{
+          this.customerMgrList = res.items
         })
       },
       payWay(data) {
@@ -1171,7 +1229,6 @@
         })
         this.optionsAddress.push(obj)
       })
-
       if (this.searchParam[this.searchParamKey]) {
         this.doWatch = false
         this.searchForm = this.searchParam[this.searchParamKey]
@@ -1196,6 +1253,7 @@
       if (key !== undefined && key !== '' && key !== null) {
         this.searchForm.key = key
       }
+      this.getMgrUerList()
       this.getDataListFun()
       this.getOrderCount()
     },
