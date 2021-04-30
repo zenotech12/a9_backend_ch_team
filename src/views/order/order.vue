@@ -578,12 +578,12 @@
         </el-dialog>
         <!-- 出库信息 -->
         <el-dialog
-          width="50%"
+          width="70%"
           :title="$t('order.Delivery')"
           :visible.sync="DeliveryMsgDialog"
           append-to-body>
            <div v-if="warehousedata">
-             <div v-for="(item,key) in this.warehousedata" :key="key">
+             <!-- <div v-for="(item,key) in this.warehousedata" :key="key">
                <div class="wtitle">{{$t('warehouse.name')}} : {{item.warehouse_name}}</div>
                <div class="num">{{$t('order.Relatedorders')}} : <span @click="idsearch(item.relation_order_id)">{{item.relation_order_id}}</span></div>
                 <div class="witems" v-for="(val,i) in item.skus" :key="i">
@@ -592,9 +592,35 @@
                   <div>{{$t('warehouse.num')}} : {{val.count}}</div>
                   <div>{{$t('warehouse.barCode')}} : {{val.barcode}}</div>
                 </div>
-             </div>
+             </div> -->
+            <el-table :data="warehousedata" border style="width: 100%">
+              <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
+              <el-table-column>
+                <template  slot="header" slot-scope="scope">
+                  <el-row style="width: 100%">
+                    <el-col :span="5" style="text-align: center">{{$t('order.Relatedorders')}}</el-col>
+                    <el-col :span="6" style="text-align: center">{{$t('warehouse.name2')}}</el-col>
+                    <el-col :span="8" style="text-align: center">{{$t('warehouse.SpecificationsMsg')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}} </el-col>
+                    <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}} </el-col>
+                  </el-row>
+                </template>
+                <template slot-scope="scope">
+                   <el-row style="width: 100%" v-for="(item, k) in scope.row.skus" :key="k">
+                    <el-col :span="5" style="text-align: center">
+                      <span  class="num"  @click="idsearch(scope.row.relation_order_id)">
+                        {{scope.row.relation_order_id}}
+                      </span>
+                      </el-col>
+                    <el-col :span="6" style="text-align: center">{{item.name}}</el-col>
+                    <el-col :span="8" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{item.arrive_count}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.barcode}}</el-col>
+                  </el-row>
+                </template>
+              </el-table-column>
+            </el-table>
            </div>
-           <div v-if="warehousedata == ''" class="msg">{{$t('order.Msg')}}</div>
           <div slot="footer" class="dialog-footer">
             <el-button size="small" type="primary" @click="DeliveryMsgDialog = false">{{$t('tools.confirm')}}</el-button>
           </div>
@@ -1008,6 +1034,23 @@
           this.$router.push({ name: 'orderExchange', params: { order_no: row.no }})
         }
       },
+      textFilter(data) {
+      let index = data.indexOf('{')
+      if(index != -1){
+        let str = ''
+        const text = JSON.parse(data)
+        Object.keys(text).forEach((v, i) => {
+          if (i === 0) {
+            str = v + ':' + text[v] + ';'
+          } else {
+            str = str + v + ':' + text[v] + ';'
+          }
+        })
+        return str
+      }else{
+        return data
+      }
+    },
       importSuccess(res) {
         this.$message.success(res.error)
         this.getDataListFun()
@@ -1225,6 +1268,7 @@
           this.warehousedata = res.items
         
         })
+        console.log(this.warehousedata);
         this.DeliveryMsgDialog = true
       },
       idsearch(data){
@@ -1395,10 +1439,7 @@
     }
   }
   .num{
-    margin-bottom: 5px;
-    >span{
       color: rgb(53, 123, 226);
-      cursor: pointer;
-    }
+      cursor: pointer;    
   }
 </style>
