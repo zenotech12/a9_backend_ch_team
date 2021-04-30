@@ -6,22 +6,48 @@
     <el-dialog :title="$t('warehouse.pulist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
       <el-table :data="tableData" border stripe>
         <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="100"></el-table-column>
-        <el-table-column :label="$t('warehouse.Purchasing')">
+        <el-table-column>
+          <!--<template slot-scope="scope">-->
+            <!--<table class="tabletitle">-->
+                      <!--<tr>-->
+                        <!--<th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>-->
+                      <!--</tr>-->
+                      <!--<tr v-for="(val,k) in scope.row.skus" :key="k" @click="addpulist(scope.row,val,k)">-->
+                        <!--<td>{{val.name}}</td>-->
+                        <!--<td>{{val.origin}}</td>-->
+                        <!--<td>{{val.specification}}</td>-->
+                        <!--<td>{{val.barcode}}</td>-->
+                        <!--<td>{{val.unit_price | price}}</td>-->
+                        <!--<td>{{val.count}}</td>-->
+                        <!--<td>{{val.total_price | price}}</td>-->
+                      <!--</tr>-->
+            <!--</table>-->
+          <!--</template>-->
+          <template slot="header" slot-scope="scope">
+            <el-row style="width: 100%">
+              <el-col :span="10">{{$t('warehouse.name2')}}</el-col>
+              <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
+              <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+              <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+              <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+              <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+              <!--<el-col :span="2" style="text-align: center">{{$t('warehouse.arrive_count')}}</el-col>-->
+              <el-col :span="2" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
+            </el-row>
+          </template>
           <template slot-scope="scope">
-            <table class="tabletitle">
-                      <tr>
-                        <th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>
-                      </tr>
-                      <tr v-for="(val,k) in scope.row.skus" :key="k" @click="addpulist(scope.row,val,k)">
-                        <td>{{val.name}}</td>
-                        <td>{{val.origin}}</td>
-                        <td>{{val.specification}}</td>
-                        <td>{{val.barcode}}</td>
-                        <td>{{val.unit_price | price}}</td>
-                        <td>{{val.count}}</td>
-                        <td>{{val.total_price | price}}</td>
-                      </tr>
-            </table>
+            <div class="goods">
+              <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                <el-col :span="10">{{item.name}}</el-col>
+                <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
+                <el-col :span="3" style="text-align: center">{{item.specification}}</el-col>
+                <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                <!--<el-col :span="2" style="text-align: center">{{item.arrive_count}}</el-col>-->
+                <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
+              </el-row>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -45,10 +71,10 @@ export default {
       searchFrom: {
         order_id: "",
         skip: 0,
-        limit: 5,
+        limit: 10,
       },
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
       itemCount: 0,
       dialogFormVisible: false,
       tableData: [],
@@ -110,6 +136,14 @@ export default {
   }
   th{
     text-align: center;
+  }
+}
+.goods{
+  .odd{
+    border-top: 1px solid #ccc;
+    &:first-child{
+      border: 0 none;
+    }
   }
 }
 </style>

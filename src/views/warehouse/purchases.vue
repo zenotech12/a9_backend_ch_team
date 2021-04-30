@@ -107,7 +107,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('warehouse.setUp')" width="70%" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.setUp')" width="80%" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
             <el-form-item :label="$t('warehouse.supplier')">
               <el-select v-model="form.supplier_id" clearable :placeholder="$t('warehouse.choice')">
@@ -138,24 +138,29 @@
                     <el-input v-model="scope.row.barcode"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="unit_price" :label="$t('warehouse.price')">
+                <el-table-column prop="unit_price" label="采购价/售价" width="250">
                   <template slot-scope="scope">
-                    <price-input v-model="scope.row.unit_price"></price-input>
+                    <price-input v-model="scope.row.unit_price"><span slot="append">/ {{scope.row.shouJia | price}}</span></price-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="count" :label="$t('warehouse.num')">
-                  <template slot-scope="scope">
-                    {{scope.row.nowCount}}
-                  </template>
-                </el-table-column>
-                <el-table-column prop="count" :label="$t('warehouse.Purchasenum')">
+                <!--<el-table-column prop="count" label="库存">-->
+                  <!--<template slot-scope="scope">-->
+                    <!--{{scope.row.nowCount}}-->
+                  <!--</template>-->
+                <!--</el-table-column>-->
+                <el-table-column prop="count" :label="$t('warehouse.Purchasenum')" width="150">
                   <template slot-scope="scope">
                     <el-input v-model.number="scope.row.count"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
+                <el-table-column prop="total_price" :label="$t('warehouse.allprice')" width="150">
                   <template slot-scope="scope">
                     <price-input v-model="scope.row.total_price"></price-input>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('tools.opt')" width="100">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="deleteRow(scope.$index)" size="small">{{$t('tools.delete')}}</el-button>
                   </template>
                 </el-table-column>
                 <!--<el-table-column :label="$t('warehouse.operation')">-->
@@ -187,9 +192,149 @@
             <el-form-item :label="$t('warehouse.order')" v-if="source === 2">
               <order-selector v-model="orderId" style="width: 300px;"></order-selector>
             </el-form-item>
+            <el-form-item label="订单信息" v-show="source === 2">
+              <el-table stripe border :data="orderInfoData" ref="orderInfoDataTable" key="1">
+                <el-table-column :label="$t('order.no')" width="200px">
+                  <template slot-scope="scope">
+                    <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
+                    <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===3" size="mini">{{$t('order.orderType3')}}</el-tag>
+                    <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===4" size="mini">{{$t('order.orderType4')}}</el-tag>
+                    No:{{scope.row.no}}<br/>
+                    <span class="f12" v-if="scope.row.pay_id">Id:{{scope.row.pay_id}}</span><br/>
+                    <el-popover v-if="scope.row.comment || (scope.row.merchant_comments && scope.row.merchant_comments.length > 0)" placement="right" width="300" trigger="click">
+                      <template v-if="scope.row.comment">
+                        <el-divider content-position="left">{{$t('order.userBz')}}</el-divider>
+                        <div style="padding: 0px 10px; text-align: left">
+                          {{scope.row.comment}}
+                        </div>
+                      </template>
+                      <template v-if="scope.row.merchant_comments && scope.row.merchant_comments.length > 0">
+                        <el-divider content-position="left">{{$t('order.businessBz')}}</el-divider>
+                        <el-timeline style="margin-top: 10px">
+                          <el-timeline-item
+                            v-for="(comments, index) in scope.row.merchant_comments"
+                            :key="index"
+                            :timestamp="comments.gen_time">
+                            <div class="ui"><span>{{comments.operator_name}}</span>{{comments.comment}}</div>
+                          </el-timeline-item>
+                        </el-timeline>
+                      </template>
+                      <a slot="reference" class="gt">{{$t('order.note')}}<i class="el-icon-arrow-right"></i></a>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+                <!-- 下单时间 -->
+                <el-table-column :label="$t('order.genTime')" width="170">
+                  <template slot-scope="scope" >
+                    <el-popover placement="left" width="300" trigger="click">
+                      <el-timeline style="margin-top: 10px">
+                        <el-timeline-item
+                          v-for="(record, index) in scope.row.operation_records"
+                          :key="index"
+                          :timestamp="record.time">
+                          <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
+                        </el-timeline-item>
+                      </el-timeline>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.gen_time}}</a>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+                <!-- 用户 -->
+                <el-table-column :label="$t('order.user')" width="130">
+                  <template slot-scope="scope">
+                    <div class="ui">{{scope.row.user_nick_name}}</div>
+                    <div class="ui">{{scope.row.user_mobile}}</div>
+                  </template>
+                </el-table-column>
+                <!-- 商品 -->
+                <el-table-column  :label="$t('order.goods')" min-width="400">
+                  <template  slot-scope="scope">
+                    <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
+                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                      <div class="g-info">
+                        <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
+                          <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5 && gInfo.goods_info.site_id" alt="">
+                          <el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
+                          <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini">{{$t('order.afterSale')}}</el-tag>
+                        </p>
+                        <p>
+                          <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
+                        </p>
+                        <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                      </div>
+                      <div class="clear"></div>
+                    </div>
+                  </template>
+                </el-table-column>
+                <!-- 金额 -->
+                <el-table-column :label="$t('order.price')" width="130">
+                  <template slot-scope="scope" >
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
+                    <span>({{$t('order.includePostage')}}：{{scope.row.postage | price}})</span>
+                    <div class="ui">
+                      <span>{{$t('order.payMethod')}}：</span>
+                      {{payMethod[scope.row.pay_way_top - 1]}}
+                    </div>
+                  </template>
+                </el-table-column>
+                <!-- 地址 -->
+                <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
+                  <template slot-scope="scope" >
+                    <div class="ui">
+                      <span>{{$t('order.expressAddr')}}：</span>
+                      {{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}
+                      {{scope.row.shipping_address.address.addr}}
+                    </div>
+                    <div class="ui">
+                      <span>{{$t('order.expressUser')}}：</span>
+                      {{scope.row.shipping_address.contacter_name}}&nbsp;&nbsp;
+                      {{scope.row.shipping_address.mobile}}
+                    </div>
+                    <div class="ui">
+                      <span>{{$t('order.deliveryMethod')}}：</span>
+                      {{deliveryMethod[scope.row.post_way - 1]}} <span v-if="scope.row.post_way === 2">({{scope.row.check_code}})</span>
+                    </div>
+                    <div class="ui" v-if="scope.row.express.novar">
+                      <span>{{$t('order.expressNo')}}：</span>
+                      <el-popover placement="left" width="300" trigger="click" v-if="scope.row.express.company === 'zto' || scope.row.express.company === 'rider'">
+                        <div v-if="expressInfo && !showOrderStatus">
+                          <el-timeline style="margin-top: 10px" v-if="expressInfo.length > 0">
+                            <el-timeline-item
+                              v-for="(record, index) in expressInfo"
+                              :key="index"
+                              :timestamp="record.time">
+                              <div class="ui"><span>{{record.message}}</span></div>
+                            </el-timeline-item>
+                          </el-timeline>
+                          <p v-else style="color: #333; font-size: 14px; text-align: center; font-weight: bold">{{$t('order.zwddwl')}}</p>
+                        </div>
+                        <div v-if="showOrderStatus">
+                          <el-timeline style="margin-top: 10px">
+                            <el-timeline-item
+                              v-for="(record, index) in scope.row.operation_records"
+                              :key="index"
+                              :timestamp="record.time">
+                              <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
+                            </el-timeline-item>
+                          </el-timeline>
+                        </div>
+                        <a @click="clickStatus(scope.row)" slot="reference">
+                          {{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}
+                          <i class="el-icon-arrow-right"></i>
+                        </a>
+                      </el-popover>
+                      <a v-else target="_blank" :href="getKuaidi100Url(scope.row.express.company, scope.row.express.novar)">
+                        {{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}
+                        <i class="el-icon-arrow-right"></i>
+                      </a>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-form-item>
             <el-form-item :label="$t('warehouse.commodityspe')" v-if="source === 1">
-              <el-table :data="goodsInventoryTable" row-key="id"  @selection-change="handleSelectionChange1" style="width: 100%">
-                <el-table-column
+              <el-table ref="multipleTable" :data="goodsInventoryTable" row-key="id" key="1" @selection-change="handleSelectionChange1" style="width: 100%">
+                <el-table-column v-if="source === 1"
                   type="selection"
                   width="55">
                 </el-table-column>
@@ -210,56 +355,56 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                <el-table-column :label="$t('warehouse.num')">
-                  <template slot="header">
-                    {{$t('warehouse.num')}}
-                    <el-popover placement="bottom"
-                                width="200"
-                                trigger="click">
-                      <el-input v-model.number="batchCount">
-                      </el-input>
-                      <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                    </el-popover>
-                  </template>
-                  <template  slot-scope="scope">
-                    <el-input v-model.number="scope.row.count"></el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column :label="$t('warehouse.price')">
-                  <template slot="header">
-                    {{$t('goods.price')}}
-                    <el-popover placement="bottom"
-                                width="200"
-                                trigger="click">
-                      <price-input v-model="batchPrice"></price-input>
-                      <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                    </el-popover>
-                  </template>
-                  <template  slot-scope="scope">
-                    <price-input v-model="scope.row.unit_price"></price-input>
-                    <!--<el-input v-model.number="scope.row.price"></el-input>-->
-                  </template>
-                </el-table-column>
-                <el-table-column :label="$t('warehouse.allprice')">
-                  <template slot="header">
-                    {{$t('goods.originalPrice')}}
-                    <el-popover placement="bottom"
-                                width="200"
-                                trigger="click">
-                      <price-input v-model="batchTotalPrice"></price-input>
-                      <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                    </el-popover>
-                  </template>
-                  <template  slot-scope="scope">
-                    <price-input v-model="scope.row.total_price"></price-input>
-                    <!--<el-input v-model.number="scope.row.price"></el-input>-->
-                  </template>
-                </el-table-column>
+                <!--<el-table-column :label="$t('warehouse.num')">-->
+                  <!--<template slot="header">-->
+                    <!--{{$t('warehouse.num')}}-->
+                    <!--<el-popover placement="bottom"-->
+                                <!--width="200"-->
+                                <!--trigger="click">-->
+                      <!--<el-input v-model.number="batchCount">-->
+                      <!--</el-input>-->
+                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
+                    <!--</el-popover>-->
+                  <!--</template>-->
+                  <!--<template  slot-scope="scope">-->
+                    <!--<el-input v-model.number="scope.row.count"></el-input>-->
+                  <!--</template>-->
+                <!--</el-table-column>-->
+                <!--<el-table-column :label="$t('warehouse.price')">-->
+                  <!--<template slot="header">-->
+                    <!--{{$t('goods.price')}}-->
+                    <!--<el-popover placement="bottom"-->
+                                <!--width="200"-->
+                                <!--trigger="click">-->
+                      <!--<price-input v-model="batchPrice"></price-input>-->
+                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
+                    <!--</el-popover>-->
+                  <!--</template>-->
+                  <!--<template  slot-scope="scope">-->
+                    <!--<price-input v-model="scope.row.unit_price"></price-input>-->
+                    <!--&lt;!&ndash;<el-input v-model.number="scope.row.price"></el-input>&ndash;&gt;-->
+                  <!--</template>-->
+                <!--</el-table-column>-->
+                <!--<el-table-column :label="$t('warehouse.allprice')">-->
+                  <!--<template slot="header">-->
+                    <!--{{$t('goods.originalPrice')}}-->
+                    <!--<el-popover placement="bottom"-->
+                                <!--width="200"-->
+                                <!--trigger="click">-->
+                      <!--<price-input v-model="batchTotalPrice"></price-input>-->
+                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
+                    <!--</el-popover>-->
+                  <!--</template>-->
+                  <!--<template  slot-scope="scope">-->
+                    <!--<price-input v-model="scope.row.total_price"></price-input>-->
+                    <!--&lt;!&ndash;<el-input v-model.number="scope.row.price"></el-input>&ndash;&gt;-->
+                  <!--</template>-->
+                <!--</el-table-column>-->
               </el-table>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="saveDataFuncSkus()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <confirm-button @confirmButton="saveDataFuncSkus()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.save')"></confirm-button>
           </div>
         </el-dialog>
         <!-- 付款单列表 -->
@@ -477,7 +622,11 @@
           this.$t('warehouse.num'),
           this.$t('warehouse.arrive_count'),
           this.$t('warehouse.allprice')
-        ]
+        ],
+        orderInfoData: [],
+        payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
+        deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
+        optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
       }
     },
     computed: {
@@ -521,7 +670,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { id: '', name: val[0].goodsName, origin: '', sku_uid: '', specification: this.textFilter(item), unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
+            const tableItem = { id: '', name: val[0].goodsName, origin: '', sku_uid: '', specification: this.textFilter(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -543,14 +692,19 @@
                 tableItem.id = this.goodsInventoryData[i].id + str
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.no = this.goodsInventoryData[i].no
-                tableItem.count = this.goodsInventoryData[i].inventory
+                tableItem.count = ''
                 tableItem.unit_price = this.goodsInventoryData[i].price
+                tableItem.shouJia = this.goodsInventoryData[i].price
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.total_price = this.goodsInventoryData[i].inventory * this.goodsInventoryData[i].price
               }
             }
             this.goodsInventoryTable.push(tableItem)
           })
+          this.$refs.multipleTable.toggleAllSelection()
+          // this.goodsInventoryTable.forEach(row => {
+          //   this.$refs.multipleTable.toggleRowSelection(row, true)
+          // })
         },
         deep: true
       },
@@ -574,6 +728,16 @@
         },
         deep: true
       },
+      orderId(val) {
+        if (val !== '') {
+          ordersInfo(val).then(res => {
+            if (res.meta === 0) {
+              this.orderInfoData = []
+              this.orderInfoData.push(res.item)
+            }
+          })
+        }
+      },
       goodsId(val) {
         if (val !== '') {
           this.getGoodsSkus(val)
@@ -581,6 +745,9 @@
       }
     },
     methods: {
+      deleteRow(index) {
+        this.skusArray.splice(index, 1)
+      },
       laiyuanChange() {
         this.goodsInventoryTable = []
       },
@@ -602,7 +769,7 @@
       },
       handleSelectionChange1(val) {
         console.log('er', val)
-        this.multipleSelection = []
+        // this.multipleSelection = []
         this.multipleSelection = val
         // val.forEach((item) => {
         //   this.multipleSelection.push(item.id)
@@ -657,8 +824,9 @@
                 sku_uid: goodsinfo.sku_url !== '' ? goodsinfo.sku_url : goodsinfo.sku_id,
                 barcode: goodsinfo.barcode,
                 unit_price: goodsinfo.unit_pay_price,
+                shouJia: goodsinfo.unit_pay_price,
                 count: goodsinfo.count,
-                nowCount: goodsinfo.count,
+                // nowCount: goodsinfo.count,
                 total_price: goodsinfo.pay_price
               }
               const index = this.skusArray.findIndex(z => {
@@ -750,6 +918,7 @@
         this.orderId = ''
         this.goodsId = ''
         this.goodsInventoryTable = []
+        this.orderInfoData = []
       },
       setForm(data) {
         if (data) {
