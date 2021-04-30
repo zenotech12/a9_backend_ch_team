@@ -106,5 +106,6 @@ export default {
   Address: '地址',
   noinformation: '暂无信息',
   Courierinformation: '快递信息',
-  Msgt: '商品不能为0'
+  Msgt: '商品不能为0',
+  Isitdone: '已完成所有付款'
 }
