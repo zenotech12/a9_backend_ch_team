@@ -188,7 +188,7 @@
               <order-selector v-model="orderId" style="width: 300px;"></order-selector>
             </el-form-item>
             <el-form-item :label="$t('warehouse.commodityspe')" v-if="source === 1">
-              <el-table :data="goodsInventoryTable" row-key="id"  @selection-change="handleSelectionChange" style="width: 100%">
+              <el-table :data="goodsInventoryTable" row-key="id"  @selection-change="handleSelectionChange1" style="width: 100%">
                 <el-table-column
                   type="selection"
                   width="55">
@@ -346,7 +346,7 @@
             </el-table-column>
             <el-table-column :label="$t('warehouse.location')">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.posttion" :placeholder="$t('warehouse.Pleaseselect')">
+                <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
                 v-for="item in locas"
                 :key="item.value"
@@ -600,8 +600,8 @@
           }
         })
       },
-      handleSelectionChange(val) {
-        // console.log('er', val)
+      handleSelectionChange1(val) {
+        console.log('er', val)
         this.multipleSelection = []
         this.multipleSelection = val
         // val.forEach((item) => {
@@ -854,7 +854,7 @@
         this.inwarehouseFrom.warehouse_id = this.wareId
         // this.inwarehouseFrom.skus.forEach(item => {
         //   item.position = this.posttion
-        
+
         // });
         this.inwarehouseFrom.skus.forEach(item => {
           if(item.count>0){
