@@ -121,6 +121,27 @@
                       </el-timeline>
                       <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.servicer_operations ? scope.row.servicer_operations[scope.row.servicer_operations.length-1].receiver_name:''}}</a>
                     </el-popover>
+                    <div>
+                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id)" size="small">
+                      {{$t('order.ownerShipGet')}}
+                    </el-button>
+                    <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
+                      <el-select v-model="ownerShipSelectUserId" placeholder="请选择">
+                        <el-option
+                          v-for="item in customerMgrList"
+                          :key="item.user_nick_name"
+                          :label="item.user_nick_name"
+                          :value="item.user_id">
+                        </el-option>
+                      </el-select>
+                      <div style="text-align:center;">
+                         <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
+                        {{$t('tools.confirm')}}
+                      </el-button>
+                      </div>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                    </el-popover>
+                    </div>
                   </template>
                 </el-table-column>
                 <!-- 用户 -->
@@ -225,26 +246,6 @@
                 <!-- 操作 -->
                 <el-table-column :label="$t('tools.opt')" width="150" fixed="right"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
-                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id)" size="small">
-                      {{$t('order.ownerShipGet')}}
-                    </el-button>
-                    <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
-                      <el-select v-model="ownerShipSelectUserId" placeholder="请选择">
-                        <el-option
-                          v-for="item in customerMgrList"
-                          :key="item.user_nick_name"
-                          :label="item.user_nick_name"
-                          :value="item.user_id">
-                        </el-option>
-                      </el-select>
-                      <div style="text-align:center;">
-                         <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
-                        {{$t('tools.confirm')}}
-                      </el-button>
-                      </div>
- 
-                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
-                    </el-popover>
                     <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2">
                       <el-button type="text" v-if="scope.row.status === 4" @click="showExpressEditor(scope.row,5)" size="small">
                       {{$t('order.modifyExpress')}}
