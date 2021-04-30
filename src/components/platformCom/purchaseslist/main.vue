@@ -4,25 +4,10 @@
       <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
     </el-input>
     <el-dialog :title="$t('warehouse.pulist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
-      <el-table :data="tableData" border stripe>
+      <el-table :data="tableData" border stripe ref="singleTable" highlight-current-row  @current-change="handleCurrentChange">
+         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="100"></el-table-column>
         <el-table-column>
-          <!--<template slot-scope="scope">-->
-            <!--<table class="tabletitle">-->
-                      <!--<tr>-->
-                        <!--<th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>-->
-                      <!--</tr>-->
-                      <!--<tr v-for="(val,k) in scope.row.skus" :key="k" @click="addpulist(scope.row,val,k)">-->
-                        <!--<td>{{val.name}}</td>-->
-                        <!--<td>{{val.origin}}</td>-->
-                        <!--<td>{{val.specification}}</td>-->
-                        <!--<td>{{val.barcode}}</td>-->
-                        <!--<td>{{val.unit_price | price}}</td>-->
-                        <!--<td>{{val.count}}</td>-->
-                        <!--<td>{{val.total_price | price}}</td>-->
-                      <!--</tr>-->
-            <!--</table>-->
-          <!--</template>-->
           <template slot="header" slot-scope="scope">
             <el-row style="width: 100%">
               <el-col :span="10">{{$t('warehouse.name2')}}</el-col>
@@ -115,7 +100,7 @@ export default {
     confirmButton(data) {
       // console.log(data);
     },
-    addpulist(data,val,k){
+    handleCurrentChange(data,val,k){
         this.dialogFormVisible = false
         this.$emit("dataid",data)
         this.$emit("getvalue",val)

@@ -24,25 +24,6 @@
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="130"></el-table-column>
                 <el-table-column>
-                  <!--<template  slot-scope="scope">-->
-                    <!--<div v-if="scope.row.skus.length < 0"></div>-->
-                    <!--<table class="tabletitle" v-if="scope.row.skus.length > 0">-->
-                      <!--<tr>-->
-                        <!--<th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>-->
-                      <!--</tr>-->
-                      <!--<tr v-for="(val,k) in scope.row.skus" :key="k">-->
-                        <!--<td>{{val.name}}</td>-->
-                        <!--<td>{{val.origin}}</td>-->
-                        <!--<td>{{val.specification}}</td>-->
-                        <!--<td>{{val.barcode}}</td>-->
-                        <!--<td>{{val.unit_price | price}}</td>-->
-                        <!--<td>{{val.count}}</td>-->
-                        <!--<td>{{val.arrive_count}}</td>-->
-                        <!--<td>{{val.total_price | price}}</td>-->
-                      <!--</tr>-->
-                    <!--</table>-->
-                  <!--</template>-->
-
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
                       <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
@@ -354,52 +335,7 @@
                     <el-input v-model.number="scope.row.origin"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                <!--<el-table-column :label="$t('warehouse.num')">-->
-                  <!--<template slot="header">-->
-                    <!--{{$t('warehouse.num')}}-->
-                    <!--<el-popover placement="bottom"-->
-                                <!--width="200"-->
-                                <!--trigger="click">-->
-                      <!--<el-input v-model.number="batchCount">-->
-                      <!--</el-input>-->
-                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
-                    <!--</el-popover>-->
-                  <!--</template>-->
-                  <!--<template  slot-scope="scope">-->
-                    <!--<el-input v-model.number="scope.row.count"></el-input>-->
-                  <!--</template>-->
-                <!--</el-table-column>-->
-                <!--<el-table-column :label="$t('warehouse.price')">-->
-                  <!--<template slot="header">-->
-                    <!--{{$t('goods.price')}}-->
-                    <!--<el-popover placement="bottom"-->
-                                <!--width="200"-->
-                                <!--trigger="click">-->
-                      <!--<price-input v-model="batchPrice"></price-input>-->
-                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
-                    <!--</el-popover>-->
-                  <!--</template>-->
-                  <!--<template  slot-scope="scope">-->
-                    <!--<price-input v-model="scope.row.unit_price"></price-input>-->
-                    <!--&lt;!&ndash;<el-input v-model.number="scope.row.price"></el-input>&ndash;&gt;-->
-                  <!--</template>-->
-                <!--</el-table-column>-->
-                <!--<el-table-column :label="$t('warehouse.allprice')">-->
-                  <!--<template slot="header">-->
-                    <!--{{$t('goods.originalPrice')}}-->
-                    <!--<el-popover placement="bottom"-->
-                                <!--width="200"-->
-                                <!--trigger="click">-->
-                      <!--<price-input v-model="batchTotalPrice"></price-input>-->
-                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
-                    <!--</el-popover>-->
-                  <!--</template>-->
-                  <!--<template  slot-scope="scope">-->
-                    <!--<price-input v-model="scope.row.total_price"></price-input>-->
-                    <!--&lt;!&ndash;<el-input v-model.number="scope.row.price"></el-input>&ndash;&gt;-->
-                  <!--</template>-->
-                <!--</el-table-column>-->
+                <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>  
               </el-table>
             </el-form-item>
           </el-form>
@@ -440,14 +376,14 @@
                 </el-pagination>
               </div>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="Paycomplete(1)" :disabled="submitDisabled" v-if="!this.paytype" :confirmButtonInfor="$t('warehouse.Cpayment')" ></confirm-button>
+            <!-- <confirm-button @confirmButton="Paycomplete(1)" :disabled="submitDisabled" v-if="!this.paytype" :confirmButtonInfor="$t('warehouse.Cpayment')" ></confirm-button> -->
             <confirm-button @confirmButton="Paycomplete(2)" :disabled="submitDisabled" :confirmButtonInfor="$t('warehouse.close')"></confirm-button>
           </div>
         </el-dialog>
         <!-- 付款单设置 -->
         <el-dialog :title="$t('warehouse.payset')" width="700px" append-to-body @close="payaddDialog = false" :visible.sync="payaddDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="skus">
-            <el-form-item :label="$t('warehouse.price')">
+            <el-form-item :label="$t('warehouse.PaymentAmount')">
               <price-input v-model="paiForm.paid"></price-input>
             </el-form-item>
             <el-form-item :label="$t('warehouse.OrderTime')">
@@ -458,7 +394,9 @@
               :placeholder="$t('order.pleaseChooseTime')">
             </el-date-picker>
             </el-form-item>
-
+            <el-form-item :label="$t('warehouse.Isitdone')" label-width="145px" v-if="!this.paytype">
+              <el-switch v-model="switchvalue" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton=" toAdd()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -550,6 +488,7 @@
           comment: ''
 
         },
+        switchvalue: false,
         posttion: '',
         searchForm: {
         skip: '',
@@ -593,6 +532,7 @@
           skip: '',
           limit: pz
         },
+        ispaid_complete : '',
         paidList: [],
         currentPagePay: 1,
         pageSizePay: pz,
@@ -842,6 +782,8 @@
         })
       },
       paidListFunc(data) {
+        this.ispaid_complete = data.paid_complete
+        // console.log(this.ispaid_complete);
         // console.log(data);
         this.paidListDialog = true
         this.searchFormpay.purchase_id = data.id
@@ -883,7 +825,7 @@
         this.skusDialog = false
       },
       toAdd() {
-        // console.log('data', this.paiForm)
+        console.log('data', this.paiForm)
         if (this.paiForm.id !== '') {
           modifypaysList(this.paiForm.id, this.paiForm).then(res => {
             this.getPayListFunc()
@@ -893,9 +835,20 @@
             this.getPayListFunc()
           })
         }
+        if(this.switchvalue == true){
+           Paymentcomplete(this.paiForm.purchase_id).then(res => {
+            this.getDataListFun()
+            this.paidListDialog = false
+          })
+        }
         this.payaddDialog = false
       },
       PaymentEit(data) {
+        // console.log(data);
+        // console.log(this.ispaid_complete);
+        if(this.ispaid_complete == false){
+          this.paytype = false
+        }
         // console.log(this.paiForm);
         this.paiForm.paid = data.paid
         this.paiForm.id = data.id
@@ -905,12 +858,7 @@
       Paycomplete(val) {
         if (val === 2) {
           this.paidListDialog = false
-        } else if (val === 1) {
-          Paymentcomplete(this.paiForm.purchase_id).then(res => {
-            this.getDataListFun()
-            this.paidListDialog = false
-          })
-        }
+        } 
       },
       addSkus() {
         this.skusDialog = true
@@ -949,6 +897,7 @@
         this.paiForm.paid = 0
         this.paiForm.pay_time = ''
         this.payaddDialog = true
+        this.paytype = true
       },
       showDataEditor(data) {
         console.log(data)
@@ -1003,6 +952,9 @@
       },
       onchange(e){
           this.getlocationList()
+           this.inwarehouseFrom.skus.forEach(item => {
+            item.position = ''
+          });
       },
       // 仓库位置
       getlocationList(){

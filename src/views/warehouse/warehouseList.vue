@@ -272,6 +272,7 @@
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">
+                      <span v-if="scope.row.tp === 1">{{$t('warehouse.order')}}</span>
                       <span v-if="scope.row.tp === 2">{{$t('warehouse.Scrap')}}</span>
                       <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
                   </template>
@@ -691,6 +692,8 @@ export default {
           this.rukuDialog = false
           this.getRuKuData()
           this.resetOrder()
+          this.istype = true
+          this.rukuForm.tp = 1
         }
       })
       this.rukuForm = {}
