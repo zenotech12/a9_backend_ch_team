@@ -36,7 +36,7 @@
         <el-table-column property="unit_price" :label="$t('warehouse.price')"></el-table-column>
         <el-table-column :label="$t('warehouse.num')">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.count"></el-input>
+            <el-input v-model.number="scope.row.count"></el-input>
           </template>
         </el-table-column>
         <el-table-column property="total_price" :label="$t('warehouse.allprice')"></el-table-column>
