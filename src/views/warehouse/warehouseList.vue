@@ -343,19 +343,21 @@
         <el-dialog :title="$t('warehouse.StockinorderSet')" @close="resetOrder1" width="80%" append-to-body :visible.sync="rukuDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="rukuForm">
             <el-form-item :label="$t('warehouse.type')">
-              <el-radio-group v-model="rukuForm.tp" @change="tpChange">
-                <el-radio :label="2">{{$t('warehouse.inpuWarehouse')}}</el-radio>
-                <el-radio :label="1">{{$t('warehouse.Returnexchange')}}</el-radio>
-              </el-radio-group>
+              <!-- <el-radio-group v-model="rukuForm.tp" @change="tpChange">
+                <el-radio :label="1">{{$t('warehouse.inpuWarehouse')}}</el-radio>
+                <el-radio :label="2">{{$t('warehouse.Returnexchange')}}</el-radio>
+              </el-radio-group> -->
+              <el-radio v-model="rukuForm.tp" label="1">{{$t('warehouse.inpuWarehouse')}}</el-radio>
+              <el-radio v-model="rukuForm.tp" label="2">{{$t('warehouse.Returnexchange')}}</el-radio>
             </el-form-item>
             <el-form-item :label="$t('warehouse.remarks')">
               <el-input v-model="rukuForm.comment" type="textarea"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.order')" v-if="istype == false">
+            <el-form-item :label="$t('warehouse.order')" v-if="rukuForm.tp == '2'">
               <show-sku-table :resetForm="resetForm" :position="positionList" v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.Purchaseorder')" v-if="istype == true">
-               <show-sku-plist :warehouseId2="wareId" @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
+            <el-form-item :label="$t('warehouse.Purchaseorder')" v-if="rukuForm.tp == '1'">
+               <show-sku-plist :warehouseId2="wareId" :resetForm="resetForm1" @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -536,7 +538,7 @@ export default {
       inventoriesDialog: false,
       rukuDialog: false,
       rukuForm: {
-        tp: 1, // 1采购单入库 2退换货
+        tp: '1', // 1采购单入库 2退换货
         purchase_id: '',
         warehouse_id: '',
         skus: [],
@@ -593,7 +595,8 @@ export default {
       resetForm: false,
       stockId: '',
       cangkuId: '',
-      chukuArrayData: []
+      chukuArrayData: [],
+      resetForm1: false
     }
   },
 
@@ -626,6 +629,9 @@ export default {
         this.chuKuSearchForm.bt = ''
         this.chuKuSearchForm.et = ''
       }
+    },
+    'rukuForm.tp': function(val) {
+      console.log('tpp', val)
     }
   },
   methods: {
@@ -662,6 +668,7 @@ export default {
       this.rukuForm.comment = ''
       this.rukuForm.skus = []
       this.resetForm = true
+      this.resetForm1 = true
     },
     resetOrder1() {
       this.resetOrder()
@@ -686,22 +693,27 @@ export default {
     },
     addRuKuForm() {
       // console.log('form', this.rukuForm)
-      this.rukuForm.skus = JSON.stringify(this.rukuForm.skus)
-      warehouseReceiptsAdd(this.rukuForm).then(res => {
-        if (res.meta === 0) {
-          this.rukuDialog = false
-          this.getRuKuData()
-          this.resetOrder()
-          this.istype = true
-          this.rukuForm.tp = 1
+      this.rukuForm.skus.forEach(item => {
+        if(item.position != ''){
+          this.rukuForm.skus = JSON.stringify(this.rukuForm.skus)
+          warehouseReceiptsAdd(this.rukuForm).then(res => {
+            if (res.meta === 0) {
+              this.rukuDialog = false
+              this.getRuKuData()
+              this.resetOrder()
+            }
+          })
+        }else{
+          this.$message(this.$t('warehouse.placeLoc'))
         }
-      })
-      this.rukuForm = {}
+      });
     },
     rukuFunc() {
-      this.rukuForm.tp = 2
       this.resetForm = false
+      this.rukuForm.tp = '1'
+      this.resetForm1 = false
       this.rukuDialog = true
+      console.log('tp', this.rukuForm.tp)
     },
     showInventories(data) {
       this.inventoriesSearchForm.warehouse_id = data.id
@@ -718,11 +730,6 @@ export default {
       })
     },
     tpChange(e) {
-      if(e == 1){
-        this.istype = false
-      }else if(e == 2){
-        this.istype = true
-      }
       this.rukuForm.purchase_id = ''
     },
     getPurchaseList() {
@@ -960,7 +967,7 @@ export default {
     getid(id){
        if(id != undefined){
         this.rukuForm.purchase_id = id
-        this.rukuForm.tp = 1
+        // this.rukuForm.tp = 1
        }
     }
   },

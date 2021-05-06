@@ -66,7 +66,25 @@ export default {
         return '';
       },
     },
+     resetForm: {
+        type: Boolean,
+        default: function() {
+          return false
+        }
+      }
   },
+  watch: {
+      resetForm: {
+        handler(val) {
+          console.log('vvvv5v', val)
+          if (val === true) {
+          
+            this.tableData = []
+          }
+        },
+        deep: true
+      }
+    },
   methods: {
     dataid(data) {
       this.puid = data.id;

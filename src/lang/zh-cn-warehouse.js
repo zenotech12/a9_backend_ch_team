@@ -107,5 +107,10 @@ export default {
   noinformation: '暂无信息',
   Courierinformation: '快递信息',
   Msgt: '商品不能为0',
-  Isitdone: '已完成所有付款'
+  Isitdone: '已完成所有付款',
+  orderinformation: '订单信息',
+  pricetype: '采购价/售价',
+  addsuccess: '添加成功',
+  placeLoc: '请选择货位',
+  placewarehouse: '请选择仓库'
 }

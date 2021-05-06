@@ -105,5 +105,11 @@ export default{
   Address: 'អាសយដ្ឋាន',
   noinformation: 'គ្មានព័ត៌មាន',
   Courierinformation: 'ព័ត៌មានអ្នកនាំសំបុត្រ',
-  Msgt: 'ផលិតផលមិនអាចជា ០'
+  Msgt: 'ផលិតផលមិនអាចជា ០',
+  Isitdone: 'ការទូទាត់ទាំងអស់ត្រូវបានបញ្ចប់',
+  orderinformation: 'ព័ត៌មានបញ្ជាទិញ',
+  pricetype: 'តំលៃ​ទិញ/តំលៃលក់',
+  addsuccess: 'បានបន្ថែមដោយជោគជ័យ',
+  placeLoc: 'សូមជ្រើសរើសទីតាំង',
+  placewarehouse: 'សូមជ្រើសរើសឃ្លាំងមួយ'
 }
