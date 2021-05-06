@@ -11,6 +11,16 @@
           </el-col>
           <el-col :span ="24">
             <el-form :inline="true" :model="searchForm">
+            <el-form-item :label="$t('order.ownerShipStatusSelect')">
+              <el-select v-model="searchForm.ownership_status" clearable>
+                <el-option
+                  v-for="(item, k) in ownerShipStatuses"
+                  :key="k"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('order.searchKey')">
               <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 250px" clearable></el-input>
             </el-form-item>
@@ -100,7 +110,7 @@
                  <!-- 所有者 -->
                  <el-table-column :label="$t('order.servicer_id')" width="170">
                   <template slot-scope="scope" >
-                    <el-popover placement="left" width="300" trigger="click">
+                    <el-popover v-if="scope.row.servicer_operations" placement="left" width="300" trigger="click">
                       <el-timeline style="margin-top: 10px">
                         <el-timeline-item
                           v-for="(record, index) in scope.row.servicer_operations"
@@ -111,6 +121,27 @@
                       </el-timeline>
                       <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.servicer_operations ? scope.row.servicer_operations[scope.row.servicer_operations.length-1].receiver_name:''}}</a>
                     </el-popover>
+                    <div>
+                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id)" size="small">
+                      {{$t('order.ownerShipGet')}}
+                    </el-button>
+                    <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
+                      <el-select v-model="ownerShipSelectUserId" placeholder="请选择">
+                        <el-option
+                          v-for="item in customerMgrList"
+                          :key="item.user_nick_name"
+                          :label="item.user_nick_name"
+                          :value="item.user_id">
+                        </el-option>
+                      </el-select>
+                      <div style="text-align:center;">
+                         <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
+                        {{$t('tools.confirm')}}
+                      </el-button>
+                      </div>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                    </el-popover>
+                    </div>
                   </template>
                 </el-table-column>
                 <!-- 用户 -->
@@ -223,23 +254,6 @@
                       {{$t('order.express')}}
                       </el-button>
                     </span>
-                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id)" size="small">
-                      {{$t('order.ownerShipGet')}}
-                    </el-button>
-                    <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
-                      <el-select v-model="ownerShipSelectUserId" placeholder="请选择">
-                        <el-option
-                          v-for="item in customerMgrList"
-                          :key="item.user_nick_name"
-                          :label="item.user_nick_name"
-                          :value="item.user_id">
-                        </el-option>
-                      </el-select>
-                      <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
-                        {{$t('tools.confirm')}}
-                      </el-button>
-                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
-                    </el-popover>
                     <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
                       {{$t('order.confirmTransaction')}}
                     </el-button>
@@ -738,6 +752,20 @@
             value: 'yue',
             label: this.$t('lang.balance')
           }
+        ],
+        ownerShipStatuses:[
+          {
+             value: 0, 
+             label: this.$t("order.ownerShipSelectAll"),
+          },
+          {
+             value: 1, 
+             label: this.$t("order.ownerShipSelectSelf"),
+          },
+          {
+             value: 2, 
+             label: this.$t("order.ownerShipSelectUndo"),
+          },
         ],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
