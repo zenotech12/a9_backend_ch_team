@@ -67,13 +67,15 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="160"></el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
+                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')">
                   <template slot-scope="scope">
-                    <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                    <span class="xiexian">/</span>
-                    <el-button type="text" @click="paidListFunc(scope.row)" size="small">{{$t('warehouse.payment2')}}</el-button>
-                    <span class="xiexian">/</span>
-                    <el-button type="text" @click="warehousing(scope.row)" size="small">{{$t('warehouse.Warehousing')}}</el-button>
+                    <el-button type="text" @click="showDataEditor(scope.row)" v-if="permissionCheck('opt', '8_3')" size="small">{{$t('tools.edit')}}</el-button>
+                    <el-button type="text" @click="shengheFunc(scope.row.id,2)" v-if="permissionCheck('opt', '9_1') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('global.financialApproval')}}</el-button>
+                    <el-button type="text" @click="shengheFunc(scope.row.id,3)" v-if="permissionCheck('opt', '9_2') && scope.row.status === 2" size="small">{{$t('global.leadershipApproval')}}</el-button>
+                    <!--<span class="xiexian">/</span>-->
+                    <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3" size="small">{{$t('warehouse.payment2')}}</el-button>
+                    <!--<span class="xiexian">/</span>-->
+                    <el-button type="text" @click="warehousing(scope.row)" v-if="scope.row.status === 3" size="small">{{$t('warehouse.Warehousing')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -486,7 +488,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseAdd, Locationlist, warehouseReceiptsAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList } from '@/api/warehouse'
+  import { purchaseAdd, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo } from '@/api/goods'
   export default {
@@ -602,7 +604,7 @@
     },
     computed: {
       ...mapGetters([
-        'userInfo'
+        'shopInfo'
       ])
     },
     watch: {
@@ -716,6 +718,13 @@
       }
     },
     methods: {
+      shengheFunc(id, number) {
+        warehousePurchasesReview(id, { status: number }).then(res => {
+          this.getDataListFun()
+          // 18280415659
+          // 15874045326
+        })
+      },
       deleteRow(index) {
         this.skusArray.splice(index, 1)
       },
@@ -889,7 +898,7 @@
       Paycomplete(val) {
         if (val === 2) {
           this.paidListDialog = false
-        } 
+        }
       },
       addSkus() {
         this.skusDialog = true
@@ -995,7 +1004,7 @@
           item.position = ''
         });
       },
-     
+
       // 仓库位置
       getlocationList(){
          if(this.wareId != ''){
@@ -1028,7 +1037,7 @@
               }
             }).catch(res=>{
               this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
-            })     
+            })
           }else{
             this.$message(this.$t('warehouse.placeLoc'))
           }
