@@ -339,7 +339,7 @@
               </el-table>
                <div class="mar10">
                  <el-form-item label="选择货币类型">
-                  <el-select v-model="from.currency" clearable placeholder="请选择">
+                  <el-select v-model="currency" clearable placeholder="请选择">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
@@ -567,6 +567,7 @@
           paid: 0,
           pay_time: ''
         },
+        currency: '',
         source: 1,
         orderId: '',
         goodsId: '',
@@ -588,6 +589,11 @@
           this.$t('warehouse.allprice')
         ],
         flag:'',
+        options:[
+          {value:'US Dollar',label: 'US Dollar'},
+          {value:'Riel(Cambodia)',label: 'Riel(Cambodia)'},
+          {value:'RBM',label: 'RBM'},
+        ],
         orderInfoData: [],
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
@@ -951,6 +957,8 @@
             this.submitDisabled = false
           })
         } else {
+          console.log(this.form);
+          this.form.currency = this.currency
           purchaseAdd(this.form).then(res => {
             this.getDataListFun()
             this.formEditDialog = false
