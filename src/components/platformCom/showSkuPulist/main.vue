@@ -86,7 +86,6 @@ export default {
         handler(val) {
           console.log('vvvv5v', val)
           if (val === true) {
-          
             this.tableData = []
           }
         },

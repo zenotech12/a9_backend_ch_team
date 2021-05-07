@@ -98,8 +98,12 @@ export default {
         this.$emit("getvalue",val)
         this.$emit("key",k)
     },  
+    setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      },
     confgBtn(){
       this.dialogFormVisible = false
+      this.setCurrent()
     },
   },
 };
