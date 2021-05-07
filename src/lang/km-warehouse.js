@@ -69,6 +69,7 @@ export default{
   DeliverySet: 'ការកំណត់ព័ត៌មាននៅខាងក្',
   Scrap: 'បោះចោល',
   return: 'ត្រឡប់មកវិញ',
+  Orderdelivery: 'ការដឹកជញ្ជូនបញ្ជាទិញ',
   locationList: 'បញ្ជីទំនិញ',
   batchAdd: 'បរិមាណបន្ថែមកន្លែងទំនេរ',
   location2: 'ចន្លោះទំនិញ',
@@ -105,5 +106,11 @@ export default{
   Address: 'អាសយដ្ឋាន',
   noinformation: 'គ្មានព័ត៌មាន',
   Courierinformation: 'ព័ត៌មានអ្នកនាំសំបុត្រ',
-  Msgt: 'ផលិតផលមិនអាចជា ០'
+  Msgt: 'ផលិតផលមិនអាចជា ០',
+  Isitdone: 'ការទូទាត់ទាំងអស់ត្រូវបានបញ្ចប់',
+  orderinformation: 'ព័ត៌មានបញ្ជាទិញ',
+  pricetype: 'តំលៃ​ទិញ/តំលៃលក់',
+  addsuccess: 'បានបន្ថែមដោយជោគជ័យ',
+  placeLoc: 'សូមជ្រើសរើសទីតាំង',
+  placewarehouse: 'សូមជ្រើសរើសឃ្លាំងមួយ'
 }

@@ -57,7 +57,7 @@ export default{
   enterlist: 'Stock In list',
   outlist: 'Stock Out list',
   SupplierNmae: 'Supplier name',
-  number: 'Number',
+  number: 'Receiving  Number',
   Productinformation: 'Product information',
   Tradename: 'Product name',
   SpecificationsMsg: 'Specification information',
@@ -69,6 +69,7 @@ export default{
   DeliverySet: 'Stock out setting',
   Scrap: 'Scrapped',
   return: 'Return',
+  Orderdelivery: 'Order delivery',
   locationList: 'Cargo space list',
   batchAdd: 'Add space in batch',
   location2: 'Cargo space',
@@ -105,5 +106,12 @@ export default{
   Address: 'Address',
   noinformation: 'No information',
   Courierinformation: 'Courier information',
-  Msgt: 'Product cannot be 0'
+  Msgt: 'Product cannot be 0',
+  Isitdone: 'All payments have been completed',
+  orderinformation: 'Order information',
+  pricetype: 'Purchase price/Selling price',
+  addsuccess: 'Added successfully',
+  placeLoc: 'Please select a location',
+  placewarehouse: 'Please select a warehouse'
+
 }

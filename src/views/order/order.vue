@@ -11,6 +11,16 @@
           </el-col>
           <el-col :span ="24">
             <el-form :inline="true" :model="searchForm">
+            <el-form-item :label="$t('order.ownerShipStatusSelect')">
+              <el-select v-model="searchForm.ownership_status" clearable>
+                <el-option
+                  v-for="(item, k) in ownerShipStatuses"
+                  :key="k"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('order.searchKey')">
               <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 250px" clearable></el-input>
             </el-form-item>
@@ -95,6 +105,43 @@
                       </el-timeline>
                       <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.gen_time}}</a>
                     </el-popover>
+                  </template>
+                </el-table-column>
+                 <!-- 所有者 -->
+                 <el-table-column :label="$t('order.servicer_id')" width="170">
+                  <template slot-scope="scope" >
+                    <el-popover v-if="scope.row.servicer_operations" placement="left" width="300" trigger="click">
+                      <el-timeline style="margin-top: 10px">
+                        <el-timeline-item
+                          v-for="(record, index) in scope.row.servicer_operations"
+                          :key="index"
+                          :timestamp="record.time">
+                          <div class="ui"><span>{{record.receiver_name}}</span>{{servicerOptArr[record.tp]}}</div>
+                        </el-timeline-item>
+                      </el-timeline>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.servicer_operations ? scope.row.servicer_operations[scope.row.servicer_operations.length-1].receiver_name:''}}</a>
+                    </el-popover>
+                    <div>
+                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id)" size="small">
+                      {{$t('order.ownerShipGet')}}
+                    </el-button>
+                    <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
+                      <el-select v-model="ownerShipSelectUserId" placeholder="请选择">
+                        <el-option
+                          v-for="item in customerMgrList"
+                          :key="item.user_nick_name"
+                          :label="item.user_nick_name"
+                          :value="item.user_id">
+                        </el-option>
+                      </el-select>
+                      <div style="text-align:center;">
+                         <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
+                        {{$t('tools.confirm')}}
+                      </el-button>
+                      </div>
+                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                    </el-popover>
+                    </div>
                   </template>
                 </el-table-column>
                 <!-- 用户 -->
@@ -532,12 +579,12 @@
         </el-dialog>
         <!-- 出库信息 -->
         <el-dialog
-          width="50%"
+          width="70%"
           :title="$t('order.Delivery')"
           :visible.sync="DeliveryMsgDialog"
           append-to-body>
            <div v-if="warehousedata">
-             <div v-for="(item,key) in this.warehousedata" :key="key">
+             <!-- <div v-for="(item,key) in this.warehousedata" :key="key">
                <div class="wtitle">{{$t('warehouse.name')}} : {{item.warehouse_name}}</div>
                <div class="num">{{$t('order.Relatedorders')}} : <span @click="idsearch(item.relation_order_id)">{{item.relation_order_id}}</span></div>
                 <div class="witems" v-for="(val,i) in item.skus" :key="i">
@@ -546,9 +593,35 @@
                   <div>{{$t('warehouse.num')}} : {{val.count}}</div>
                   <div>{{$t('warehouse.barCode')}} : {{val.barcode}}</div>
                 </div>
-             </div>
+             </div> -->
+            <el-table :data="warehousedata" border style="width: 100%">
+              <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
+              <el-table-column>
+                <template  slot="header" slot-scope="scope">
+                  <el-row style="width: 100%">
+                    <el-col :span="5" style="text-align: center">{{$t('order.Relatedorders')}}</el-col>
+                    <el-col :span="6" style="text-align: center">{{$t('warehouse.name2')}}</el-col>
+                    <el-col :span="8" style="text-align: center">{{$t('warehouse.SpecificationsMsg')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}} </el-col>
+                    <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}} </el-col>
+                  </el-row>
+                </template>
+                <template slot-scope="scope">
+                   <el-row style="width: 100%" v-for="(item, k) in scope.row.skus" :key="k">
+                    <el-col :span="5" style="text-align: center">
+                      <span  class="num"  @click="idsearch(scope.row.relation_order_id)">
+                        {{scope.row.relation_order_id}}
+                      </span>
+                      </el-col>
+                    <el-col :span="6" style="text-align: center">{{item.name}}</el-col>
+                    <el-col :span="8" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{item.arrive_count}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.barcode}}</el-col>
+                  </el-row>
+                </template>
+              </el-table-column>
+            </el-table>
            </div>
-           <div v-if="warehousedata == ''" class="msg">{{$t('order.Msg')}}</div>
           <div slot="footer" class="dialog-footer">
             <el-button size="small" type="primary" @click="DeliveryMsgDialog = false">{{$t('tools.confirm')}}</el-button>
           </div>
@@ -560,8 +633,9 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords } from '@/api/order'
+  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans} from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
+  import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
   import serverConfig from '@/utils/serverConfig'
   import areaInfo from '@/utils/areaInfo'
@@ -575,6 +649,7 @@
         searchParamKey: 'orderList',
         doWatch: true,
         showTab: false,
+        servicerOptArr:{1:this.$t('order.servicerOpt1'), 2:this.$t('order.servicerOpt2')},
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
@@ -621,6 +696,7 @@
         expressageList: expressage,
         payPrice: 0,
         comment: '',
+        customerMgrList:[],
         importUrl: serverConfig.api_url + '/app/v1/merchant/orders-import',
         fileUploadHeader: { 'X-Access-Token': store.state.user.token },
         multipleSelection: [],
@@ -635,6 +711,7 @@
         expressInfo: [],
         pageX: '',
         pageY: '',
+        ownerShipSelectUserId:'',
         showOrderStatus: false,
         expressRiderInfo: [],
         addressArray: [],
@@ -675,6 +752,20 @@
             value: 'yue',
             label: this.$t('lang.balance')
           }
+        ],
+        ownerShipStatuses:[
+          {
+             value: 0, 
+             label: this.$t("order.ownerShipSelectAll"),
+          },
+          {
+             value: 1, 
+             label: this.$t("order.ownerShipSelectSelf"),
+          },
+          {
+             value: 2, 
+             label: this.$t("order.ownerShipSelectUndo"),
+          },
         ],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
@@ -859,6 +950,27 @@
           this.getOrderCount()
         })
       },
+      // 认领订单
+      orderOwnerShipGetFunc(id) {
+         orderOwnerShipGet(id).then(res => {
+           this.$message.success("success")
+           this.getDataListFun()
+           this.getOrderCount()
+         })
+      },
+      // 转让订单
+      orderOwnerShipTransFunc(id) {
+        orderOwnerShipTrans(id,{'user_id':this.ownerShipSelectUserId}).then(res => {
+           this.$message.success("success")
+           this.getDataListFun()
+           this.getOrderCount()
+        })
+      },
+      getMgrUerList() {
+        customerServicesList().then(res=>{
+          this.customerMgrList = res.items
+        })
+      },
       payWay(data) {
         let str = ''
         this.listV.forEach(v => {
@@ -923,6 +1035,23 @@
           this.$router.push({ name: 'orderExchange', params: { order_no: row.no }})
         }
       },
+      textFilter(data) {
+      let index = data.indexOf('{')
+      if(index != -1){
+        let str = ''
+        const text = JSON.parse(data)
+        Object.keys(text).forEach((v, i) => {
+          if (i === 0) {
+            str = v + ':' + text[v] + ';'
+          } else {
+            str = str + v + ':' + text[v] + ';'
+          }
+        })
+        return str
+      }else{
+        return data
+      }
+    },
       importSuccess(res) {
         this.$message.success(res.error)
         this.getDataListFun()
@@ -1140,6 +1269,7 @@
           this.warehousedata = res.items
         
         })
+        console.log(this.warehousedata);
         this.DeliveryMsgDialog = true
       },
       idsearch(data){
@@ -1171,7 +1301,6 @@
         })
         this.optionsAddress.push(obj)
       })
-
       if (this.searchParam[this.searchParamKey]) {
         this.doWatch = false
         this.searchForm = this.searchParam[this.searchParamKey]
@@ -1196,6 +1325,7 @@
       if (key !== undefined && key !== '' && key !== null) {
         this.searchForm.key = key
       }
+      this.getMgrUerList()
       this.getDataListFun()
       this.getOrderCount()
     },
@@ -1310,10 +1440,7 @@
     }
   }
   .num{
-    margin-bottom: 5px;
-    >span{
       color: rgb(53, 123, 226);
-      cursor: pointer;
-    }
+      cursor: pointer;    
   }
 </style>

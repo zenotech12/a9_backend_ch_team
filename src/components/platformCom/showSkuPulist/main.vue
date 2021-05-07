@@ -33,13 +33,21 @@
             <el-input v-model="scope.row.barcode"></el-input>
           </template>
         </el-table-column>
-        <el-table-column property="unit_price" :label="$t('warehouse.price')"></el-table-column>
+        <el-table-column property="unit_price" :label="$t('warehouse.price')">
+           <template slot-scope="scope">
+                      {{scope.row.unit_price | price}}
+                    </template>
+        </el-table-column>
         <el-table-column :label="$t('warehouse.num')">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.count"></el-input>
+            <el-input v-model.number="scope.row.count"></el-input>
           </template>
         </el-table-column>
-        <el-table-column property="total_price" :label="$t('warehouse.allprice')"></el-table-column>
+        <el-table-column property="total_price" :label="$t('warehouse.allprice')">
+           <template slot-scope="scope">
+                      {{scope.row.total_price | price}}
+                    </template>
+        </el-table-column>
       </el-table>
     </el-row>
   </div>
@@ -66,7 +74,24 @@ export default {
         return '';
       },
     },
+     resetForm: {
+        type: Boolean,
+        default: function() {
+          return false
+        }
+      }
   },
+  watch: {
+      resetForm: {
+        handler(val) {
+          console.log('vvvv5v', val)
+          if (val === true) {
+            this.tableData = []
+          }
+        },
+        deep: true
+      }
+    },
   methods: {
     dataid(data) {
       this.puid = data.id;
@@ -80,12 +105,10 @@ export default {
     },
     getpuinfo() {
       purchaseInfo(this.puid).then((res) => {
-        // this.tableData = res
-        // console.log(res.item.skus);
-        res.item.skus.forEach((item) => {
-          item.position = "";
-        });
         this.tableData = res.item.skus;
+        this.tableData.forEach((item, k) => {
+          this.$set(this.tableData[k], 'position', '')
+        });
       });
     },
     handleSelectionChange(val) {

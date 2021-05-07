@@ -70,6 +70,7 @@ export default {
   DeliverySet: '出库信息设置',
   Scrap: '报废',
   return: '退回',
+  Orderdelivery: '订单出库',
   locationList: '货位列表',
   batchAdd: '批量添加货位',
   location2: '货位',
@@ -106,5 +107,11 @@ export default {
   Address: '地址',
   noinformation: '暂无信息',
   Courierinformation: '快递信息',
-  Msgt: '商品不能为0'
+  Msgt: '商品不能为0',
+  Isitdone: '已完成所有付款',
+  orderinformation: '订单信息',
+  pricetype: '采购价/售价',
+  addsuccess: '添加成功',
+  placeLoc: '请选择货位',
+  placewarehouse: '请选择仓库'
 }

@@ -24,26 +24,7 @@
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="130"></el-table-column>
                 <el-table-column>
-                  <!--<template  slot-scope="scope">-->
-                    <!--<div v-if="scope.row.skus.length < 0"></div>-->
-                    <!--<table class="tabletitle" v-if="scope.row.skus.length > 0">-->
-                      <!--<tr>-->
-                        <!--<th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>-->
-                      <!--</tr>-->
-                      <!--<tr v-for="(val,k) in scope.row.skus" :key="k">-->
-                        <!--<td>{{val.name}}</td>-->
-                        <!--<td>{{val.origin}}</td>-->
-                        <!--<td>{{val.specification}}</td>-->
-                        <!--<td>{{val.barcode}}</td>-->
-                        <!--<td>{{val.unit_price | price}}</td>-->
-                        <!--<td>{{val.count}}</td>-->
-                        <!--<td>{{val.arrive_count}}</td>-->
-                        <!--<td>{{val.total_price | price}}</td>-->
-                      <!--</tr>-->
-                    <!--</table>-->
-                  <!--</template>-->
-
-                  <template slot="header" slot-scope="scope">
+                  <template slot="header">
                     <el-row style="width: 100%">
                       <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
@@ -110,7 +91,7 @@
         <el-dialog :title="$t('warehouse.setUp')" width="80%" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
             <el-form-item :label="$t('warehouse.supplier')">
-              <el-select v-model="form.supplier_id" clearable :placeholder="$t('warehouse.choice')">
+              <el-select v-model="form.supplier_id" filterable clearable :placeholder="$t('warehouse.choice')">
                 <el-option
                   v-for="item in supplierList"
                   :key="item.id"
@@ -138,7 +119,7 @@
                     <el-input v-model="scope.row.barcode"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="unit_price" label="采购价/售价" width="250">
+                <el-table-column prop="unit_price" :label="$t('warehouse.pricetype')" width="250">
                   <template slot-scope="scope">
                     <price-input v-model="scope.row.unit_price"><span slot="append">/ {{scope.row.shouJia | price}}</span></price-input>
                   </template>
@@ -192,7 +173,7 @@
             <el-form-item :label="$t('warehouse.order')" v-if="source === 2">
               <order-selector v-model="orderId" style="width: 300px;"></order-selector>
             </el-form-item>
-            <el-form-item label="订单信息" v-show="source === 2">
+            <el-form-item :label="$t('warehouse.orderinformation')" v-show="source === 2">
               <el-table stripe border :data="orderInfoData" ref="orderInfoDataTable" key="1">
                 <el-table-column :label="$t('order.no')" width="200px">
                   <template slot-scope="scope">
@@ -355,52 +336,19 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                <!--<el-table-column :label="$t('warehouse.num')">-->
-                  <!--<template slot="header">-->
-                    <!--{{$t('warehouse.num')}}-->
-                    <!--<el-popover placement="bottom"-->
-                                <!--width="200"-->
-                                <!--trigger="click">-->
-                      <!--<el-input v-model.number="batchCount">-->
-                      <!--</el-input>-->
-                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
-                    <!--</el-popover>-->
-                  <!--</template>-->
-                  <!--<template  slot-scope="scope">-->
-                    <!--<el-input v-model.number="scope.row.count"></el-input>-->
-                  <!--</template>-->
-                <!--</el-table-column>-->
-                <!--<el-table-column :label="$t('warehouse.price')">-->
-                  <!--<template slot="header">-->
-                    <!--{{$t('goods.price')}}-->
-                    <!--<el-popover placement="bottom"-->
-                                <!--width="200"-->
-                                <!--trigger="click">-->
-                      <!--<price-input v-model="batchPrice"></price-input>-->
-                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
-                    <!--</el-popover>-->
-                  <!--</template>-->
-                  <!--<template  slot-scope="scope">-->
-                    <!--<price-input v-model="scope.row.unit_price"></price-input>-->
-                    <!--&lt;!&ndash;<el-input v-model.number="scope.row.price"></el-input>&ndash;&gt;-->
-                  <!--</template>-->
-                <!--</el-table-column>-->
-                <!--<el-table-column :label="$t('warehouse.allprice')">-->
-                  <!--<template slot="header">-->
-                    <!--{{$t('goods.originalPrice')}}-->
-                    <!--<el-popover placement="bottom"-->
-                                <!--width="200"-->
-                                <!--trigger="click">-->
-                      <!--<price-input v-model="batchTotalPrice"></price-input>-->
-                      <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
-                    <!--</el-popover>-->
-                  <!--</template>-->
-                  <!--<template  slot-scope="scope">-->
-                    <!--<price-input v-model="scope.row.total_price"></price-input>-->
-                    <!--&lt;!&ndash;<el-input v-model.number="scope.row.price"></el-input>&ndash;&gt;-->
-                  <!--</template>-->
-                <!--</el-table-column>-->
               </el-table>
+               <div class="mar10">
+                 <el-form-item label="选择货币类型">
+                  <el-select v-model="from.currency" clearable placeholder="请选择">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+               </div>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -440,14 +388,14 @@
                 </el-pagination>
               </div>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="Paycomplete(1)" :disabled="submitDisabled" v-if="!this.paytype" :confirmButtonInfor="$t('warehouse.Cpayment')" ></confirm-button>
+            <!-- <confirm-button @confirmButton="Paycomplete(1)" :disabled="submitDisabled" v-if="!this.paytype" :confirmButtonInfor="$t('warehouse.Cpayment')" ></confirm-button> -->
             <confirm-button @confirmButton="Paycomplete(2)" :disabled="submitDisabled" :confirmButtonInfor="$t('warehouse.close')"></confirm-button>
           </div>
         </el-dialog>
         <!-- 付款单设置 -->
         <el-dialog :title="$t('warehouse.payset')" width="700px" append-to-body @close="payaddDialog = false" :visible.sync="payaddDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="skus">
-            <el-form-item :label="$t('warehouse.price')">
+            <el-form-item :label="$t('warehouse.PaymentAmount')">
               <price-input v-model="paiForm.paid"></price-input>
             </el-form-item>
             <el-form-item :label="$t('warehouse.OrderTime')">
@@ -458,7 +406,9 @@
               :placeholder="$t('order.pleaseChooseTime')">
             </el-date-picker>
             </el-form-item>
-
+            <el-form-item :label="$t('warehouse.Isitdone')" label-width="145px" v-if="!this.paytype">
+              <el-switch v-model="switchvalue" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton=" toAdd()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -475,44 +425,56 @@
                 :disabled="item.disabled">
               </el-option>
             </el-select>
-         <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
-            <el-table-column :label="$t('warehouse.PlaceofOrigin')">
-              <template slot-scope="scope">
-                  <el-input v-model="scope.row.origin"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
-            <el-table-column :label="$t('warehouse.barCode')">
-              <template  slot-scope="scope">
-                  <el-input v-model="scope.row.barcode"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('warehouse.location')">
-              <template slot-scope="scope">
-                <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
-              <el-option
-                v-for="item in locas"
-                :key="item.value"
-                :label="item.name"
-                :value="item.name"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column property="unit_price" :label="$t('warehouse.price')"></el-table-column>
-            <el-table-column :label="$t('warehouse.num')">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.count"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="total_price" :label="$t('warehouse.allprice')"></el-table-column>
-          </el-table>
-           <div style="margin-top: 10px;">
-           <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input>
-          </div>
+            <div v-if="wareId">
+              <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                  <el-table-column type="selection" width="55"></el-table-column>
+                  <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
+                  <el-table-column :label="$t('warehouse.PlaceofOrigin')">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.origin"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
+                  <el-table-column :label="$t('warehouse.barCode')">
+                    <template  slot-scope="scope">
+                        <el-input v-model="scope.row.barcode"></el-input>
+                    </template>
+                  </el-table-column>
+                    <el-table-column :label="$t('warehouse.location')">
+                      <template slot-scope="scope">
+                        <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
+                          <el-option
+                           v-for="(item, k) in locas"
+                           :key="k"
+                           :label="item.name"
+                           :value="item.name">
+                          </el-option>
+                        </el-select>
+                      </template>
+                    </el-table-column>
+                  <el-table-column property="unit_price" :label="$t('warehouse.price')">
+                     <template slot-scope="scope">
+                      {{scope.row.unit_price | price}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('warehouse.num')">
+                    <template slot-scope="scope">
+                      <el-input v-model="scope.row.count"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column property="total_price" :label="$t('warehouse.allprice')">
+                    <template slot-scope="scope">
+                      {{scope.row.total_price | price}}
+                    </template>
+                  </el-table-column>
+              </el-table>
+              <div style="margin-top: 10px;">
+                <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input>
+              </div>
+            </div>
+            <div v-if="!wareId" class="Msg">
+              {{$t('warehouse.placewarehouse')}}
+            </div>
           <div style="display:" slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="inwarehouseAdd" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
@@ -550,7 +512,8 @@
           comment: ''
 
         },
-        posttion: '',
+        switchvalue: false,
+        position: '',
         searchForm: {
         skip: '',
         limit: pz,
@@ -593,6 +556,7 @@
           skip: '',
           limit: pz
         },
+        ispaid_complete : '',
         paidList: [],
         currentPagePay: 1,
         pageSizePay: pz,
@@ -623,6 +587,7 @@
           this.$t('warehouse.arrive_count'),
           this.$t('warehouse.allprice')
         ],
+        flag:'',
         orderInfoData: [],
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
@@ -842,6 +807,8 @@
         })
       },
       paidListFunc(data) {
+        this.ispaid_complete = data.paid_complete
+        // console.log(this.ispaid_complete);
         // console.log(data);
         this.paidListDialog = true
         this.searchFormpay.purchase_id = data.id
@@ -883,7 +850,7 @@
         this.skusDialog = false
       },
       toAdd() {
-        // console.log('data', this.paiForm)
+        console.log('data', this.paiForm)
         if (this.paiForm.id !== '') {
           modifypaysList(this.paiForm.id, this.paiForm).then(res => {
             this.getPayListFunc()
@@ -893,9 +860,20 @@
             this.getPayListFunc()
           })
         }
+        if(this.switchvalue == true){
+           Paymentcomplete(this.paiForm.purchase_id).then(res => {
+            this.getDataListFun()
+            this.paidListDialog = false
+          })
+        }
         this.payaddDialog = false
       },
       PaymentEit(data) {
+        // console.log(data);
+        // console.log(this.ispaid_complete);
+        // if(this.ispaid_complete == false){
+          this.paytype = false
+        // }
         // console.log(this.paiForm);
         this.paiForm.paid = data.paid
         this.paiForm.id = data.id
@@ -905,12 +883,7 @@
       Paycomplete(val) {
         if (val === 2) {
           this.paidListDialog = false
-        } else if (val === 1) {
-          Paymentcomplete(this.paiForm.purchase_id).then(res => {
-            this.getDataListFun()
-            this.paidListDialog = false
-          })
-        }
+        } 
       },
       addSkus() {
         this.skusDialog = true
@@ -928,7 +901,8 @@
             id: '',
             order_id: '',
             supplier_id: '',
-            skus: ''
+            skus: '',
+            currency: '',
           }
         }
       },
@@ -945,6 +919,7 @@
         this.formEditDialog = true
       },
       payaddData() {
+        this.paytype = false
         this.paiForm.id = ''
         this.paiForm.paid = 0
         this.paiForm.pay_time = ''
@@ -993,17 +968,26 @@
         })
       },
       warehousing(data){
+        this.wareId = ''
+        this.inwarehouseFrom.comment = ''
         warehousesList(this.searchForm).then(res=>{
           this.warelist = res.items
-          console.log(this.warelist);
         })
         this.inwarehouselog = true
-        console.log(data);
         this.inwarehouseData = data.skus
+        this.inwarehouseData.forEach((item, k) => {
+          // item['position'] = ''
+          this.$set(this.inwarehouseData[k], 'position', '')
+        });
+        console.log(this.inwarehouseData);
       },
       onchange(e){
-          this.getlocationList()
+        this.getlocationList()
+        this.inwarehouseFrom.skus.map(item => {
+          item.position = ''
+        });
       },
+     
       // 仓库位置
       getlocationList(){
          if(this.wareId != ''){
@@ -1014,32 +998,33 @@
       },
       handleSelectionChange(val) {
         this.inwarehouseFrom.skus = []
-        this.inwarehouseFrom.skus.push(val)
-        this.inwarehouseFrom.skus = this.inwarehouseFrom.skus[0]
-        console.log(this.inwarehouseFrom);
+        this.inwarehouseFrom.skus = val
+        console.log(this.inwarehouseFrom.skus);
       },
       // 确定入库
       inwarehouseAdd(){
         this.inwarehouseFrom.warehouse_id = this.wareId
-        // this.inwarehouseFrom.skus.forEach(item => {
-        //   item.position = this.posttion
-
-        // });
-        this.inwarehouseFrom.skus.forEach(item => {
-          if(item.count>0){
+        this.inwarehouseFrom.skus.map(item => {
+          item.count = Number(item.count)
+        });
+        this.flag = this.inwarehouseFrom.skus.every(item => {
+          return item.position != ''
+        });
+          if(this.flag == true){
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
             warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-            })
+             if(res.meta == 0){
+                this.commentlog = false
+                this.inwarehouselog = false
+                this.$message(this.$t('warehouse.addsuccess'))
+              }
+            }).catch(res=>{
+              this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
+            })     
           }else{
-            this.$message(this.$t('warehouse.Msgt'));
+            this.$message(this.$t('warehouse.placeLoc'))
           }
-          console.log(item.count);
-        });
-        // console.log(this.inwarehouseFrom.skus);
-        this.commentlog = false
-        this.inwarehouselog = false
-        this.$message(this.$t('tools.addSuccess'));
-      },
+        },
       Searchlist(){
         this.getDataListFun()
       }
@@ -1099,5 +1084,15 @@
 .searchbtn{
   display: flex;
   align-items: center;
+}
+.Msg{
+  width: 100%;
+  line-height: 100px;
+  font-size: 17px;
+  text-align: center;
+  color: #909399;
+}
+.mar10{
+  margin-top: 10px;
 }
 </style>

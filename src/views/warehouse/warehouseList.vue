@@ -123,6 +123,7 @@
           <el-row>
             <el-col :span="24">
               <el-form :inline="true" :model="inventoriesSearchForm">
+              <div class="searchBox">
                 <el-form-item>
                   <el-select v-model="inventoriesSearchForm.position" clearable :placeholder="$t('warehouse.Pleaseselect')">
                     <el-option
@@ -134,8 +135,12 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item>
+                  <el-input v-model="inventoriesSearchForm.key"></el-input>
+                </el-form-item>
+                <el-form-item>
                   <el-button type="primary" @click="searchInStorckList" size="small" icon="el-icon-search"></el-button>
                 </el-form-item>
+              </div>
               </el-form>
             </el-col>
           </el-row>
@@ -180,11 +185,28 @@
             <el-tab-pane :label="$t('warehouse.enterlist')" name="1"></el-tab-pane>
             <el-tab-pane :label="$t('warehouse.outlist')" name="2"></el-tab-pane>
             <div v-if="activeChuRuKu === '1'">
+              <div class="searchBox">
+                <div>
+                  <el-select v-model="rukuSearchForm.tp" clearable>
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div>
+                  <el-input v-model="rukuSearchForm.key"></el-input>
+                </div>
+                <div>
+                  <el-button type="primary" @click="dataSearch" icon="el-icon-search" size="small"></el-button>
+                </div>
+              </div>
               <el-row>
                 <el-col :span="20">
                   <el-form :inline="true" :model="rukuSearchForm">
                     <el-form-item>
-
                     </el-form-item>
                     <el-form-item>
                       <!--<el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>-->
@@ -203,7 +225,7 @@
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
                 <el-table-column >
-                  <template slot="header" slot-scope="scope">
+                  <template slot="header">
                     <el-row style="width: 100%">
                       <el-col :span="10">{{$t('warehouse.Tradename')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.position')}}</el-col>
@@ -241,43 +263,57 @@
               </div>
             </div>
             <div v-if="activeChuRuKu === '2'">
-              <el-row>
-                <el-col :span="20">
-                  <el-form :inline="true" :model="chuKuSearchForm">
-                    <el-form-item>
-                      <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
-                                      v-model="orderTimes"
-                                      type="daterange"
-                                      align="right"
-                                      unlink-panels
-                                      :range-separator="$t('tools.to')"
-                                      :start-placeholder="$t('tools.startDate')"
-                                      :end-placeholder="$t('tools.endDate')">
-                      </el-date-picker>
-                    </el-form-item>
-                    <el-form-item>
-                      <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
-                    </el-form-item>
-                  </el-form>
-                </el-col>
-                <el-col :span="4" align="right">
+              <div class="searchBox">
+                 <el-col :span="20">
+                    <el-form :inline="true" :model="chuKuSearchForm">
+                      <el-form-item>
+                        <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
+                            v-model="orderTimes"
+                            type="daterange"
+                            align="right"
+                            unlink-panels
+                            :range-separator="$t('tools.to')"
+                            :start-placeholder="$t('tools.startDate')"
+                            :end-placeholder="$t('tools.endDate')">
+                        </el-date-picker>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-select v-model="chuKuSearchForm.tp" clearable>
+                          <el-option
+                            v-for="item in options2"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-input v-model="chuKuSearchForm.key"></el-input>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                      </el-form-item>
+                    </el-form>
+                  </el-col>
+              </div>
+                 <el-col :span="4" align="right">
                   <div class="boxFuncBtn2" @click="chukuFunc" v-if="permissionCheck('opt')">
                     <img src="../../assets/images/icon/icon_add.png" alt class="icon_add" />
                     <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
                   </div>
                 </el-col>
-              </el-row>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">
+                      <span v-if="scope.row.tp === 1">{{$t('warehouse.order')}}</span>
                       <span v-if="scope.row.tp === 2">{{$t('warehouse.Scrap')}}</span>
                       <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column>
-                  <template slot="header" slot-scope="scope">
+                  <template slot="header">
                     <el-row style="width: 100%">
                       <el-col :span="10">{{$t('warehouse.Tradename')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.position')}}</el-col>
@@ -342,19 +378,21 @@
         <el-dialog :title="$t('warehouse.StockinorderSet')" @close="resetOrder1" width="80%" append-to-body :visible.sync="rukuDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="rukuForm">
             <el-form-item :label="$t('warehouse.type')">
-              <el-radio-group v-model="rukuForm.tp" @change="tpChange">
-                <el-radio :label="2">{{$t('warehouse.inpuWarehouse')}}</el-radio>
-                <el-radio :label="1">{{$t('warehouse.Returnexchange')}}</el-radio>
-              </el-radio-group>
+              <!-- <el-radio-group v-model="rukuForm.tp" @change="tpChange">
+                <el-radio :label="1">{{$t('warehouse.inpuWarehouse')}}</el-radio>
+                <el-radio :label="2">{{$t('warehouse.Returnexchange')}}</el-radio>
+              </el-radio-group> -->
+              <el-radio v-model="rukuForm.tp" label="1">{{$t('warehouse.inpuWarehouse')}}</el-radio>
+              <el-radio v-model="rukuForm.tp" label="2">{{$t('warehouse.Returnexchange')}}</el-radio>
             </el-form-item>
             <el-form-item :label="$t('warehouse.remarks')">
               <el-input v-model="rukuForm.comment" type="textarea"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.order')" v-if="istype == false">
+            <el-form-item :label="$t('warehouse.order')" v-if="rukuForm.tp == '2'">
               <show-sku-table :resetForm="resetForm" :position="positionList" v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.Purchaseorder')" v-if="istype == true">
-               <show-sku-plist :warehouseId2="wareId" @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
+            <el-form-item :label="$t('warehouse.Purchaseorder')" v-if="rukuForm.tp == '1'">
+               <show-sku-plist :warehouseId2="wareId" :resetForm="resetForm1" @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -520,6 +558,7 @@ export default {
       },
       // 库存信息
       inventoriesSearchForm: {
+        key:'',
         warehouse_id: '',
         position: '',
         sku_uid: '',
@@ -535,7 +574,7 @@ export default {
       inventoriesDialog: false,
       rukuDialog: false,
       rukuForm: {
-        tp: 1, // 1采购单入库 2退换货
+        tp: '1', // 1采购单入库 2退换货
         purchase_id: '',
         warehouse_id: '',
         skus: [],
@@ -546,6 +585,8 @@ export default {
       activeChuRuKu: '1',
       // 出库信息
       chuKuSearchForm: {
+        key: '',
+        tp: '',
         warehouse_id: '',
         bt: '',
         et: '',
@@ -560,6 +601,8 @@ export default {
       orderTimes: [],
       // 入库单列表信息
       rukuSearchForm: {
+        tp:'',
+        key:'',
         purchase_id: '',
         warehouse_id: '',
         supplier_id: '',
@@ -592,7 +635,18 @@ export default {
       resetForm: false,
       stockId: '',
       cangkuId: '',
-      chukuArrayData: []
+      chukuArrayData: [],
+      resetForm1: false,
+      flag:'',
+      options:[
+        {value:'1',label: this.$t('warehouse.inpuWarehouse')},
+        {value:'2',label: this.$t('warehouse.Returnexchange')}
+        ],
+      options2:[
+        {value:'1',label: this.$t('warehouse.Orderdelivery')},
+        {value:'2',label: this.$t('warehouse.Scrap')},
+        {value:'3',label: this.$t('warehouse.return')},
+        ]
     }
   },
 
@@ -625,6 +679,9 @@ export default {
         this.chuKuSearchForm.bt = ''
         this.chuKuSearchForm.et = ''
       }
+    },
+    'rukuForm.tp': function(val) {
+      console.log('tpp', val)
     }
   },
   methods: {
@@ -661,6 +718,7 @@ export default {
       this.rukuForm.comment = ''
       this.rukuForm.skus = []
       this.resetForm = true
+      this.resetForm1 = true
     },
     resetOrder1() {
       this.resetOrder()
@@ -684,21 +742,31 @@ export default {
       }
     },
     addRuKuForm() {
-      // console.log('form', this.rukuForm)
-      this.rukuForm.skus = JSON.stringify(this.rukuForm.skus)
-      warehouseReceiptsAdd(this.rukuForm).then(res => {
-        if (res.meta === 0) {
-          this.rukuDialog = false
-          this.getRuKuData()
-          this.resetOrder()
-        }
-      })
-      this.rukuForm = {}
+          this.flag = this.rukuForm.skus.every(item => {
+            return item.position != ''
+          });
+          console.log(this.flag);
+          if(this.flag == true){
+            this.rukuForm.skus = JSON.stringify(this.rukuForm.skus)
+            warehouseReceiptsAdd(this.rukuForm).then(res => {
+              if (res.meta === 0) {
+                this.rukuDialog = false
+                this.getRuKuData()
+                this.resetOrder()
+              }
+            }).catch(res=>{
+              this.rukuForm.skus = JSON.parse(this.rukuForm.skus)
+            })
+          }else{
+             this.$message(this.$t('warehouse.placeLoc'))
+          }
     },
     rukuFunc() {
-      this.rukuForm.tp = 2
       this.resetForm = false
+      this.rukuForm.tp = '1'
+      this.resetForm1 = false
       this.rukuDialog = true
+      console.log('tp', this.rukuForm.tp)
     },
     showInventories(data) {
       this.inventoriesSearchForm.warehouse_id = data.id
@@ -715,11 +783,6 @@ export default {
       })
     },
     tpChange(e) {
-      if(e == 1){
-        this.istype = false
-      }else if(e == 2){
-        this.istype = true
-      }
       this.rukuForm.purchase_id = ''
     },
     getPurchaseList() {
@@ -957,8 +1020,11 @@ export default {
     getid(id){
        if(id != undefined){
         this.rukuForm.purchase_id = id
-        this.rukuForm.tp = 1
+        // this.rukuForm.tp = 1
        }
+    },
+    dataSearch(){
+      this.getRuKuData()
     }
   },
   mounted() {
@@ -1031,6 +1097,13 @@ export default {
     &:first-child{
       border: 0 none;
     }
+  }
+}
+.searchBox{
+  display: flex;
+  align-items: center;
+  >div{
+    margin-right: 5px;
   }
 }
 </style>

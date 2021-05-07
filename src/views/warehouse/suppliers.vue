@@ -56,9 +56,9 @@
         </el-row>
         <el-dialog :title="$t('warehouse.SupplierSettings')" width="800px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form" :inline="true">
-            <el-form-item :label="$t('warehouse.SupplierNum')">
+            <!-- <el-form-item :label="$t('warehouse.SupplierNum')">
               <el-input v-model="form.no"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label="$t('warehouse.Tel2')">
               <el-input v-model="form.mobile"></el-input>
             </el-form-item>

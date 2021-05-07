@@ -4,25 +4,10 @@
       <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
     </el-input>
     <el-dialog :title="$t('warehouse.pulist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
-      <el-table :data="tableData" border stripe>
+      <el-table :data="tableData" border stripe ref="singleTable" highlight-current-row  @current-change="handleCurrentChange">
+         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="100"></el-table-column>
         <el-table-column>
-          <!--<template slot-scope="scope">-->
-            <!--<table class="tabletitle">-->
-                      <!--<tr>-->
-                        <!--<th v-for="(item,k) in tabletitle" :key="k">{{item}}</th>-->
-                      <!--</tr>-->
-                      <!--<tr v-for="(val,k) in scope.row.skus" :key="k" @click="addpulist(scope.row,val,k)">-->
-                        <!--<td>{{val.name}}</td>-->
-                        <!--<td>{{val.origin}}</td>-->
-                        <!--<td>{{val.specification}}</td>-->
-                        <!--<td>{{val.barcode}}</td>-->
-                        <!--<td>{{val.unit_price | price}}</td>-->
-                        <!--<td>{{val.count}}</td>-->
-                        <!--<td>{{val.total_price | price}}</td>-->
-                      <!--</tr>-->
-            <!--</table>-->
-          <!--</template>-->
           <template slot="header" slot-scope="scope">
             <el-row style="width: 100%">
               <el-col :span="10">{{$t('warehouse.name2')}}</el-col>
@@ -59,6 +44,9 @@
               :total="itemCount">
             </el-pagination>
       </div>
+      <div class="conbtn">
+        <el-button size="small" @click="confgBtn()" type="primary">{{$t('tools.confirm')}}</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -78,16 +66,6 @@ export default {
       itemCount: 0,
       dialogFormVisible: false,
       tableData: [],
-      tabletitle:[
-          this.$t('warehouse.name2'),
-          this.$t('warehouse.PlaceofOrigin'),
-          this.$t('warehouse.pecifications'),
-          this.$t('warehouse.barCode'),
-          this.$t('warehouse.price'),
-          this.$t('warehouse.num'),
-          this.$t('warehouse.allprice'),
-        //   '操作'
-        ]
     };
   },
 
@@ -115,12 +93,18 @@ export default {
     confirmButton(data) {
       // console.log(data);
     },
-    addpulist(data,val,k){
-        this.dialogFormVisible = false
+    handleCurrentChange(data,val,k){
         this.$emit("dataid",data)
         this.$emit("getvalue",val)
         this.$emit("key",k)
-    }
+    },  
+    setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      },
+    confgBtn(){
+      this.dialogFormVisible = false
+      this.setCurrent()
+    },
   },
 };
 </script>
@@ -145,5 +129,9 @@ export default {
       border: 0 none;
     }
   }
+}
+.conbtn{
+  width: 100%;
+  text-align: right;
 }
 </style>
