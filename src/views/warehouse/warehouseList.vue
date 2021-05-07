@@ -221,7 +221,9 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
+                <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
+                <el-table-column prop="comment" :label="$t('warehouse.remarks')" width="150px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
                 <el-table-column >

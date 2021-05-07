@@ -113,5 +113,6 @@ export default {
   pricetype: '采购价/售价',
   addsuccess: '添加成功',
   placeLoc: '请选择货位',
-  placewarehouse: '请选择仓库'
+  placewarehouse: '请选择仓库',
+  pu_no: '采购单编号'
 }

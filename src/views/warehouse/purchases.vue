@@ -21,8 +21,11 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120"></el-table-column>
-                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="130"></el-table-column>
+                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120" fixed = "left"></el-table-column>
+                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
+                <el-table-column prop="currency" label="币种" width="85"></el-table-column>
+                <el-table-column prop="payment_term" label="支付账期" width="100"></el-table-column>
+                <el-table-column prop="delivery_method" label="运输方式" width="100"></el-table-column>
                 <el-table-column>
                   <template slot="header">
                     <el-row style="width: 100%">
@@ -67,7 +70,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="160"></el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
+                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')" fixed="right">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <span class="xiexian">/</span>
@@ -90,16 +93,40 @@
         </el-row>
         <el-dialog :title="$t('warehouse.setUp')" width="80%" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
-            <el-form-item :label="$t('warehouse.supplier')">
-              <el-select v-model="form.supplier_id" filterable clearable :placeholder="$t('warehouse.choice')">
-                <el-option
-                  v-for="item in supplierList"
-                  :key="item.id"
-                  :label="item.company_name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
+              <el-form-item :label="$t('warehouse.supplier')">
+                  <el-select v-model="form.supplier_id" filterable clearable :placeholder="$t('warehouse.choice')">
+                    <el-option
+                      v-for="item in supplierList"
+                      :key="item.id"
+                      :label="item.company_name"
+                      :value="item.id">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="currency" clearable placeholder="选择货币类型">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="payment_term" clearable placeholder="选择支付账期">
+                    <el-option
+                      v-for="item in paymenttermdata"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  <el-select v-model="delivery_method" clearable placeholder="选择运输方式">
+                    <el-option
+                      v-for="item in deliverymedata"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+              </el-form-item>
             <el-form-item :label="$t('warehouse.Purchaselist')">
               <!--<el-button type="primary" @click="addSkus" size="mini">{{$t('warehouse.add2')}}</el-button>-->
               <el-table :data="skusArray" height="calc(100vh - 440px)" style="width: 100%">
@@ -155,6 +182,7 @@
               <a class="add-btn" @click="addSkus">{{$t('warehouse.Newadd')}}</a>
             </el-form-item>
           </el-form>
+          
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
@@ -337,18 +365,6 @@
                 </el-table-column>
                 <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
               </el-table>
-               <div class="mar10">
-                 <el-form-item label="选择货币类型">
-                  <el-select v-model="currency" clearable placeholder="请选择">
-                    <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-               </div>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -568,6 +584,8 @@
           pay_time: ''
         },
         currency: '',
+        payment_term: '',
+        delivery_method: '',
         source: 1,
         orderId: '',
         goodsId: '',
@@ -593,6 +611,14 @@
           {value:'US Dollar',label: 'US Dollar'},
           {value:'Riel(Cambodia)',label: 'Riel(Cambodia)'},
           {value:'RBM',label: 'RBM'},
+        ],
+        paymenttermdata:[
+          {value:'Net 30 days',label: 'Net 30 days'},
+          {value:'Net 60 days',label: 'Net 60 days'}
+        ],
+        deliverymedata:[
+          {value:'Self-pick up',label: 'Self-pick up'},
+          {value:'Express',label: 'Express'}
         ],
         orderInfoData: [],
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
@@ -909,6 +935,8 @@
             supplier_id: '',
             skus: '',
             currency: '',
+            payment_term: '',
+            delivery_method: ''
           }
         }
       },
@@ -920,6 +948,9 @@
         })
       },
       addData() {
+        this.currency = ''
+        this.payment_term = ''
+        this.delivery_method = ''
         this.form = this.setForm()
         this.skusArray = []
         this.formEditDialog = true
@@ -959,6 +990,8 @@
         } else {
           console.log(this.form);
           this.form.currency = this.currency
+          this.form.payment_term = this.payment_term
+          this.form.delivery_method = this.delivery_method
           purchaseAdd(this.form).then(res => {
             this.getDataListFun()
             this.formEditDialog = false
