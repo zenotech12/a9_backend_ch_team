@@ -60,5 +60,8 @@ export default {
   warehouseMgr: 'ការគ្រប់គ្រងឃ្លាំង',
   warehouseList: 'បញ្ជីឃ្លាំង',
   suppliersMgr: 'អ្នកផ្គត់ផ្គង់',
-  purchasesMgr: 'បញ្ជា​រ​ទិញ'
+  purchasesMgr: 'បញ្ជា​រ​ទិញ',
+  specialPermission: 'ការអនុញ្ញាតពិសេស',
+  financialApproval: 'ការយល់ព្រមផ្នែកហិរញ្ញវត្ថុ',
+  leadershipApproval: 'ការអនុម័តភាពជាអ្នកដឹកនាំ'
 }
