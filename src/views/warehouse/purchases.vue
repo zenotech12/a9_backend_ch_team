@@ -986,7 +986,6 @@
       handleSelectionChange(val) {
         this.inwarehouseFrom.skus = []
         this.inwarehouseFrom.skus = val
-        // this.inwarehouseFrom.skus = this.inwarehouseFrom.skus[0]
         console.log(this.inwarehouseFrom.skus);
       },
       // 确定入库
@@ -996,12 +995,12 @@
           item.count = Number(item.count)
         });
         this.flag = this.inwarehouseFrom.skus.every(item => {
-          return item.position !=''
+          return item.position != ''
         });
           if(this.flag == true){
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
             warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-              if(res.meta == 0){
+             if(res.meta == 0){
                 this.commentlog = false
                 this.inwarehouselog = false
                 this.$message(this.$t('warehouse.addsuccess'))
