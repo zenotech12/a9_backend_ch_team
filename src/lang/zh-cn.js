@@ -59,5 +59,8 @@ export default {
   warehouseMgr: '仓库管理',
   warehouseList: '仓库列表',
   suppliersMgr: '供应商',
-  purchasesMgr: '采购单'
+  purchasesMgr: '采购单',
+  specialPermission: '特殊权限',
+  financialApproval: '财务审批',
+  leadershipApproval: '领导审批'
 }

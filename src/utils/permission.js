@@ -39,8 +39,8 @@ export default [
     { 'name': '供应商', 'lk': 'suppliersMgr', 'code': '8_2', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '采购单', 'lk': 'purchasesMgr', 'code': '8_3', 'permissions': ['view', 'opt'], 'urls': [] }
   ] },
-  { 'name': '特殊权限', 'lk': 'warehouseMgr', 'code': '9', 'permissions': [], 'urls': [], 'son': [
-    { 'name': '财务审批', 'lk': 'warehouseList', 'code': '9_1', 'permissions': ['opt'], 'urls': [] },
-    { 'name': '领导审批', 'lk': 'suppliersMgr', 'code': '9_2', 'permissions': ['opt'], 'urls': [] }
+  { 'name': '特殊权限', 'lk': 'specialPermission', 'code': '9', 'permissions': [], 'urls': [], 'son': [
+    { 'name': '财务审批', 'lk': 'financialApproval', 'code': '9_1', 'permissions': ['opt'], 'urls': [] },
+    { 'name': '领导审批', 'lk': 'leadershipApproval', 'code': '9_2', 'permissions': ['opt'], 'urls': [] }
   ] }
 ]

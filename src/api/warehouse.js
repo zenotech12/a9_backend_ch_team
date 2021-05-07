@@ -166,7 +166,6 @@ export function Paymentcomplete(id, data) {
   })
 }
 
-
 // 仓库.位置.批量添加
 export function CwarehouseAdd(id, data) {
   return request({
@@ -243,7 +242,7 @@ export function warehouseReceiptsAdd(data) {
 // 仓库.位置.批量添加
 export function warelocalAll(id, data) {
   return request({
-    url: 'warehouses/'+ id +'/batch-positions',
+    url: 'warehouses/' + id + '/batch-positions',
     method: 'post',
     data: data
   })
@@ -252,9 +251,17 @@ export function warelocalAll(id, data) {
 // 仓库.位置列表
 export function waregetlocallist(id, data) {
   return request({
-    url: 'warehouses/'+ id +'/positions',
+    url: 'warehouses/' + id + '/positions',
     method: 'get',
     params: data
   })
 }
 
+// 采购单.审核
+export function warehousePurchasesReview(id, data) {
+  return request({
+    url: 'warehouse-purchases/' + id + '/review',
+    method: 'put',
+    params: data
+  })
+}
