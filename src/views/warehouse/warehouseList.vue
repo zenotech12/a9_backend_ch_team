@@ -641,11 +641,11 @@ export default {
       resetForm1: false,
       flag:'',
       options:[
-        {value:'1',label: this.$t('warehouse.inpuWarehouse')},
+        {value:'1',label: this.$t('warehouse.inpuWarehouse2')},
         {value:'2',label: this.$t('warehouse.Returnexchange')}
         ],
       options2:[
-        {value:'1',label: this.$t('warehouse.Orderdelivery')},
+        {value:'1',label: this.$t('warehouse.Orderdelivery2')},
         {value:'2',label: this.$t('warehouse.Scrap')},
         {value:'3',label: this.$t('warehouse.return')},
         ]

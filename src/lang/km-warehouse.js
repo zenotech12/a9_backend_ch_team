@@ -112,5 +112,8 @@ export default{
   pricetype: 'តំលៃ​ទិញ/តំលៃលក់',
   addsuccess: 'បានបន្ថែមដោយជោគជ័យ',
   placeLoc: 'សូមជ្រើសរើសទីតាំង',
-  placewarehouse: 'សូមជ្រើសរើសឃ្លាំងមួយ'
+  placewarehouse: 'សូមជ្រើសរើសឃ្លាំងមួយ',
+  Currency: 'រូបិយប័ណ្ណ',
+  payment_term: 'រយៈពេលទូទាត់',
+  delivery_method: 'របៀបនៃការដឹកជញ្ជូន',
 }

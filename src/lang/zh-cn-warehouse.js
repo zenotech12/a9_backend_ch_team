@@ -114,5 +114,12 @@ export default {
   addsuccess: '添加成功',
   placeLoc: '请选择货位',
   placewarehouse: '请选择仓库',
-  pu_no: '采购单编号'
+  pu_no: '采购单编号',
+  inpuWarehouse2: '采购单入库',
+  Orderdelivery2: '订单出库',
+  Scrap2: '报废',
+  return2: '退回',
+  Currency: '币种',
+  payment_term: '支付账期',
+  delivery_method: '运输方式',
 }

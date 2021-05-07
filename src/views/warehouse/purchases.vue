@@ -23,9 +23,9 @@
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120" fixed = "left"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
-                <el-table-column prop="currency" label="币种" width="85"></el-table-column>
-                <el-table-column prop="payment_term" label="支付账期" width="100"></el-table-column>
-                <el-table-column prop="delivery_method" label="运输方式" width="100"></el-table-column>
+                <el-table-column prop="currency" :label="$t('warehouse.Currency')" width="85"></el-table-column>
+                <el-table-column prop="payment_term" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
+                <el-table-column prop="delivery_method" :label="$t('warehouse.delivery_method')" width="100"></el-table-column>
                 <el-table-column>
                   <template slot="header">
                     <el-row style="width: 100%">
@@ -102,7 +102,7 @@
                       :value="item.id">
                     </el-option>
                   </el-select>
-                  <el-select v-model="currency" clearable placeholder="选择货币类型">
+                  <el-select v-model="currency" clearable :placeholder="$t('warehouse.Currency')">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
@@ -110,7 +110,7 @@
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  <el-select v-model="payment_term" clearable placeholder="选择支付账期">
+                  <el-select v-model="payment_term" clearable :placeholder="$t('warehouse.payment_term')">
                     <el-option
                       v-for="item in paymenttermdata"
                       :key="item.value"
@@ -118,7 +118,7 @@
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  <el-select v-model="delivery_method" clearable placeholder="选择运输方式">
+                  <el-select v-model="delivery_method" clearable :placeholder="$t('warehouse.delivery_method')">
                     <el-option
                       v-for="item in deliverymedata"
                       :key="item.value"
