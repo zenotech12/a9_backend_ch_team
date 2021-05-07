@@ -575,6 +575,7 @@
           this.$t('warehouse.arrive_count'),
           this.$t('warehouse.allprice')
         ],
+        flag:'',
         orderInfoData: [],
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
@@ -992,23 +993,26 @@
       inwarehouseAdd(){
         this.inwarehouseFrom.warehouse_id = this.wareId
         this.inwarehouseFrom.skus.map(item => {
-            item.count = Number(item.count)
-            if(item.position != ''){
-              this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
-              warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-                if(res.meta == 0){
-                  this.commentlog = false
-                  this.inwarehouselog = false
-                   this.$message(this.$t('warehouse.addsuccess'))
-                }
-              }).catch(res=>{
-                  this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
-              })     
-            }else{
-              this.$message(this.$t('warehouse.placeLoc'))
-            }
+          item.count = Number(item.count)
         });
-      },
+        this.flag = this.inwarehouseFrom.skus.every(item => {
+          return item.position !=''
+        });
+          if(this.flag == true){
+            this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
+            warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
+              if(res.meta == 0){
+                this.commentlog = false
+                this.inwarehouselog = false
+                this.$message(this.$t('warehouse.addsuccess'))
+              }
+            }).catch(res=>{
+              this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
+            })     
+          }else{
+            this.$message(this.$t('warehouse.placeLoc'))
+          }
+        },
       Searchlist(){
         this.getDataListFun()
       }

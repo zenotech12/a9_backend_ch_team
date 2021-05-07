@@ -106,12 +106,10 @@ export default {
     },
     getpuinfo() {
       purchaseInfo(this.puid).then((res) => {
-        // this.tableData = res
-        // console.log(res.item.skus);
-        res.item.skus.forEach((item) => {
-          item.position = "";
-        });
         this.tableData = res.item.skus;
+        this.tableData.forEach((item, k) => {
+          this.$set(this.tableData[k], 'position', '')
+        });
       });
     },
     handleSelectionChange(val) {

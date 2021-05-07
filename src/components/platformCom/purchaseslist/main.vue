@@ -44,6 +44,9 @@
               :total="itemCount">
             </el-pagination>
       </div>
+      <div class="conbtn">
+        <el-button size="small" @click="confgBtn()" type="primary">{{$t('tools.confirm')}}</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -63,16 +66,6 @@ export default {
       itemCount: 0,
       dialogFormVisible: false,
       tableData: [],
-      tabletitle:[
-          this.$t('warehouse.name2'),
-          this.$t('warehouse.PlaceofOrigin'),
-          this.$t('warehouse.pecifications'),
-          this.$t('warehouse.barCode'),
-          this.$t('warehouse.price'),
-          this.$t('warehouse.num'),
-          this.$t('warehouse.allprice'),
-        //   '操作'
-        ]
     };
   },
 
@@ -101,11 +94,13 @@ export default {
       // console.log(data);
     },
     handleCurrentChange(data,val,k){
-        this.dialogFormVisible = false
         this.$emit("dataid",data)
         this.$emit("getvalue",val)
         this.$emit("key",k)
-    }
+    },  
+    confgBtn(){
+      this.dialogFormVisible = false
+    },
   },
 };
 </script>
@@ -130,5 +125,9 @@ export default {
       border: 0 none;
     }
   }
+}
+.conbtn{
+  width: 100%;
+  text-align: right;
 }
 </style>
