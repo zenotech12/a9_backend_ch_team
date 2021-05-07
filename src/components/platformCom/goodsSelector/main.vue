@@ -77,6 +77,8 @@
                 <el-table-column prop="gen_time" width="150"  :label="$t('goods.publishTime')">
                 </el-table-column>
               </el-table>
+              <el-col>
+              </el-col>
               <el-row style="margin-top: 10px">
                 <el-col :span="24" style="text-align: right;">
                   <el-pagination v-if="itemCount > 0"

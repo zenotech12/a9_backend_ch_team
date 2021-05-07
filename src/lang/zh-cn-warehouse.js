@@ -70,6 +70,7 @@ export default {
   DeliverySet: '出库信息设置',
   Scrap: '报废',
   return: '退回',
+  Orderdelivery: '订单出库',
   locationList: '货位列表',
   batchAdd: '批量添加货位',
   location2: '货位',

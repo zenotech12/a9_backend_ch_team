@@ -187,7 +187,7 @@
             <div v-if="activeChuRuKu === '1'">
               <div class="searchBox">
                 <div>
-                  <el-select v-model="rukuSearchForm.tp" clearable placeholder="请选择">
+                  <el-select v-model="rukuSearchForm.tp" clearable>
                     <el-option
                       v-for="item in options"
                       :key="item.value"
@@ -197,7 +197,7 @@
                   </el-select>
                 </div>
                 <div>
-                  <el-input v-model="rukuSearchForm.key" placeholder="请输入内容"></el-input>
+                  <el-input v-model="rukuSearchForm.key"></el-input>
                 </div>
                 <div>
                   <el-button type="primary" @click="dataSearch" icon="el-icon-search" size="small"></el-button>
@@ -278,7 +278,7 @@
                         </el-date-picker>
                       </el-form-item>
                       <el-form-item>
-                        <el-select v-model="chuKuSearchForm.tp" clearable placeholder="请选择">
+                        <el-select v-model="chuKuSearchForm.tp" clearable>
                           <el-option
                             v-for="item in options2"
                             :key="item.value"
@@ -288,7 +288,7 @@
                         </el-select>
                       </el-form-item>
                       <el-form-item>
-                        <el-input v-model="chuKuSearchForm.key" placeholder="请输入内容"></el-input>
+                        <el-input v-model="chuKuSearchForm.key"></el-input>
                       </el-form-item>
                       <el-form-item>
                         <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
@@ -639,13 +639,13 @@ export default {
       resetForm1: false,
       flag:'',
       options:[
-        {value:'1',label:'采购单入库'},
-        {value:'2',label:'退换货'}
+        {value:'1',label: this.$t('warehouse.inpuWarehouse')},
+        {value:'2',label: this.$t('warehouse.Returnexchange')}
         ],
       options2:[
-        {value:'1',label:'订单出库'},
-        {value:'2',label:'报废'},
-        {value:'3',label:'退回'},
+        {value:'1',label: this.$t('warehouse.Orderdelivery')},
+        {value:'2',label: this.$t('warehouse.Scrap')},
+        {value:'3',label: this.$t('warehouse.return')},
         ]
     }
   },

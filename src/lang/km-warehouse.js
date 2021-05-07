@@ -69,6 +69,7 @@ export default{
   DeliverySet: 'ការកំណត់ព័ត៌មាននៅខាងក្',
   Scrap: 'បោះចោល',
   return: 'ត្រឡប់មកវិញ',
+  Orderdelivery: 'ការដឹកជញ្ជូនបញ្ជាទិញ',
   locationList: 'បញ្ជីទំនិញ',
   batchAdd: 'បរិមាណបន្ថែមកន្លែងទំនេរ',
   location2: 'ចន្លោះទំនិញ',

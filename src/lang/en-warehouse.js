@@ -69,6 +69,7 @@ export default{
   DeliverySet: 'Stock out setting',
   Scrap: 'Scrapped',
   return: 'Return',
+  Orderdelivery: 'Order delivery',
   locationList: 'Cargo space list',
   batchAdd: 'Add space in batch',
   location2: 'Cargo space',

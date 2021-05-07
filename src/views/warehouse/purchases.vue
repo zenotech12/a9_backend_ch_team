@@ -335,8 +335,20 @@
                     <el-input v-model.number="scope.row.origin"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>  
+                <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
               </el-table>
+               <div class="mar10">
+                 <el-form-item label="选择货币类型">
+                  <el-select v-model="from.currency" clearable placeholder="请选择">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+               </div>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -889,7 +901,8 @@
             id: '',
             order_id: '',
             supplier_id: '',
-            skus: ''
+            skus: '',
+            currency: '',
           }
         }
       },
@@ -1078,5 +1091,8 @@
   font-size: 17px;
   text-align: center;
   color: #909399;
+}
+.mar10{
+  margin-top: 10px;
 }
 </style>
