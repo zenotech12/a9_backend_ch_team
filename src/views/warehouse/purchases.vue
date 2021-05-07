@@ -91,7 +91,7 @@
         <el-dialog :title="$t('warehouse.setUp')" width="80%" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
             <el-form-item :label="$t('warehouse.supplier')">
-              <el-select v-model="form.supplier_id" clearable :placeholder="$t('warehouse.choice')">
+              <el-select v-model="form.supplier_id" filterable clearable :placeholder="$t('warehouse.choice')">
                 <el-option
                   v-for="item in supplierList"
                   :key="item.id"
