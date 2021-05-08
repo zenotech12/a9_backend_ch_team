@@ -265,3 +265,13 @@ export function warehousePurchasesReview(id, data) {
     params: data
   })
 }
+
+// 仓库.库存信息导出
+export function warehousereport(data) {
+  return request({
+    url: 'warehouse-inventories-report',
+    method: 'get',
+    params: data,
+    responseType: 'blob'
+  })
+}

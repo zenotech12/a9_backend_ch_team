@@ -120,4 +120,6 @@ export default{
   Currency: 'Currency',
   payment_term: 'Payment period',
   delivery_method: 'Mode of transport',
+  Inventoryinfo: 'Information export',
+  save: 'next'
 }

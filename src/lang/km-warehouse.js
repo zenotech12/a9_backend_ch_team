@@ -116,4 +116,6 @@ export default{
   Currency: 'រូបិយប័ណ្ណ',
   payment_term: 'រយៈពេលទូទាត់',
   delivery_method: 'របៀបនៃការដឹកជញ្ជូន',
+  Inventoryinfo: 'ការនាំចេញព័ត៌មាន',
+  save: 'បន្ទាប់'
 }

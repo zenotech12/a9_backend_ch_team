@@ -123,24 +123,29 @@
           <el-row>
             <el-col :span="24">
               <el-form :inline="true" :model="inventoriesSearchForm">
-              <div class="searchBox">
-                <el-form-item>
-                  <el-select v-model="inventoriesSearchForm.position" clearable :placeholder="$t('warehouse.Pleaseselect')">
-                    <el-option
-                      v-for="item in positionList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.name">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item>
-                  <el-input v-model="inventoriesSearchForm.key"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" @click="searchInStorckList" size="small" icon="el-icon-search"></el-button>
-                </el-form-item>
-              </div>
+                <div class="exbox">
+                   <div class="searchBox">
+                    <el-form-item>
+                      <el-select v-model="inventoriesSearchForm.position" clearable :placeholder="$t('warehouse.Pleaseselect')">
+                        <el-option
+                          v-for="item in positionList"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.name">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-input v-model="inventoriesSearchForm.key"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="searchInStorckList" size="small" icon="el-icon-search"></el-button>
+                    </el-form-item>
+                  </div>
+                  <div>
+                    <el-button type="primary" @click="wareinfoExport" size="small">{{$t('warehouse.Inventoryinfo')}}</el-button>
+                  </div>
+                </div>
               </el-form>
             </el-col>
           </el-row>
@@ -518,7 +523,8 @@ import {
   warehouseOutboundsAdd,
   warelocalAll,
   waregetlocallist,
-  LocationDel
+  LocationDel,
+  warehousereport
 } from '@/api/warehouse'
 export default {
   components: {},
@@ -1027,6 +1033,15 @@ export default {
     },
     dataSearch(){
       this.getRuKuData()
+    },
+    wareinfoExport(){
+      warehousereport({warehouse_id:this.inventoriesSearchForm.warehouse_id}).then(res=>{
+        var a = document.createElement('a')
+        let blod = new Blob([res], {type: 'app;ication/vnd.ms-excel'})
+        a.href = URL.createObjectURL(blod)
+        a.download = 'Inventoryinfo.xlsx'
+        a.click()
+      })
     }
   },
   mounted() {
@@ -1107,5 +1122,9 @@ export default {
   >div{
     margin-right: 5px;
   }
+}
+.exbox{
+  display: flex;
+  justify-content: space-between;
 }
 </style>

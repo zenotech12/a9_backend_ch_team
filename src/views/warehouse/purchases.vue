@@ -368,7 +368,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <confirm-button @confirmButton="saveDataFuncSkus()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.save')"></confirm-button>
+            <confirm-button @confirmButton="saveDataFuncSkus()" :disabled="submitDisabled" :confirmButtonInfor="$t('warehouse.save')"></confirm-button>
           </div>
         </el-dialog>
         <!-- 付款单列表 -->
