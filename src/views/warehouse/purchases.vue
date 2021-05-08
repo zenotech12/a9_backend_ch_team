@@ -27,7 +27,7 @@
                 <el-table-column prop="payment_term" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
                 <el-table-column prop="delivery_method" :label="$t('warehouse.delivery_method')" width="100"></el-table-column>
                 <el-table-column>
-                  <template slot="header">
+                  <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
                       <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
