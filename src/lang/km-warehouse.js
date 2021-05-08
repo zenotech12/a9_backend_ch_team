@@ -117,5 +117,11 @@ export default{
   payment_term: 'រយៈពេលទូទាត់',
   delivery_method: 'របៀបនៃការដឹកជញ្ជូន',
   Inventoryinfo: 'ការនាំចេញព័ត៌មាន',
-  save: 'បន្ទាប់'
+  save: 'បន្ទាប់',
+  Info: 'ព័ត៌មានលម្អិត',
+  goodsviwe: 'ទិដ្ឋភាពទំនិញ',
+  locationviwe: 'ទិដ្ឋភាពទីតាំង',
+  goodsname: 'ឈ្មោះ​ផលិតផល',
+  goodsId: 'លេខសម្គាល់ផលិតផល',
+  scrap_count: 'បរិមាណសំណល់'
 }

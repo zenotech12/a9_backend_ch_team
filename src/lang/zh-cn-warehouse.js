@@ -123,5 +123,11 @@ export default {
   payment_term: '支付账期',
   delivery_method: '运输方式',
   Inventoryinfo: '信息导出',
-  save: '下一步'
+  save: '下一步',
+  Info: '详情',
+  goodsviwe: '商品视图',
+  locationviwe: '位置视图',
+  goodsname: '商品名称',
+  goodsId: '商品id',
+  scrap_count: '报废数量'
 }

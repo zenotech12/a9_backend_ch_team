@@ -118,8 +118,14 @@ export default{
   Scrap2: 'Scrap',
   return2: 'Refund',
   Currency: 'Currency',
-  payment_term: 'Payment period',
+  payment_term: 'Payment term',
   delivery_method: 'Mode of transport',
   Inventoryinfo: 'Information export',
-  save: 'next'
+  save: 'next',
+  Info: 'Details',
+  goodsviwe: 'Goodsviwe',
+  locationviwe: 'Locationviwe',
+  goodsname: 'Goods name',
+  goodsId: 'GoodsId',
+  scrap_count: 'Scrap num'
 }

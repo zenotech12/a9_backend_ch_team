@@ -120,7 +120,43 @@
         <!--库存信息列表-->
         <el-dialog class="dialog" :title="$t('warehouse.stockmsg')" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
           :close-on-click-modal="false" center >
-          <el-row>
+          <el-tabs v-model="activeName">
+            <el-tab-pane :label="$t('warehouse.goodsviwe')" name="1"></el-tab-pane>
+            <el-tab-pane :label="$t('warehouse.locationviwe')" name="2"></el-tab-pane>
+            <div v-if="activeName === '1'">
+              <el-table :data="goodsviewdata" stripe border style="width: 100%">
+                <el-table-column prop="name" :label="$t('warehouse.goodsname')"></el-table-column>
+                <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+                <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
+                  <template slot-scope="scope">
+                   {{textFilter(scope.row.specification)}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="sku_uid" :label="$t('warehouse.goodsId')"></el-table-column>
+                <el-table-column prop="barcode" :label="$t('warehouse.barCode')" width="100"></el-table-column>
+                <el-table-column prop="unit_price" :label="$t('warehouse.price')" width="100"></el-table-column>
+                <el-table-column prop="count" :label="$t('warehouse.num')" width="100">
+                  <template slot-scope="scope">
+                   <span class="numcss" @click="goodsnuminfo(scope.row)">{{scope.row.count}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="scrap_count" :label="$t('warehouse.scrap_count')" width="100">
+                  <template slot-scope="scope">
+                   <span @click="goodsscrapcount(scope.row)" class="numcss">{{scope.row.scrap_count}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPage_num"
+                  :page-size="pageSize_num"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCount_num">
+                </el-pagination>
+              </div>
+            </div>
+            <div v-if="activeName === '2'">
+              <el-row>
             <el-col :span="24">
               <el-form :inline="true" :model="inventoriesSearchForm">
                 <div class="exbox">
@@ -162,9 +198,9 @@
             <el-table-column prop="unit_price" :label="$t('warehouse.price')">
               <template slot-scope="scope">{{scope.row.unit_price | price}}</template>
             </el-table-column>
-            <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
+            <!-- <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
               <template slot-scope="scope">{{scope.row.total_price | price}}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
           </el-table>
           <div style="text-align: right;margin-top: 10px">
@@ -175,9 +211,77 @@
               :total="itemCountKuCun"
             ></el-pagination>
           </div>
+            </div>
+          </el-tabs>  
           <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
           </div>
+        </el-dialog>
+        <!-- 库存信息点击数量的模态框 -->
+        <el-dialog
+          :title="$t('warehouse.Info')"
+          :visible.sync="dialogVisible"
+          width="70%">
+           <el-table stripe border :data="goodsnumdata" style="width: 100%">
+            <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+            <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+            <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+            <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
+              <template slot-scope="scope">
+                {{textFilter(scope.row.specification)}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
+            <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
+            <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
+          </el-table>
+          <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPage_info"
+                  :page-size="pageSize_info"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCount_info">
+                </el-pagination>
+              </div>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" size="small" @click="dialogVisible = false">{{$t('warehouse.close')}}</el-button>
+          </span>
+        </el-dialog>
+        <!-- 库存信息点击报废数量的模态框 -->
+        <el-dialog
+          :title="$t('warehouse.Info')"
+          :visible.sync="scrapcountlog"
+          width="80%">
+          <el-table :data="scrapcountdata" stripe border>
+            <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="150"></el-table-column>
+            <el-table-column prop="warehouse_name">
+               <template slot="header" slot-scope="scope">
+                  <el-row style="width: 100%">
+                    <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.location')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                  </el-row>
+                </template>
+                <template slot-scope="scope">
+                  <div class="goods">
+                    <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                      <el-col :span="8">{{item.name}}</el-col>
+                      <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
+                      <el-col :span="3" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.position}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                    </el-row>
+                  </div>
+                </template>
+            </el-table-column>
+          </el-table>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" size="small" @click="scrapcountlog = false">{{$t('warehouse.close')}}</el-button>
+          </span>
         </el-dialog>
         <!--出入库信息-->
         <el-dialog class="dialog" :title="$t('warehouse.information')" width="85%"
@@ -271,7 +375,7 @@
             </div>
             <div v-if="activeChuRuKu === '2'">
               <div class="searchBox">
-                 <el-col :span="20">
+                <el-col :span="20">
                     <el-form :inline="true" :model="chuKuSearchForm">
                       <el-form-item>
                         <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
@@ -301,14 +405,14 @@
                         <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
                       </el-form-item>
                     </el-form>
-                  </el-col>
-              </div>
+                </el-col>
                  <el-col :span="4" align="right">
                   <div class="boxFuncBtn2" @click="chukuFunc" v-if="permissionCheck('opt')">
                     <img src="../../assets/images/icon/icon_add.png" alt class="icon_add" />
                     <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
                   </div>
                 </el-col>
+              </div>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
@@ -524,7 +628,8 @@ import {
   warelocalAll,
   waregetlocallist,
   LocationDel,
-  warehousereport
+  warehousereport,
+  warehousegroup
 } from '@/api/warehouse'
 export default {
   components: {},
@@ -556,6 +661,8 @@ export default {
       form: formData,
       formEditDialog: false,
       submitDisabled: false,
+      dialogVisible: false,
+      scrapcountlog: false,
       formAddress: {
         province: '',
         city: '',
@@ -591,6 +698,7 @@ export default {
       purchaseListData: [],
       chuRuKuDialog: false,
       activeChuRuKu: '1',
+      activeName: '1',
       // 出库信息
       chuKuSearchForm: {
         key: '',
@@ -623,6 +731,12 @@ export default {
         limit: pz
       },
       rukuData: [],
+      currentPage_num: 1,
+      pageSize_num: pz,
+      itemCount_num : 0,
+      currentPage_info: 1,
+      pageSize_info: pz,
+      itemCount_info: 0,
       currentPageruku: 1,
       pageSizeruku: pz,
       itemCountruku: 0,
@@ -654,11 +768,42 @@ export default {
         {value:'1',label: this.$t('warehouse.Orderdelivery2')},
         {value:'2',label: this.$t('warehouse.Scrap')},
         {value:'3',label: this.$t('warehouse.return')},
-        ]
+        ],
+      goodsviewfrom:{
+        key: '',
+        warehouse_id: '',
+        sku_uid: '',
+        skip: 0,
+        limit: pz,
+      },
+      goodsviewdata:[],
+      goodsnumfrom:{
+        sku_uid: '',
+        specification: '',
+        skip: 0,
+        limit: pz,
+      },
+      goodsnumdata:[],
+      scrapcountfrom:{
+        tp: 2,
+        sku_uid: '',
+        specification: '',
+      },
+      scrapcountdata:[]
     }
   },
 
   watch: {
+     currentPage_num(val) {
+        this.getgrouplist.skip = (val - 1) * this.pageSize_num
+        this.getgrouplist.limit = this.pageSize_num
+        this.getgrouplist()
+      },
+       currentPage_info(val) {
+        this.goodsnumfrom.skip = (val - 1) * this.pageSize_info
+        this.goodsnumfrom.limit = this.pageSize_info
+        this.getgoodsinfodata()
+      },
     currentPage(val) {
       this.searchForm.skip = (val - 1) * this.pageSize
       this.searchForm.limit = this.pageSize
@@ -776,11 +921,22 @@ export default {
       this.rukuDialog = true
       console.log('tp', this.rukuForm.tp)
     },
+    // 库存信息
     showInventories(data) {
+      this.currentPage_num = 1
       this.inventoriesSearchForm.warehouse_id = data.id
+      this.goodsviewfrom.warehouse_id = data.id
       this.getInventoriesList()
       this.getPositionList(data.id)
       this.inventoriesDialog = true
+      this.getgrouplist()
+    },
+    getgrouplist(){
+       warehousegroup(this.goodsviewfrom).then(res=>{
+        this.goodsviewdata = res.items
+        this.itemCount_num = res.total
+        console.log(this.goodsviewdata);
+      })
     },
     getInventoriesList() {
       warehouseInventories(this.inventoriesSearchForm).then(res => {
@@ -1042,6 +1198,36 @@ export default {
         a.download = 'Inventoryinfo.xlsx'
         a.click()
       })
+    },
+    goodsnuminfo(data){
+      this.goodsnumfrom.sku_uid = data.sku_uid
+      this.goodsnumfrom.specification = data.specification
+      this.getgoodsinfodata()
+    },
+    getgoodsinfodata(){
+      warehouseInventories(this.goodsnumfrom).then(res=>{
+       if(res.meta == 0){
+          this.goodsnumdata = res.items
+          this.itemCount_info = res.total
+          this.dialogVisible = true
+       }
+      })
+    },
+    goodsscrapcount(data){
+      if(data.scrap_count > 0){
+        this.scrapcountfrom.sku_uid = data.sku_uid
+        this.scrapcountfrom.specification = data.specification
+        this.getscrapcountdata()
+        this.scrapcountlog = true
+      }else{
+        this.$message(this.$t('warehouse.noinformation'))
+      }
+    },
+    getscrapcountdata(){
+      warehouseOutbounds(this.scrapcountfrom).then(res=>{
+        this.scrapcountdata = res.items
+        console.log(this.scrapcountdata);
+      })
     }
   },
   mounted() {
@@ -1126,5 +1312,11 @@ export default {
 .exbox{
   display: flex;
   justify-content: space-between;
+}
+.numcss{
+  display: inline-block;
+  width: 100%;
+  cursor: pointer;
+  color: #409eff;
 }
 </style>

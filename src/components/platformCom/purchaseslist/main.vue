@@ -94,6 +94,7 @@ export default {
       // console.log(data);
     },
     handleCurrentChange(data,val,k){
+      console.log(data,'2222222222222');
         this.$emit("dataid",data)
         this.$emit("getvalue",val)
         this.$emit("key",k)

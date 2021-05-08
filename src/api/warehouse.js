@@ -275,3 +275,12 @@ export function warehousereport(data) {
     responseType: 'blob'
   })
 }
+
+// 仓库.库存信息.根据商品归类
+export function warehousegroup(data) {
+  return request({
+    url: 'warehouse-inventories-group',
+    method: 'get',
+    params: data,
+  })
+}

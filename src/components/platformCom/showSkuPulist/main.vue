@@ -114,7 +114,6 @@ export default {
     handleSelectionChange(val) {
       let array = [];
       array.push(val);
-      console.log(array[0],'5555');
       this.$emit("pulist", array[0]);
       this.$emit("getid", this.puid);
     },

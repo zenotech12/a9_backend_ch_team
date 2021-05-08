@@ -26,7 +26,7 @@
                 <el-table-column prop="currency" :label="$t('warehouse.Currency')" width="85"></el-table-column>
                 <el-table-column prop="payment_term" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
                 <el-table-column prop="delivery_method" :label="$t('warehouse.delivery_method')" width="100"></el-table-column>
-                <el-table-column>
+                <el-table-column width="800">
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
                       <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
@@ -445,11 +445,7 @@
               <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
                   <el-table-column type="selection" width="55"></el-table-column>
                   <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
-                  <el-table-column :label="$t('warehouse.PlaceofOrigin')">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.origin"></el-input>
-                    </template>
-                  </el-table-column>
+                  <el-table-column property="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
                   <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
                   <el-table-column :label="$t('warehouse.barCode')">
                     <template  slot-scope="scope">
@@ -1009,8 +1005,10 @@
         })
       },
       warehousing(data){
+        this.inwarehouseFrom.purchase_id = ''
         this.wareId = ''
         this.inwarehouseFrom.comment = ''
+        this.inwarehouseFrom.purchase_id = data.id
         warehousesList(this.searchForm).then(res=>{
           this.warelist = res.items
         })
@@ -1019,8 +1017,7 @@
         this.inwarehouseData.forEach((item, k) => {
           // item['position'] = ''
           this.$set(this.inwarehouseData[k], 'position', '')
-        });
-        console.log(this.inwarehouseData);
+        })
       },
       onchange(e){
         this.getlocationList()
