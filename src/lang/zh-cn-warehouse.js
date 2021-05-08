@@ -123,5 +123,5 @@ export default {
   payment_term: '支付账期',
   delivery_method: '运输方式',
   Inventoryinfo: '信息导出',
-  save: '保存'
+  save: '下一步'
 }
