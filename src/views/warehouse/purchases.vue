@@ -491,6 +491,41 @@
             <confirm-button @confirmButton="inwarehouseAdd" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
+        <!-- 入库列表 -->
+        <el-dialog
+          title="库存列表"
+          :visible.sync="dialogVisible"
+          width="70%">
+          <el-row>
+          <el-col :span="24" class="funcList">    
+              <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
+                <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+                <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              </div>
+          </el-col>
+        </el-row>
+          <el-table :data="totaldata" border stripe style="width: 100%">
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="origin" label="产地"></el-table-column>
+            <el-table-column prop="date" label="规格信息">
+                <template slot-scope="scope">
+                    {{textFilter(scope.row.specification)}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="barcode" label="条形码"></el-table-column>
+            <el-table-column prop="unit_price" label="单价"></el-table-column>
+            <el-table-column prop="count" label="数量"></el-table-column>
+            <el-table-column prop="warehouse_name" label="仓库名称"></el-table-column>
+          </el-table>
+          <div style="text-align: right;margin-top: 10px">
+            <el-pagination
+                :current-page.sync="currentPage_to"
+                :page-size="pageSize_to"
+                layout="total, prev, pager, next, jumper"
+                :total="itemCount_to">
+            </el-pagination>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -498,7 +533,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseAdd, Locationlist, warehouseReceiptsAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList } from '@/api/warehouse'
+  import { purchaseAdd, Locationlist, warehouseReceiptsAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo } from '@/api/goods'
   export default {
@@ -524,6 +559,15 @@
           comment: ''
 
         },
+        stockfrom:{
+          key: '',
+          warehouse_id: '',
+          position: '',
+          specification: '',
+          skip: 0,
+          limit: 10,
+        },
+        dialogVisible: false,
         switchvalue: false,
         position: '',
         searchForm: {
@@ -542,6 +586,9 @@
         currentPage: 1,
         pageSize: pz,
         itemCount: 0,
+        currentPage_to: 1,
+        pageSize_to: 10,
+        itemCount_to: 0,
         form: formData,
         formEditDialog: false,
         formEditDialogpay: false,
@@ -603,16 +650,17 @@
           this.$t('warehouse.allprice')
         ],
         flag:'',
-        options:[
+        totaldata: [],
+        options: [
           {value:'US Dollar',label: 'US Dollar'},
           {value:'Riel(Cambodia)',label: 'Riel(Cambodia)'},
           {value:'RBM',label: 'RBM'},
         ],
-        paymenttermdata:[
+        paymenttermdata: [
           {value:'Net 30 days',label: 'Net 30 days'},
           {value:'Net 60 days',label: 'Net 60 days'}
         ],
-        deliverymedata:[
+        deliverymedata: [
           {value:'Self-pick up',label: 'Self-pick up'},
           {value:'Express',label: 'Express'}
         ],
@@ -628,6 +676,11 @@
       ])
     },
     watch: {
+      currentPage_to(val) {
+          this.stockfrom.skip = (val - 1) * this.pageSize_to
+          this.stockfrom.limit = this.pageSize_to
+          this.getstockinfo()
+      },
       currentPage(val) {
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
@@ -1005,6 +1058,7 @@
         })
       },
       warehousing(data){
+        this.getstockinfo()
         this.inwarehouseFrom.purchase_id = ''
         this.wareId = ''
         this.inwarehouseFrom.comment = ''
@@ -1012,12 +1066,23 @@
         warehousesList(this.searchForm).then(res=>{
           this.warelist = res.items
         })
-        this.inwarehouselog = true
+        // this.inwarehouselog = true
+        this.dialogVisible = true
         this.inwarehouseData = data.skus
         this.inwarehouseData.forEach((item, k) => {
           // item['position'] = ''
           this.$set(this.inwarehouseData[k], 'position', '')
         })
+      },
+      getstockinfo(){
+        warehouseInventories(this.stockfrom).then(res=>{
+        this.totaldata = res.items
+        this.itemCount_to = res.total
+        console.log(this.totaldata);
+        })
+      },
+      addrukudata(){
+        this.inwarehouselog = true
       },
       onchange(e){
         this.getlocationList()
@@ -1055,6 +1120,7 @@
                 this.commentlog = false
                 this.inwarehouselog = false
                 this.$message(this.$t('warehouse.addsuccess'))
+                this.getstockinfo()
               }
             }).catch(res=>{
               this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
@@ -1065,7 +1131,24 @@
         },
       Searchlist(){
         this.getDataListFun()
+      },
+       textFilter(data) {
+      let index = data.indexOf('{')
+      if(index != -1){
+        let str = ''
+        const text = JSON.parse(data)
+        Object.keys(text).forEach((v, i) => {
+          if (i === 0) {
+            str = v + ':' + text[v] + ';'
+          } else {
+            str = str + v + ':' + text[v] + ';'
+          }
+        })
+        return str
+      }else{
+        return data
       }
+    },
     },
     mounted() {
       this.getDataListFun()
@@ -1132,5 +1215,8 @@
 }
 .mar10{
   margin-top: 10px;
+}
+.mt{
+  margin-top: -40px;
 }
 </style>

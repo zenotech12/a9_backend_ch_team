@@ -232,7 +232,6 @@
               </template>
             </el-table-column>
             <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
-            <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
             <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
           </el-table>
           <div style="text-align: right;margin-top: 10px">
@@ -778,6 +777,7 @@ export default {
       },
       goodsviewdata:[],
       goodsnumfrom:{
+        warehouse_id: '',
         sku_uid: '',
         specification: '',
         skip: 0,
@@ -785,6 +785,7 @@ export default {
       },
       goodsnumdata:[],
       scrapcountfrom:{
+        warehouse_id: '',
         tp: 2,
         sku_uid: '',
         specification: '',
@@ -1200,7 +1201,9 @@ export default {
       })
     },
     goodsnuminfo(data){
+      console.log(data);
       this.goodsnumfrom.sku_uid = data.sku_uid
+      this.goodsnumfrom.warehouse_id = this.inventoriesSearchForm.warehouse_id
       this.goodsnumfrom.specification = data.specification
       this.getgoodsinfodata()
     },
@@ -1212,10 +1215,12 @@ export default {
           this.dialogVisible = true
        }
       })
+      console.log(this.goodsnumfrom.warehouse_id);
     },
     goodsscrapcount(data){
       if(data.scrap_count > 0){
         this.scrapcountfrom.sku_uid = data.sku_uid
+        this.scrapcountfrom.warehouse_id = this.inventoriesSearchForm.warehouse_id
         this.scrapcountfrom.specification = data.specification
         this.getscrapcountdata()
         this.scrapcountlog = true

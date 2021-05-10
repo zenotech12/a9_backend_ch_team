@@ -61,6 +61,7 @@ export default {
   warehouseList: 'Warehouse list',
   suppliersMgr: 'Supplier',
   purchasesMgr: 'Purchase Order',
+  totalinventory: 'Total inventory',
   specialPermission: 'Special Permission',
   financialApproval: 'Financial Approval',
   leadershipApproval: 'Leadership Approval'
