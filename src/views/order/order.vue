@@ -61,6 +61,11 @@
                   type="selection"
                   width="45">
                 </el-table-column>
+                <el-table-column label="序号" width="80px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <!-- 单号 -->
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
@@ -317,7 +322,7 @@
                   :value="item.id">
                 </el-option>
               </el-select>
-              <el-button v-if="goodsInvList.length === 0" size="small" type="text">所购商品暂无库存，请先采购</el-button>
+              <el-button v-if="goodsInvList.length === 0" @click="jumpCaiGou" size="small" type="text">所购商品暂无库存，请先采购</el-button>
             </el-form-item>
             <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
               <!--<div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>-->
@@ -338,7 +343,7 @@
                     <div class="clear"></div>
                   </el-col>
                   <el-col :span="4" class="kuchunBox">
-                      库存：{{returnInvNumber(gInfo.goods_info, wareid)}}
+                      <el-button type="text" style="font-size: 20px" @click="showInvFunc(returnInvNumber(gInfo.goods_info, wareid))">{{$t('goods.inventory')}}：{{returnInvNumber(gInfo.goods_info, wareid)}}</el-button>
                   </el-col>
                 </el-row>
             </el-form-item>
@@ -630,8 +635,8 @@
                <el-table-column :label="$t('warehouse.Address')" width="300px">
                  <template slot-scope="scope">
                    <!-- <span v-for="(item,key) in scope.row.shipping_address" :key="key"> -->
-                     {{scope.row.shipping_address.address.city}} - 
-                     {{scope.row.shipping_address.address.province}} - 
+                     {{scope.row.shipping_address.address.city}} -
+                     {{scope.row.shipping_address.address.province}} -
                      {{scope.row.shipping_address.address.district}}
                    <!-- </span> -->
                  </template>
@@ -807,7 +812,10 @@
           record_t: '',
           comment: ''
         },
-		goodsInvList: [],		addressdataarr:[]      }
+        goodsInvList: [],
+        addWuLiuShow: false,
+        addressdataarr: []
+      }
     },
     computed: {
       ...mapGetters([
@@ -856,6 +864,16 @@
       }
     },
     methods: {
+      jumpCaiGou() {
+        this.$router.push({
+          path: '/warehouse/purchases'
+        })
+      },
+      showInvFunc(number) {
+        if (number > 0) {
+
+        }
+      },
       confirmAddWuliuJiLu() {
         // console.log('form', this.addWuLiuRecordForm)
         orderTransRecords(this.expressOrder.id, this.addWuLiuRecordForm).then(res => {
@@ -1165,7 +1183,7 @@
             let breach = true
             if (res.items && res.items.length > 0) {
               res.items.forEach(v => {
-                if (v.count !== 0 && breach === true) {
+                if (v.count !== 0 && breach === true && sendId.indexOf(v.oid) === -1) {
                   this.wareid = v.warehouse_id
                   breach = false
                 }
