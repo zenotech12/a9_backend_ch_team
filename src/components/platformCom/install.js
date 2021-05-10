@@ -22,6 +22,7 @@ import showSkuOrder from './showSkuOrder'
 import stockSelect from './stockSelect'
 import showSkuPlist from './showSkuPulist'
 import purchasesList from './purchaseslist'
+import totalData from './totalData'
 
 // 形成组件库
 const components = [
@@ -45,7 +46,8 @@ const components = [
   showSkuOrder,
   stockSelect,
   showSkuPlist,
-  purchasesList
+  purchasesList,
+  totalData
  
 ]
 
