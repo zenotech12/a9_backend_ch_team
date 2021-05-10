@@ -203,4 +203,11 @@ export function orderTransRecords(id, data) {
   })
 }
 
-
+// 仓库.库存信息.根据仓库区分组
+export function warehouseGroupInven(data) {
+  return request({
+    url: 'warehouse-inventories-group-warehouse',
+    method: 'get',
+    params: data
+  })
+}

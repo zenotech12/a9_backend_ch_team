@@ -269,7 +269,7 @@
                     <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17"  type="text" @click="showExpressEditor(scope.row,4)" size="small" style="margin-left: 0">
                       {{$t('order.price4Note')}}
                     </el-button>
-                     <el-button type="text" @click="deliveryMsg(scope.row)" size="small" style="margin-left: 0">
+                     <el-button type="text" @click="deliveryMsg(scope.row)" v-if="scope.row.status === 5 || scope.row.status === 4 || scope.row.status === 8" size="small" style="margin-left: 0">
                       {{$t('order.Delivery')}}
                     </el-button>
                     <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
@@ -308,22 +308,39 @@
             <el-form-item :label="$t('order.user')">
               {{expressOrder.user_nick_name}}&nbsp;{{expressOrder.user_mobile}}
             </el-form-item>
+            <el-form-item :label="$t('warehouse.ware')" v-if="optType === 1">
+              <el-select v-model="wareid" :disabled="expressOrder.rider_post" :placeholder="$t('warehouse.name')">
+                <el-option
+                  v-for="(item, k) in wareData2"
+                  :key="k"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+              <el-button v-if="goodsInvList.length === 0" size="small" type="text">所购商品暂无库存，请先采购</el-button>
+            </el-form-item>
             <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
-              <div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>
-              <div class="goods-item" v-for="(gInfo,k) in expressOrder.merchant_item.goods_items" :key="k">
-                <div class="chooseCheck" v-if="!allGoodsSend && gInfo.isHaveGoods">
-                  <el-checkbox v-model="gInfo.chooseGoods" :key="k"></el-checkbox>
-                </div>
-                <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)" fit="cover"></el-image>
-                <div class="g-info">
-                  <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
-                  <p>
-                    <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
-                  </p>
-                  <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price | price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
-                </div>
-                <div class="clear"></div>
-              </div>
+              <!--<div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>-->
+                <el-row class="goods-item" v-for="(gInfo,k) in expressOrder.merchant_item.goods_items" :key="k">
+                  <el-col :span="20">
+                    <!--v-if="!allGoodsSend && gInfo.isHaveGoods"-->
+                    <div class="chooseCheck" v-if="returnInvNumber(gInfo.goods_info, wareid) > 0 && gInfo.isHaveGoods">
+                      <el-checkbox v-model="gInfo.chooseGoods" :key="k"></el-checkbox>
+                    </div>
+                    <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)" fit="cover"></el-image>
+                    <div class="g-info">
+                      <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
+                      <p>
+                        <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
+                      </p>
+                      <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price | price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                    </div>
+                    <div class="clear"></div>
+                  </el-col>
+                  <el-col :span="4" class="kuchunBox">
+                      库存：{{returnInvNumber(gInfo.goods_info, wareid)}}
+                  </el-col>
+                </el-row>
             </el-form-item>
             <el-form-item :label="$t('order.price')">
               {{expressOrder.pay_price | price}}（{{$t('order.price1') + '：' }}{{expressOrder.goods_price | price}}；{{$t('order.price2') + '：'}}{{expressOrder.postage | price}}）
@@ -378,16 +395,6 @@
                   </el-col>
                 </el-row>
               </el-form-item>
-              <el-form-item :label="$t('warehouse.ware')">
-                 <el-select v-model="wareid" :disabled="expressOrder.rider_post" :placeholder="$t('warehouse.name')">
-                      <el-option
-                        v-for="(item, k) in wareData2"
-                        :key="k"
-                        :label="item.name"
-                        :value="item.id">
-                      </el-option>
-                    </el-select>
-              </el-form-item>
 <!--              <el-form-item :label="$t('order.note')" >-->
 <!--                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>-->
 <!--              </el-form-item>-->
@@ -428,7 +435,7 @@
                 <el-form-item :label="$t('order.userPhone')" style="display: inline-block" >
                   <el-input v-model="userPhone" :placeholder="$t('order.userPhone')" style="width: 200px"></el-input>
                 </el-form-item>
-                
+
 <!--              </div>-->
             </template>
           </el-form>
@@ -633,7 +640,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans} from '@/api/order'
+  import { ordersList, warehouseGroupInven, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans} from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
   import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
@@ -755,15 +762,15 @@
         ],
         ownerShipStatuses:[
           {
-             value: 0, 
+             value: 0,
              label: this.$t("order.ownerShipSelectAll"),
           },
           {
-             value: 1, 
+             value: 1,
              label: this.$t("order.ownerShipSelectSelf"),
           },
           {
-             value: 2, 
+             value: 2,
              label: this.$t("order.ownerShipSelectUndo"),
           },
         ],
@@ -779,7 +786,7 @@
         purchaseCheckId: '',
         sku_ids: [],
         sku_specifications:[],
-        allGoodsSend: true,
+        allGoodsSend: false,
         sendGoodsRecord: false,
         visibleExpress: false,
         express_id: '',
@@ -791,7 +798,8 @@
           record_t: '',
           comment: ''
         },
-        addWuLiuShow: false
+        addWuLiuShow: false,
+        goodsInvList: []
       }
     },
     computed: {
@@ -1096,12 +1104,26 @@
           return `https://www.kuaidi100.com/chaxun?com=${com}&nu=${nu}`
         }
       },
+      returnInvNumber(data, warehouse_id) {
+        const skuid = data.sku_url !== '' ? data.sku_url : data.sku_id
+        const spe = JSON.stringify(data.specifications)
+        let count = 0
+        if (this.goodsInvList && this.goodsInvList.length > 0) {
+          this.goodsInvList.forEach(item => {
+            // debugger
+            if (skuid === item.sku_uid && spe === item.specification && warehouse_id === item.warehouse_id) {
+              count = item.count
+            }
+          })
+        }
+        return count
+      },
       // 操作
       showExpressEditor(data, ot) {
         // data为商品数据 ot为一个值根据传过来不同的值做不同的操作
         this.expressOrder = data
         this.optType = ot
-        // console.log(data);
+        console.log(data);
         // console.log(ot);
         if (ot === 1) {
           this.wareid = ''
@@ -1115,13 +1137,32 @@
               sendId.push(v.oid)
             })
           })
+          const sku_uids = []
+          const specifications = []
           this.expressOrder.merchant_item.goods_items.forEach(goods => {
             // goods.chooseGoods = true
             if (sendId.indexOf(goods.goods_info.oid) === -1) {
-              this.$set(goods, 'chooseGoods', false)
+              this.$set(goods, 'chooseGoods', true)
               this.$set(goods, 'isHaveGoods', true)
             } else {
               this.$set(goods, 'isHaveGoods', false)
+            }
+            const id = goods.goods_info.sku_url !== '' ? goods.goods_info.sku_url : goods.goods_info.sku_id
+            const spe = Object.keys(goods.goods_info.specifications).length > 0 ? JSON.stringify(goods.goods_info.specifications) : ''
+            sku_uids.push(id)
+            specifications.push(spe)
+          })
+          warehouseGroupInven({ 'sku_uids': JSON.stringify(sku_uids), 'specifications': JSON.stringify(specifications), 'order_id': this.expressOrder.id, 'skip': 0, 'limit': 2000 }).then(res => {
+            console.log('res', res)
+            this.goodsInvList = res.items
+            let breach = true
+            if (res.items && res.items.length > 0) {
+              res.items.forEach(v => {
+                if (v.count !== 0 && breach === true) {
+                  this.wareid = v.warehouse_id
+                  breach = false
+                }
+              })
             }
           })
           this.dialogTitle = this.$t('order.express')
@@ -1162,20 +1203,20 @@
       // 修改地址确定按钮
       saveDataFunc() {
         this.submitDisabled = true
-        console.log(this.optType);
+        // console.log(this.optType);
         if (this.optType === 1) {
           this.sku_ids = []
           this.sku_specifications = []
           this.expressOrder.merchant_item.goods_items.forEach(goods => {
             if (!this.allGoodsSend) {
-              if (goods.chooseGoods && goods.isHaveGoods === true) {
+              if (goods.chooseGoods && goods.isHaveGoods === true && this.returnInvNumber(goods.goods_info, this.wareid) > 0) {
                 if (goods.goods_info.sku_url !== '') {
                   this.sku_ids.push(goods.goods_info.sku_url)
                   // 把规格组装进去
                   this.sku_specifications.push(JSON.stringify(goods.goods_info.specifications))
                 } else {
                   // 空也要推进去，占位，避免长度和sku_ids不同
-                  this.sku_specifications.push('') 
+                  this.sku_specifications.push('')
                   this.sku_ids.push(goods.goods_info.sku_id)
                 }
               }
@@ -1186,8 +1227,10 @@
             this.sku_specifications = ''
           } else {
             this.sku_ids = JSON.stringify(this.sku_ids)
-            this.sku_specifications = JSON.stringify(this.sku_specifications) 
+            this.sku_specifications = JSON.stringify(this.sku_specifications)
           }
+          console.log('this.sku_ids', this.sku_ids)
+          console.log('this.sku_specifications', this.sku_specifications)
           // console.log('sku_ids', this.sku_ids)
           ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids,sku_specifications:this.sku_specifications, warehouse_id:this.wareid}).then(res => {
             this.$message.success(this.$t('order.expressTip'))
@@ -1196,6 +1239,7 @@
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
+            this.DeliveryMsgDialog = true
           }).catch(() => {
             this.submitDisabled = false
           })
@@ -1206,6 +1250,7 @@
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
+            this.DeliveryMsgDialog = true
           }).catch(() => {
             this.submitDisabled = false
           })
@@ -1228,6 +1273,7 @@
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
+            this.DeliveryMsgDialog = true
           }).catch(() => {
             this.submitDisabled = false
           })
@@ -1238,6 +1284,7 @@
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
+            this.DeliveryMsgDialog = true
           }).catch(() => {
             this.submitDisabled = false
           })
@@ -1267,7 +1314,7 @@
         // data.id = ''
         warehouseOutbounds({order_id:data.id}).then(res=>{
           this.warehousedata = res.items
-        
+
         })
         console.log(this.warehousedata);
         this.DeliveryMsgDialog = true
@@ -1364,6 +1411,9 @@
     margin-bottom: 5px;
     cursor: pointer;
     clear: both;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     &:last-child {
       border-bottom: none;
       margin-bottom: 0px;
@@ -1388,6 +1438,9 @@
     }
     .clear{
       clear: both;
+    }
+    .kuchunBox {
+      font-size: 20px;
     }
   }
   .ui{
@@ -1441,6 +1494,6 @@
   }
   .num{
       color: rgb(53, 123, 226);
-      cursor: pointer;    
+      cursor: pointer;
   }
 </style>
