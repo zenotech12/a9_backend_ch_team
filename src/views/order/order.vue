@@ -627,6 +627,15 @@
                   </el-row>
                 </template>
               </el-table-column>
+               <el-table-column :label="$t('warehouse.Address')" width="300px">
+                 <template slot-scope="scope">
+                   <!-- <span v-for="(item,key) in scope.row.shipping_address" :key="key"> -->
+                     {{scope.row.shipping_address.address.city}} - 
+                     {{scope.row.shipping_address.address.province}} - 
+                     {{scope.row.shipping_address.address.district}}
+                   <!-- </span> -->
+                 </template>
+               </el-table-column>
             </el-table>
            </div>
           <div slot="footer" class="dialog-footer">
@@ -798,9 +807,7 @@
           record_t: '',
           comment: ''
         },
-        addWuLiuShow: false,
-        goodsInvList: []
-      }
+		goodsInvList: [],		addressdataarr:[]      }
     },
     computed: {
       ...mapGetters([
@@ -1314,9 +1321,7 @@
         // data.id = ''
         warehouseOutbounds({order_id:data.id}).then(res=>{
           this.warehousedata = res.items
-
-        })
-        console.log(this.warehousedata);
+	               })
         this.DeliveryMsgDialog = true
       },
       idsearch(data){
