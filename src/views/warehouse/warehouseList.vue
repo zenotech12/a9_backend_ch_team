@@ -233,6 +233,7 @@
             </el-table-column>
             <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
             <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
+            <!-- <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column> -->
           </el-table>
           <div style="text-align: right;margin-top: 10px">
                 <el-pagination
@@ -293,8 +294,9 @@
             <el-tab-pane :label="$t('warehouse.enterlist')" name="1"></el-tab-pane>
             <el-tab-pane :label="$t('warehouse.outlist')" name="2"></el-tab-pane>
             <div v-if="activeChuRuKu === '1'">
-              <div class="searchBox">
-                <div>
+              <div class="searchBox2">
+               <div class="searchBox">
+                  <div>
                   <el-select v-model="rukuSearchForm.tp" clearable>
                     <el-option
                       v-for="item in options"
@@ -310,6 +312,13 @@
                 <div>
                   <el-button type="primary" @click="dataSearch" icon="el-icon-search" size="small"></el-button>
                 </div>
+               </div>
+                <el-col :span="4" align="right">
+                  <div class="boxFuncBtn2" @click="rukuFunc" v-if="permissionCheck('opt')">
+                    <img src="../../assets/images/icon/icon_add.png" alt class="icon_add" />
+                    <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+                  </div>
+                </el-col>
               </div>
               <el-row>
                 <el-col :span="20">
@@ -321,16 +330,10 @@
                     </el-form-item>
                   </el-form>
                 </el-col>
-                <el-col :span="4" align="right">
-                  <div class="boxFuncBtn2" @click="rukuFunc" v-if="permissionCheck('opt')">
-                    <img src="../../assets/images/icon/icon_add.png" alt class="icon_add" />
-                    <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
-                  </div>
-                </el-col>
               </el-row>
               <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
-                <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
+                <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
                 <el-table-column prop="comment" :label="$t('warehouse.remarks')" width="150px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
@@ -413,7 +416,7 @@
                 </el-col>
               </div>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
+                <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">
@@ -1312,6 +1315,16 @@ export default {
   align-items: center;
   >div{
     margin-right: 5px;
+  }
+}
+.searchBox2{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  >div{
+   >div{
+    margin-right: 5px;
+    }
   }
 }
 .exbox{

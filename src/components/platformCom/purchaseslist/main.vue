@@ -4,8 +4,14 @@
       <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
     </el-input>
     <el-dialog :title="$t('warehouse.pulist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
+       <div style="width:200px" class="searchbtn">
+          <el-input v-model="searchFrom.no"></el-input>
+          <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
+        </div>
       <el-table :data="tableData" border stripe ref="singleTable" highlight-current-row  @current-change="handleCurrentChange">
          <el-table-column type="index" width="50"></el-table-column>
+        <el-table-column prop="no" :label="$t('warehouse.number')" width="150"></el-table-column>
+        <!-- <el-table-column prop="status" :label="$t('warehouse.type')" width="150"></el-table-column> -->
         <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="100"></el-table-column>
         <el-table-column>
           <template slot="header" slot-scope="scope">
@@ -60,6 +66,7 @@ export default {
         order_id: "",
         skip: 0,
         limit: 10,
+        no: '',
       },
       currentPage: 1,
       pageSize: 10,
@@ -85,7 +92,6 @@ export default {
     },
     getpulidtdata() {
       purchaseList(this.searchFrom).then((res) => {
-        // console.log(res);
         this.tableData = res.items;
         this.itemCount = res.total
       });
@@ -94,7 +100,6 @@ export default {
       // console.log(data);
     },
     handleCurrentChange(data,val,k){
-      console.log(data,'2222222222222');
         this.$emit("dataid",data)
         this.$emit("getvalue",val)
         this.$emit("key",k)
@@ -106,6 +111,9 @@ export default {
       this.dialogFormVisible = false
       this.setCurrent()
     },
+    Searchlist(){
+      this.getpulidtdata()
+    }
   },
 };
 </script>
@@ -134,5 +142,10 @@ export default {
 .conbtn{
   width: 100%;
   text-align: right;
+}
+.searchbtn{
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
 </style>
