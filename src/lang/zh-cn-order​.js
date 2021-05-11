@@ -110,8 +110,8 @@ export default {
   userPhone: '手机号',
   zwddwl: '暂无订单物流信息',
   modifyExpress: '修改物流信息',
-  transOwnerShip:"转让",
-  ownerShipGet: '认领',
+  transOwnerShip: '转让',
+  ownerShipGet: '待认领',
   includePostage: '含运费',
   businessBz: '商家备注',
   orderNumber: '订单数',
@@ -165,5 +165,5 @@ export default {
   Delivery: '出库信息',
   Relatedorders: '相关订单ID',
   Msg: '暂无信息',
-  
+
 }

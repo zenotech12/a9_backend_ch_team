@@ -64,5 +64,6 @@ export default {
   totalinventory: 'សារពើភ័ណ្ឌសរុប',
   specialPermission: 'ការអនុញ្ញាតពិសេស',
   financialApproval: 'ការយល់ព្រមផ្នែកហិរញ្ញវត្ថុ',
-  leadershipApproval: 'ការអនុម័តភាពជាអ្នកដឹកនាំ'
+  leadershipApproval: 'ការអនុម័តភាពជាអ្នកដឹកនាំ',
+  journal: 'កំណត់ហេតុក្នុងនិងក្រៅប្រទេស'
 }

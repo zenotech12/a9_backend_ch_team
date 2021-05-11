@@ -13,6 +13,12 @@ const warehouse = [{
       component: () => import('@/views/warehouse/totalinventory')
     },
     {
+      path: 'inboundOutBound',
+      name: 'inboundOutBound',
+      meta: { title: 'journal', icon: 'list', code: '8_5' },
+      component: () => import('@/views/warehouse/inboundOutBound')
+    },
+    {
       path: 'warehouseList',
       name: 'warehouseList',
       meta: { title: 'warehouseList', icon: 'list', code: '8_1' },

@@ -64,5 +64,6 @@ export default {
   totalinventory: 'Total inventory',
   specialPermission: 'Special Permission',
   financialApproval: 'Financial Approval',
-  leadershipApproval: 'Leadership Approval'
+  leadershipApproval: 'Leadership Approval',
+  journal: 'Inbound and outbound log'
 }

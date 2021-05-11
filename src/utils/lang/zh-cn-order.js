@@ -163,5 +163,5 @@ export default {
   Delivery: '出库信息',
   Relatedorders: '相关订单ID',
   Msg: '暂无信息',
-  
+
 }

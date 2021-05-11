@@ -131,7 +131,7 @@
                       {{$t('order.ownerShipGet')}}
                     </el-button>
                     <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
-                      <el-select v-model="ownerShipSelectUserId" placeholder="请选择">
+                      <el-select v-model="ownerShipSelectUserId">
                         <el-option
                           v-for="item in customerMgrList"
                           :key="item.user_nick_name"
@@ -143,6 +143,9 @@
                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
                         {{$t('tools.confirm')}}
                       </el-button>
+                        <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
+                          取消认领
+                        </el-button>
                       </div>
                       <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
                     </el-popover>
@@ -682,7 +685,7 @@
         searchParamKey: 'orderList',
         doWatch: true,
         showTab: false,
-        servicerOptArr:{1:this.$t('order.servicerOpt1'), 2:this.$t('order.servicerOpt2')},
+        servicerOptArr: { 1:this.$t('order.servicerOpt1'), 2 : this.$t('order.servicerOpt2'), 3: '取消认领' },
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
@@ -1012,8 +1015,14 @@
          })
       },
       // 转让订单
-      orderOwnerShipTransFunc(id) {
-        orderOwnerShipTrans(id,{'user_id':this.ownerShipSelectUserId}).then(res => {
+      orderOwnerShipTransFunc(id, userid) {
+        let id_user = ''
+        if (userid !== '') {
+          id_user = this.ownerShipSelectUserId
+        } else {
+          id_user = ''
+        }
+        orderOwnerShipTrans(id, { 'user_id': id_user }).then(res => {
            this.$message.success("success")
            this.getDataListFun()
            this.getOrderCount()

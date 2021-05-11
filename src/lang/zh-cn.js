@@ -63,5 +63,6 @@ export default {
   totalinventory: '总库存',
   specialPermission: '特殊权限',
   financialApproval: '财务审批',
-  leadershipApproval: '领导审批'
+  leadershipApproval: '领导审批',
+  journal: '出入库日志'
 }

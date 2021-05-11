@@ -447,12 +447,12 @@
                 </el-col>
               </div>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
-                <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
                 <el-table-column label="#" width="60px">
                   <template slot-scope="scope">
                     {{scope.$index + chuKuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
+                <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
