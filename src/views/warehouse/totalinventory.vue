@@ -10,6 +10,11 @@
               <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
             </div>
             <el-table :data="Totaldata" border stripe style="width: 100%">
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + totalgoodshForm.skip + 1}}
+                </template>
+              </el-table-column>
               <el-table-column prop="name" label="名称"></el-table-column>
               <el-table-column prop="date" label="规格信息">
                 <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
