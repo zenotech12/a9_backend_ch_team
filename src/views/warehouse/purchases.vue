@@ -55,7 +55,7 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="状态" width="100">
+                <el-table-column :label="$t('warehouse.type')" width="100">
                   <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">待审核</el-tag>
                     <el-tag type="info" v-if="scope.row.status === 2">财务审批</el-tag>
@@ -508,10 +508,14 @@
         </el-dialog>
         <!-- 入库列表 -->
         <el-dialog
-          title="入存列表"
+          :title="$t('warehouse.enterlist')"
           :visible.sync="dialogVisible"
           width="80%">
           <el-row>
+          <div class="searchbox">
+            <el-input v-model="stockfrom.key"></el-input>
+            <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
+          </div>
           <el-col :span="24" class="funcList">
               <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
                 <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
@@ -519,10 +523,10 @@
               </div>
           </el-col>
         </el-row>
-          <el-table :data="totaldata" border stripe style="width: 100%">
-            <el-table-column prop="no" label="编号" width="150"></el-table-column>
-            <el-table-column prop="warehouse_name" label="仓库名称" width="150"></el-table-column>
-            <el-table-column prop="supplier_name" label="供应商名称" width="150"></el-table-column>
+          <el-table :data="totaldata" border stripe highlight-current-row height="calc(100vh - 420px)" style="width: 100%">
+            <el-table-column prop="no" :label="$t('warehouse.number')" width="150"></el-table-column>
+            <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="150"></el-table-column>
+            <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150"></el-table-column>
             <el-table-column prop="warehouse_name" label="">
               <template slot="header" slot-scope="scope">
                <div>
@@ -1165,7 +1169,7 @@
       Searchlist(){
         this.getDataListFun()
       },
-       textFilter(data) {
+      textFilter(data) {
       let index = data.indexOf('{')
       if(index != -1){
         let str = ''
@@ -1181,7 +1185,10 @@
       }else{
         return data
       }
-    },
+      },
+      Searchrukudata(){
+        this.getstockinfo()
+      }
     },
     mounted() {
       this.getDataListFun()
@@ -1251,5 +1258,10 @@
 }
 .mt{
   margin-top: -40px;
+}
+.searchbox{
+  width: 200px;
+  display: flex;
+  align-items: center;
 }
 </style>

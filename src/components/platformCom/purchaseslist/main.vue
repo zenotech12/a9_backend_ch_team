@@ -8,10 +8,14 @@
           <el-input v-model="searchFrom.no"></el-input>
           <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
         </div>
-      <el-table :data="tableData" border stripe ref="singleTable" highlight-current-row  @current-change="handleCurrentChange">
-         <el-table-column type="index" width="50"></el-table-column>
+      <el-table :data="tableData" border stripe ref="singleTable" highlight-current-row height="calc(100vh - 420px)"  @current-change="handleCurrentChange">
+          <el-table-column label="#" width="60px" fixed = "left">
+            <template slot-scope="scope">
+              {{scope.$index + searchFrom.skip + 1}}
+            </template>
+          </el-table-column>
         <el-table-column prop="no" :label="$t('warehouse.number')" width="150"></el-table-column>
-        <!-- <el-table-column prop="status" :label="$t('warehouse.type')" width="150"></el-table-column> -->
+        <!-- <el-table-column prop="status" :label="$t('warehouse.type')" width="50"></el-table-column> -->
         <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="100"></el-table-column>
         <el-table-column>
           <template slot="header" slot-scope="scope">
@@ -63,10 +67,11 @@ export default {
   data() {
     return {
       searchFrom: {
-        order_id: "",
+        order_id: '',
         skip: 0,
         limit: 10,
         no: '',
+        status: 3
       },
       currentPage: 1,
       pageSize: 10,
@@ -92,12 +97,12 @@ export default {
     },
     getpulidtdata() {
       purchaseList(this.searchFrom).then((res) => {
-        this.tableData = res.items;
+        this.tableData = res.items
         this.itemCount = res.total
       });
     },
     confirmButton(data) {
-      // console.log(data);
+      
     },
     handleCurrentChange(data,val,k){
         this.$emit("dataid",data)

@@ -195,7 +195,7 @@
               </el-form>
             </el-col>
           </el-row>
-          <el-table stripe border :data="inventoriesList" height="calc(100vh - 400px)">
+          <el-table stripe border :data="inventoriesList" highlight-current-row  height="calc(100vh - 450px)">
             <el-table-column label="#" width="60px">
               <template slot-scope="scope">
                 {{scope.$index + inventoriesSearchForm.skip + 1}}
@@ -357,18 +357,18 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
-                <el-table-column label="#" width="60px">
+                <el-table-column label="#" width="60px" fixed = "left">
                   <template slot-scope="scope">
                     {{scope.$index + rukuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
+                <el-table-column prop="no" fixed = "left" :label="$t('warehouse.number')" width="150px"></el-table-column>
                 <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
-                <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
-                <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
+                <!-- <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column> -->
                 <el-table-column prop="comment" :label="$t('warehouse.remarks')" width="150px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
-                <el-table-column >
+                <el-table-column width="800px">
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
                       <el-col :span="10">{{$t('warehouse.Tradename')}}</el-col>
@@ -447,14 +447,14 @@
                 </el-col>
               </div>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
-                <el-table-column label="#" width="60px">
+					<el-table-column label="#" width="60px">
                   <template slot-scope="scope">
                     {{scope.$index + chuKuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
-                <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
-                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
+                
+                
+                                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">
                       <span v-if="scope.row.tp === 1">{{$t('warehouse.order')}}</span>
