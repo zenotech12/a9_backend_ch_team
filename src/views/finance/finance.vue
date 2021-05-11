@@ -61,6 +61,11 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 260px)">
               <el-table stripe border :data="tableData" height="calc(100% - 50px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column  :label="$t('finance.type')">
                   <template  slot-scope="scope">
                     <span v-if="scope.row.type === 13">{{$t('finance.distributionDeduction')}}</span>

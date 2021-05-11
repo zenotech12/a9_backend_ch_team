@@ -24,6 +24,11 @@
         <el-row>
           <el-col :span="24" style="height: calc(100vh - 200px)">
             <el-table stripe border :data="tableData" height="calc(100% - 40px)" style="width: 100%;">
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + searchForm.skip + 1}}
+                </template>
+              </el-table-column>
               <el-table-column  :label="$t('operation.cutGoods')" min-width="300">
                 <template  slot-scope="scope">
                   <div class="goods-item">
@@ -166,7 +171,7 @@
         xgType: 1,
         timeValidSwitch: true,
         searchForm: {
-          skip: '',
+          skip: 0,
           limit: pz
         },
         secondArr: [{ label: 0.5, value: 1800 }, { label: 1, value: 3600 }, { label: 2, value: 7200 }, { label: 5, value: 18000 }],

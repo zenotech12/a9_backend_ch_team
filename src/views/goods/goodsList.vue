@@ -97,6 +97,11 @@
                     type="selection"
                     width="55">
                   </el-table-column>
+                  <el-table-column label="#" width="60px" fixed="left">
+                    <template slot-scope="scope">
+                      {{scope.$index + searchForm.skip + 1}}
+                    </template>
+                  </el-table-column>
                   <el-table-column  :label="$t('goods.name')" min-width="300">
                   <template  slot-scope="scope">
                     <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
@@ -457,6 +462,11 @@
             <el-dialog class="dialog" :title="$t('warehouse.stockmsg')" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
                        :close-on-click-modal="false" center >
               <el-table stripe border :data="inventoriesList" height="calc(100vh - 360px)">
+                <el-table-column label="#" width="60px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + inventoriesSearchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <!-- 仓库名称 -->
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>

@@ -58,6 +58,11 @@
                     type="selection"
                     width="55">
                   </el-table-column>
+                  <el-table-column label="#" width="60px" fixed="left">
+                    <template slot-scope="scope">
+                      {{scope.$index + searchForm.skip + 1}}
+                    </template>
+                  </el-table-column>
                   <el-table-column  :label="$t('goods.name')" min-width="300">
                     <template  slot-scope="scope">
                       <div class="goods-item">

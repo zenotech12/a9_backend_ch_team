@@ -79,7 +79,7 @@
                 </div>
                 <a @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
               </el-form-item>
-              <el-form-item :label="$t('goods.piEdit')" required>
+              <el-form-item :label="$t('goods.price')" required>
                 <el-table :data="goodsInventoryTable"  style="width: 100%" :span-method="inventoryTableSpanMethod">
                   <el-table-column :label="$t('goods.sp')">
                     <template  slot-scope="scope">
@@ -92,21 +92,21 @@
                     </template>
                   </el-table-column>
                   <el-table-column v-if="goodsData.id" prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                  <el-table-column :label="$t('goods.inventory')">
-                    <template slot="header" slot-scope="scope">
-                      {{$t('goods.inventory')}}
-                      <el-popover placement="bottom"
-                                  width="200"
-                                  trigger="click">
-                        <el-input v-model.number="batchInventory">
-                        </el-input>
-                        <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                      </el-popover>
-                    </template>
-                    <template  slot-scope="scope">
-                      <el-input v-model.number="scope.row.inventory"></el-input>
-                    </template>
-                  </el-table-column>
+                  <!--<el-table-column :label="$t('goods.inventory')">-->
+                    <!--<template slot="header" slot-scope="scope">-->
+                      <!--{{$t('goods.inventory')}}-->
+                      <!--<el-popover placement="bottom"-->
+                                  <!--width="200"-->
+                                  <!--trigger="click">-->
+                        <!--<el-input v-model.number="batchInventory">-->
+                        <!--</el-input>-->
+                        <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
+                      <!--</el-popover>-->
+                    <!--</template>-->
+                    <!--<template  slot-scope="scope">-->
+                      <!--<el-input v-model.number="scope.row.inventory"></el-input>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
                   <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.salePrice')">
                     <template slot="header" slot-scope="scope">
                       {{$t('goods.salePrice')}}

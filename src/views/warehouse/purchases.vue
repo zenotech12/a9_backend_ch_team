@@ -21,11 +21,12 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px" fixed = "left">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120" fixed = "left"></el-table-column>
-                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
-                <el-table-column prop="currency" :label="$t('warehouse.Currency')" width="85"></el-table-column>
-                <el-table-column prop="payment_term" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
-                <el-table-column prop="delivery_method" :label="$t('warehouse.delivery_method')" width="100"></el-table-column>
                 <el-table-column width="800">
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
@@ -54,6 +55,15 @@
                     </div>
                   </template>
                 </el-table-column>
+                <el-table-column label="状态" width="80">
+                  <template slot-scope="scope">
+
+                  </template>
+                </el-table-column>
+                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
+                <el-table-column prop="currency" :label="$t('warehouse.Currency')" width="85"></el-table-column>
+                <el-table-column prop="payment_term" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
+                <el-table-column prop="delivery_method" :label="$t('warehouse.delivery_method')" width="100"></el-table-column>
                 <el-table-column :label="$t('warehouse.payment')" width="100">
                   <template  slot-scope="scope">
                     {{scope.row.paid_complete ? $t('warehouse.yes') : $t('warehouse.no')}}
@@ -72,9 +82,10 @@
                 <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="160"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
                   <template slot-scope="scope">
-                    <el-button type="text" @click="showDataEditor(scope.row)" v-if="permissionCheck('opt', '8_3')" size="small">{{$t('tools.edit')}}</el-button>
+                    <el-button type="text" @click="showDataEditor(scope.row)" v-if="permissionCheck('opt', '8_3') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('tools.edit')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,2)" v-if="permissionCheck('opt', '9_1') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('global.financialApproval')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,3)" v-if="permissionCheck('opt', '9_2') && scope.row.status === 2" size="small">{{$t('global.leadershipApproval')}}</el-button>
+                    <el-button type="text" @click="shengheFunc(scope.row.id,100)" v-if="(permissionCheck('opt', '9_1') && scope.row.status === 2) || (permissionCheck('opt', '9_2') && scope.row.status === 3)" size="small">{{$t('tools.cancel')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
                     <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3" size="small">{{$t('warehouse.payment2')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
@@ -548,7 +559,7 @@
         triggersType: [{ code: 1, name: this.$t('operation.triggersA') }, { code: 2, name: this.$t('operation.triggersB') }, { code: 3, name: this.$t('operation.triggersC') }],
         timeValidSwitch: true,
         searchForm: {
-          skip: '',
+          skip: 0,
           limit: pz,
           no : ''
         },
@@ -572,11 +583,6 @@
         dialogVisible: false,
         switchvalue: false,
         position: '',
-        searchForm: {
-        skip: '',
-        limit: pz,
-        no : ''
-        },
         locas:[],
         wareId: '',
         inwarehouseData:[],

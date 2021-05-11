@@ -212,6 +212,11 @@
           <el-col :span="24" class="historyBox">
             <div style="height: calc(100vh - 200px)">
               <el-table stripe border :data="historyData" height="calc(100% - 30px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + historySearch.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column :label="$t('operation.name')" prop="name"></el-table-column>
                 <el-table-column :label="$t('operation.cover')">
                   <template slot-scope="scope">
@@ -265,6 +270,11 @@
           <el-row>
             <el-col :span="24" style="height: calc(100vh - 320px)">
               <el-table stripe border :data="orderData" height="calc(100% - 18px)" @selection-change="handleSelectionChange">
+                <el-table-column label="#" width="60px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + orderSearch.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
                     <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>

@@ -16,6 +16,11 @@
             <div style="height: calc(100vh - 185px)">
               <!-- 表格 -->
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <!-- 仓库名称 -->
                 <el-table-column prop="name" :label="$t('warehouse.name')"></el-table-column>
                 <!-- 备注 -->
@@ -124,7 +129,12 @@
             <el-tab-pane :label="$t('warehouse.goodsviwe')" name="1"></el-tab-pane>
             <el-tab-pane :label="$t('warehouse.locationviwe')" name="2"></el-tab-pane>
             <div v-if="activeName === '1'">
-              <el-table :data="goodsviewdata" stripe border style="width: 100%">
+              <el-table :data="goodsviewdata" stripe border height="calc(100vh - 400px)" style="width: 100%">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + goodsviewfrom.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="name" :label="$t('warehouse.goodsname')"></el-table-column>
                 <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
                 <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
@@ -186,6 +196,11 @@
             </el-col>
           </el-row>
           <el-table stripe border :data="inventoriesList" height="calc(100vh - 400px)">
+            <el-table-column label="#" width="60px">
+              <template slot-scope="scope">
+                {{scope.$index + inventoriesSearchForm.skip + 1}}
+              </template>
+            </el-table-column>
             <!-- 仓库名称 -->
             <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
             <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
@@ -212,7 +227,7 @@
             ></el-pagination>
           </div>
             </div>
-          </el-tabs>  
+          </el-tabs>
           <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
           </div>
@@ -223,7 +238,12 @@
           :visible.sync="dialogVisible"
           width="70%">
            <el-table stripe border :data="goodsnumdata" style="width: 100%">
-            <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+             <el-table-column label="#" width="60px">
+               <template slot-scope="scope">
+                 {{scope.$index + goodsnumfrom.skip + 1}}
+               </template>
+             </el-table-column>
+             <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
             <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
             <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
             <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
@@ -252,6 +272,11 @@
           :visible.sync="scrapcountlog"
           width="80%">
           <el-table :data="scrapcountdata" stripe border>
+            <el-table-column label="#" width="60px">
+              <template slot-scope="scope">
+                {{scope.$index + 1}}
+              </template>
+            </el-table-column>
             <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="150"></el-table-column>
             <el-table-column prop="warehouse_name">
                <template slot="header" slot-scope="scope">
@@ -329,6 +354,11 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + rukuSearchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
                 <el-table-column prop="comment" :label="$t('warehouse.remarks')" width="150px"></el-table-column>
@@ -413,6 +443,11 @@
                 </el-col>
               </div>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + chuKuSearchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
@@ -643,7 +678,7 @@ export default {
       ],
       timeValidSwitch: true,
       searchForm: {
-        skip: '',
+        skip: 0,
         limit: pz
       },
       ids: [],
@@ -721,8 +756,8 @@ export default {
         purchase_id: '',
         warehouse_id: '',
         supplier_id: '',
-        skip: '',
-        limit: ''
+        skip: 0,
+        limit: 10
       },
       locsearchFrom: {
         id: '',
@@ -795,16 +830,16 @@ export default {
   },
 
   watch: {
-     currentPage_num(val) {
-        this.getgrouplist.skip = (val - 1) * this.pageSize_num
-        this.getgrouplist.limit = this.pageSize_num
-        this.getgrouplist()
-      },
-       currentPage_info(val) {
-        this.goodsnumfrom.skip = (val - 1) * this.pageSize_info
-        this.goodsnumfrom.limit = this.pageSize_info
-        this.getgoodsinfodata()
-      },
+    currentPage_num(val) {
+      this.goodsviewfrom.skip = (val - 1) * this.pageSize_num
+      this.goodsviewfrom.limit = this.pageSize_num
+      this.getgrouplist()
+    },
+    currentPage_info(val) {
+      this.goodsnumfrom.skip = (val - 1) * this.pageSize_info
+      this.goodsnumfrom.limit = this.pageSize_info
+      this.getgoodsinfodata()
+    },
     currentPage(val) {
       this.searchForm.skip = (val - 1) * this.pageSize
       this.searchForm.limit = this.pageSize

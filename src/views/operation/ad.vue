@@ -33,6 +33,11 @@
                   type="selection"
                   width="55">
                 </el-table-column>
+                <el-table-column label="#" width="60px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column :label="$t('operation.image')">
                   <template  slot-scope="scope">
                     <el-image :src="getImageUrl(scope.row.image,200)" style="height: 130px; width:270px" fit="contain"></el-image>
@@ -170,7 +175,7 @@
         searchForm: {
           code: 0,
           time_valid: 1,
-          skip: '',
+          skip: 0,
           limit: pz
         },
         tableData: [],

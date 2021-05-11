@@ -16,6 +16,11 @@
         <el-row>
           <el-col :span="24">
             <el-table stripe border v-loading="tableData.loading" :data="tableData.body" style="width: 100%">
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + searchForm.skip + 1}}
+                </template>
+              </el-table-column>
               <el-table-column prop="user_nick_name" :label="$t('sys.user')">
               </el-table-column>
               <el-table-column prop="user_login_name" :label="$t('sys.mobile')"></el-table-column>

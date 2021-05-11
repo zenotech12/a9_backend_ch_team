@@ -15,6 +15,11 @@
           <el-col :span="24">
               <div style="height: calc(100% - 88px)">
                 <el-table stripe border :span-method="arraySpanMethod" :data="tablePostage">
+                  <el-table-column label="#" width="60px">
+                    <template slot-scope="scope">
+                      {{scope.$index + 1}}
+                    </template>
+                  </el-table-column>
                   <el-table-column prop="name" :label="$t('sys.name')"></el-table-column>
                   <el-table-column :label="$t('sys.default')">
                     <template slot-scope="scope">

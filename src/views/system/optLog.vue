@@ -6,6 +6,11 @@
           <el-col :span="24" >
             <div style="">
             <el-table stripe border v-loading="tableData.loading" :data="tableData.body" style="width: 100%;" height="calc(100vh - 175px)" >
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + searchForm.skip + 1}}
+                </template>
+              </el-table-column>
               <el-table-column prop="user_nick_name"  width="200px" :label="$t('sys.optUser')">
                 <template slot-scope="scope">
                   {{scope.row.user_nick_name}}/{{scope.row.user_login_name}}

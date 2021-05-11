@@ -61,7 +61,7 @@
                   type="selection"
                   width="45">
                 </el-table-column>
-                <el-table-column label="序号" width="80px" fixed="left">
+                <el-table-column label="#" width="60px" fixed="left">
                   <template slot-scope="scope">
                     {{scope.$index + searchForm.skip + 1}}
                   </template>
@@ -271,7 +271,7 @@
                     <el-button v-if="scope.row.status === 2 || scope.row.status === 5"  type="text" @click="showExpressEditor(scope.row,3)" size="small" style="margin-left: 0">
                       {{$t('order.changeAddress')}}
                     </el-button>
-                    <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17"  type="text" @click="showExpressEditor(scope.row,4)" size="small" style="margin-left: 0">
+                    <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17 && scope.row.expresses && scope.row.expresses.length > 0" type="text" @click="showModifyBz(scope.row, 4)" size="small" style="margin-left: 0">
                       {{$t('order.price4Note')}}
                     </el-button>
                      <el-button type="text" @click="deliveryMsg(scope.row)" v-if="scope.row.status === 5 || scope.row.status === 4 || scope.row.status === 8" size="small" style="margin-left: 0">
@@ -361,12 +361,12 @@
             <el-form-item :label="$t('order.payMethod')">
               {{payMethod[expressOrder.pay_way_top - 1]}}
             </el-form-item>
-            <el-form-item :label="$t('order.deliveryRecord')">
-              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}}</el-button>
-              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-else>{{$t('order.modifyWuLiuInfo')}}</el-button>
-            </el-form-item>
             <el-form-item :label="$t('order.userBz')">
               {{userComment}}
+            </el-form-item>
+            <el-form-item :label="$t('order.deliveryRecord')">
+              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}}({{expressOrder.expresses && expressOrder.expresses.length}})</el-button>
+              <!--<el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-else>{{$t('order.modifyWuLiuInfo')}}</el-button>-->
             </el-form-item>
             <el-form-item :label="$t('order.businessBz')" v-if="expressOrder.merchant_comments && expressOrder.merchant_comments.length > 0">
               <el-timeline style="margin-top: 10px">
@@ -379,9 +379,6 @@
               </el-timeline>
             </el-form-item>
             <template v-if="optType === 1">
-              <el-form-item :label="$t('order.note')" >
-                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
-              </el-form-item>
               <el-form-item :label="$t('order.expressInfo')" >
                 <el-row :gutter="20">
                   <el-col :span="8">
@@ -400,7 +397,11 @@
                   </el-col>
                 </el-row>
               </el-form-item>
-<!--              <el-form-item :label="$t('order.note')" >-->
+              <el-form-item :label="$t('order.note')" >
+                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
+              </el-form-item>
+
+              <!--              <el-form-item :label="$t('order.note')" >-->
 <!--                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>-->
 <!--              </el-form-item>-->
             </template>
@@ -443,6 +444,7 @@
 
 <!--              </div>-->
             </template>
+
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" v-if="optType !== 5 && optType !== 4" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -474,6 +476,11 @@
         </el-dialog>
         <el-dialog :title="$t('order.deliveryRecord')" width="1200px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
           <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 320px)">
+            <el-table-column label="#" width="60px">
+              <template slot-scope="scope">
+                {{scope.$index + 1}}
+              </template>
+            </el-table-column>
             <el-table-column :label="$t('order.goods')" min-width="400">
               <template  slot-scope="scope">
                 <div @click="jumpGoodsPage(gInfo, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.sku_infos" :key="k">
@@ -607,6 +614,11 @@
                 </div>
              </div> -->
             <el-table :data="warehousedata" border style="width: 100%">
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + 1}}
+                </template>
+              </el-table-column>
               <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
               <el-table-column>
                 <template  slot="header" slot-scope="scope">
@@ -1143,6 +1155,11 @@
         }
         return count
       },
+      showModifyBz(data, ot) {
+        this.expressOrder = data
+        this.optType = ot
+        this.sendGoodsRecord = true
+      },
       // 操作
       showExpressEditor(data, ot) {
         // data为商品数据 ot为一个值根据传过来不同的值做不同的操作
@@ -1213,7 +1230,7 @@
           this.userName = data.shipping_address.contacter_name
           this.userPhone = data.shipping_address.mobile
         } else if (ot === 4) {
-          this.dialogTitle = this.$t('order.price4Note')
+          // this.dialogTitle = this.$t('order.price4Note')
           this.userComment = data.comment
           this.comment = data.merchant_comment
         } else if (ot === 5) {

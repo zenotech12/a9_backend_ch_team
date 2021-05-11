@@ -24,6 +24,11 @@
         <el-row>
           <el-col :span="24" style="height: calc(100vh - 200px)">
             <el-table stripe border :data="tableData" height="calc(100% - 40px)" style="width: 100%;">
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + searchForm.skip + 1}}
+                </template>
+              </el-table-column>
               <el-table-column  :label="$t('goods.name')" min-width="300">
                 <template  slot-scope="scope">
                   <div class="goods-item">
@@ -179,7 +184,7 @@
         searchForm: {
           cobuy: 2,
           key: '',
-          skip: '',
+          skip: 0,
           shelf_status: 2,
           approve_status: 2,
           limit: pz

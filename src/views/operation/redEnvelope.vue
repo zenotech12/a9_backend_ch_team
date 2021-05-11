@@ -22,6 +22,11 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="name" :label="$t('operation.name')"></el-table-column>
                 <el-table-column  :label="$t('operation.totalMoney')">
                   <template  slot-scope="scope">
@@ -147,7 +152,7 @@
         timeValidSwitch: true,
         searchForm: {
           time_valid: 1,
-          skip: '',
+          skip: 0,
           limit: pz
         },
         tableData: [],
