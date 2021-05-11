@@ -1,19 +1,19 @@
 <template>
   <div>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="70%">
+    <el-dialog :title="$t('warehouse.Info')" :visible.sync="dialogVisible" width="70%">
       <el-table :data="tableData" style="width: 100%" border stripe>
         <el-table-column label="#" width="60px" fixed="left">
           <template slot-scope="scope">{{scope.$index + numinfofrom.skip + 1}}</template>
         </el-table-column>
-        <el-table-column prop="name" label="名称"></el-table-column>
-        <el-table-column prop="origin" label="产地"></el-table-column>
-        <el-table-column prop="barcode" label="条形码"></el-table-column>
-        <el-table-column prop="specification" label="规格">
+        <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+        <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+        <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+        <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
           <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
         </el-table-column>
-        <el-table-column prop="count" label="数量"></el-table-column>
-        <el-table-column prop="position" label="位置"></el-table-column>
-        <el-table-column prop="warehouse_name" label="仓库名称"></el-table-column>
+        <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
+        <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
+        <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
       </el-table>
       <div style="text-align: right;margin-top: 10px">
         <el-pagination

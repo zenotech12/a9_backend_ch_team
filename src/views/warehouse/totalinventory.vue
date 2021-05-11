@@ -48,18 +48,18 @@
                       {{scope.$index + totalgoodshForm.skip + 1}}
                     </template>
                   </el-table-column>
-                  <el-table-column prop="name" label="名称"></el-table-column>
-                  <el-table-column prop="date" label="规格信息">
+                  <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+                  <el-table-column prop="date" :label="$t('warehouse.SpecificationsMsg')">
                     <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
                   </el-table-column>
-                  <el-table-column prop="barcode" label="条形码"></el-table-column>
-                  <el-table-column prop="unit_price" label="单价"></el-table-column>
-                  <el-table-column prop="count" label="数量">
+                  <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+                  <el-table-column prop="unit_price" :label="$t('warehouse.price')"></el-table-column>
+                  <el-table-column prop="count" :label="$t('warehouse.num')">
                     <template slot-scope="scope">
                       <span class="numcss" @click="numinfo(scope.row)">{{scope.row.count}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="origin" label="产地"></el-table-column>
+                  <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
                 </el-table>
               </div>
             </div>
