@@ -1,51 +1,88 @@
 <template>
   <div class="sys-body">
-    <div class="sys-neiBody bigbox">
-      <div></div>
-      <div class="rightbox">
-        <div>
-          <div>
-            <div style="width:200px" class="searchbtn">
-              <el-input v-model="totalgoodshForm.key"></el-input>
-              <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
+    <div class="sys-neiBody">
+      <el-row>
+        <el-col :span="4" class="funcTree" style="margin-left: 0">
+          <el-row>
+            <el-col :span="24" class="funcBoxTitle">
+              <div class="small_title">{{$t('goods.type')}}</div>
+            </el-col>
+          </el-row>
+          <div class="custom-tree-container">
+            <div class="block">
+              <el-tree style="height: calc(100vh - 185px); overflow-y: auto;"
+                       :data="goodsTypeData"
+                       node-key="id"
+                       :show-checkbox="false"
+                       :props="defaultProps"
+                       @node-click="typeChangeFunc"
+                       @node-expand="nodeOpen"
+                       @node-collapse="nodeClose"
+                       :default-expanded-keys="defaultExpanded"
+                       :expand-on-click-node="false"
+                       :render-content="renderContent"
+              >
+              </el-tree>
             </div>
-            <el-table :data="Totaldata" border stripe style="width: 100%">
-              <el-table-column label="#" width="60px" fixed = "left">
-                  <template slot-scope="scope">
-                    {{scope.$index + totalgoodshForm.skip + 1}}
-                  </template>
-              </el-table-column>
-              <el-table-column prop="name" label="名称"></el-table-column>
-              <el-table-column prop="date" label="规格信息">
-                <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
-              </el-table-column>
-              <el-table-column prop="barcode" label="条形码"></el-table-column>
-              <el-table-column prop="unit_price" label="单价"></el-table-column>
-              <el-table-column prop="count" label="数量">
-                <template slot-scope="scope">
-                  <span class="numcss" @click="numinfo(scope.row)">{{scope.row.count}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="origin" label="产地"></el-table-column>
-            </el-table>
           </div>
-        </div>
-        <div style="text-align: right;margin-top: 10px">
-          <el-pagination
-            :current-page.sync="currentPage_to"
-            :page-size="pageSize_to"
-            layout="total, prev, pager, next, jumper"
-            :total="itemCount_to"
-          ></el-pagination>
-        </div>
-        <total-data :restFrom="restFrom" :restFromid="restFromid" :istype="dialogVisible" @dalogtype="dalogtype"></total-data>
-      </div>
+        </el-col>
+        <el-col :span="20" class="funcBox">
+          <div class="rightbox">
+            <div>
+              <div>
+                <el-row>
+                  <el-col :span="24" style="padding-left: 20px">
+                    <el-form :inline="true" :model="totalgoodshForm">
+                      <el-form-item>
+                        <el-input v-model="totalgoodshForm.key" clearable></el-input>
+                      </el-form-item>
+                      <el-form-item class="searchBtn">
+                        <el-button type="primary" @click="Searchlist" size="small" icon="el-icon-search"></el-button>
+                      </el-form-item>
+                    </el-form>
+                  </el-col>
+                </el-row>
+                <el-table :data="Totaldata" border stripe height="calc(100vh - 229px)" style="width: 100%">
+                  <el-table-column label="#" width="60px" fixed = "left">
+                    <template slot-scope="scope">
+                      {{scope.$index + totalgoodshForm.skip + 1}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="name" label="名称"></el-table-column>
+                  <el-table-column prop="date" label="规格信息">
+                    <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
+                  </el-table-column>
+                  <el-table-column prop="barcode" label="条形码"></el-table-column>
+                  <el-table-column prop="unit_price" label="单价"></el-table-column>
+                  <el-table-column prop="count" label="数量">
+                    <template slot-scope="scope">
+                      <span class="numcss" @click="numinfo(scope.row)">{{scope.row.count}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="origin" label="产地"></el-table-column>
+                </el-table>
+              </div>
+            </div>
+            <div style="text-align: right;margin-top: 10px">
+              <el-pagination
+                :current-page.sync="currentPage_to"
+                :page-size="pageSize_to"
+                layout="total, prev, pager, next, jumper"
+                :total="itemCount_to"
+              ></el-pagination>
+            </div>
+            <total-data :restFrom="restFrom" :restFromid="restFromid" :istype="dialogVisible" @dalogtype="dalogtype"></total-data>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 
 <script>
-import { warehouseInventories, } from "@/api/warehouse";
+import { warehouseInventories } from "@/api/warehouse";
+import { spuTypesList } from '@/api/goods'
+
 export default {
   data() {
     return {
@@ -55,6 +92,7 @@ export default {
         position: "",
         sku_uid: "",
         specification: "",
+        type_id: '',
         skip: 0,
         limit: 15,
       },
@@ -78,6 +116,15 @@ export default {
       numinfoData: [],
       restFrom: "",
       restFromid: "",
+      goodsTypeData: [],
+      defaultProps: {
+        children: 'items',
+        label: 'name'
+      },
+      defaultExpanded: [],
+      maxNumber: 0,
+      funcTreeWidth: 0,
+      funcBoxWidth: 0,
     };
   },
   watch: {
@@ -85,15 +132,54 @@ export default {
       this.totalgoodshForm.skip = (val - 1) * this.pageSize_to;
       this.totalgoodshForm.limit = this.pageSize_to;
       this.gettotaldata();
-    },
-    currentPage_info(val) {
-      this.numinfoForm.skip = (val - 1) * this.pageSize_info;
-      this.numinfoForm.limit = this.pageSize_info;
-      this.getnuminfodata();
-    },
-
+    }
   },
   methods: {
+    getTypeList() {
+      spuTypesList({ type: 2 }).then(response => {
+        if (response.meta === 0) {
+          this.typeData = []
+          this.goodsTypeData = []
+          if (response.items !== null) {
+            this.typeData = response.items
+            this.goodsTypeData = [{ name: this.$t('tools.all'), code: '', id: '' }, ...response.items]
+          }
+        }
+      })
+    },
+    typeChangeFunc(data) {
+      this.totalgoodshForm.type_id = data.id
+      this.currentPage_to = 1
+      this.Searchlist()
+    },
+    nodeOpen(data, node, obj) {
+      this.defaultExpanded.push(data.id)
+      console.log('node', node)
+      if (node.level > this.maxNumber) {
+        this.maxNumber = node.level
+        const addWidth = 18 * this.maxNumber
+        const funcTreeWidth1 = this.funcTreeWidth
+        const funcBoxWidth1 = this.funcBoxWidth
+        const addClassWidth = funcTreeWidth1 + addWidth
+        const reduceWidth = funcBoxWidth1 - addWidth
+        $('.funcTree').width(addClassWidth)
+        $('.funcBox').width(reduceWidth)
+      }
+    },
+    nodeClose(data, node, obj) {
+      this.defaultExpanded.splice(this.defaultExpanded.indexOf(data.id), 1)
+    },
+    renderContent(h, { node, data, store }) {
+      if (this.permissionCheck('opt')) {
+        return (
+          <span class='custom-tree-node'>
+            <span title={node.label}>{node.label}</span>
+          </span>)
+      } else {
+        return (<span class='custom-tree-node'>
+          <span title={node.label}>{node.label}</span></span>)
+      }
+    },
     textFilter(data) {
       let index = data.indexOf("{");
       if (index != -1) {
@@ -122,7 +208,6 @@ export default {
     },
     numinfo(data) {
       this.dialogVisible = true;
-      this.currentPage_info = 1;
       this.restFrom = data.specification;
       this.restFromid = data.sku_uid;
     },
@@ -133,6 +218,9 @@ export default {
   },
   mounted() {
     this.gettotaldata();
+    this.getTypeList()
+    this.funcTreeWidth = $('.funcTree').width()
+    this.funcBoxWidth = $('.funcBox').width()
   },
   created() {},
 };
@@ -158,4 +246,12 @@ export default {
     width: 85%;
   }
 }
+  /deep/ {
+    .el-form-item {
+      margin-bottom: 0!important;
+    }
+    .el-tree-node {
+      margin-left: 0;
+    }
+  }
 </style>
