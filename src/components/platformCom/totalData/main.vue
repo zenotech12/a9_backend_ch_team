@@ -2,6 +2,9 @@
   <div>
     <el-dialog title="提示" :visible.sync="dialogVisible" width="70%">
       <el-table :data="tableData" style="width: 100%" border stripe>
+        <el-table-column label="#" width="60px" fixed="left">
+          <template slot-scope="scope">{{scope.$index + numinfofrom.skip + 1}}</template>
+        </el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="origin" label="产地"></el-table-column>
         <el-table-column prop="barcode" label="条形码"></el-table-column>
@@ -10,6 +13,7 @@
         </el-table-column>
         <el-table-column prop="count" label="数量"></el-table-column>
         <el-table-column prop="position" label="位置"></el-table-column>
+        <el-table-column prop="warehouse_name" label="仓库名称"></el-table-column>
       </el-table>
       <div style="text-align: right;margin-top: 10px">
         <el-pagination
@@ -35,8 +39,8 @@ export default {
       pageSize_info: 10,
       itemCount_info: 0,
       numinfofrom: {
-        sku_uid: '',
-        specification: '',
+        sku_uid: "",
+        specification: "",
         skip: 0,
         limit: 10,
       },
@@ -83,16 +87,16 @@ export default {
     getnuminfo() {
       warehouseInventories(this.numinfofrom).then((res) => {
         this.tableData = res.items;
-        this.itemCount_info = res.total
+        this.itemCount_info = res.total;
         console.log(res);
       });
     },
   },
   watch: {
     currentPage_info(val) {
-      this.numinfofrom.skip = (val - 1) * this.pageSize_info
-      this.numinfofrom.limit = this.pageSize_info
-      this.getnuminfo()
+      this.numinfofrom.skip = (val - 1) * this.pageSize_info;
+      this.numinfofrom.limit = this.pageSize_info;
+      this.getnuminfo();
     },
     istype: {
       handler(val) {
@@ -100,7 +104,7 @@ export default {
           this.dialogVisible = true;
           this.numinfofrom.sku_uid = this.restFromid;
           this.numinfofrom.specification = this.restFrom;
-          this.getnuminfo()
+          this.getnuminfo();
         }
       },
       deep: true,
@@ -108,7 +112,7 @@ export default {
     dialogVisible: {
       handler(val) {
         if (val == false) {
-          this.currentPage_info = 1
+          this.currentPage_info = 1;
           this.$emit("dalogtype");
         }
       },

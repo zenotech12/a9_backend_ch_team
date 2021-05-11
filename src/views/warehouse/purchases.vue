@@ -506,9 +506,9 @@
         </el-dialog>
         <!-- 入库列表 -->
         <el-dialog
-          title="库存列表"
+          title="入存列表"
           :visible.sync="dialogVisible"
-          width="70%">
+          width="80%">
           <el-row>
           <el-col :span="24" class="funcList">
               <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
@@ -518,17 +518,35 @@
           </el-col>
         </el-row>
           <el-table :data="totaldata" border stripe style="width: 100%">
-            <el-table-column prop="name" label="名称"></el-table-column>
-            <el-table-column prop="origin" label="产地"></el-table-column>
-            <el-table-column prop="date" label="规格信息">
-                <template slot-scope="scope">
-                    {{textFilter(scope.row.specification)}}
-                </template>
+            <el-table-column prop="no" label="编号" width="150"></el-table-column>
+            <el-table-column prop="warehouse_name" label="仓库名称" width="150"></el-table-column>
+            <el-table-column prop="supplier_name" label="供应商名称" width="150"></el-table-column>
+            <el-table-column prop="warehouse_name" label="">
+              <template slot="header" slot-scope="scope">
+               <div>
+                  <el-row style="width: 100%">
+                    <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                  </el-row>
+               </div>
+              </template>
+              <template slot-scope="scope">
+                <div class="goods">
+                  <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                    <el-col :span="8">{{item.name}}</el-col>
+                    <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.specification}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                  </el-row>
+                </div>
+              </template>
             </el-table-column>
-            <el-table-column prop="barcode" label="条形码"></el-table-column>
-            <el-table-column prop="unit_price" label="单价"></el-table-column>
-            <el-table-column prop="count" label="数量"></el-table-column>
-            <el-table-column prop="warehouse_name" label="仓库名称"></el-table-column>
           </el-table>
           <div style="text-align: right;margin-top: 10px">
             <el-pagination
@@ -546,7 +564,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseAdd, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
+  import { purchaseAdd, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo } from '@/api/goods'
   export default {
@@ -575,8 +593,8 @@
         stockfrom:{
           key: '',
           warehouse_id: '',
-          position: '',
-          specification: '',
+          purchase_id: '',
+          supplier_id: '',
           skip: 0,
           limit: 10,
         },
@@ -1073,6 +1091,7 @@
         })
       },
       warehousing(data){
+        this.stockfrom.purchase_id = data.id
         this.getstockinfo()
         this.inwarehouseFrom.purchase_id = ''
         this.wareId = ''
@@ -1081,19 +1100,16 @@
         warehousesList(this.searchForm).then(res=>{
           this.warelist = res.items
         })
-        // this.inwarehouselog = true
         this.dialogVisible = true
         this.inwarehouseData = data.skus
         this.inwarehouseData.forEach((item, k) => {
-          // item['position'] = ''
           this.$set(this.inwarehouseData[k], 'position', '')
         })
       },
       getstockinfo(){
-        warehouseInventories(this.stockfrom).then(res=>{
+        warehouseReceipts(this.stockfrom).then(res=>{
         this.totaldata = res.items
         this.itemCount_to = res.total
-        console.log(this.totaldata);
         })
       },
       addrukudata(){
