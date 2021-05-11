@@ -284,3 +284,13 @@ export function warehousegroup(data) {
     params: data
   })
 }
+
+// 仓库.库存信息.根据仓库区分组
+export function warehousegroupclass(data) {
+  return request({
+    url: 'warehouse-inventories-group-warehouse',
+    method: 'get',
+    params: data
+  })
+}
+

@@ -357,15 +357,12 @@
                 </el-col>
               </el-row>
               <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
-<<<<<<< HEAD
-=======
                 <el-table-column label="#" width="60px">
                   <template slot-scope="scope">
                     {{scope.$index + rukuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
                 <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
->>>>>>> 50603a794fe44148aeb099e552fe3460fc13443e
                 <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
                 <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
                 <el-table-column prop="comment" :label="$t('warehouse.remarks')" width="150px"></el-table-column>
@@ -450,16 +447,13 @@
                 </el-col>
               </div>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
-<<<<<<< HEAD
                 <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
-=======
                 <el-table-column label="#" width="60px">
                   <template slot-scope="scope">
                     {{scope.$index + chuKuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
->>>>>>> 50603a794fe44148aeb099e552fe3460fc13443e
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">

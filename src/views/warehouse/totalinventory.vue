@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { warehouseInventories } from "@/api/warehouse";
+import { warehouseInventories, } from "@/api/warehouse";
 export default {
   data() {
     return {
@@ -91,11 +91,7 @@ export default {
       this.numinfoForm.limit = this.pageSize_info;
       this.getnuminfodata();
     },
-    // dialogVisible(val){
-    //   if(val == false){
-    //     this.currentPage_info = 1
-    //   }
-    // }
+
   },
   methods: {
     textFilter(data) {
@@ -130,16 +126,10 @@ export default {
       this.restFrom = data.specification;
       this.restFromid = data.sku_uid;
     },
-    // getnuminfodata(){
-    //   warehouseInventories(this.numinfoForm).then((res) => {
-    //     this.numinfoData = res.items;
-    //     this.itemCount_info = res.total
-    //     console.log(this.numinfoData);
-    //   });
-    // }
     dalogtype() {
       this.dialogVisible = false;
     },
+
   },
   mounted() {
     this.gettotaldata();

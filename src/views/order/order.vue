@@ -343,7 +343,7 @@
                     <div class="clear"></div>
                   </el-col>
                   <el-col :span="4" class="kuchunBox">
-                      <el-button type="text" style="font-size: 20px" @click="showInvFunc(returnInvNumber(gInfo.goods_info, wareid))">{{$t('goods.inventory')}}：{{returnInvNumber(gInfo.goods_info, wareid)}}</el-button>
+                      <el-button type="text" style="font-size: 20px" @click="showInvFunc(returnInvNumber(gInfo.goods_info, wareid), gInfo.goods_info)">{{$t('goods.inventory')}}：{{returnInvNumber(gInfo.goods_info, wareid)}}</el-button>
                   </el-col>
                 </el-row>
             </el-form-item>
@@ -444,13 +444,13 @@
 
 <!--              </div>-->
             </template>
-
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" v-if="optType !== 5 && optType !== 4" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
             <el-button type="primary" v-else size="small" @click="formEditDialog = false"> {{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
+        <total-data :restFrom="restFrom" :restFromid="restFromid" :istype="showKunNumberDialog" @dalogtype="dalogtype"></total-data>
         <el-dialog :title="$t('order.purchaseOrderReview')" width="500px" @close="shengheShow = false" :visible.sync="shengheShow" :close-on-click-modal="false" center >
           <el-form label-width="100px">
             <el-form-item :label="$t('order.isCancelOrder')">
@@ -826,7 +826,10 @@
         },
         goodsInvList: [],
         addWuLiuShow: false,
-        addressdataarr: []
+        addressdataarr: [],
+        showKunNumberDialog: false,
+        restFrom: '',
+        restFromid: ''
       }
     },
     computed: {
@@ -881,9 +884,14 @@
           path: '/warehouse/purchases'
         })
       },
-      showInvFunc(number) {
+      dalogtype() {
+        this.showKunNumberDialog = false
+      },
+      showInvFunc(number, data) {
         if (number > 0) {
-
+          this.showKunNumberDialog = true
+          this.restFrom = JSON.stringify(data.specifications)
+          this.restFromid = data.sku_url !== '' ? data.sku_url : data.sku_id
         }
       },
       confirmAddWuliuJiLu() {
