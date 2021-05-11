@@ -41,6 +41,11 @@
                   type="selection"
                   width="55">
                 </el-table-column>
+                <el-table-column label="#" width="60px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column :label="$t('order.user')" align="left" width="100" fixed="left">
                   <template slot-scope="scope">
                     {{scope.row.user_nick_name}}<br/>
@@ -168,7 +173,7 @@
           sku_id: '',
           comprehensive_lv: 0,
           replied: 0,
-          skip: '',
+          skip: 0,
           limit: pz
         },
         tableData: [],
@@ -286,7 +291,7 @@
       this.getDataListFun()
     },
     created() {
-      
+
     }
   }
 </script>

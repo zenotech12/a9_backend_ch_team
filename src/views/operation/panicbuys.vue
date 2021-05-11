@@ -22,6 +22,11 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="spu_name" :label="$t('operation.goods')" min-width="260px"></el-table-column>
                 <el-table-column  :label="$t('operation.pbGoods1')" min-width="400">
                   <template  slot-scope="scope">
@@ -178,7 +183,7 @@
         searchForm: {
           bt_after: '',
           doing_time: '',
-          skip: '',
+          skip: 0,
           limit: pz
         },
         tableData: [],

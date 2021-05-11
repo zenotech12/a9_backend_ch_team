@@ -46,6 +46,11 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 225px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column :label="$t('order.user')" width="110">
                   <template slot-scope="scope">
                     <div class="ui">{{scope.row.user_nick_name}}</div>
@@ -405,7 +410,7 @@
       // console.log(1111)
     },
     created() {
-   
+
     }
   }
 </script>

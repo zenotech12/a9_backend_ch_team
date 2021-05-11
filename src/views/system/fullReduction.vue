@@ -13,7 +13,12 @@
         <el-row>
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
-              <el-table stripe border :data="data.body" height="calc(100% - 5px)">
+              <el-table stripe border :data="data.body" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="name" :label="$t('sys.name')"></el-table-column>
                 <el-table-column :label="$t('sys.manjianDate')">
                   <template slot-scope="scope">

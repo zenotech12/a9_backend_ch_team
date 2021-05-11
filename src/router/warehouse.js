@@ -12,7 +12,7 @@ const warehouse = [{
       meta: { title: 'totalinventory', icon: 'list', code: '8_4' },
       component: () => import('@/views/warehouse/totalinventory')
     },
-      {
+    {
       path: 'warehouseList',
       name: 'warehouseList',
       meta: { title: 'warehouseList', icon: 'list', code: '8_1' },

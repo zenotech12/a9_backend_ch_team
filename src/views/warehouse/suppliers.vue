@@ -15,6 +15,11 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.SupplierNum')"></el-table-column>
                 <el-table-column prop="company_name" :label="$t('warehouse.corporateName')"></el-table-column>
                 <el-table-column prop="business_scope" :label="$t('warehouse.MainBusiness')"></el-table-column>

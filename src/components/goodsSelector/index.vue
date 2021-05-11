@@ -57,6 +57,11 @@
                 <!--<el-checkbox :checked="isSelected(scope.row)" @change="mulitSelectGoodsChange(scope.row)"></el-checkbox>-->
               <!--</template>-->
             </el-table-column>
+            <el-table-column label="#" width="60px">
+              <template slot-scope="scope">
+                {{scope.$index + searchForm.skip + 1}}
+              </template>
+            </el-table-column>
             <el-table-column prop="name" width="50">
               <template  slot-scope="scope">
                 <img :src="getImageUrl(scope.row.images[0],200,200)" width="50" height="50"/>

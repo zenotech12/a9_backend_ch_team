@@ -14,7 +14,12 @@
         <el-row>
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
-              <el-table stripe border :data="tableData" height="calc(100% - 5px)">
+              <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="contacter_name" :label="$t('sys.contacterName')"></el-table-column>
                 <el-table-column prop="mobile" :label="$t('sys.mobile')"></el-table-column>
                 <el-table-column prop="province" :label="$t('sys.province')"></el-table-column>

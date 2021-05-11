@@ -36,6 +36,11 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 235px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+                <el-table-column label="#" width="60px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="name" :label="$t('operation.name')"></el-table-column>
                 <el-table-column :label="$t('operation.couponType')">
                   <template  slot-scope="scope">
@@ -220,7 +225,7 @@
         timeValidSwitch: true,
         searchForm: {
           type: 0,
-          skip: '',
+          skip: 0,
           limit: pz,
           for_live: false,
           live_template: true

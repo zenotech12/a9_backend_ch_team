@@ -97,6 +97,11 @@
                     type="selection"
                     width="55">
                   </el-table-column>
+                  <el-table-column label="#" width="60px" fixed="left">
+                    <template slot-scope="scope">
+                      {{scope.$index + searchForm.skip + 1}}
+                    </template>
+                  </el-table-column>
                   <el-table-column  :label="$t('goods.name')" min-width="300">
                   <template  slot-scope="scope">
                     <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
@@ -143,8 +148,8 @@
                       </template>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="inventory" width="75"  :label="$t('goods.inventory')">
-                  </el-table-column>
+                  <!--<el-table-column prop="inventory" width="75"  :label="$t('goods.inventory')">-->
+                  <!--</el-table-column>-->
                   <el-table-column prop="sales" width="75"  :label="$t('goods.saled')">
                   </el-table-column>
                   <el-table-column prop="gen_time" width="150"  :label="$t('goods.publishTime')">
@@ -155,7 +160,7 @@
                         <a :href="'/goods/publish?id=' + scope.row.id" target="_blank" style="color: #1E88E5">{{$t('tools.edit')}}</a>
                         <!--<el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>-->
                         <span class="xiexian">/</span>
-                        <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">{{$t('goods.piEdit')}}</el-button>
+                        <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">{{$t('goods.price')}}</el-button>
                         <span class="xiexian">/</span>
                         <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
                       </template>
@@ -320,21 +325,21 @@
                       </el-table-column>
                       <el-table-column prop="barcode"  :label="$t('goods.barcode')"></el-table-column>
                       <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                      <el-table-column :label="$t('goods.inventory')">
-                        <template slot="header" slot-scope="scope">
-                          {{$t('goods.inventory')}}
-                          <el-popover placement="bottom"
-                                      width="200"
-                                      trigger="click">
-                            <el-input v-model.number="batchInventory">
-                            </el-input>
-                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                          </el-popover>
-                        </template>
-                        <template  slot-scope="scope">
-                          <el-input v-model.number="scope.row.inventory"></el-input>
-                        </template>
-                      </el-table-column>
+                      <!--<el-table-column :label="$t('goods.inventory')">-->
+                        <!--<template slot="header" slot-scope="scope">-->
+                          <!--{{$t('goods.inventory')}}-->
+                          <!--<el-popover placement="bottom"-->
+                                      <!--width="200"-->
+                                      <!--trigger="click">-->
+                            <!--<el-input v-model.number="batchInventory">-->
+                            <!--</el-input>-->
+                            <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
+                          <!--</el-popover>-->
+                        <!--</template>-->
+                        <!--<template  slot-scope="scope">-->
+                          <!--<el-input v-model.number="scope.row.inventory"></el-input>-->
+                        <!--</template>-->
+                      <!--</el-table-column>-->
                       <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
                         <template slot="header" slot-scope="scope">
                           {{$t('goods.price')}}
@@ -457,6 +462,11 @@
             <el-dialog class="dialog" :title="$t('warehouse.stockmsg')" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
                        :close-on-click-modal="false" center >
               <el-table stripe border :data="inventoriesList" height="calc(100vh - 360px)">
+                <el-table-column label="#" width="60px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + inventoriesSearchForm.skip + 1}}
+                  </template>
+                </el-table-column>
                 <!-- 仓库名称 -->
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>

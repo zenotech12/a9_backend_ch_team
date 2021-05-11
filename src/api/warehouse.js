@@ -281,6 +281,6 @@ export function warehousegroup(data) {
   return request({
     url: 'warehouse-inventories-group',
     method: 'get',
-    params: data,
+    params: data
   })
 }
