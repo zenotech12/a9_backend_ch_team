@@ -532,7 +532,8 @@
             <el-input v-model="stockfrom.key" style="margin-right: 10px"></el-input>
             <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
           </div>
-          <el-col :span="24" class="funcList">
+          <el-col :span="24" class="funcList localcss">
+            <el-button type="primary" class="overbtn" @click="overBtn" size="mini">完成收货</el-button>
             <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
@@ -586,7 +587,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
+  import { purchaseover, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo } from '@/api/goods'
   export default {
@@ -1152,7 +1153,7 @@
         })
       },
       warehousing(data){
-        // console.log(data);
+        console.log(data);
         this.stockfrom.purchase_id = data.id
         this.getstockinfo()
         this.inwarehouseFrom.purchase_id = ''
@@ -1246,6 +1247,14 @@
       },
       Searchrukudata(){
         this.getstockinfo()
+      },
+      overBtn(){
+        purchaseover(this.stockfrom.purchase_id).then(res=>{
+          console.log(res);
+          this.dialogVisible = false
+          this.getDataListFun()
+        })
+        
       }
     },
     mounted() {
@@ -1332,5 +1341,13 @@
   >span{
     margin-right: 16px;
   }
+}
+.localcss{
+  position: relative;
+}
+.overbtn{
+  position: absolute;
+  right: 100px;
+  top: -38px;
 }
 </style>
