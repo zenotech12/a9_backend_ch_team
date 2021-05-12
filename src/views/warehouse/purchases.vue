@@ -1136,7 +1136,6 @@
           item.position = ''
         });
       },
-
       // 仓库位置
       getlocationList(){
          if(this.wareId != ''){
