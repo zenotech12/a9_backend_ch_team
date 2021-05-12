@@ -7,7 +7,7 @@
           <el-col :span="24" class="funcList">
             <div class="box">
                <div style="width:200px" class="searchbtn">
-                 <el-input v-model="searchForm.no"></el-input>
+                 <el-input v-model="searchForm.no" style="margin-right: 10px"></el-input>
                  <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
                </div>
               <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
@@ -55,7 +55,7 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('warehouse.type')" width="100">
+                <el-table-column :label="$t('warehouse.type2')" width="100">
                   <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">待审核</el-tag>
                     <el-tag type="info" v-if="scope.row.status === 2">财务审批</el-tag>
@@ -484,9 +484,14 @@
                       {{scope.row.unit_price | price}}
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('warehouse.num')">
+                  <!-- 本次到货 已到货 采购数量 -->
+                  <el-table-column :label="$t('warehouse.thearrivalarr')" width="200px">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.count"></el-input>
+                      <div class="numclass">
+                        <span><el-input v-model="scope.row.count"></el-input></span>
+                        <span>{{scope.row.arrive_count}}</span>
+                        <span>{{Number(scope.row.arrive_count) + Number(scope.row.count)}}</span>
+                      </div>
                     </template>
                   </el-table-column>
                   <el-table-column property="total_price" :label="$t('warehouse.allprice')">
@@ -513,14 +518,14 @@
           width="80%">
           <el-row>
           <div class="searchbox">
-            <el-input v-model="stockfrom.key"></el-input>
+            <el-input v-model="stockfrom.key" style="margin-right: 10px"></el-input>
             <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
           </div>
           <el-col :span="24" class="funcList">
-              <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
-                <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-                <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
-              </div>
+            <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
+              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+            </div>
           </el-col>
         </el-row>
           <el-table :data="totaldata" border stripe highlight-current-row height="calc(100vh - 420px)" style="width: 100%">
@@ -1097,6 +1102,7 @@
         })
       },
       warehousing(data){
+        // console.log(data);
         this.stockfrom.purchase_id = data.id
         this.getstockinfo()
         this.inwarehouseFrom.purchase_id = ''
@@ -1108,6 +1114,9 @@
         })
         this.dialogVisible = true
         this.inwarehouseData = data.skus
+        this.inwarehouseData.forEach(item => {
+          item.count = 1
+        });
         this.inwarehouseData.forEach((item, k) => {
           this.$set(this.inwarehouseData[k], 'position', '')
         })
@@ -1263,5 +1272,15 @@
   width: 200px;
   display: flex;
   align-items: center;
+}
+.numclass{
+  display: flex;
+  align-items: center;
+  >span:nth-child(1){
+    width: 70px;
+  }
+  >span{
+    margin-right: 16px;
+  }
 }
 </style>

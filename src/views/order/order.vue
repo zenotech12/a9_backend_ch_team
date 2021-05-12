@@ -330,7 +330,7 @@
             <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
               <!--<div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>-->
                 <el-row class="goods-item" v-for="(gInfo,k) in expressOrder.merchant_item.goods_items" :key="k">
-                  <el-col :span="20">
+                  <el-col :span="16">
                     <!--v-if="!allGoodsSend && gInfo.isHaveGoods"-->
                     <div class="chooseCheck" v-if="returnInvNumber(gInfo.goods_info, wareid) > 0 && gInfo.isHaveGoods">
                       <el-checkbox v-model="gInfo.chooseGoods" :key="k"></el-checkbox>

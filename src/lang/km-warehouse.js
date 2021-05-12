@@ -123,5 +123,6 @@ export default{
   locationviwe: 'ទិដ្ឋភាពទីតាំង',
   goodsname: 'ឈ្មោះ​ផលិតផល',
   goodsId: 'លេខសម្គាល់ផលិតផល',
-  scrap_count: 'បរិមាណសំណល់'
+  scrap_count: 'បរិមាណសំណល់',
+  type2: 'ស្ថានភាព',
 }

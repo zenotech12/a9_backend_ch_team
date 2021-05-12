@@ -127,5 +127,7 @@ export default{
   locationviwe: 'Locationviwe',
   goodsname: 'Goods name',
   goodsId: 'GoodsId',
-  scrap_count: 'Scrap num'
+  scrap_count: 'Scrap num',
+  type2: 'status',
+  thearrivalarr: 'the arrival / It has arrived / Purchase quantity',
 }

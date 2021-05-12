@@ -129,5 +129,7 @@ export default {
   locationviwe: '位置视图',
   goodsname: '商品名称',
   goodsId: '商品id',
-  scrap_count: '报废数量'
+  scrap_count: '报废数量',
+  type2: '状态',
+  thearrivalarr: '到货 / 已到货 / 采购数量',
 }

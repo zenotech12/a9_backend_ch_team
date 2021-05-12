@@ -5,7 +5,7 @@
     </el-input>
     <el-dialog :title="$t('warehouse.pulist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
        <div style="width:200px" class="searchbtn">
-          <el-input v-model="searchFrom.no"></el-input>
+          <el-input v-model="searchFrom.no" style="margin-right: 10px"></el-input>
           <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
         </div>
       <el-table :data="tableData" border stripe ref="singleTable" highlight-current-row height="calc(100vh - 420px)"  @current-change="handleCurrentChange">

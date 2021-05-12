@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { warehouseInventories } from "@/api/warehouse";
+import { warehousegroup } from "@/api/warehouse";
 import { spuTypesList } from '@/api/goods'
 
 export default {
@@ -89,10 +89,9 @@ export default {
       totalgoodshForm: {
         key: "",
         warehouse_id: "",
-        position: "",
         sku_uid: "",
-        specification: "",
-        type_id: '',
+        // specification: "",
+        // type_id: '',
         skip: 0,
         limit: 15,
       },
@@ -198,7 +197,7 @@ export default {
       }
     },
     gettotaldata() {
-      warehouseInventories(this.totalgoodshForm).then((res) => {
+      warehousegroup(this.totalgoodshForm).then((res) => {
         this.Totaldata = res.items;
         this.itemCount_to = res.total;
       });

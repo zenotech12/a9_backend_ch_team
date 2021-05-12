@@ -294,3 +294,12 @@ export function warehousegroupclass(data) {
   })
 }
 
+// 采购单.收货完毕
+export function purchaseover(id,data) {
+  return request({
+    url: `warehouse-purchases/${id}/receive-complete`,
+    method: 'put',
+    params: data
+  })
+}
+
