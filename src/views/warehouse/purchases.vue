@@ -14,7 +14,7 @@
           <el-col :span="20" style="padding: 0px 15px ">
             <el-form :inline="true" :model="searchForm">
               <el-form-item>
-                <el-input v-model="searchForm.no" placeholder="请输入单号" clearable></el-input>
+                <el-input v-model="searchForm.no" clearable></el-input>
               </el-form-item>
               <el-form-item class="searchBtn">
                 <el-button type="primary" @click="Searchlist" size="small" icon="el-icon-search"></el-button>
@@ -1250,7 +1250,6 @@
       },
       overBtn(){
         purchaseover(this.stockfrom.purchase_id).then(res=>{
-          console.log(res);
           this.dialogVisible = false
           this.getDataListFun()
         })
