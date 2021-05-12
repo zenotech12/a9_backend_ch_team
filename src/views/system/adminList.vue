@@ -63,8 +63,11 @@
                 <i class="el-icon-info"></i>
               </el-tooltip>
             </el-form-item>
-            <el-form-item :label="$t('sys.user')" prop="real_name">
+            <el-form-item :label="$t('sys.user')">
               <el-input style="width: 200px" v-model="form.nick_name" auto-complete="off" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="职位">
+              <el-input style="width: 200px" v-model="form.title" auto-complete="off" clearable></el-input>
             </el-form-item>
             <el-form-item :label="$t('sys.isService')"  prop="status">
               <el-checkbox v-model="form.customer_servicer">{{$t('tools.yes')}}</el-checkbox>
@@ -114,7 +117,8 @@
           id: '',
           mobile: '',
           nick_name: '',
-          customer_servicer: true
+          customer_servicer: true,
+          title: ''
         },
         formRule: {
           mobile: [
@@ -297,6 +301,7 @@
         this.form.mobile = ''
         this.form.nick_name = ''
         this.form.customer_servicer = true
+        this.form.title = ''
         this.type = 'add'
         this.editTitle = this.$t('lang.addAdmin')
       },
@@ -312,7 +317,7 @@
         this.permissionSelect = data.permissions ? JSON.parse(JSON.stringify(data.permissions)) : {}
         this.dialogFormVisible = true
         this.isOwner = data.default
-        this.form = { id: data.id, mobile: data.user_login_name, nick_name: data.user_nick_name, customer_servicer: data.customer_servicer }
+        this.form = { id: data.id, mobile: data.user_login_name, nick_name: data.user_nick_name, customer_servicer: data.customer_servicer, title: data.title }
       },
       getTableData() {
         customerServicesList(this.searchForm).then(response => {

@@ -11,76 +11,79 @@
         </div>
       </el-card>
     </el-row>
-    <el-row class="liuliang" v-if="permissionCheck('view', '3_1')">
-      <el-col :span="8">
-        <el-card shadow="always" class="stat-item">
-          <div class="sp cp" @click="gotoUrl('orderList',{ bt: $moment(new Date().getTime()).format('YYYY-MM-DD'), et: $moment(new Date().getTime()).format('YYYY-MM-DD') })">
-            <p>{{$t('lang.todayOrder')}}：<span>{{statInfo.today_order}}</span></p>
-            <p>{{$t('lang.todayMoney')}}：<span>{{statInfo.today_sales | price}}</span></p>
-          </div>
-        </el-card>
+    <!--待办事项-->
+    <el-row class="newStyleBox">
+      <el-col :span="24" class="new_style_title">
+          代办事项
       </el-col>
-      <el-col :span="8">
-        <el-card shadow="always"  class="stat-item">
-          <div class="sp">
-            <p>{{$t('lang.todayUser')}}：<span>{{statInfo.today_visit}}</span></p>
-            <p>{{$t('lang.todayPV')}}：<span>{{statInfo.today_traffic}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="always">
-          <div class="sp">
-            <p>{{$t('lang.yesterdayUser')}}：<span>{{statInfo.yesterday_visit}}</span></p>
-            <p>{{$t('lang.yesterdayPV')}}：<span>{{statInfo.yesterday_traffic}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-row class="liuliang" v-if="permissionCheck('view', '3_1')">
-      <el-col :span="4">
-        <el-card shadow="always">
-          <div class="sp cp" @click="gotoUrl('orderList', { order_status: 2})">
-            <p>{{$t('lang.orderStat1')}}：<span>{{statInfo.need_pay}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="1">&nbsp;</el-col>
-      <el-col :span="4">
-        <el-card shadow="always">
-          <div class="sp cp" @click="gotoUrl('orderList', { order_status: 5})">
-            <p>{{$t('lang.orderStat2')}}：<span>{{statInfo.need_ship}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="1">&nbsp;</el-col>
-      <el-col :span="4">
-        <el-card shadow="always">
-          <div class="sp cp" @click="gotoUrl('/order/return')">
-            <p>{{$t('lang.orderStat3')}}：<span>{{statInfo.refund}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="1">&nbsp;</el-col>
-      <el-col :span="4">
-        <el-card shadow="always">
-          <div class="sp">
-            <p>{{$t('lang.orderStat4')}}：<span>{{statInfo.need_evaluate}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="1">&nbsp;</el-col>
-      <el-col :span="4">
-        <el-card shadow="always">
-          <div class="sp">
-            <p>{{$t('lang.orderStat5')}}：<span>{{statInfo.shipping_exception}}</span></p>
-          </div>
-        </el-card>
+      <el-col :span="24">
+        <el-row>
+          <el-col :span="6" v-if="permissionCheck('view', '3_1')">
+            <el-card shadow="always" class="stat-item">
+              <div slot="header" class="clearfix">
+                <span>订单</span>
+              </div>
+              <div class="sp cp">
+                <p @click="gotoUrl('orderList', { ownership_status: 2})">待认领：<span>{{statInfo.order_need_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { order_status: 5})">待发货：<span>{{statInfo.need_ship}}</span></p>
+                <p>&nbsp;</p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6" v-if="permissionCheck('view', '3_2') || permissionCheck('view', '3_4')">
+            <el-card shadow="always" class="stat-item">
+              <div slot="header" class="clearfix">
+                <span>退换货</span>
+              </div>
+              <div class="sp cp" @click="gotoUrl('orderList')">
+                <p>退货待审批：<span>{{statInfo.refund}}</span></p>
+                <p>换货待审批：<span>{{statInfo.exchange_need_approve}}</span></p>
+                <p>换货待回寄：<span>{{statInfo.exchange_need_ship}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6" v-if="permissionCheck('view', '8_1')">
+            <el-card shadow="always" class="stat-item">
+              <div slot="header" class="clearfix">
+                <span>仓库</span>
+              </div>
+              <div class="sp cp" @click="gotoUrl('orderList')">
+                <p>待发货：<span>{{statInfo.need_ship}}</span></p>
+                <p>待入库：<span>{{statInfo.purchase_need_warehouse}}</span></p>
+                <p>&nbsp;</p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6" v-if="permissionCheck('view', '8_3')">
+            <el-card shadow="always">
+              <div slot="header" class="clearfix">
+                <span>采购</span>
+              </div>
+              <div class="sp cp" @click="gotoUrl('orderList')">
+                <p>代采购：<span>{{statInfo.need_purchase}}</span></p>
+                <p>待财务审批：<span>{{statInfo.purchase_finance_approve}}</span></p>
+                <p>待领导审批：<span>{{statInfo.purchase_leader_approve}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="24" style="margin-top: 20px">
-        <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getDataInfo"
+    <!--概况统计-->
+    <el-row class="newStyleBox">
+      <el-col :span="24" class="new_style_title">
+        概况统计
+      </el-col>
+      <el-col :span="24" class="timeBoxRow">
+        时间：
+        <el-radio-group v-model="timeValue" size="medium" style="margin-right: 5px">
+          <el-radio-button :label="1">今日</el-radio-button>
+          <el-radio-button :label="2">本周</el-radio-button>
+          <el-radio-button :label="3">本月</el-radio-button>
+          <el-radio-button :label="4">自定义</el-radio-button>
+        </el-radio-group>
+        <el-date-picker v-if="timeValue === 4" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getDataInfo"
                         v-model="dataTime"
                         type="datetimerange"
                         align="right"
@@ -90,302 +93,327 @@
                         :end-placeholder="$t('tools.endDate')">
         </el-date-picker>
       </el-col>
+      <el-col :span="24">
+        <el-row>
+          <el-col :span="6">
+            <el-card shadow="always" class="stat-item">
+              <div class="sp cp">
+                <p>{{$t('order.orderNumber')}}：<span>{{dataInfo.order_count}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="always" class="stat-item">
+              <div class="sp cp" @click="gotoUrl('orderList', { order_status: 2})">
+                <p>{{$t('lang.orderStat1')}}：<span>{{dataInfo.need_pay}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="always" class="stat-item">
+              <div class="sp cp">
+                <p>订单金额：<span>{{dataInfo.sales | price}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="always">
+              <div class="sp cp">
+                <p>{{$t('order.visitorsNumber')}}：<span>{{dataInfo.visit}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="always" class="stat-item liuliang">
+              <div class="sp cp">
+                <p>{{$t('order.pageviews')}}：<span>{{dataInfo.traffic}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="always"  class="stat-item liuliang">
+              <div class="sp cp">
+                <p>{{$t('order.customerPrice')}}：<span>{{dataInfo.per_order_money | price}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="always" class="stat-item liuliang">
+              <div class="sp cp" @click="gotoUrl('/order/orderReturn')">
+                <p>退货：<span>{{dataInfo.refund}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="always" class="liuliang">
+              <div class="sp cp" @click="gotoUrl('/order/orderExchange')">
+                <p>换货：<span>{{dataInfo.exchange_count}}</span></p>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+
+      </el-col>
     </el-row>
-    <el-row class="liuliang" style="margin-top: 20px">
-      <el-col :span="4">
-        <el-card shadow="always" class="stat-item">
-          <div class="sp cp">
-            <p>{{$t('order.orderNumber')}}：<span>{{dataInfo.order_count}}</span></p>
-          </div>
-        </el-card>
+
+    <!--排行榜-->
+    <el-row class="newStyleBox" v-if="shopInfo.user_info.owner">
+      <el-col :span="24" class="new_style_title">
+        排行榜
       </el-col>
-      <el-col :span="4">
-        <el-card shadow="always"  class="stat-item">
-          <div class="sp cp">
-            <p>{{$t('order.customerPrice')}}：<span>{{dataInfo.per_order_money | price}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="4">
-        <el-card shadow="always" class="stat-item">
-          <div class="sp cp">
-            <p>{{$t('order.refundAmountSale')}}：<span>{{dataInfo.refunding_money | price}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="4">
-        <el-card shadow="always" class="stat-item">
-          <div class="sp">
-            <p>{{$t('order.paymentAmount')}}：<span>{{dataInfo.sales | price}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="4">
-        <el-card shadow="always" class="stat-item">
-          <div class="sp cp">
-            <p>{{$t('order.pageviews')}}：<span>{{dataInfo.traffic}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="4">
-        <el-card shadow="always">
-          <div class="sp cp">
-            <p>{{$t('order.visitorsNumber')}}：<span>{{dataInfo.visit}}</span></p>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-divider>{{$t('order.leaderboard')}}</el-divider>
-    <el-row :gutter="20">
-      <el-col :span="8">
-        <div>
-          <div style="margin-bottom: 10px;">{{$t('order.pageviewRanking')}}</div>
-          <el-row>
-            <el-col :span ="24">
-              <el-form :inline="true" :model="searchForm">
-                <el-form-item>
-                  <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListData"
-                                  v-model="listTime"
-                                  type="datetimerange"
-                                  align="right"
-                                  unlink-panels
-                                  :range-separator="$t('tools.to')"
-                                  :start-placeholder="$t('tools.startDate')"
-                                  :end-placeholder="$t('tools.endDate')">
-                  </el-date-picker>
-                </el-form-item>
-              </el-form>
-            </el-col>
-          </el-row>
-          <el-table stripe border :data="tableData" height="400">
-            <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column :label="$t('order.goods')">
-              <template slot-scope="scope">
-                <div>
-                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
-                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
-                    <div style="margin-left: 20px">
-                      {{scope.row.name}}
+      <el-col :span="24">
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <div>
+              <div style="margin-bottom: 10px;">{{$t('order.pageviewRanking')}}</div>
+              <el-row>
+                <el-col :span ="24">
+                  <el-form :inline="true" :model="searchForm">
+                    <el-form-item>
+                      <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListData"
+                                      v-model="listTime"
+                                      type="datetimerange"
+                                      align="right"
+                                      unlink-panels
+                                      :range-separator="$t('tools.to')"
+                                      :start-placeholder="$t('tools.startDate')"
+                                      :end-placeholder="$t('tools.endDate')">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+              <el-table stripe border :data="tableData" height="400">
+                <el-table-column type="index" width="50"></el-table-column>
+                <el-table-column :label="$t('order.goods')">
+                  <template slot-scope="scope">
+                    <div>
+                      <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                        <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                        <div style="margin-left: 20px">
+                          {{scope.row.name}}
+                        </div>
+                      </a>
                     </div>
-                  </a>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('order.pageviews')">
-              <template slot-scope="scope">
-                <span>{{scope.row.statistic_val}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div style="text-align: right;margin-top: 10px">
-            <el-pagination
-              :current-page.sync="currentPage"
-              :page-size="pageSize"
-              layout="total, prev, pager, next, jumper"
-              :total="itemCount">
-            </el-pagination>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div>
-          <div style="margin-bottom: 10px;">{{$t('order.visitorsRanking')}}</div>
-          <el-row>
-            <el-col :span ="24">
-              <el-form :inline="true" :model="searchVisit">
-                <el-form-item>
-                  <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListDataVisit"
-                                  v-model="visitTime"
-                                  type="datetimerange"
-                                  align="right"
-                                  unlink-panels
-                                  :range-separator="$t('tools.to')"
-                                  :start-placeholder="$t('tools.startDate')"
-                                  :end-placeholder="$t('tools.endDate')">
-                  </el-date-picker>
-                </el-form-item>
-              </el-form>
-            </el-col>
-          </el-row>
-          <el-table stripe border :data="listVisit" height="400">
-            <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column :label="$t('order.goods')">
-              <template slot-scope="scope">
-                <div>
-                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
-                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
-                    <div style="margin-left: 20px">
-                      {{scope.row.name}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.pageviews')">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.statistic_val}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPage"
+                  :page-size="pageSize"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCount">
+                </el-pagination>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div>
+              <div style="margin-bottom: 10px;">{{$t('order.visitorsRanking')}}</div>
+              <el-row>
+                <el-col :span ="24">
+                  <el-form :inline="true" :model="searchVisit">
+                    <el-form-item>
+                      <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListDataVisit"
+                                      v-model="visitTime"
+                                      type="datetimerange"
+                                      align="right"
+                                      unlink-panels
+                                      :range-separator="$t('tools.to')"
+                                      :start-placeholder="$t('tools.startDate')"
+                                      :end-placeholder="$t('tools.endDate')">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+              <el-table stripe border :data="listVisit" height="400">
+                <el-table-column type="index" width="50"></el-table-column>
+                <el-table-column :label="$t('order.goods')">
+                  <template slot-scope="scope">
+                    <div>
+                      <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                        <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                        <div style="margin-left: 20px">
+                          {{scope.row.name}}
+                        </div>
+                      </a>
                     </div>
-                  </a>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('order.visitorsNumber')">
-              <template slot-scope="scope">
-                <span>{{scope.row.statistic_val}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div style="text-align: right;margin-top: 10px">
-            <el-pagination
-              :current-page.sync="currentPageVisit"
-              :page-size="pageSizeVisit"
-              layout="total, prev, pager, next, jumper"
-              :total="itemCountVisit">
-            </el-pagination>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="listPaidStyle">
-          <div style="margin-bottom: 10px;">{{$t('order.paymentRanking')}}</div>
-          <el-row>
-            <el-col :span ="24">
-              <el-form :inline="true" :model="searchPaid">
-                <el-form-item>
-                  <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListDataPaid"
-                                  v-model="paidTime"
-                                  type="datetimerange"
-                                  align="right"
-                                  unlink-panels
-                                  :range-separator="$t('tools.to')"
-                                  :start-placeholder="$t('tools.startDate')"
-                                  :end-placeholder="$t('tools.endDate')">
-                  </el-date-picker>
-                </el-form-item>
-              </el-form>
-            </el-col>
-          </el-row>
-          <el-table stripe border :data="listPaid" height="400">
-            <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column :label="$t('order.goods')">
-              <template slot-scope="scope">
-                <div>
-                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
-                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
-                    <div style="margin-left: 20px">
-                      {{scope.row.name}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.visitorsNumber')">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.statistic_val}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPageVisit"
+                  :page-size="pageSizeVisit"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCountVisit">
+                </el-pagination>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="listPaidStyle">
+              <div style="margin-bottom: 10px;">{{$t('order.paymentRanking')}}</div>
+              <el-row>
+                <el-col :span ="24">
+                  <el-form :inline="true" :model="searchPaid">
+                    <el-form-item>
+                      <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListDataPaid"
+                                      v-model="paidTime"
+                                      type="datetimerange"
+                                      align="right"
+                                      unlink-panels
+                                      :range-separator="$t('tools.to')"
+                                      :start-placeholder="$t('tools.startDate')"
+                                      :end-placeholder="$t('tools.endDate')">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+              <el-table stripe border :data="listPaid" height="400">
+                <el-table-column type="index" width="50"></el-table-column>
+                <el-table-column :label="$t('order.goods')">
+                  <template slot-scope="scope">
+                    <div>
+                      <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                        <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                        <div style="margin-left: 20px">
+                          {{scope.row.name}}
+                        </div>
+                      </a>
                     </div>
-                  </a>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('order.paymentAmount')">
-              <template slot-scope="scope">
-                <span>{{scope.row.statistic_val | price}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div style="text-align: right;margin-top: 10px">
-            <el-pagination
-              :current-page.sync="currentPagePaid"
-              :page-size="pageSizePaid"
-              layout="total, prev, pager, next, jumper"
-              :total="itemCountPaid">
-            </el-pagination>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="listPaidStyle">
-          <div style="margin-bottom: 10px;">{{$t('order.addShopRanking')}}</div>
-          <el-row>
-            <el-col :span ="24">
-              <el-form :inline="true" :model="searchAddCart">
-                <el-form-item>
-                  <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListDataAddCart"
-                                  v-model="addCartTime"
-                                  type="datetimerange"
-                                  align="right"
-                                  unlink-panels
-                                  :range-separator="$t('tools.to')"
-                                  :start-placeholder="$t('tools.startDate')"
-                                  :end-placeholder="$t('tools.endDate')">
-                  </el-date-picker>
-                </el-form-item>
-              </el-form>
-            </el-col>
-          </el-row>
-          <el-table stripe border :data="listAddCart" height="400">
-            <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column :label="$t('order.goods')">
-              <template slot-scope="scope">
-                <div>
-                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
-                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
-                    <div style="margin-left: 20px">
-                      {{scope.row.name}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.paymentAmount')">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.statistic_val | price}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPagePaid"
+                  :page-size="pageSizePaid"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCountPaid">
+                </el-pagination>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="listPaidStyle">
+              <div style="margin-bottom: 10px;">{{$t('order.addShopRanking')}}</div>
+              <el-row>
+                <el-col :span ="24">
+                  <el-form :inline="true" :model="searchAddCart">
+                    <el-form-item>
+                      <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListDataAddCart"
+                                      v-model="addCartTime"
+                                      type="datetimerange"
+                                      align="right"
+                                      unlink-panels
+                                      :range-separator="$t('tools.to')"
+                                      :start-placeholder="$t('tools.startDate')"
+                                      :end-placeholder="$t('tools.endDate')">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+              <el-table stripe border :data="listAddCart" height="400">
+                <el-table-column type="index" width="50"></el-table-column>
+                <el-table-column :label="$t('order.goods')">
+                  <template slot-scope="scope">
+                    <div>
+                      <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                        <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                        <div style="margin-left: 20px">
+                          {{scope.row.name}}
+                        </div>
+                      </a>
                     </div>
-                  </a>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('order.addShopCart')">
-              <template slot-scope="scope">
-                <span>{{scope.row.statistic_val}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div style="text-align: right;margin-top: 10px">
-            <el-pagination
-              :current-page.sync="currentPageAddCart"
-              :page-size="pageSizeAddCart"
-              layout="total, prev, pager, next, jumper"
-              :total="itemCountAddCart">
-            </el-pagination>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="listPaidStyle">
-          <div style="margin-bottom: 10px;">{{$t('order.starRanking')}}</div>
-          <el-row>
-            <el-col :span ="24">
-              <el-form :inline="true" :model="searchStar">
-                <el-form-item>
-                  <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListDataStar"
-                                  v-model="starTime"
-                                  type="datetimerange"
-                                  align="right"
-                                  unlink-panels
-                                  :range-separator="$t('tools.to')"
-                                  :start-placeholder="$t('tools.startDate')"
-                                  :end-placeholder="$t('tools.endDate')">
-                  </el-date-picker>
-                </el-form-item>
-              </el-form>
-            </el-col>
-          </el-row>
-          <el-table stripe border :data="listStar" height="400">
-            <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column :label="$t('order.goods')">
-              <template slot-scope="scope">
-                <div>
-                  <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
-                    <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
-                    <div style="margin-left: 20px">
-                      {{scope.row.name}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.addShopCart')">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.statistic_val}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPageAddCart"
+                  :page-size="pageSizeAddCart"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCountAddCart">
+                </el-pagination>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="listPaidStyle">
+              <div style="margin-bottom: 10px;">{{$t('order.starRanking')}}</div>
+              <el-row>
+                <el-col :span ="24">
+                  <el-form :inline="true" :model="searchStar">
+                    <el-form-item>
+                      <el-date-picker format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getListDataStar"
+                                      v-model="starTime"
+                                      type="datetimerange"
+                                      align="right"
+                                      unlink-panels
+                                      :range-separator="$t('tools.to')"
+                                      :start-placeholder="$t('tools.startDate')"
+                                      :end-placeholder="$t('tools.endDate')">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+              <el-table stripe border :data="listStar" height="400">
+                <el-table-column type="index" width="50"></el-table-column>
+                <el-table-column :label="$t('order.goods')">
+                  <template slot-scope="scope">
+                    <div>
+                      <a :href="'https://www.a9kh.com/goods/' + scope.row.id + '.html'" target="_blank" class="styleImgShow">
+                        <img :src="imgUrl + scope.row.images[0]" height="80" alt="">
+                        <div style="margin-left: 20px">
+                          {{scope.row.name}}
+                        </div>
+                      </a>
                     </div>
-                  </a>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('order.favorites')">
-              <template slot-scope="scope">
-                <span>{{scope.row.statistic_val}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div style="text-align: right;margin-top: 10px">
-            <el-pagination
-              :current-page.sync="currentPageStar"
-              :page-size="pageSizeStar"
-              layout="total, prev, pager, next, jumper"
-              :total="itemCountStar">
-            </el-pagination>
-          </div>
-        </div>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.favorites')">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.statistic_val}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="text-align: right;margin-top: 10px">
+                <el-pagination
+                  :current-page.sync="currentPageStar"
+                  :page-size="pageSizeStar"
+                  layout="total, prev, pager, next, jumper"
+                  :total="itemCountStar">
+                </el-pagination>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
   </div>
@@ -492,7 +520,8 @@
           type: 'star', // traffic浏览量 visit访客数 paid支付金额 add_cart加购物车 star收藏
           bt: '',
           et: ''
-        }
+        },
+        timeValue: 1
       }
     },
     computed: {
@@ -579,9 +608,93 @@
         this.searchStar.skip = (val - 1) * this.pageSizeStar
         this.searchStar.limit = this.pageSizeStar
         this.getListDataStar()
+      },
+      timeValue: {
+        handler(val) {
+          if (val === 1) {
+            this.searchForm.bt = this.$moment().format('YYYY-MM-DD') + ' 00:00:00'
+            this.searchForm.et = this.$moment().format('YYYY-MM-DD') + ' 23:59:59'
+            this.getDataInfo()
+          } else if (val === 2) {
+            this.searchForm.bt = this.getCurrentWeek(new Date).bt
+            this.searchForm.et = this.getCurrentWeek(new Date).et
+            this.getDataInfo()
+          } else if (val === 3) {
+            this.searchForm.bt = this.getCurrentMonth(new Date).bt
+            this.searchForm.et = this.getCurrentMonth(new Date).et
+            this.getDataInfo()
+          } else if (val === 4) {
+            this.searchForm.bt = ''
+            this.searchForm.et = ''
+          }
+        },
+        immediate: true
       }
     },
     methods: {
+      // 本周时间
+      getCurrentWeek(value) {
+        if (value === '' || value === undefined) {
+          return value
+        }
+        if (value.length === 10) {
+          value = value * 1000
+        }
+        const myDate = new Date(value)
+        const day = myDate.getDay() // 回退7天后是星期几？
+        const time = myDate.getDate() - day + (day === 0 ? -6 : 1)
+        const startTime = new Date(myDate.setDate(time))
+        console.log('startTime', startTime.getMonth())
+        let monthD = startTime.getMonth() + 1
+        if (monthD < 10) {
+          monthD = '0' + monthD
+        }
+        let dayD = startTime.getDate()
+        if (dayD < 10) {
+          dayD = '0' + dayD
+        }
+        const bt = startTime.getFullYear() + '-' + monthD + '-' + dayD + ' 00:00:00'
+        const endTime = new Date(myDate.setDate(time + 6))
+        let monthE = endTime.getMonth() + 1
+        if (monthE < 10) {
+          monthE = '0' + monthE
+        }
+        let dayE = endTime.getDate()
+        if (dayE < 10) {
+          dayE = '0' + dayE
+        }
+        const et = endTime.getFullYear() + '-' + monthE + '-' + dayE + ' 23:59:59'
+        return {
+          bt: bt,
+          et: et
+        }
+      },
+      // 本月时间
+      getCurrentMonth(value) {
+        if (value === '' || value === undefined) {
+          return value
+        }
+        if (value.length === 10) {
+          value = value * 1000
+        }
+        const nowdays = new Date(value)
+        const year = nowdays.getFullYear()
+        let month = nowdays.getMonth() + 1
+
+        if (month < 10) {
+          month = '0' + month
+        }
+
+        const yDate = new Date(year, month, 0)
+
+        const bt = year + '-' + month + '-01 00:00:00' // 上个月第一天
+        const et = year + '-' + month + '-' + yDate.getDate() + ' 23:59:59' // 上个月最后一天
+
+        return {
+          bt: bt,
+          et: et
+        }
+      },
       getDataInfo() {
         statisticsCountV2(this.searchForm).then(res => {
           this.dataInfo = res.item
@@ -618,7 +731,8 @@
         })
       },
       getStatInfo() {
-        const items = ['need_pay', 'need_ship', 'refund', 'need_evaluate', 'shipping_exception', 'today_order', 'today_traffic', 'today_visit', 'yesterday_visit', 'yesterday_traffic', 'today_sales']
+        // const items = ['need_pay', 'need_ship', 'refund', 'need_evaluate', 'shipping_exception', 'today_order', 'today_traffic', 'today_visit', 'yesterday_visit', 'yesterday_traffic', 'today_sales']
+        const items = ['order_need_claim', 'need_ship', 'exchange_need_approve', 'exchange_need_ship', 'purchase_need_warehouse', 'need_purchase', 'purchase_finance_approve', 'purchase_leader_approve', 'refund']
         shopStat({ categories: JSON.stringify(items) }).then(res => {
           this.statInfo = res.item
         })
@@ -647,9 +761,8 @@
       if (day < 10) {
         day = '0' + day
       }
-      this.searchForm.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
-      this.searchForm.et = year + '-' + mouth + '-' + day + ' 23:59:59'
-      this.getDataInfo()
+      // this.searchForm.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
+      // this.searchForm.et = year + '-' + mouth + '-' + day + ' 23:59:59'
       this.searchList.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
       this.searchList.et = year + '-' + mouth + '-' + day + ' 23:59:59'
       this.searchVisit.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
@@ -723,5 +836,23 @@
     .el-table__body-wrapper {
       overflow-y: auto;
     }
+  }
+  .newStyleBox {
+    border: 1px solid #E7E9F4;
+    background: #F8F8FC;
+    border-radius: 4px;
+    padding: 20px 30px;
+    margin-top: 20px;
+  }
+  .new_style_title {
+    font-size: 16px;
+    color: #3C74F6;
+    margin-bottom: 20px;
+  }
+  .timeBoxRow {
+    margin-bottom: 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
   }
 </style>

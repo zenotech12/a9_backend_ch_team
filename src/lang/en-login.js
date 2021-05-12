@@ -9,7 +9,7 @@ export default {
   welcome: 'Welcome',
   login: 'Login',
   loginOut: 'Logout',
-  merchantSystem: 'A9 Merchant Center',
+  merchantSystem: 'A9 BACKEND',
   slogan: 'Benefit sharing - common development',
   copyright: 'Copyright 2000-2020 ANINE International Holdings Limited',
   forget: 'Forget password？',

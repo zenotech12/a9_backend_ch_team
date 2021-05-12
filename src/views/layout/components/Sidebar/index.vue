@@ -3,9 +3,10 @@
     <div class="sliderBg">
       <div class="logoTitle" >
         <div class="logoImgBox">
-          <img  :src="imgPng" class="logoImg">
+          <img :src="imgPng" class="logoImg">
         </div>
-        <span  class="comName">{{$t('login.merchantSystem')}}</span>
+        <span class="comName">{{$t('login.merchantSystem')}}</span>
+        <span class="userZhiwei">{{shopInfo.user_info.title}}</span>
       </div>
       <div @click="jump()" :class="[toggle ?'guide' : 'mini-guide']">
         <span>{{$t('global.home')}}</span>
@@ -32,14 +33,15 @@ export default {
   data() {
     return {
       toggle: true,
-      imgPng: require('../../../../assets/images/dl/logo.png'),
+      imgPng: require('../../../../assets/images/dl/logoMerchant.png'),
       opened: !+Cookies.get('sidebarStatus')
     }
   },
   computed: {
     ...mapGetters([
       'permission_routers',
-      'sidebar'
+      'sidebar',
+      'shopInfo'
     ]),
     routes() {
       return store.getters.routers
@@ -70,7 +72,15 @@ export default {
   .logoTitle {
     background-color: #9ac338;
     text-align: center;
-    height: 122px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    .userZhiwei {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 14px;
+      color: #fff;
+    }
     .comName {
       font-size: 20px;
       font-family:PingFangSC-Semibold;
@@ -84,7 +94,7 @@ export default {
       padding: 13px 0 5px 0;
       .logoImg{
         display: inline-block;
-        height: 36px;
+        height: 44px;
         margin-right: 7px;
         border-radius: 1px;
       }

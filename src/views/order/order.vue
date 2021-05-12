@@ -702,6 +702,7 @@
           limit: pz,
           bt: '',
           et: '',
+          ownership_status: '',
           invoice: true
         },
         allprice: 0,
@@ -1417,6 +1418,12 @@
           this.currentPage = 1
           this.searchForm.order_status = this.$route.params.order_status
         }
+      }
+      if (this.$route.params.ownership_status) {
+        this.searchForm.skip = 0
+        this.currentPage = 1
+        this.searchForm.order_status = 0
+        this.searchForm.ownership_status = this.$route.params.ownership_status
       }
       this.tab_order_status = this.searchForm.order_status + ''
       if (this.$route.params.bt || this.$route.params.et) {
