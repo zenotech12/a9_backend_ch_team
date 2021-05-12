@@ -4,23 +4,34 @@
       <!-- 搜索 -->
       <div class="rightbox">
         <el-row>
-          <el-col :span="24" class="funcList">
-            <div class="box">
-               <div style="width:200px" class="searchbtn">
-                 <el-input v-model="searchForm.no" style="margin-right: 10px"></el-input>
-                 <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
-               </div>
-              <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
-                <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-                <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
-              </div>
+          <el-col :span="24">
+            <el-tabs style="height: 40px" v-model="tab_status">
+              <el-tab-pane style="height: 44px" v-for="(item, k) in statusTab" :key="k" v-if="item" :label="item.label" :name="item.value"></el-tab-pane>
+            </el-tabs>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="20" style="padding: 0px 15px ">
+            <el-form :inline="true" :model="searchForm">
+              <el-form-item>
+                <el-input v-model="searchForm.no" placeholder="请输入单号" clearable></el-input>
+              </el-form-item>
+              <el-form-item class="searchBtn">
+                <el-button type="primary" @click="Searchlist" size="small" icon="el-icon-search"></el-button>
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <el-col :span="4" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
+            <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
+              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <div style="height: calc(100vh - 185px)">
-              <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+              <el-table stripe border :data="tableData" height="calc(100% - 70px)">
                 <el-table-column label="#" width="60px" fixed = "left">
                   <template slot-scope="scope">
                     {{scope.$index + searchForm.skip + 1}}
@@ -575,7 +586,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseAdd, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
+  import { purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo } from '@/api/goods'
   export default {
@@ -590,7 +601,8 @@
         searchForm: {
           skip: 0,
           limit: pz,
-          no : ''
+          no: '',
+          status: 0 // 0所有 1申请 2财务审批 3管理层审批（已完成）4完成收货
         },
         warelist: [],
         inwarehouseFrom:{
@@ -705,6 +717,17 @@
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
+        statusTab: [{ value: '0', label: this.$t('tools.all') },
+          { value: '1', label: '申请' },
+          { value: '2', label: '财务审批' },
+          { value: '3', label: '管理层审批' },
+          { value: '4', label: '完成收货' }],
+        statusTabList: [{ value: '0', label: this.$t('tools.all') },
+          { value: '1', label: '申请' },
+          { value: '2', label: '财务审批' },
+          { value: '3', label: '管理层审批' },
+          { value: '4', label: '完成收货' }],
+        tab_status: '0'
       }
     },
     computed: {
@@ -713,10 +736,20 @@
       ])
     },
     watch: {
+      tab_status(val) {
+        if (this.searchForm.skip !== 0 || this.searchForm.status !== parseInt(val)) {
+          this.searchForm.skip = 0
+          this.searchForm.limit = this.pageSize
+          this.currentPage = 1
+          this.searchForm.status = parseInt(val)
+          this.getDataListFun()
+          // console.log(111)
+        }
+      },
       currentPage_to(val) {
-          this.stockfrom.skip = (val - 1) * this.pageSize_to
-          this.stockfrom.limit = this.pageSize_to
-          this.getstockinfo()
+        this.stockfrom.skip = (val - 1) * this.pageSize_to
+        this.stockfrom.limit = this.pageSize_to
+        this.getstockinfo()
       },
       currentPage(val) {
         this.searchForm.skip = (val - 1) * this.pageSize
@@ -828,9 +861,26 @@
       }
     },
     methods: {
+      getCount() {
+        this.statusTab = JSON.parse(JSON.stringify(this.statusTabList))
+        warehousePurchasesCount().then(res => {
+          if (res.meta === 0) {
+            console.log(res)
+            res.items.forEach(item => {
+              this.statusTab.forEach((Z, k) => {
+                if (Z.value === item.status.toString()) {
+                  this.statusTab[k].label = this.statusTab[k].label + '(' + item.count + ')'
+                }
+              })
+            })
+          }
+          this.showTab = true
+        })
+      },
       shengheFunc(id, number) {
         warehousePurchasesReview(id, { status: number }).then(res => {
           this.getDataListFun()
+          this.getCount()
           // 18280415659
           // 15874045326
         })
@@ -1202,6 +1252,7 @@
     mounted() {
       this.getDataListFun()
       this.getSupplierList()
+      this.getCount()
     },
     created() {
     }

@@ -295,11 +295,17 @@ export function warehousegroupclass(data) {
 }
 
 // 采购单.收货完毕
-export function purchaseover(id,data) {
+export function purchaseover(id, data) {
   return request({
     url: `warehouse-purchases/${id}/receive-complete`,
     method: 'put',
     params: data
   })
 }
-
+// 采购单.获取数量
+export function warehousePurchasesCount() {
+  return request({
+    url: 'warehouse-purchases-count',
+    method: 'get'
+  })
+}
