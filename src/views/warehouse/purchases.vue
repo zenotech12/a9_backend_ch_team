@@ -5,7 +5,7 @@
       <div class="rightbox">
         <el-row>
           <el-col :span="24">
-            <el-tabs style="height: 40px" v-model="tab_status">
+            <el-tabs style="height: 40px" v-if="showTab" v-model="tab_status">
               <el-tab-pane style="height: 44px" v-for="(item, k) in statusTab" :key="k" v-if="item" :label="item.label" :name="item.value"></el-tab-pane>
             </el-tabs>
           </el-col>
@@ -611,7 +611,6 @@
           warehouse_id: '',
           skus:[],
           comment: ''
-
         },
         stockfrom:{
           key: '',
@@ -718,16 +717,17 @@
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         statusTab: [{ value: '0', label: this.$t('tools.all') },
-          { value: '1', label: '申请' },
-          { value: '2', label: '财务审批' },
-          { value: '3', label: '管理层审批' },
-          { value: '4', label: '完成收货' }],
+          { value: '1', label: '待财务审批' },
+          { value: '2', label: '待领导审批' },
+          { value: '3', label: '待入库' },
+          { value: '4', label: '完成入库' }],
         statusTabList: [{ value: '0', label: this.$t('tools.all') },
-          { value: '1', label: '申请' },
-          { value: '2', label: '财务审批' },
-          { value: '3', label: '管理层审批' },
-          { value: '4', label: '完成收货' }],
-        tab_status: '0'
+          { value: '1', label: '待财务审批' },
+          { value: '2', label: '待领导审批' },
+          { value: '3', label: '待入库' },
+          { value: '4', label: '完成入库' }],
+        tab_status: '0',
+        showTab: false
       }
     },
     computed: {
@@ -1250,9 +1250,17 @@
       }
     },
     mounted() {
+      if (this.$route.params.status) {
+        if (this.$route.params.status !== this.searchForm.status) {
+          this.searchForm.skip = 0
+          this.currentPage = 1
+          this.tab_status = this.$route.params.status.toString()
+          this.searchForm.status = this.$route.params.status
+        }
+      }
+      this.getCount()
       this.getDataListFun()
       this.getSupplierList()
-      this.getCount()
     },
     created() {
     }

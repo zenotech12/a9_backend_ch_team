@@ -36,6 +36,13 @@
                       <el-form-item>
                         <el-input v-model="totalgoodshForm.key" clearable></el-input>
                       </el-form-item>
+                      <el-form-item>
+                        <el-switch @change="Searchlist"
+                          v-model="totalgoodshForm.zero_inventory"
+                          active-text="没库存"
+                          inactive-text="有库存">
+                        </el-switch>
+                      </el-form-item>
                       <el-form-item class="searchBtn">
                         <el-button type="primary" @click="Searchlist" size="small" icon="el-icon-search"></el-button>
                       </el-form-item>
@@ -94,6 +101,7 @@ export default {
         // type_id: '',
         skip: 0,
         limit: 15,
+        zero_inventory: false
       },
       numinfoForm: {
         key: "",
@@ -216,7 +224,12 @@ export default {
 
   },
   mounted() {
-    this.gettotaldata();
+    if (this.$route.params.zero_inventory) {
+      this.totalgoodshForm.skip = 0
+      this.currentPage_to = 1
+      this.totalgoodshForm.zero_inventory = this.$route.params.zero_inventory
+    }
+    this.gettotaldata()
     this.getTypeList()
     this.funcTreeWidth = $('.funcTree').width()
     this.funcBoxWidth = $('.funcBox').width()

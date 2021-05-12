@@ -35,10 +35,10 @@
               <div slot="header" class="clearfix">
                 <span>退换货</span>
               </div>
-              <div class="sp cp" @click="gotoUrl('orderList')">
-                <p>退货待审批：<span>{{statInfo.refund}}</span></p>
-                <p>换货待审批：<span>{{statInfo.exchange_need_approve}}</span></p>
-                <p>换货待回寄：<span>{{statInfo.exchange_need_ship}}</span></p>
+              <div class="sp cp">
+                <p @click="gotoUrl('/order/orderReturn')">退货待审批：<span>{{statInfo.refund}}</span></p>
+                <p @click="gotoUrl('/order/orderExchange')">换货待审批：<span>{{statInfo.exchange_need_approve}}</span></p>
+                <p @click="gotoUrl('/order/orderExchange')">换货待回寄：<span>{{statInfo.exchange_need_ship}}</span></p>
               </div>
             </el-card>
           </el-col>
@@ -47,9 +47,9 @@
               <div slot="header" class="clearfix">
                 <span>仓库</span>
               </div>
-              <div class="sp cp" @click="gotoUrl('orderList')">
-                <p>待发货：<span>{{statInfo.need_ship}}</span></p>
-                <p>待入库：<span>{{statInfo.purchase_need_warehouse}}</span></p>
+              <div class="sp cp">
+                <p @click="gotoUrl('orderList', { order_status: 5})">待发货：<span>{{statInfo.need_ship}}</span></p>
+                <p @click="gotoUrl('/warehouse/warehouseList')">待入库：<span>{{statInfo.purchase_need_warehouse}}</span></p>
                 <p>&nbsp;</p>
               </div>
             </el-card>
@@ -59,10 +59,10 @@
               <div slot="header" class="clearfix">
                 <span>采购</span>
               </div>
-              <div class="sp cp" @click="gotoUrl('orderList')">
-                <p>代采购：<span>{{statInfo.need_purchase}}</span></p>
-                <p>待财务审批：<span>{{statInfo.purchase_finance_approve}}</span></p>
-                <p>待领导审批：<span>{{statInfo.purchase_leader_approve}}</span></p>
+              <div class="sp cp" >
+                <p @click="gotoUrl('totalinventory', { zero_inventory: true})">待采购：<span>{{statInfo.need_purchase}}</span></p>
+                <p @click="gotoUrl('purchases', { status: 1})">待财务审批：<span>{{statInfo.purchase_finance_approve}}</span></p>
+                <p @click="gotoUrl('purchases', { status: 2})">待领导审批：<span>{{statInfo.purchase_leader_approve}}</span></p>
               </div>
             </el-card>
           </el-col>
