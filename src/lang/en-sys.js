@@ -76,5 +76,7 @@ export default {
   zhekou: 'Discount',
   manjian: 'Full reduction',
   youhuiMethod: 'Promotion method',
-  manjianDate: 'Full minus date'
+  manjianDate: 'Full minus date',
+  permission_view: 'View',
+  permission_opt: 'Operating'
 }

@@ -76,5 +76,7 @@ export default {
   zhekou: 'បញ្ចុះតំលៃ',
   manjian: 'ការកាត់បន្ថយពេញលេញ',
   youhuiMethod: 'វិធីផ្សព្វផ្សាយ',
-  manjianDate: 'កាលបរិច្ឆេទដកពេញលេញ'
+  manjianDate: 'កាលបរិច្ឆេទដកពេញលេញ',
+  permission_view: 'មើល',
+  permission_opt: 'ប្រតិបត្ដិការ'
 }
