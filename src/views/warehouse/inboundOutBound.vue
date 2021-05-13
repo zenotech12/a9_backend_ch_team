@@ -12,7 +12,7 @@
               <el-col :span="24">
                 <el-form :inline="true" :model="rukuSearchForm">
                   <el-form-item>
-                    <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
+                    <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm" clearable
                                     v-model="rukuTimes"
                                     type="daterange"
                                     align="right"
@@ -47,9 +47,8 @@
                   {{scope.$index + rukuSearchForm.skip + 1}}
                 </template>
               </el-table-column>
-              <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
-              <el-table-column prop="no" :label="$t('warehouse.number')" width="150px"></el-table-column>
-              <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="150px"></el-table-column>
+              <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
+              <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="120px"></el-table-column>
               <el-table-column prop="comment" :label="$t('warehouse.remarks')" width="150px"></el-table-column>
               <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
               <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
@@ -68,9 +67,9 @@
                 <template slot-scope="scope">
                   <div class="goods">
                     <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                      <el-col :span="10">{{item.name}}</el-col>
+                      <el-col :span="10" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                       <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
-                      <el-col :span="3" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                      <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification)}}</span></el-col>
                       <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
@@ -132,7 +131,6 @@
                 </template>
               </el-table-column>
               <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
-              <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120px"></el-table-column>
               <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
               <el-table-column :label="$t('warehouse.type')" width="100px">
                 <template slot-scope="scope">
@@ -156,9 +154,9 @@
                 <template slot-scope="scope">
                   <div class="goods">
                     <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                      <el-col :span="10">{{item.name}}</el-col>
+                      <el-col :span="10" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                       <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
-                      <el-col :span="3" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                      <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification)}}</span></el-col>
                       <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.count}}</el-col>

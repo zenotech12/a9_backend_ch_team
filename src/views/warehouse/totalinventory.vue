@@ -15,6 +15,7 @@
                        node-key="id"
                        :show-checkbox="false"
                        :props="defaultProps"
+                       :highlight-current="true"
                        @node-click="typeChangeFunc"
                        @node-expand="nodeOpen"
                        @node-collapse="nodeClose"
@@ -37,19 +38,27 @@
                         <el-input v-model="totalgoodshForm.key" clearable></el-input>
                       </el-form-item>
                       <el-form-item>
-                        <el-switch @change="Searchlist"
-                          v-model="totalgoodshForm.zero_inventory"
-                          active-text="没库存"
-                          inactive-text="有库存">
-                        </el-switch>
+                        <el-checkbox v-model="totalgoodshForm.zero_inventory" @change="Searchlist">仅看没库存</el-checkbox>
                       </el-form-item>
+                      <!--<el-form-item label="排序">-->
+                        <!--<el-switch-->
+                          <!--v-model="totalgoodshForm.sort"-->
+                          <!--active-text="升序"-->
+                          <!--inactive-text="降序"-->
+                          <!--active-value="count"-->
+                          <!--inactive-value="-count">-->
+                        <!--</el-switch>-->
+                      <!--</el-form-item>-->
                       <el-form-item class="searchBtn">
                         <el-button type="primary" @click="Searchlist" size="small" icon="el-icon-search"></el-button>
                       </el-form-item>
                     </el-form>
                   </el-col>
                 </el-row>
-                <el-table :data="Totaldata" border stripe height="calc(100vh - 229px)" style="width: 100%">
+                <el-table :data="Totaldata"
+                          @sort-change="sortChange"
+                          :default-sort = "{prop: 'count', order: 'descending'}"
+                          border stripe height="calc(100vh - 229px)" style="width: 100%">
                   <el-table-column label="#" width="60px" fixed = "left">
                     <template slot-scope="scope">
                       {{scope.$index + totalgoodshForm.skip + 1}}
@@ -60,8 +69,15 @@
                     <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
                   </el-table-column>
                   <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
-                  <el-table-column prop="unit_price" :label="$t('warehouse.price')"></el-table-column>
-                  <el-table-column prop="count" :label="$t('warehouse.num')">
+                  <el-table-column prop="unit_price" :label="$t('warehouse.price')">
+                    <template slot-scope="scope">
+                      {{scope.row.unit_price | price}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="count" sortable :label="$t('warehouse.num')">
+                    <!--<template slot="header" slot-scope="header">-->
+                      <!--<span class="numcss" @click="numinfo(scope.row)">{{scope.row.count}}</span>-->
+                    <!--</template>-->
                     <template slot-scope="scope">
                       <span class="numcss" @click="numinfo(scope.row)">{{scope.row.count}}</span>
                     </template>
@@ -101,7 +117,8 @@ export default {
         // type_id: '',
         skip: 0,
         limit: 15,
-        zero_inventory: false
+        zero_inventory: false,
+        sort: 'count' // count 库存升序 -count库存降序
       },
       numinfoForm: {
         key: "",
@@ -142,6 +159,9 @@ export default {
     }
   },
   methods: {
+    sortChange() {
+
+    },
     getTypeList() {
       spuTypesList({ type: 2 }).then(response => {
         if (response.meta === 0) {

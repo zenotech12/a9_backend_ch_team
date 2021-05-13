@@ -22,7 +22,7 @@
             </el-form>
           </el-col>
           <el-col :span="4" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
-            <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
+            <div style="display: flex;align-items: center;justify-content: flex-end" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
@@ -938,18 +938,18 @@
         }
         return path
       },
-      textFilter(data) {
-        let str = ''
-        const text = data
-        Object.keys(text).forEach((v, i) => {
-          if (i === 0) {
-            str = v + ':' + text[v] + ';'
-          } else {
-            str = str + v + ':' + text[v] + ';'
-          }
-        })
-        return str
-      },
+      // textFilter(data) {
+      //   let str = ''
+      //   const text = data
+      //   Object.keys(text).forEach((v, i) => {
+      //     if (i === 0) {
+      //       str = v + ':' + text[v] + ';'
+      //     } else {
+      //       str = str + v + ':' + text[v] + ';'
+      //     }
+      //   })
+      //   return str
+      // },
       getOrderInfo(id) {
         ordersInfo(id).then(res => {
           if (res.meta === 0) {
@@ -1229,21 +1229,34 @@
         this.getDataListFun()
       },
       textFilter(data) {
-      let index = data.indexOf('{')
-      if(index != -1){
-        let str = ''
-        const text = JSON.parse(data)
-        Object.keys(text).forEach((v, i) => {
-          if (i === 0) {
-            str = v + ':' + text[v] + ';'
+        console.log('dat', data)
+        if (typeof data === Object) {
+          let str = ''
+          Object.keys(data).forEach((v, i) => {
+            if (i === 0) {
+              str = v + ':' + data[v] + ';'
+            } else {
+              str = str + v + ':' + data[v] + ';'
+            }
+          })
+          return str
+        } else if (typeof data === String) {
+          let index = data.indexOf('{')
+          if (index !== -1) {
+            let str = ''
+            const text = JSON.parse(data)
+            Object.keys(text).forEach((v, i) => {
+              if (i === 0) {
+                str = v + ':' + text[v] + ';'
+              } else {
+                str = str + v + ':' + text[v] + ';'
+              }
+            })
+            return str
           } else {
-            str = str + v + ':' + text[v] + ';'
+            return data
           }
-        })
-        return str
-      }else{
-        return data
-      }
+        }
       },
       Searchrukudata(){
         this.getstockinfo()
@@ -1254,7 +1267,7 @@
           this.dialogVisible = false
           this.getDataListFun()
         })
-        
+
       }
     },
     mounted() {
