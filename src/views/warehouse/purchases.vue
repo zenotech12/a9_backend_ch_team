@@ -68,9 +68,10 @@
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.type2')" width="100">
                   <template slot-scope="scope">
-                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">待审核</el-tag>
-                    <el-tag type="info" v-if="scope.row.status === 2">财务审批</el-tag>
-                    <el-tag type="warning" v-if="scope.row.status === 3">领导审批</el-tag>
+                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">待财务审批</el-tag>
+                    <el-tag type="info" v-if="scope.row.status === 2">领导待审批</el-tag>
+                    <el-tag type="warning" v-if="scope.row.status === 3">待入库</el-tag>
+                    <el-tag type="warning" v-if="scope.row.status === 4">完成入库</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
