@@ -14,18 +14,18 @@
     <!--待办事项-->
     <el-row class="newStyleBox">
       <el-col :span="24" class="new_style_title">
-          代办事项
+          {{$t('order.Pending')}}
       </el-col>
       <el-col :span="24">
         <el-row>
           <el-col :span="6" v-if="permissionCheck('view', '3_1')">
             <el-card shadow="always" class="stat-item">
               <div slot="header" class="clearfix">
-                <span>订单</span>
+                <span>{{$t('order.order')}}</span>
               </div>
               <div class="sp cp">
-                <p @click="gotoUrl('orderList', { ownership_status: 2})">待认领：<span>{{statInfo.order_need_claim}}</span></p>
-                <p @click="gotoUrl('orderList', { order_status: 5})">待发货：<span>{{statInfo.need_ship}}</span></p>
+                <p @click="gotoUrl('orderList', { ownership_status: 2})">{{$t('order.Tobeclaimed')}}<span>{{statInfo.order_need_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { order_status: 5})">{{$t('order.tobedelivered')}}<span>{{statInfo.need_ship}}</span></p>
                 <p>&nbsp;</p>
               </div>
             </el-card>
@@ -33,23 +33,23 @@
           <el-col :span="6" v-if="permissionCheck('view', '3_2') || permissionCheck('view', '3_4')">
             <el-card shadow="always" class="stat-item">
               <div slot="header" class="clearfix">
-                <span>退换货</span>
+                <span>{{$t('warehouse.Returnexchange')}}</span>
               </div>
-              <div class="sp cp" @click="gotoUrl('orderList')">
-                <p>退货待审批：<span>{{statInfo.refund}}</span></p>
-                <p>换货待审批：<span>{{statInfo.exchange_need_approve}}</span></p>
-                <p>换货待回寄：<span>{{statInfo.exchange_need_ship}}</span></p>
+              <div class="sp cp">
+                <p @click="gotoUrl('/order/orderReturn')">{{$t('order.Returnpending')}}<span>{{statInfo.refund}}</span></p>
+                <p @click="gotoUrl('/order/orderExchange')">{{$t('order.Replacement')}}<span>{{statInfo.exchange_need_approve}}</span></p>
+                <p @click="gotoUrl('/order/orderExchange')">{{$t('order.Replacement2')}}<span>{{statInfo.exchange_need_ship}}</span></p>
               </div>
             </el-card>
           </el-col>
           <el-col :span="6" v-if="permissionCheck('view', '8_1')">
             <el-card shadow="always" class="stat-item">
               <div slot="header" class="clearfix">
-                <span>仓库</span>
+                <span>{{$t('warehouse.ware')}}</span>
               </div>
-              <div class="sp cp" @click="gotoUrl('orderList')">
-                <p>待发货：<span>{{statInfo.need_ship}}</span></p>
-                <p>待入库：<span>{{statInfo.purchase_need_warehouse}}</span></p>
+              <div class="sp cp">
+                <p @click="gotoUrl('orderList', { order_status: 5})">{{$t('order.tobedelivered')}}<span>{{statInfo.need_ship}}</span></p>
+                <p @click="gotoUrl('/warehouse/warehouseList')">{{$t('order.Tobestored')}}<span>{{statInfo.purchase_need_warehouse}}</span></p>
                 <p>&nbsp;</p>
               </div>
             </el-card>
@@ -57,12 +57,12 @@
           <el-col :span="6" v-if="permissionCheck('view', '8_3')">
             <el-card shadow="always">
               <div slot="header" class="clearfix">
-                <span>采购</span>
+                <span>{{$t('order.purchase2')}}</span>
               </div>
-              <div class="sp cp" @click="gotoUrl('orderList')">
-                <p>代采购：<span>{{statInfo.need_purchase}}</span></p>
-                <p>待财务审批：<span>{{statInfo.purchase_finance_approve}}</span></p>
-                <p>待领导审批：<span>{{statInfo.purchase_leader_approve}}</span></p>
+              <div class="sp cp" >
+                <p @click="gotoUrl('totalinventory', { zero_inventory: true})">{{$t('order.Tobepurchased')}}<span>{{statInfo.need_purchase}}</span></p>
+                <p @click="gotoUrl('purchases', { status: 1})">{{$t('order.Pendingapproval')}}<span>{{statInfo.purchase_finance_approve}}</span></p>
+                <p @click="gotoUrl('purchases', { status: 2})">{{$t('order.Tobeleadership')}}<span>{{statInfo.purchase_leader_approve}}</span></p>
               </div>
             </el-card>
           </el-col>
@@ -73,15 +73,15 @@
     <!--概况统计-->
     <el-row class="newStyleBox">
       <el-col :span="24" class="new_style_title">
-        概况统计
+        {{$t('order.Overviewstatistics')}}
       </el-col>
       <el-col :span="24" class="timeBoxRow">
-        时间：
+        {{$t('order.time')}}：
         <el-radio-group v-model="timeValue" size="medium" style="margin-right: 5px">
-          <el-radio-button :label="1">今日</el-radio-button>
-          <el-radio-button :label="2">本周</el-radio-button>
-          <el-radio-button :label="3">本月</el-radio-button>
-          <el-radio-button :label="4">自定义</el-radio-button>
+          <el-radio-button :label="1">{{$t('order.today')}}</el-radio-button>
+          <el-radio-button :label="2">{{$t('order.Thisweek')}}</el-radio-button>
+          <el-radio-button :label="3">{{$t('order.thismonth')}}</el-radio-button>
+          <el-radio-button :label="4">{{$t('order.customize')}}</el-radio-button>
         </el-radio-group>
         <el-date-picker v-if="timeValue === 4" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getDataInfo"
                         v-model="dataTime"
@@ -112,7 +112,7 @@
           <el-col :span="6">
             <el-card shadow="always" class="stat-item">
               <div class="sp cp">
-                <p>订单金额：<span>{{dataInfo.sales | price}}</span></p>
+                <p>{{$t('order.orderamount')}}：<span>{{dataInfo.sales | price}}</span></p>
               </div>
             </el-card>
           </el-col>
@@ -140,14 +140,14 @@
           <el-col :span="6">
             <el-card shadow="always" class="stat-item liuliang">
               <div class="sp cp" @click="gotoUrl('/order/orderReturn')">
-                <p>退货：<span>{{dataInfo.refund}}</span></p>
+                <p>{{$t('order.Return')}}：<span>{{dataInfo.refund}}</span></p>
               </div>
             </el-card>
           </el-col>
           <el-col :span="6">
             <el-card shadow="always" class="liuliang">
               <div class="sp cp" @click="gotoUrl('/order/orderExchange')">
-                <p>换货：<span>{{dataInfo.exchange_count}}</span></p>
+                <p>{{$t('order.Exchange')}}：<span>{{dataInfo.exchange_count}}</span></p>
               </div>
             </el-card>
           </el-col>
@@ -159,7 +159,7 @@
     <!--排行榜-->
     <el-row class="newStyleBox" v-if="shopInfo.user_info.owner">
       <el-col :span="24" class="new_style_title">
-        排行榜
+        {{$t('order.Leaderboard')}}
       </el-col>
       <el-col :span="24">
         <el-row :gutter="20">
