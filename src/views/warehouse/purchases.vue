@@ -1286,11 +1286,9 @@
           this.flag = true
         }
         if(this.flag == true){
-          // console.log(this.inwarehouseFrom.skus);
           this.flag2 = this.inwarehouseFrom.skus.every(item => {
             return item.merchant_type_code.length == 0 || item.merchant_type_code == null
           });
-          // console.log(this.flag2,'74');
           if(this.flag2 == false){
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
             warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
