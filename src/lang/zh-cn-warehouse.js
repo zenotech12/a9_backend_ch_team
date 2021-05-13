@@ -132,4 +132,10 @@ export default {
   scrap_count: '报废数量',
   type2: '状态',
   thearrivalarr: '到货 / 已到货 / 采购数量',
+  Pendingreview: '待审核',
+  Financialapproval: '财务审批',
+  Leadershipapproval: '领导审批',
+  Completereceipt: '完成收货',
+  emptystock: '没库存',
+  Instock: '有库存',
 }

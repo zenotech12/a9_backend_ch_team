@@ -38,6 +38,11 @@
                         <el-input v-model="totalgoodshForm.key" clearable></el-input>
                       </el-form-item>
                       <el-form-item>
+                        <el-switch @change="Searchlist"
+                          v-model="totalgoodshForm.zero_inventory"
+                          :active-text="$t('warehouse.emptystock')"
+                          :inactive-text="$t('warehouse.Instock')">
+                        </el-switch>
                         <el-checkbox v-model="totalgoodshForm.zero_inventory" @change="Searchlist">仅看没库存</el-checkbox>
                       </el-form-item>
                       <!--<el-form-item label="排序">-->

@@ -166,6 +166,27 @@ export default {
   batchDetailExportFunc: 'The maximum number of exports is 20',
   Delivery: 'Delivery information',
   Relatedorders: 'Related order ID',
-  Msg: 'No information'
+  Msg: 'No information',
+  Pending: 'Pending',
+  Tobeclaimed: 'To be claimed',
+  tobedelivered: 'to be delivered:',
+  Returnpending: 'Return pending approval:',
+  Replacement: 'Replacement pending approval:',
+  Replacement2: 'Replacement to be sent back:',
+  Tobestored: 'To be stored:',
+  Tobepurchased: 'To be purchased:',
+  purchase2: 'purchase',
+  Pendingapproval: 'Pending financial approval:',
+  Tobeleadership : 'To be approved by the leader:',
+  Overviewstatistics: 'Overview statistics',
+  time: 'time',
+  today: 'today',
+  Thisweek: 'This week',
+  thismonth: 'this month',
+  customize: 'customize',
+  orderamount: 'order amount',
+  Return: 'Return',
+  Exchange: 'Exchange',
+  Leaderboard: 'Leaderboard'
 
 }
