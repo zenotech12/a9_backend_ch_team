@@ -187,7 +187,7 @@
     </div>
 </template>
 <script>
-  import { ordersList } from '@/api/order'
+  import { ordersList, getExpressInfo } from '@/api/order'
   import expressage from '@/utils/expressage'
   export default {
     name: 'orderSelector',
@@ -259,7 +259,9 @@
             label: this.$t('lang.balance')
           }
         ],
-        cesiId: ''
+        cesiId: '',
+        expressInfo: [],
+        showOrderStatus: false
       }
     },
     model: {
@@ -299,6 +301,21 @@
       // this.getProductInfo()
     },
     methods: {
+      clickStatus(data) {
+        const info = {
+          no: data.express.novar,
+          company: data.express.company
+        }
+        if (data.express.company === 'zto') {
+          getExpressInfo(info).then(res => {
+            this.showOrderStatus = false
+            this.expressInfo = res.items
+          })
+        }
+        if (data.express.company === 'rider') {
+          this.showOrderStatus = true
+        }
+      },
       clearInput() {
         this.$emit('goodSelectedChange', this.cesiId)
       },

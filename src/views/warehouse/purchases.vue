@@ -342,40 +342,6 @@
                       <span>{{$t('order.deliveryMethod')}}：</span>
                       {{deliveryMethod[scope.row.post_way - 1]}} <span v-if="scope.row.post_way === 2">({{scope.row.check_code}})</span>
                     </div>
-                    <div class="ui" v-if="scope.row.express.novar">
-                      <span>{{$t('order.expressNo')}}：</span>
-                      <el-popover placement="left" width="300" trigger="click" v-if="scope.row.express.company === 'zto' || scope.row.express.company === 'rider'">
-                        <div v-if="expressInfo && !showOrderStatus">
-                          <el-timeline style="margin-top: 10px" v-if="expressInfo.length > 0">
-                            <el-timeline-item
-                              v-for="(record, index) in expressInfo"
-                              :key="index"
-                              :timestamp="record.time">
-                              <div class="ui"><span>{{record.message}}</span></div>
-                            </el-timeline-item>
-                          </el-timeline>
-                          <p v-else style="color: #333; font-size: 14px; text-align: center; font-weight: bold">{{$t('order.zwddwl')}}</p>
-                        </div>
-                        <div v-if="showOrderStatus">
-                          <el-timeline style="margin-top: 10px">
-                            <el-timeline-item
-                              v-for="(record, index) in scope.row.operation_records"
-                              :key="index"
-                              :timestamp="record.time">
-                              <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
-                            </el-timeline-item>
-                          </el-timeline>
-                        </div>
-                        <a @click="clickStatus(scope.row)" slot="reference">
-                          {{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}
-                          <i class="el-icon-arrow-right"></i>
-                        </a>
-                      </el-popover>
-                      <a v-else target="_blank" :href="getKuaidi100Url(scope.row.express.company, scope.row.express.novar)">
-                        {{expressageList[scope.row.express.company]}}&nbsp;&nbsp;{{scope.row.express.novar}}
-                        <i class="el-icon-arrow-right"></i>
-                      </a>
-                    </div>
                   </template>
                 </el-table-column>
               </el-table>
@@ -661,7 +627,6 @@
 import store from '@/store'
   import { purchaseover, receiptsinventory, warehouseOutboundsAdd, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
-
   import { spusSkusList, spusInfo, spuTypesList, spuTypesInfo } from '@/api/goods'
   import { fileUploadUrl } from '@/utils/serverConfig'
   export default {
@@ -989,6 +954,29 @@ import store from '@/store'
       }
     },
     methods: {
+      // 海外购图标显示
+      otherLogo(text) {
+        // console.log(text);
+        if (text === 'JinDong') {
+          return require('../../assets/images/jingdong.png')
+        } else if (text === 'Tmal') {
+          return require('../../assets/images/tianmao.png')
+        } else if (text === 'Taobao') {
+          return require('../../assets/images/taobao.png')
+        } else if (text === 'Suning') {
+          return require('../../assets/images/suning.jpeg')
+        } else if (text === 'Kaola') {
+          return require('../../assets/images/kaola.jpeg')
+        } else if (text === 'Dangdang') {
+          return require('../../assets/images/dangdang.jpeg')
+        } else if (text === 'Amazon') {
+          return require('../../assets/images/yamaxun.png')
+        } else if(text === '1688'){
+          return require('../../assets/images/1688.png')
+        } else if(text === '1689'){
+          return require('../../assets/images/1689.png')
+        }
+      },
       uploadSuccess(response, file, fileList) {
         console.log('rs', response)
         this.paiForm.attach_file = response.md5
@@ -1581,5 +1569,11 @@ import store from '@/store'
 .switchbox{
   width: 100%;
   text-align: right;
+}
+.otherShopLogo {
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
+  border: none;
 }
 </style>
