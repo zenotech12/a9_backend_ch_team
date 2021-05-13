@@ -22,7 +22,7 @@
             </el-form>
           </el-col>
           <el-col :span="4" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
-            <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
+            <div style="display: flex;align-items: center;justify-content: flex-end" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
@@ -56,7 +56,7 @@
                       <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
                         <el-col :span="8">{{item.name}}</el-col>
                         <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                        <el-col :span="3" style="text-align: center">{{item.specification}}</el-col>
+                        <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>
                         <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
@@ -68,9 +68,10 @@
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.type2')" width="100">
                   <template slot-scope="scope">
-                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">{{$t('warehouse.Pendingreview')}}</el-tag>
-                    <el-tag type="info" v-if="scope.row.status === 2">{{$t('warehouse.Financialapproval')}}</el-tag>
-                    <el-tag type="warning" v-if="scope.row.status === 3">{{$t('warehouse.Leadershipapproval')}}</el-tag>
+                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">待财务审批</el-tag>
+                    <el-tag type="info" v-if="scope.row.status === 2">领导待审批</el-tag>
+                    <el-tag type="warning" v-if="scope.row.status === 3">待入库</el-tag>
+                    <el-tag type="warning" v-if="scope.row.status === 4">完成入库</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
@@ -182,6 +183,8 @@
                     <!--{{scope.row.nowCount}}-->
                   <!--</template>-->
                 <!--</el-table-column>-->
+                <el-table-column prop="inventory" label="当前库存"></el-table-column>
+
                 <el-table-column prop="count" :label="$t('warehouse.Purchasenum')" width="150">
                   <template slot-scope="scope">
                     <el-input v-model.number="scope.row.count"></el-input>
@@ -379,6 +382,7 @@
                     {{scope.row.title}}
                   </template>
                 </el-table-column>
+                <el-table-column prop="inventory" label="当前库存"></el-table-column>
                 <el-table-column prop="barcode" :label="$t('goods.barcode')">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.barcode"></el-input>
@@ -846,7 +850,8 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { id: '', name: val[0].goodsName, origin: '', sku_uid: '', specification: this.textFilter(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
+            console.log('item', item)
+            const tableItem = { id: '', name: val[0].goodsName, inventory: 0, origin: '', sku_uid: '', specification: this.textFilter(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -868,7 +873,7 @@
                 tableItem.id = this.goodsInventoryData[i].id + str
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.no = this.goodsInventoryData[i].no
-                tableItem.count = ''
+                tableItem.inventory = this.goodsInventoryData[i].inventory
                 tableItem.unit_price = this.goodsInventoryData[i].price
                 tableItem.shouJia = this.goodsInventoryData[i].price
                 tableItem.barcode = this.goodsInventoryData[i].barcode
@@ -997,18 +1002,18 @@
         }
         return path
       },
-      textFilter(data) {
-        let str = ''
-        const text = data
-        Object.keys(text).forEach((v, i) => {
-          if (i === 0) {
-            str = v + ':' + text[v] + ';'
-          } else {
-            str = str + v + ':' + text[v] + ';'
-          }
-        })
-        return str
-      },
+      // textFilter(data) {
+      //   let str = ''
+      //   const text = data
+      //   Object.keys(text).forEach((v, i) => {
+      //     if (i === 0) {
+      //       str = v + ':' + text[v] + ';'
+      //     } else {
+      //       str = str + v + ':' + text[v] + ';'
+      //     }
+      //   })
+      //   return str
+      // },
       getOrderInfo(id) {
         ordersInfo(id).then(res => {
           if (res.meta === 0) {
@@ -1074,6 +1079,7 @@
               this.skusArray.push(this.multipleSelection[k])
             }
           })
+          console.log('this.skusArray', this.skusArray)
         } else if (this.source === 2) {
           if (this.orderId === '') {
             this.$message.error(this.$t('warehouse.TipsMsg2'))
@@ -1308,21 +1314,34 @@
         this.getDataListFun()
       },
       textFilter(data) {
-      let index = data.indexOf('{')
-      if(index != -1){
-        let str = ''
-        const text = JSON.parse(data)
-        Object.keys(text).forEach((v, i) => {
-          if (i === 0) {
-            str = v + ':' + text[v] + ';'
+        console.log('dat', data)
+        if (data instanceof Object) {
+          let str = ''
+          Object.keys(data).forEach((v, i) => {
+            if (i === 0) {
+              str = v + ':' + data[v] + ';'
+            } else {
+              str = str + v + ':' + data[v] + ';'
+            }
+          })
+          return str
+        } else if (data instanceof String) {
+          let index = data.indexOf('{')
+          if (index !== -1) {
+            let str = ''
+            const text = JSON.parse(data)
+            Object.keys(text).forEach((v, i) => {
+              if (i === 0) {
+                str = v + ':' + text[v] + ';'
+              } else {
+                str = str + v + ':' + text[v] + ';'
+              }
+            })
+            return str
           } else {
-            str = str + v + ':' + text[v] + ';'
+            return data
           }
-        })
-        return str
-      }else{
-        return data
-      }
+        }
       },
       Searchrukudata(){
         this.getstockinfo()
@@ -1332,6 +1351,7 @@
           this.dialogVisible = false
           this.getDataListFun()
         })
+
       },
       Rukubtn(data){
         this.Rukufrom.skus = []

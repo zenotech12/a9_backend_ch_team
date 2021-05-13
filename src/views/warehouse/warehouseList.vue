@@ -293,9 +293,9 @@
                 <template slot-scope="scope">
                   <div class="goods">
                     <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                      <el-col :span="8">{{item.name}}</el-col>
+                      <el-col :span="8" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                       <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                      <el-col :span="3" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                      <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification)}}</span></el-col>
                       <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.position}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
@@ -383,9 +383,9 @@
                   <template slot-scope="scope">
                     <div class="goods">
                       <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                        <el-col :span="10">{{item.name}}</el-col>
+                        <el-col :span="10" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                         <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
-                        <el-col :span="3" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                        <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification)}}</span></el-col>
                         <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
@@ -452,8 +452,8 @@
                     {{scope.$index + chuKuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
-                
-                
+
+
                                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">
@@ -477,9 +477,9 @@
                   <template slot-scope="scope">
                     <div class="goods">
                       <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                        <el-col :span="10">{{item.name}}</el-col>
+                        <el-col :span="10" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                         <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
-                        <el-col :span="3" style="text-align: center">{{textFilter(item.specification)}}</el-col>
+                        <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification)}}</span></el-col>
                         <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.count}}</el-col>

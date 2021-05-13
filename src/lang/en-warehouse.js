@@ -80,7 +80,7 @@ export default{
   Delmsg : 'Please select the cargo space to be deleted',
   parameterMsg: 'Parameter error',
   Purchaselist: 'Purchase list',
-  Purchasenum: 'Purchase order quantity',
+  Purchasenum: 'Purchase quantity',
   Newadd: 'Add new',
   PurchaseSet: 'Purchase settings',
   source: 'Source',

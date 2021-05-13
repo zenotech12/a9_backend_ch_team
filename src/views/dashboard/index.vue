@@ -83,9 +83,9 @@
           <el-radio-button :label="3">{{$t('order.thismonth')}}</el-radio-button>
           <el-radio-button :label="4">{{$t('order.customize')}}</el-radio-button>
         </el-radio-group>
-        <el-date-picker v-if="timeValue === 4" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getDataInfo"
+        <el-date-picker v-if="timeValue === 4" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getDataInfo"
                         v-model="dataTime"
-                        type="datetimerange"
+                        type="daterange"
                         align="right"
                         unlink-panels
                         :range-separator="$t('tools.to')"
@@ -854,5 +854,10 @@
     height: 40px;
     display: flex;
     align-items: center;
+  }
+  /deep/ {
+    .el-date-editor .el-range-separator {
+      width: 7%;
+    }
   }
 </style>
