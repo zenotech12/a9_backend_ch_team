@@ -14,7 +14,17 @@
           <el-col :span="20" style="padding: 0px 15px ">
             <el-form :inline="true" :model="searchForm">
               <el-form-item>
-                <el-input v-model="searchForm.no" clearable></el-input>
+                <el-select v-model="searchForm.pay_status" placeholder="请选择">
+                  <el-option
+                    v-for="item in payStatusOption"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-input v-model="searchForm.no" placeholder="请输入单号" clearable></el-input>
               </el-form-item>
               <el-form-item class="searchBtn">
                 <el-button type="primary" @click="Searchlist" size="small" icon="el-icon-search"></el-button>
@@ -418,6 +428,7 @@
                     {{scope.row.paid | price}}
                   </template>
                 </el-table-column>
+                <el-table-column prop="comment" :label="$t('goods.note')"></el-table-column>
                 <el-table-column prop="pay_time" :label="$t('warehouse.OrderTime')" width="180"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
@@ -445,15 +456,34 @@
               <price-input v-model="paiForm.paid"></price-input>
             </el-form-item>
             <el-form-item :label="$t('warehouse.OrderTime')">
-            <el-date-picker
-              format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"
-              v-model="paiForm.pay_time"
-              type="datetime"
-              :placeholder="$t('order.pleaseChooseTime')">
-            </el-date-picker>
+              <el-date-picker
+                format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"
+                v-model="paiForm.pay_time"
+                type="datetime"
+                :placeholder="$t('order.pleaseChooseTime')">
+              </el-date-picker>
             </el-form-item>
             <el-form-item :label="$t('warehouse.Isitdone')" label-width="145px" v-if="!this.paytype">
               <el-switch v-model="switchvalue" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            </el-form-item>
+            <el-form-item :label="$t('goods.note')">
+              <el-input type="textarea"
+                :rows="2"
+                v-model="paiForm.comment">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="附件">
+              <el-upload
+                name="image"
+                :headers="fileUploadHeader"
+                :action="fileUploadUrl"
+                :on-success="uploadSuccess"
+                :on-remove="removeFile"
+                multiple
+                :limit="1"
+                :file-list="fileList">
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -570,8 +600,7 @@
                   <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
                     <el-col :span="8">{{item.name}}</el-col>
                     <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                    <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : '暂无信息'}}</el-col>
-                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
                   </el-row>
@@ -629,9 +658,12 @@
 
 <script>
   import { mapGetters } from 'vuex'
+import store from '@/store'
   import { purchaseover, receiptsinventory, warehouseOutboundsAdd, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
+
   import { spusSkusList, spusInfo, spuTypesList, spuTypesInfo } from '@/api/goods'
+  import { fileUploadUrl } from '@/utils/serverConfig'
   export default {
     components: {
     },
@@ -639,24 +671,42 @@
       const formData = this.setForm()
       const pz = 10
       return {
-        triggersType: [{ code: 1, name: this.$t('operation.triggersA') }, { code: 2, name: this.$t('operation.triggersB') }, { code: 3, name: this.$t('operation.triggersC') }],
+        triggersType: [{code: 1, name: this.$t('operation.triggersA')}, {
+          code: 2,
+          name: this.$t('operation.triggersB')
+        }, {code: 3, name: this.$t('operation.triggersC')}],
         timeValidSwitch: true,
         searchForm: {
           skip: 0,
           limit: pz,
           no: '',
+          pay_status: '', // 0 所有 1未付完 2已付完
           status: 0 // 0所有 1申请 2财务审批 3管理层审批（已完成）4完成收货
         },
+        payStatusOption: [
+          {
+            label: '所有',
+            value: 0
+          },
+          {
+            label: '未付完',
+            value: 1
+          },
+          {
+            label: '已付完',
+            value: 2
+          }
+        ],
         warelist: [],
-        inwarehouseFrom:{
+        inwarehouseFrom: {
           tp: 1,
           purchase_id: '',
           warehouse_id: '',
-          skus:[],
+          skus: [],
           comment: '',
           status: '',
         },
-        stockfrom:{
+        stockfrom: {
           key: '',
           warehouse_id: '',
           purchase_id: '',
@@ -668,10 +718,10 @@
         switchvalue: false,
         Rudalog: false,
         position: '',
-        locas:[],
+        locas: [],
         wareId: '',
-        inwarehouseData:[],
-        inwarehouselog :false,
+        inwarehouseData: [],
+        inwarehouselog: false,
         paytype: false,
         test: [],
         commentlog: false,
@@ -708,7 +758,7 @@
           skip: '',
           limit: pz
         },
-        ispaid_complete : '',
+        ispaid_complete: '',
         paidList: [],
         currentPagePay: 1,
         pageSizePay: pz,
@@ -717,7 +767,9 @@
           id: '',
           purchase_id: '',
           paid: 0,
-          pay_time: ''
+          pay_time: '',
+          comment: '',
+          attach_file: ''
         },
         currency: '',
         payment_term: '',
@@ -732,7 +784,7 @@
         batchPrice: 0,
         batchTotalPrice: 0,
         multipleSelection: [],
-        tabletitle:[
+        tabletitle: [
           this.$t('warehouse.name2'),
           this.$t('warehouse.PlaceofOrigin'),
           this.$t('warehouse.pecifications'),
@@ -742,54 +794,65 @@
           this.$t('warehouse.arrive_count'),
           this.$t('warehouse.allprice')
         ],
-        Rukufrom:{
+        Rukufrom: {
           warehouse_id: '',
           comment: '',
           skus: '',
         },
-        flag:'',
-        flag2:'',
+        flag: '',
+        flag2: '',
         totaldata: [],
         options: [
-          {value:'US Dollar',label: 'US Dollar'},
-          {value:'Riel(Cambodia)',label: 'Riel(Cambodia)'},
-          {value:'RBM',label: 'RBM'},
+          {value: 'US Dollar', label: 'US Dollar'},
+          {value: 'Riel(Cambodia)', label: 'Riel(Cambodia)'},
+          {value: 'RBM', label: 'RBM'},
         ],
         paymenttermdata: [
-          {value:'Net 30 days',label: 'Net 30 days'},
-          {value:'Net 60 days',label: 'Net 60 days'}
+          {value: 'Net 30 days', label: 'Net 30 days'},
+          {value: 'Net 60 days', label: 'Net 60 days'}
         ],
         deliverymedata: [
-          {value:'Self-pick up',label: 'Self-pick up'},
-          {value:'Express',label: 'Express'}
+          {value: 'Self-pick up', label: 'Self-pick up'},
+          {value: 'Express', label: 'Express'}
         ],
         orderInfoData: [],
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
-        optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
-        statusTab: [{ value: '0', label: this.$t('tools.all') },
-          { value: '1', label: '待财务审批' },
-          { value: '2', label: '待领导审批' },
-          { value: '3', label: '待入库' },
-          { value: '4', label: '完成入库' }],
-        statusTabList: [{ value: '0', label: this.$t('tools.all') },
-          { value: '1', label: '待财务审批' },
-          { value: '2', label: '待领导审批' },
-          { value: '3', label: '待入库' },
-          { value: '4', label: '完成入库' }],
+        optArr: {
+          2: this.$t('order.opt2'),
+          4: this.$t('order.opt4'),
+          5: this.$t('order.opt5'),
+          6: this.$t('order.opt6'),
+          7: this.$t('order.opt7'),
+          8: this.$t('order.opt8'),
+          9: this.$t('order.opt9')
+        },
+        statusTab: [{value: '0', label: this.$t('tools.all')},
+          {value: '1', label: '待财务审批'},
+          {value: '2', label: '待领导审批'},
+          {value: '3', label: '待入库'},
+          {value: '4', label: '完成入库'}],
+        statusTabList: [{value: '0', label: this.$t('tools.all')},
+          {value: '1', label: '待财务审批'},
+          {value: '2', label: '待领导审批'},
+          {value: '3', label: '待入库'},
+          {value: '4', label: '完成入库'}],
         tab_status: '0',
         showTab: false,
+        fileList: [],
+        fileUploadUrl: fileUploadUrl,
+        fileUploadHeader: {'X-Access-Token': store.state.user.token},
         switchtype: false,
         rukuid: '',
-        returnFrom:{
+        returnFrom: {
           warehouse_id: '',
           tp: 3,
           skus: [],
           receipt_id: '',
           typeData: [],
           goodsTypeData: []
-      },
-    }
+        }
+      }
     },
     computed: {
       ...mapGetters([
@@ -798,7 +861,7 @@
     },
     watch: {
       // Rudalog(val){
-        
+
       // },
       tab_status(val) {
         if (this.searchForm.skip !== 0 || this.searchForm.status !== parseInt(val)) {
@@ -926,6 +989,14 @@
       }
     },
     methods: {
+      uploadSuccess(response, file, fileList) {
+        console.log('rs', response)
+        this.paiForm.attach_file = response.md5
+      },
+      removeFile(file, fileList) {
+        console.log('file', file)
+        this.paiForm.attach_file = ''
+      },
       getCount() {
         this.statusTab = JSON.parse(JSON.stringify(this.statusTabList))
         warehousePurchasesCount().then(res => {
@@ -1101,8 +1172,8 @@
             this.getPayListFunc()
           })
         }
-        if(this.switchvalue == true){
-           Paymentcomplete(this.paiForm.purchase_id).then(res => {
+        if (this.switchvalue === true) {
+          Paymentcomplete(this.paiForm.purchase_id).then(res => {
             this.getDataListFun()
             this.paidListDialog = false
           })
@@ -1113,12 +1184,19 @@
         // console.log(data);
         // console.log(this.ispaid_complete);
         // if(this.ispaid_complete == false){
-          this.paytype = false
+        this.paytype = false
         // }
         // console.log(this.paiForm);
         this.paiForm.paid = data.paid
         this.paiForm.id = data.id
         this.paiForm.pay_time = data.pay_time
+        this.paiForm.comment = data.comment
+        this.paiForm.attach_file = data.attach_file
+        const obj = {
+          name: data.attach_file,
+          url: data.attach_file_conv
+        }
+        this.fileList[0] = obj
         this.payaddDialog = true
       },
       Paycomplete(val) {
@@ -1302,7 +1380,7 @@
               this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
             })
           }else{
-           
+
           }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))
@@ -1312,7 +1390,6 @@
         this.getDataListFun()
       },
       textFilter(data) {
-        console.log('dat', data)
         if (data instanceof Object) {
           let str = ''
           Object.keys(data).forEach((v, i) => {
@@ -1394,7 +1471,7 @@
         console.log(data);
       },
       getGoodstype(){
-        
+
       }
     },
     mounted() {

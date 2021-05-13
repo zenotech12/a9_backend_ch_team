@@ -69,7 +69,7 @@
                     <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
                       <el-col :span="10" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                       <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
-                      <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification)}}</span></el-col>
+                      <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No'}}</span></el-col>
                       <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
