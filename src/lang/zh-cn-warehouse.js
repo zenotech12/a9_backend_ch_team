@@ -81,7 +81,7 @@ export default {
   Delmsg: '请选择要删除的货位',
   parameterMsg: '参数错误',
   Purchaselist: '采购清单',
-  Purchasenum: '采购单数量',
+  Purchasenum: '采购数量',
   Newadd: '新增',
   PurchaseSet: '采购设置',
   source: '来源',

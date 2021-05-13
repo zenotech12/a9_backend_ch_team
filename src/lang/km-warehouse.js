@@ -80,7 +80,7 @@ export default{
   Delmsg: 'សូមជ្រើសរើសទីតាំងដែលត្រូវលុបចោល',
   parameterMsg: 'កំហុសប៉ារ៉ាម៉ែត្',
   Purchaselist: 'បញ្ជីទិញ',
-  Purchasenum: 'ទិញបរិមាណបញ្ជាទិញ',
+  Purchasenum: 'បរិមាណទិញ',
   Newadd: 'បន្ថែម',
   PurchaseSet: 'ការកំណត់ការទិញ',
   source: 'ប្រភព',

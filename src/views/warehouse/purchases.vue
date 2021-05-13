@@ -56,7 +56,7 @@
                       <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
                         <el-col :span="8">{{item.name}}</el-col>
                         <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                        <el-col :span="3" style="text-align: center">{{item.specification}}</el-col>
+                        <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>
                         <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
@@ -182,6 +182,8 @@
                     <!--{{scope.row.nowCount}}-->
                   <!--</template>-->
                 <!--</el-table-column>-->
+                <el-table-column prop="inventory" label="当前库存"></el-table-column>
+
                 <el-table-column prop="count" :label="$t('warehouse.Purchasenum')" width="150">
                   <template slot-scope="scope">
                     <el-input v-model.number="scope.row.count"></el-input>
@@ -379,6 +381,7 @@
                     {{scope.row.title}}
                   </template>
                 </el-table-column>
+                <el-table-column prop="inventory" label="当前库存"></el-table-column>
                 <el-table-column prop="barcode" :label="$t('goods.barcode')">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.barcode"></el-input>
@@ -787,7 +790,8 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { id: '', name: val[0].goodsName, origin: '', sku_uid: '', specification: this.textFilter(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
+            console.log('item', item)
+            const tableItem = { id: '', name: val[0].goodsName, inventory: 0, origin: '', sku_uid: '', specification: this.textFilter(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -809,7 +813,7 @@
                 tableItem.id = this.goodsInventoryData[i].id + str
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.no = this.goodsInventoryData[i].no
-                tableItem.count = ''
+                tableItem.inventory = this.goodsInventoryData[i].inventory
                 tableItem.unit_price = this.goodsInventoryData[i].price
                 tableItem.shouJia = this.goodsInventoryData[i].price
                 tableItem.barcode = this.goodsInventoryData[i].barcode
@@ -1015,6 +1019,7 @@
               this.skusArray.push(this.multipleSelection[k])
             }
           })
+          console.log('this.skusArray', this.skusArray)
         } else if (this.source === 2) {
           if (this.orderId === '') {
             this.$message.error(this.$t('warehouse.TipsMsg2'))
@@ -1230,7 +1235,7 @@
       },
       textFilter(data) {
         console.log('dat', data)
-        if (typeof data === Object) {
+        if (data instanceof Object) {
           let str = ''
           Object.keys(data).forEach((v, i) => {
             if (i === 0) {
@@ -1240,7 +1245,7 @@
             }
           })
           return str
-        } else if (typeof data === String) {
+        } else if (data instanceof String) {
           let index = data.indexOf('{')
           if (index !== -1) {
             let str = ''
