@@ -302,10 +302,20 @@ export function purchaseover(id, data) {
     params: data
   })
 }
+
 // 采购单.获取数量
 export function warehousePurchasesCount() {
   return request({
     url: 'warehouse-purchases-count',
     method: 'get'
+  })
+}
+
+// 仓库.入库单.入库
+export function receiptsinventory(id, data) {
+  return request({
+    url: 'warehouse-receipts/' + id + '/inventory',
+    method: 'post',
+    data: data
   })
 }

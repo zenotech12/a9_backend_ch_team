@@ -125,4 +125,11 @@ export default{
   goodsId: 'លេខសម្គាល់ផលិតផល',
   scrap_count: 'បរិមាណសំណល់',
   type2: 'ស្ថានភាព',
+  thearrivalarr: 'មកដល់ / វាបានមកដល់ហើយ / បរិមាណទិញ',
+  Pendingreview: 'ការពិនិត្យឡើងវិញដែលមិនទាន់សម្រេច',
+  Financialapproval: 'ការយល់ព្រមផ្នែកហិរញ្ញវត្ថុ',
+  Leadershipapproval: 'ការអនុម័តភាពជាអ្នកដឹកនាំ',
+  Completereceipt: 'បង្កាន់ដៃពេញលេញ',
+  emptystock: 'ស្តុកទទេ',
+  Instock: 'នៅ​ក្នុង​ស្តុក',
 }

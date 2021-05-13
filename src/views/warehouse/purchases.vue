@@ -68,9 +68,9 @@
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.type2')" width="100">
                   <template slot-scope="scope">
-                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">待审核</el-tag>
-                    <el-tag type="info" v-if="scope.row.status === 2">财务审批</el-tag>
-                    <el-tag type="warning" v-if="scope.row.status === 3">领导审批</el-tag>
+                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">{{$t('warehouse.Pendingreview')}}</el-tag>
+                    <el-tag type="info" v-if="scope.row.status === 2">{{$t('warehouse.Financialapproval')}}</el-tag>
+                    <el-tag type="warning" v-if="scope.row.status === 3">{{$t('warehouse.Leadershipapproval')}}</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
@@ -458,7 +458,7 @@
         </el-dialog>
         <!-- 入库 -->
         <el-dialog :title="$t('warehouse.Warehousing')" width="70%" @close="inwarehouselog=false" :visible.sync="inwarehouselog" :close-on-click-modal="false" center >
-          <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
+            <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
                 v-for="item in warelist"
                 :key="item.value"
@@ -468,6 +468,10 @@
               </el-option>
             </el-select>
             <div v-if="wareId">
+              <div class="switchbox">
+                <span>待检测</span>
+                <el-switch v-model="switchtype" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+              </div>
               <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
                   <el-table-column type="selection" width="55"></el-table-column>
                   <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
@@ -501,7 +505,7 @@
                       <div class="numclass">
                         <span><el-input v-model="scope.row.count"></el-input></span>
                         <span>{{scope.row.arrive_count}}</span>
-                        <span>{{Number(scope.row.arrive_count) + Number(scope.row.count)}}</span>
+                        <span>{{Number(scope.row.count)}}</span>
                       </div>
                     </template>
                   </el-table-column>
@@ -528,22 +532,22 @@
           :visible.sync="dialogVisible"
           width="80%">
           <el-row>
-          <div class="searchbox">
-            <el-input v-model="stockfrom.key" style="margin-right: 10px"></el-input>
-            <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
-          </div>
-          <el-col :span="24" class="funcList localcss">
-            <el-button type="primary" class="overbtn" @click="overBtn" size="mini">完成收货</el-button>
-            <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
-              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+            <div class="searchbox">
+              <el-input v-model="stockfrom.key" style="margin-right: 10px"></el-input>
+              <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
             </div>
-          </el-col>
-        </el-row>
+            <el-col :span="24" class="funcList localcss">
+              <el-button type="primary" class="overbtn" @click="overBtn" size="mini">{{$t('warehouse.Completereceipt')}}</el-button>
+              <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
+                <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+                <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              </div>
+            </el-col>
+          </el-row>
           <el-table :data="totaldata" border stripe highlight-current-row height="calc(100vh - 420px)" style="width: 100%">
             <el-table-column prop="no" :label="$t('warehouse.number')" width="150"></el-table-column>
             <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="150"></el-table-column>
-            <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150"></el-table-column>
+            <!-- <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150"></el-table-column> -->
             <el-table-column prop="warehouse_name" label="">
               <template slot="header" slot-scope="scope">
                <div>
@@ -562,12 +566,18 @@
                   <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
                     <el-col :span="8">{{item.name}}</el-col>
                     <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                    <el-col :span="3" style="text-align: center">{{item.specification}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : '暂无信息'}}</el-col>
                     <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
                   </el-row>
                 </div>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
+              <template slot-scope="scope">
+                <el-button type="text" @click="Rukubtn(scope.row)" v-if="scope.row.status === 1" size="small">{{$t('warehouse.Warehousing')}}</el-button>
+                <el-button type="text" @click="Returndata(scope.row)" v-if="scope.row.status === 1" size="small">退还</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -580,6 +590,34 @@
             </el-pagination>
           </div>
         </el-dialog>
+        <el-dialog
+          title="入库"
+          :visible.sync="Rudalog"
+          width="70%">
+            <el-table :data="Rukufrom.skus" border stripe style="width: 100%">
+              <el-table-column prop="name" label="名称"></el-table-column>
+              <el-table-column prop="origin" label="产地"></el-table-column>
+              <el-table-column prop="name" label="名称"></el-table-column>
+              <el-table-column prop="barcode" label="条形码"></el-table-column>
+              <el-table-column prop="name" label="货位">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
+                    <el-option
+                      v-for="(item, k) in locas"
+                      :key="k"
+                      :label="item.name"
+                      :value="item.name">
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column prop="unit_price" label="单价"></el-table-column>
+            </el-table><br>
+            <el-input type="textarea" :rows="2" v-model="Rukufrom.comment" placeholder="备注"></el-input>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" size="small" @click="Rukuadd">确 定</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -587,9 +625,9 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { purchaseover, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
+  import { purchaseover, receiptsinventory, warehouseOutboundsAdd, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
-  import { spusSkusList, spusInfo } from '@/api/goods'
+  import { spusSkusList, spusInfo, spuTypesList, spuTypesInfo } from '@/api/goods'
   export default {
     components: {
     },
@@ -611,7 +649,8 @@
           purchase_id: '',
           warehouse_id: '',
           skus:[],
-          comment: ''
+          comment: '',
+          status: '',
         },
         stockfrom:{
           key: '',
@@ -623,6 +662,7 @@
         },
         dialogVisible: false,
         switchvalue: false,
+        Rudalog: false,
         position: '',
         locas:[],
         wareId: '',
@@ -698,7 +738,13 @@
           this.$t('warehouse.arrive_count'),
           this.$t('warehouse.allprice')
         ],
+        Rukufrom:{
+          warehouse_id: '',
+          comment: '',
+          skus: '',
+        },
         flag:'',
+        flag2:'',
         totaldata: [],
         options: [
           {value:'US Dollar',label: 'US Dollar'},
@@ -728,8 +774,18 @@
           { value: '3', label: '待入库' },
           { value: '4', label: '完成入库' }],
         tab_status: '0',
-        showTab: false
-      }
+        showTab: false,
+        switchtype: false,
+        rukuid: '',
+        returnFrom:{
+          warehouse_id: '',
+          tp: 3,
+          skus: [],
+          receipt_id: '',
+          typeData: [],
+          goodsTypeData: []
+      },
+    }
     },
     computed: {
       ...mapGetters([
@@ -737,6 +793,9 @@
       ])
     },
     watch: {
+      // Rudalog(val){
+        
+      // },
       tab_status(val) {
         if (this.searchForm.skip !== 0 || this.searchForm.status !== parseInt(val)) {
           this.searchForm.skip = 0
@@ -1153,6 +1212,7 @@
         })
       },
       warehousing(data){
+        this.switchtype = false
         console.log(data);
         this.stockfrom.purchase_id = data.id
         this.getstockinfo()
@@ -1165,9 +1225,9 @@
         })
         this.dialogVisible = true
         this.inwarehouseData = data.skus
-        this.inwarehouseData.forEach(item => {
-          item.count = 1
-        });
+        // this.inwarehouseData.forEach(item => {
+        //   item.count = 1
+        // });
         this.inwarehouseData.forEach((item, k) => {
           this.$set(this.inwarehouseData[k], 'position', '')
         })
@@ -1175,11 +1235,15 @@
       getstockinfo(){
         warehouseReceipts(this.stockfrom).then(res=>{
         this.totaldata = res.items
+        // console.log(this.totaldata);
         this.itemCount_to = res.total
         })
       },
       addrukudata(){
+        this.wareId = ''
+        this.switchtype = false
         this.inwarehouselog = true
+        this.inwarehouseFrom.status = ''
       },
       onchange(e){
         this.getlocationList()
@@ -1202,6 +1266,9 @@
       },
       // 确定入库
       inwarehouseAdd(){
+        if(this.switchtype){
+          this.inwarehouseFrom.status = 1
+        }
         this.inwarehouseFrom.warehouse_id = this.wareId
         this.inwarehouseFrom.skus.map(item => {
           item.count = Number(item.count)
@@ -1209,10 +1276,19 @@
         this.flag = this.inwarehouseFrom.skus.every(item => {
           return item.position != ''
         });
-          if(this.flag == true){
+        if(this.switchtype == true){
+          this.flag = true
+        }
+        if(this.flag == true){
+          // console.log(this.inwarehouseFrom.skus);
+          this.flag2 = this.inwarehouseFrom.skus.every(item => {
+            return item.merchant_type_code.length == 0 || item.merchant_type_code == null
+          });
+          // console.log(this.flag2,'74');
+          if(this.flag2 == false){
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
             warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-             if(res.meta == 0){
+              if(res.meta == 0){
                 this.commentlog = false
                 this.inwarehouselog = false
                 this.$message(this.$t('warehouse.addsuccess'))
@@ -1222,9 +1298,12 @@
               this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
             })
           }else{
-            this.$message(this.$t('warehouse.placeLoc'))
+           
           }
-        },
+        }else{
+          this.$message(this.$t('warehouse.placeLoc'))
+        }
+      },
       Searchlist(){
         this.getDataListFun()
       },
@@ -1253,6 +1332,50 @@
           this.dialogVisible = false
           this.getDataListFun()
         })
+      },
+      Rukubtn(data){
+        this.Rukufrom.skus = []
+        this.Rudalog = true
+        console.log(data);
+        this.rukuid = data.id
+        this.Rukufrom.warehouse_id = data.warehouse_id
+        this.Rukufrom.skus = data.skus
+        console.log(this.Rukufrom.skus);
+        Locationlist(data.warehouse_id).then(res=>{
+          this.locas = res.items
+        })
+      },
+      Rukuadd(){
+         this.flag = this.Rukufrom.skus.every(item => {
+          return item.position != ''
+        });
+        console.log(this.Rukufrom);
+        if(this.flag == true){
+          // this.Rukufrom.skus = JSON.stringify(this.Rukufrom.skus)
+          receiptsinventory(this.rukuid,this.Rukufrom).then(res=>{
+            this.Rudalog = false
+            this.dialogVisible = false
+            this.$message(this.$t('warehouse.addsuccess'))
+          }).catch(res=>{
+
+          })
+        }else{
+          this.$message(this.$t('warehouse.placeLoc'))
+        }
+      },
+      Returndata(data){
+        this.returnFrom.warehouse_id = data.warehouse_id
+        this.returnFrom.skus = data.skus
+        this.returnFrom.receipt_id = data.id
+        this.returnFrom.skus = JSON.stringify(this.returnFrom.skus)
+        warehouseOutboundsAdd(this.returnFrom).then(res=>{
+          this.Rudalog = false
+          this.dialogVisible = false
+          console.log(res);
+        })
+        console.log(data);
+      },
+      getGoodstype(){
         
       }
     },
@@ -1268,6 +1391,7 @@
       this.getCount()
       this.getDataListFun()
       this.getSupplierList()
+      this.getGoodstype()
     },
     created() {
     }
@@ -1356,5 +1480,9 @@
   position: absolute;
   right: 100px;
   top: -38px;
+}
+.switchbox{
+  width: 100%;
+  text-align: right;
 }
 </style>

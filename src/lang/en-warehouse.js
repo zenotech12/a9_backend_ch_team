@@ -130,4 +130,11 @@ export default{
   scrap_count: 'Scrap num',
   type2: 'status',
   thearrivalarr: 'the arrival / It has arrived / Purchase quantity',
+  Pendingreview: 'Pending review',
+  Financialapproval: 'Financial approval',
+  Leadershipapproval: 'Leadership approval',
+  Completereceipt: 'Complete receipt',
+  emptystock: 'empty stock',
+  Instock: 'In stock',
 }
+

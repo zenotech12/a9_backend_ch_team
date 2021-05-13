@@ -39,8 +39,8 @@
                       <el-form-item>
                         <el-switch @change="Searchlist"
                           v-model="totalgoodshForm.zero_inventory"
-                          active-text="没库存"
-                          inactive-text="有库存">
+                          :active-text="$t('warehouse.emptystock')"
+                          :inactive-text="$t('warehouse.Instock')">
                         </el-switch>
                       </el-form-item>
                       <el-form-item class="searchBtn">
