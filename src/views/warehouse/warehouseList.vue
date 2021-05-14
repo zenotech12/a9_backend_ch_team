@@ -321,6 +321,17 @@
             <div v-if="activeChuRuKu === '1'">
               <div class="searchBox2">
                <div class="searchBox">
+                 <div>
+                     <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm" clearable
+                                     v-model="rukuTimes"
+                                     type="daterange"
+                                     align="right"
+                                     unlink-panels
+                                     :range-separator="$t('tools.to')"
+                                     :start-placeholder="$t('tools.startDate')"
+                                     :end-placeholder="$t('tools.endDate')">
+                     </el-date-picker>
+                 </div>
                   <div>
                   <el-select v-model="rukuSearchForm.tp" clearable>
                     <el-option
@@ -411,7 +422,7 @@
                 <el-col :span="20">
                     <el-form :inline="true" :model="chuKuSearchForm">
                       <el-form-item>
-                        <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
+                        <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm" clearable
                             v-model="orderTimes"
                             type="daterange"
                             align="right"
@@ -758,12 +769,15 @@ export default {
       rukuSearchForm: {
         tp:'',
         key:'',
+        bt: '',
+        et: '',
         purchase_id: '',
         warehouse_id: '',
         supplier_id: '',
         skip: 0,
         limit: 10
       },
+      rukuTimes: [],
       locsearchFrom: {
         id: '',
         skip: 0,
@@ -835,6 +849,15 @@ export default {
   },
 
   watch: {
+    rukuTimes(val) {
+      if (val && val.length === 2) {
+        this.rukuSearchForm.bt = val[0]
+        this.rukuSearchForm.et = val[1]
+      } else {
+        this.rukuSearchForm.bt = ''
+        this.rukuSearchForm.et = ''
+      }
+    },
     currentPage_num(val) {
       this.goodsviewfrom.skip = (val - 1) * this.pageSize_num
       this.goodsviewfrom.limit = this.pageSize_num
