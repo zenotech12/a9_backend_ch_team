@@ -150,7 +150,7 @@ export default {
   Tobepurchased: 'ការទិញមិនទាន់សម្រេច',
   purchase2: 'ទិញ',
   Pendingapproval: 'រង់ចាំការយល់ព្រមផ្នែកហិរញ្ញវត្ថុ',
-  Tobeleadership : 'ដើម្បីទទួលបានការយល់ព្រមពីអ្នកដឹកនាំ',
+  Tobeleadership: 'ដើម្បីទទួលបានការយល់ព្រមពីអ្នកដឹកនាំ',
   Overviewstatistics: 'ស្ថិតិសង្ខេប',
   time: 'ពេលវេលា',
   today: 'ថ្ងៃនេះ',
@@ -160,5 +160,6 @@ export default {
   orderamount: 'ចំនួនទឹកប្រាក់បញ្ជាទិញ',
   Return: 'ត្រឡប់',
   Exchange: 'ការផ្លាស់ប្តូរ',
-  Leaderboard: 'តារាងពិន្ទុ'
+  Leaderboard: 'តារាងពិន្ទុ',
+  noGoodsTip: 'ទំនិញដែលបានទិញអស់ស្តុកជាបណ្តោះអាសន្នសូមទិញជាមុនសិន'
 }

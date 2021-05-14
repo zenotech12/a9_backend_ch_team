@@ -182,7 +182,7 @@
                       </el-select>
                     </el-form-item>
                     <el-form-item>
-                      <el-input v-model="inventoriesSearchForm.key"></el-input>
+                      <el-input v-model="inventoriesSearchForm.key" clearable></el-input>
                     </el-form-item>
                     <el-form-item>
                       <el-button type="primary" @click="searchInStorckList" size="small" icon="el-icon-search"></el-button>
@@ -570,7 +570,6 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('warehouse.stockmsg')">
-              <stock-select style="width: 300px;" :warehouseId="cangkuId" @goodSelectedInfo="currentKuncun" v-model="stockId"></stock-select>
               <el-table :data="chukuArrayData" style="width: 100%" class="inputNumber">
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
                 <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
@@ -596,6 +595,7 @@
                   </template>
                 </el-table-column>
               </el-table>
+              <stock-select v-if="chukuDlalog" :warehouseId="cangkuId" @goodSelectedInfo="currentKuncun" v-model="stockId"></stock-select>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -907,7 +907,17 @@ export default {
     },
     currentKuncun(data) {
       console.log('data', data)
-      this.chukuArrayData.push(data)
+      data['id'] = data.sku_uid + data.specification
+      const index = this.chukuArrayData.findIndex(v => {
+        if (v.id === data.id) {
+          return v
+        }
+      })
+      if (index === -1) {
+        this.chukuArrayData.push(data)
+      } else {
+        this.$message.error('库存信息已存在')
+      }
     },
     searchInStorckList() {
       this.inventoriesSearchForm.skip = 0

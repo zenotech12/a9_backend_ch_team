@@ -1,10 +1,35 @@
 <template>
     <div>
-        <el-input readonly :placeholder="$t('warehouse.Pleaseselect2')" clearable v-model="orderInfo.name" @clear="clearInput">
-            <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
-        </el-input>
+        <!--<el-input readonly :placeholder="$t('warehouse.Pleaseselect2')" clearable v-model="orderInfo.name" @clear="clearInput">-->
+            <!--<el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>-->
+        <!--</el-input>-->
+      <a class="add-btn" @click="showGoodsTable">{{$t('warehouse.Newadd')}}</a>
         <el-dialog :title="$t('warehouse.informationlist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
           <el-row>
+            <el-col :span="24">
+              <el-form :inline="true" :model="searchForm">
+                <div class="exbox">
+                  <div class="searchBox">
+                    <el-form-item>
+                      <el-select v-model="searchForm.position" clearable :placeholder="$t('warehouse.Pleaseselect')">
+                        <el-option
+                          v-for="item in positionList"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.name">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-input v-model="searchForm.key" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                    </el-form-item>
+                  </div>
+                </div>
+              </el-form>
+            </el-col>
             <el-col :span="24">
               <el-table stripe border v-loading="tableData.loading" :data="tableData.body" :row-key="productRowKey" highlight-current-row height="calc(100vh - 390px)" @current-change="selectionChange">
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
@@ -45,7 +70,7 @@
     </div>
 </template>
 <script>
-  import { warehouseInventories } from '@/api/warehouse'
+  import { warehouseInventories, waregetlocallist } from '@/api/warehouse'
   export default {
     name: 'stockSelect',
     data() {
@@ -61,13 +86,15 @@
           position: '',
           sku_uid: '',
           skip: 0,
-          limit: 10
+          limit: 10,
+          key: ''
         },
         tableData: {
           loading: true,
           body: []
         },
-        cesiId: ''
+        cesiId: '',
+        positionList: [],
       }
     },
     model: {
@@ -114,9 +141,16 @@
     },
     mounted() {
       this.searchForm.warehouse_id = this.warehouseId
+      console.log('this.warehouseId', this.warehouseId)
       this.getDataListFun()
+      this.getPositionList(this.warehouseId)
     },
     methods: {
+      getPositionList(id) {
+        waregetlocallist(id).then(res => {
+          this.positionList = res.items
+        })
+      },
       textFilter(data) {
         let index = data.indexOf('{')
         if(index != -1){
@@ -273,5 +307,17 @@
     margin-right: 10px;
     height: 100px;
     line-height: 100px;
+  }
+  .add-btn{
+    display: block;
+    width: 100%;
+    background-color: #f6f7f9;
+    line-height: 50px;
+    text-align: center;
+    font-size: 14px;
+    color: #88898a;
+    &:hover{
+      color: rgb(30, 66, 121);
+    }
   }
 </style>

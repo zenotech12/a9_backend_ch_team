@@ -325,7 +325,7 @@
                   :value="item.id">
                 </el-option>
               </el-select>
-              <el-button v-if="goodsInvList.length === 0" @click="jumpCaiGou" size="small" type="text">所购商品暂无库存，请先采购</el-button>
+              <el-button v-if="goodsInvList.length === 0" @click="jumpCaiGou" size="small" type="text">{{$t('order.noGoodsTip')}}</el-button>
             </el-form-item>
             <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
               <!--<div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>-->
@@ -793,16 +793,16 @@
         ownerShipStatuses:[
           {
              value: 0,
-             label: this.$t("order.ownerShipSelectAll"),
+             label: this.$t("order.ownerShipSelectAll")
           },
           {
              value: 1,
-             label: this.$t("order.ownerShipSelectSelf"),
+             label: this.$t("order.ownerShipSelectSelf")
           },
           {
              value: 2,
-             label: this.$t("order.ownerShipSelectUndo"),
-          },
+             label: this.$t("order.ownerShipSelectUndo")
+          }
         ],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
         payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
