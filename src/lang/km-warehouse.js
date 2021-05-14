@@ -132,4 +132,23 @@ export default{
   Completereceipt: 'បង្កាន់ដៃពេញលេញ',
   emptystock: 'ស្តុកទទេ',
   Instock: 'នៅ​ក្នុង​ស្តុក',
+  onlyLookNoInv: 'គ្រាន់តែមើលទៅអស់ពីស្តុកហើយ',
+  totalInv: 'សារពើភ័ណ្ឌសរុប',
+  purchase: 'ទិញ',
+  currentInv: 'សារពើភ័ណ្ឌបច្ចុប្បន្ន',
+  choosePurchaseGoods: 'សូមជ្រើសរើសផលិតផលដែលបានទិញ',
+  pleaseEnterNo: 'សូមបញ្ចូលលេខតាមដាន',
+  pleaseChoose: 'សូម​ជ្រើសរើស',
+  pendFinancialApproval: 'រង់ចាំការយល់ព្រមផ្នែកហិរញ្ញវត្ថុ',
+  leaderBeApproved: 'មេដឹកនាំដែលត្រូវបានអនុម័ត',
+  tobeStored: 'ដើម្បីទុក',
+  compleateStorage: 'បញ្ចប់ការផ្ទុក',
+  payTime: 'ពេលវេលាទូទាត់ប្រាក់',
+  annex: 'ឧបសម្ព័ន្ធ',
+  clickUpload: 'សូមចុចផ្ទុកឡើង',
+  all: 'ទាំងអស់',
+  unpaid: 'មិនបានបង់',
+  Paid: 'បង់លុយ',
+
+
 }

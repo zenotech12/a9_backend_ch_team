@@ -14,7 +14,7 @@
           <el-col :span="20" style="padding: 0px 15px ">
             <el-form :inline="true" :model="searchForm">
               <el-form-item>
-                <el-select v-model="searchForm.pay_status" placeholder="请选择">
+                <el-select v-model="searchForm.pay_status" :placeholder="$t('warehouse.pleaseChoose')">
                   <el-option
                     v-for="item in payStatusOption"
                     :key="item.value"
@@ -24,7 +24,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-input v-model="searchForm.no" placeholder="请输入单号" clearable></el-input>
+                <el-input v-model="searchForm.no" :placeholder="$t('warehouse.pleaseEnterNo')" clearable></el-input>
               </el-form-item>
               <el-form-item class="searchBtn">
                 <el-button type="primary" @click="Searchlist" size="small" icon="el-icon-search"></el-button>
@@ -78,10 +78,10 @@
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.type2')" width="100">
                   <template slot-scope="scope">
-                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">待财务审批</el-tag>
-                    <el-tag type="info" v-if="scope.row.status === 2">领导待审批</el-tag>
-                    <el-tag type="warning" v-if="scope.row.status === 3">待入库</el-tag>
-                    <el-tag type="warning" v-if="scope.row.status === 4">完成入库</el-tag>
+                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">{{$t('warehouse.pendFinancialApproval')}}</el-tag>
+                    <el-tag type="info" v-if="scope.row.status === 2">{{$t('warehouse.leaderBeApproved')}}</el-tag>
+                    <el-tag type="warning" v-if="scope.row.status === 3">{{$t('warehouse.tobeStored')}}</el-tag>
+                    <el-tag type="warning" v-if="scope.row.status === 4">{{$t('warehouse.compleateStorage')}}</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
@@ -395,7 +395,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="comment" :label="$t('goods.note')"></el-table-column>
-                <el-table-column prop="pay_time" label="付款时间" width="180"></el-table-column>
+                <el-table-column prop="pay_time" :label="$t('warehouse.payTime')" width="180"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="PaymentEit(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
@@ -421,7 +421,7 @@
             <el-form-item :label="$t('warehouse.PaymentAmount')">
               <price-input v-model="paiForm.paid"></price-input>
             </el-form-item>
-            <el-form-item label="付款时间">
+            <el-form-item :label="$t('warehouse.payTime')">
               <el-date-picker
                 format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"
                 v-model="paiForm.pay_time"
@@ -438,7 +438,7 @@
                 v-model="paiForm.comment">
               </el-input>
             </el-form-item>
-            <el-form-item label="附件">
+            <el-form-item :label="$t('warehouse.annex')">
               <el-upload
                 name="image"
                 :headers="fileUploadHeader"
@@ -448,7 +448,7 @@
                 multiple
                 :limit="1"
                 :file-list="fileList">
-                <el-button size="small" type="primary">点击上传</el-button>
+                <el-button size="small" type="primary">{{$t('warehouse.clickUpload')}}</el-button>
               </el-upload>
             </el-form-item>
           </el-form>
@@ -535,7 +535,7 @@
             <div v-if="!wareId" class="Msg">
               {{$t('warehouse.placewarehouse')}}
             </div>
-          <div style="display:" slot="footer" class="dialog-footer">
+          <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="inwarehouseAdd" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
@@ -631,7 +631,7 @@
           </span>
         </el-dialog>
         <!-- 选择商品类型 -->
-        
+
       </div>
     </div>
   </div>
@@ -665,15 +665,15 @@ import store from '@/store'
         },
         payStatusOption: [
           {
-            label: '所有',
+            label: this.$t('warehouse.all'),
             value: 0
           },
           {
-            label: '未付完',
+            label: this.$t('warehouse.unpaid'),
             value: 1
           },
           {
-            label: '已付完',
+            label: this.$t('warehouse.Paid'),
             value: 2
           }
         ],
@@ -807,16 +807,16 @@ import store from '@/store'
           8: this.$t('order.opt8'),
           9: this.$t('order.opt9')
         },
-        statusTab: [{value: '0', label: this.$t('tools.all')},
-          {value: '1', label: '待财务审批'},
-          {value: '2', label: '待领导审批'},
-          {value: '3', label: '待入库'},
-          {value: '4', label: '完成入库'}],
-        statusTabList: [{value: '0', label: this.$t('tools.all')},
-          {value: '1', label: '待财务审批'},
-          {value: '2', label: '待领导审批'},
-          {value: '3', label: '待入库'},
-          {value: '4', label: '完成入库'}],
+        statusTab: [{ value: '0', label: this.$t('tools.all') },
+          { value: '1', label: this.$t('warehouse.pendFinancialApproval') },
+          { value: '2', label: this.$t('warehouse.leaderBeApproved') },
+          { value: '3', label: this.$t('warehouse.tobeStored') },
+          { value: '4', label: this.$t('warehouse.compleateStorage') }],
+        statusTabList: [{ value: '0', label: this.$t('tools.all') },
+          { value: '1', label: this.$t('warehouse.pendFinancialApproval') },
+          { value: '2', label: this.$t('warehouse.leaderBeApproved') },
+          { value: '3', label: this.$t('warehouse.tobeStored') },
+          { value: '4', label: this.$t('warehouse.compleateStorage') }],
         tab_status: '0',
         showTab: false,
         fileList: [],
@@ -830,7 +830,7 @@ import store from '@/store'
           skus: [],
           receipt_id: '',
         },
-        // selecttypedalog: false, 
+        // selecttypedalog: false,
         selectdata: '',
         goodsTypeData:''
       }
