@@ -550,7 +550,7 @@
           <div v-if="activeChuRuKu === '1'">
             <el-row>
               <div class="searchbox">
-                <el-input v-model="stockfrom.key" style="margin-right: 10px"></el-input>
+                <el-input v-model="stockfrom.key" style="margin-right: 10px" clearable></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
               </div>
               <el-col :span="24" class="funcList localcss" v-if="permissionCheck('opt', '8_1')">
@@ -634,7 +634,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item>
-                    <el-input v-model="chuKuSearchForm.key"></el-input>
+                    <el-input v-model="chuKuSearchForm.key" clearable></el-input>
                   </el-form-item>
                   <el-form-item>
                     <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>

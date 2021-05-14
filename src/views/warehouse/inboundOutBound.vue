@@ -126,7 +126,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item>
-                    <el-input v-model="chuKuSearchForm.key"></el-input>
+                    <el-input v-model="chuKuSearchForm.key" clearable></el-input>
                   </el-form-item>
                   <el-form-item>
                     <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
