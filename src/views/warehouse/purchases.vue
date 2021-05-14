@@ -457,7 +457,7 @@
           </div>
         </el-dialog>
         <!-- 入库 -->
-        <el-dialog :title="$t('warehouse.Warehousing')" width="70%" @close="inwarehouselog=false" :visible.sync="inwarehouselog" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('warehouse.Warehousing')" width="90%" @close="inwarehouselog=false" :visible.sync="inwarehouselog" :close-on-click-modal="false" center >
             <el-select v-model="wareId" @change="onchange" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
                 v-for="item in warelist"
@@ -494,6 +494,19 @@
                         </el-select>
                       </template>
                     </el-table-column>
+                  <el-table-column property="specification" label="商品分类">
+                    <template  slot-scope="scope">
+                      <!-- <div v-if="scope.row.merchant_type_code.length == 0 || scope.row.merchant_type_code == null"> -->
+                        <el-cascader
+                          v-model="scope.row.merchant_type_code"
+                          :options="goodsTypeData"
+                          :props="{label: 'name', value :'tree_code' ,children : 'items'}"
+                          @change="handleChange">
+                        </el-cascader>
+                      <!-- </div> -->
+                    </template>
+                  </el-table-column>
+
                   <el-table-column property="unit_price" :label="$t('warehouse.price')">
                      <template slot-scope="scope">
                       {{scope.row.unit_price | price}}
@@ -617,6 +630,8 @@
             <el-button type="primary" size="small" @click="Rukuadd">确 定</el-button>
           </span>
         </el-dialog>
+        <!-- 选择商品类型 -->
+        
       </div>
     </div>
   </div>
@@ -814,9 +829,10 @@ import store from '@/store'
           tp: 3,
           skus: [],
           receipt_id: '',
-          typeData: [],
-          goodsTypeData: []
-        }
+        },
+        // selecttypedalog: false, 
+        selectdata: '',
+        goodsTypeData:''
       }
     },
     computed: {
@@ -1359,25 +1375,24 @@ import store from '@/store'
           this.flag = true
         }
         if(this.flag == true){
-          // console.log(this.inwarehouseFrom.skus);
           this.flag2 = this.inwarehouseFrom.skus.every(item => {
             return item.merchant_type_code.length == 0 || item.merchant_type_code == null
           });
-          // console.log(this.flag2,'74');
           if(this.flag2 == false){
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
-            warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-              if(res.meta == 0){
-                this.commentlog = false
-                this.inwarehouselog = false
-                this.$message(this.$t('warehouse.addsuccess'))
-                this.getstockinfo()
-              }
-            }).catch(res=>{
-              this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
-            })
+            // warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
+            //   if(res.meta == 0){
+            //     this.commentlog = false
+            //     this.inwarehouselog = false
+            //     this.$message(this.$t('warehouse.addsuccess'))
+            //     this.getstockinfo()
+            //   }
+            // }).catch(res=>{
+              console.log(this.inwarehouseFrom.skus);
+            //   this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
+            // })
           }else{
-
+            console.log(4444444);
           }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))
@@ -1468,7 +1483,18 @@ import store from '@/store'
         console.log(data);
       },
       getGoodstype(){
-
+        spuTypesList({type:2}).then(response=>{
+         if (response.meta === 0) {
+          this.goodsTypeData = []
+          if (response.items !== null) {
+          this.goodsTypeData = response.items
+          console.log(this.goodsTypeData,'66666');
+          }
+        }
+        })
+      },
+      handleChange(val){
+        console.log(val);
       }
     },
     mounted() {
