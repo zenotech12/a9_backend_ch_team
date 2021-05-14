@@ -506,7 +506,6 @@
                       <!-- </div> -->
                     </template>
                   </el-table-column>
-
                   <el-table-column property="unit_price" :label="$t('warehouse.price')">
                      <template slot-scope="scope">
                       {{scope.row.unit_price | price}}
@@ -518,7 +517,7 @@
                       <div class="numclass">
                         <span><el-input v-model="scope.row.count"></el-input></span>
                         <span>{{scope.row.arrive_count}}</span>
-                        <span>{{Number(scope.row.count)}}</span>
+                        <span>{{scope.row.count}}</span>
                       </div>
                     </template>
                   </el-table-column>
