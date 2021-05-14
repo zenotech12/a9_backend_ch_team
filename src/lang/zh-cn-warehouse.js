@@ -138,4 +138,24 @@ export default {
   Completereceipt: '完成收货',
   emptystock: '没库存',
   Instock: '有库存',
+  onlyLookNoInv: '仅看没库存',
+  totalInv: '总库存',
+  purchase: '采购',
+  currentInv: '当前库存',
+  choosePurchaseGoods: '请选择采购商品',
+  pleaseEnterNo: '请输入单号',
+  pleaseChoose: '请选择',
+  pendFinancialApproval: '待财务审批',
+  leaderBeApproved: '领导待审批',
+  tobeStored: '待入库',
+  compleateStorage: '完成入库',
+  payTime: '付款时间',
+  annex: '附件',
+  clickUpload: '点击上传',
+  all: '所有',
+  unpaid: '未付完',
+  Paid: '已付完',
+
+
+
 }

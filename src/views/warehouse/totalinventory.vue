@@ -38,17 +38,8 @@
                         <el-input v-model="totalgoodshForm.key" clearable></el-input>
                       </el-form-item>
                       <el-form-item>
-                        <el-checkbox v-model="totalgoodshForm.zero_inventory" @change="Searchlist">仅看没库存</el-checkbox>
+                        <el-checkbox v-model="totalgoodshForm.zero_inventory" @change="Searchlist">{{$t('warehouse.onlyLookNoInv')}}</el-checkbox>
                       </el-form-item>
-                      <!--<el-form-item label="排序">-->
-                        <!--<el-switch-->
-                          <!--v-model="totalgoodshForm.sort"-->
-                          <!--active-text="升序"-->
-                          <!--inactive-text="降序"-->
-                          <!--active-value="count"-->
-                          <!--inactive-value="-count">-->
-                        <!--</el-switch>-->
-                      <!--</el-form-item>-->
                       <el-form-item class="searchBtn">
                         <el-button type="primary" @click="Searchlist" size="small" icon="el-icon-search"></el-button>
                       </el-form-item>
@@ -95,8 +86,8 @@
             </div>
             <el-row>
               <el-col :span="12" style="display: flex;align-items: center">
-                <span class="totlaInv">总库存：{{inventory}}</span>
-                <el-button type="primary" size="small" @click="addData" v-if="totalgoodshForm.zero_inventory">采购</el-button>
+                <span class="totlaInv">{{$t('warehouse.totalInv')}}：{{inventory}}</span>
+                <el-button type="primary" size="small" @click="addData" v-if="totalgoodshForm.zero_inventory">{{$t('warehouse.purchase')}}</el-button>
               </el-col>
               <el-col :span="12">
                 <div style="text-align: right;margin-top: 10px">
@@ -176,7 +167,7 @@
                     <!--{{scope.row.nowCount}}-->
                     <!--</template>-->
                     <!--</el-table-column>-->
-                    <el-table-column prop="inventory" label="当前库存"></el-table-column>
+                    <el-table-column prop="inventory" :label="$t('warehouse.currentInv')"></el-table-column>
                     <el-table-column prop="count" :label="$t('warehouse.Purchasenum')" width="150">
                       <template slot-scope="scope">
                         <el-input v-model.number="scope.row.count"></el-input>
@@ -318,12 +309,12 @@ export default {
     },
     saveDataFunc() {
       if (this.skusArray.length === 0) {
-        this.$message.error('请选择采购商品')
+        this.$message.error(this.$t('warehouse.choosePurchaseGoods'))
         return
       }
       this.submitDisabled = true
       this.form.skus = JSON.stringify(this.skusArray)
-      console.log(this.form)
+      // console.log(this.form)
       purchaseAdd(this.form).then(res => {
         this.gettotaldata()
         this.formEditDialog = false
@@ -340,7 +331,7 @@ export default {
       this.gettotaldata()
     },
     handleSelectionChange(val) {
-      console.log('sssl', val)
+      // console.log('sssl', val)
       this.skusArray = val
     },
     getTypeList() {

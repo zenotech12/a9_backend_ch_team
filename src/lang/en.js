@@ -57,7 +57,7 @@ export default {
   liveBroadcast: 'Live Broadcast',
   freeShipingSet: 'Free shipping',
   fullReductionSet: 'Full reduction',
-  warehouseMgr: 'Warehouse management',
+  warehouseMgr: 'Warehouse Mgr',
   warehouseList: 'Warehouse list',
   suppliersMgr: 'Supplier',
   purchasesMgr: 'Purchase Order',
