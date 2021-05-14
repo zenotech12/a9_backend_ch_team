@@ -571,6 +571,7 @@
                     <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
                     <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
                     <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                    <el-col :span="2" style="text-align: center">退还数量</el-col>
                   </el-row>
                </div>
               </template>
@@ -582,6 +583,7 @@
                     <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{item.refund_count}}</el-col>
                   </el-row>
                 </div>
               </template>
@@ -1353,7 +1355,7 @@ import store from '@/store'
       getstockinfo(){
         warehouseReceipts(this.stockfrom).then(res=>{
         this.totaldata = res.items
-        // console.log(this.totaldata);
+        console.log(this.totaldata,'uuuuu');
         this.itemCount_to = res.total
         })
       },
@@ -1493,7 +1495,7 @@ import store from '@/store'
         });
         console.log(this.Rukufrom);
         if(this.flag == true){
-          // this.Rukufrom.skus = JSON.stringify(this.Rukufrom.skus)
+          this.Rukufrom.skus = JSON.stringify(this.Rukufrom.skus)
           receiptsinventory(this.rukuid,this.Rukufrom).then(res=>{
             this.Rudalog = false
             this.dialogVisible = false
@@ -1533,7 +1535,6 @@ import store from '@/store'
       },
       handleSelectionChange3(val){
         this.returnFrom.skus = val
-        console.log(this.returnFrom,'95244');
       },
       returnbtn(){
         this.returnFrom.skus.map(item => {
