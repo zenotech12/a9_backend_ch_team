@@ -156,6 +156,6 @@ export default{
   invConfirm: 'ការបញ្ជាក់ពីឃ្លាំង',
   invInfohaved: 'មានព័ត៌មានស្តុករួចទៅហើយ',
   goodsChuKuCount: 'ទំនិញសរុប',
-
+  rukuInfo: 'ព័ត៌មានក្នុងស្រុក',
 
 }

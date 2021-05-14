@@ -160,7 +160,7 @@ export default{
   invConfirm: 'Warehouse confirmation',
   invInfohaved: 'Inventory information already exists',
   goodsChuKuCount: 'Total merchandise',
-
+  rukuInfo: 'Inbound information',
 
 }
 

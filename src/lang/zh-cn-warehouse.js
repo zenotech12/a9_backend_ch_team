@@ -162,6 +162,6 @@ export default {
   invConfirm: '仓库确认',
   invInfohaved: '库存信息已存在',
   goodsChuKuCount: '商品总量',
-
+  rukuInfo: '入库信息',
 
 }
