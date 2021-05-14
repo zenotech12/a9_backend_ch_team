@@ -177,7 +177,7 @@ export default {
   Tobepurchased: 'To be purchased:',
   purchase2: 'purchase',
   Pendingapproval: 'Pending financial approval:',
-  Tobeleadership : 'To be approved by the leader:',
+  Tobeleadership: 'To be approved by the leader:',
   Overviewstatistics: 'Overview statistics',
   time: 'time',
   today: 'today',
@@ -187,6 +187,6 @@ export default {
   orderamount: 'order amount',
   Return: 'Return',
   Exchange: 'Exchange',
-  Leaderboard: 'Leaderboard'
-
+  Leaderboard: 'Leaderboard',
+  noGoodsTip: 'The purchased goods are temporarily out of stock, please purchase first'
 }

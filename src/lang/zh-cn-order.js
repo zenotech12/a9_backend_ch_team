@@ -180,7 +180,7 @@ export default {
   Tobepurchased: '待采购：',
   purchase2: '采购',
   Pendingapproval: '待财务审批：',
-  Tobeleadership : '待领导审批：',
+  Tobeleadership: '待领导审批：',
   Overviewstatistics: '概况统计',
   time: '时间',
   today: '今日',
@@ -190,5 +190,6 @@ export default {
   orderamount: '订单金额',
   Return: '退货',
   Exchange: '换货',
-  Leaderboard: '排行榜'
+  Leaderboard: '排行榜',
+  noGoodsTip: '所购商品暂无库存，请先采购'
 }
