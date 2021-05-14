@@ -319,3 +319,12 @@ export function receiptsinventory(id, data) {
     data: data
   })
 }
+
+// 仓库.出库信息.审核
+export function warehouseOutboundReview(id, data) {
+  return request({
+    url: 'warehouse-outbounds/' + id + '/review',
+    method: 'put',
+    data: data
+  })
+}

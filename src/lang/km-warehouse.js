@@ -149,6 +149,13 @@ export default{
   all: 'ទាំងអស់',
   unpaid: 'មិនបានបង់',
   Paid: 'បង់លុយ',
+  pendingProcurementReview: 'ការត្រួតពិនិត្យលទ្ធកម្មដែលមិនទាន់សម្រេច',
+  daiInvConfirm: 'ត្រូវបញ្ជាក់ដោយឃ្លាំង',
+  invConfirmComplete: 'ការបញ្ជាក់ពីឃ្លាំងបានបញ្ចប់',
+  caigoushenghe: 'ការពិនិត្យមើលលទ្ធកម្ម',
+  invConfirm: 'ការបញ្ជាក់ពីឃ្លាំង',
+  invInfohaved: 'មានព័ត៌មានស្តុករួចទៅហើយ',
+  goodsChuKuCount: 'ទំនិញសរុប',
 
 
 }

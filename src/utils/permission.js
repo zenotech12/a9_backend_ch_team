@@ -35,6 +35,8 @@ export default [
     { 'name': '操作日志', 'lk': 'optLog', 'code': '6_6', 'permissions': ['view'], 'urls': [] }
   ] },
   { 'name': '仓库管理', 'lk': 'warehouseMgr', 'code': '8', 'permissions': [], 'urls': [], 'son': [
+    { 'name': '总库存', 'lk': 'totalinventory', 'code': '8_4', 'permissions': ['view'], 'urls': [] },
+    { 'name': '出入库日志', 'lk': 'journal', 'code': '8_5', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '仓库列表', 'lk': 'warehouseList', 'code': '8_1', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '供应商', 'lk': 'suppliersMgr', 'code': '8_2', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '采购单', 'lk': 'purchasesMgr', 'code': '8_3', 'permissions': ['view', 'opt'], 'urls': [] }
