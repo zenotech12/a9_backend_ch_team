@@ -1368,10 +1368,13 @@ import store from '@/store'
           this.flag = true
         }
         if(this.flag == true){
-          this.flag2 = this.inwarehouseFrom.skus.every(item => {
+          this.flag2 = this.inwarehouseFrom.skus.some(item => {
             return item.merchant_type_code.length == 0 || item.merchant_type_code == null
           });
           if(this.flag2 == false){
+            this.inwarehouseFrom.skus.forEach(item => {
+              item.merchant_type_code = item.merchant_type_code[item.merchant_type_code.length -1]
+            });
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
             // warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
             //   if(res.meta == 0){
@@ -1385,7 +1388,7 @@ import store from '@/store'
             //   this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
             // })
           }else{
-            console.log(4444444);
+              this.$message('请选择商品类型')
           }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))
