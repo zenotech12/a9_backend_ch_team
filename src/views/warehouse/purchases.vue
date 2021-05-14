@@ -586,7 +586,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
+            <el-table-column :label="$t('tools.opt')" width = "140">
               <template slot-scope="scope">
                 <el-button type="text" @click="Rukubtn(scope.row)" v-if="scope.row.status === 1" size="small">{{$t('warehouse.Warehousing')}}</el-button>
                 <el-button type="text" @click="Returndata(scope.row)" v-if="scope.row.status === 1" size="small">退还</el-button>
@@ -609,7 +609,7 @@
             <el-table :data="Rukufrom.skus" border stripe style="width: 100%">
               <el-table-column prop="name" label="名称"></el-table-column>
               <el-table-column prop="origin" label="产地"></el-table-column>
-              <el-table-column prop="name" label="名称"></el-table-column>
+              <el-table-column prop="specification" label="规格"></el-table-column>
               <el-table-column prop="barcode" label="条形码"></el-table-column>
               <el-table-column prop="name" label="货位">
                 <template slot-scope="scope">
@@ -623,15 +623,35 @@
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column prop="unit_price" label="单价"></el-table-column>
+              <el-table-column prop="unit_price" label="单价">
+                <template slot-scope="scope">
+                  {{scope.row.unit_price | price}}
+                </template>
+              </el-table-column>
             </el-table><br>
             <el-input type="textarea" :rows="2" v-model="Rukufrom.comment" placeholder="备注"></el-input>
           <span slot="footer" class="dialog-footer">
             <el-button type="primary" size="small" @click="Rukuadd">确 定</el-button>
           </span>
         </el-dialog>
-        <!-- 选择商品类型 -->
-
+        <!-- 退还 -->
+        <el-dialog title="提示" :visible.sync="returndalog" width="70%">
+          <el-table :data="testfrom" style="width: 100%" border stripe ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange3">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="origin" label="产地"></el-table-column>
+            <el-table-column prop="specification" label="规格"></el-table-column>
+            <el-table-column prop="barcode" label="条形码"></el-table-column>
+            <el-table-column prop="count" label="数量">
+               <template slot-scope="scope">
+                 <el-input v-model="scope.row.count"></el-input>
+                </template>
+            </el-table-column>
+          </el-table>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" size="small" @click="returnbtn">确 定</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -713,6 +733,7 @@ import store from '@/store'
         pageSize_to: 10,
         itemCount_to: 0,
         form: formData,
+        returndalog: false,
         formEditDialog: false,
         formEditDialogpay: false,
         submitDisabled: false,
@@ -781,6 +802,7 @@ import store from '@/store'
         },
         flag: '',
         flag2: '',
+        flag3: '',
         totaldata: [],
         options: [
           {value: 'US Dollar', label: 'US Dollar'},
@@ -832,7 +854,8 @@ import store from '@/store'
         },
         // selecttypedalog: false,
         selectdata: '',
-        goodsTypeData:''
+        goodsTypeData:'',
+        testfrom:[],
       }
     },
     computed: {
@@ -1371,29 +1394,41 @@ import store from '@/store'
         this.flag = this.inwarehouseFrom.skus.every(item => {
           return item.position != ''
         });
+        this.flag3 = this.inwarehouseFrom.skus.every(item => {
+          return item.count != 0
+        });
         if(this.switchtype == true){
           this.flag = true
         }
         if(this.flag == true){
-          this.flag2 = this.inwarehouseFrom.skus.every(item => {
+          this.flag2 = this.inwarehouseFrom.skus.some(item => {
             return item.merchant_type_code.length == 0 || item.merchant_type_code == null
+            
           });
-          if(this.flag2 == false){
+           if(this.flag3){
+             if(this.flag2 == false){
+            this.inwarehouseFrom.skus.forEach(item => {
+              const array = []
+              array[0] = item.merchant_type_code[item.merchant_type_code.length -1]
+              item.merchant_type_code = array
+            });
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
-            // warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-            //   if(res.meta == 0){
-            //     this.commentlog = false
-            //     this.inwarehouselog = false
-            //     this.$message(this.$t('warehouse.addsuccess'))
-            //     this.getstockinfo()
-            //   }
-            // }).catch(res=>{
-              console.log(this.inwarehouseFrom.skus);
-            //   this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
-            // })
+            warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
+              if(res.meta == 0){
+                this.commentlog = false
+                this.inwarehouselog = false
+                this.$message(this.$t('warehouse.addsuccess'))
+                this.getstockinfo()
+              }
+            }).catch(res=>{
+              this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
+            })
           }else{
-            console.log(4444444);
+              this.$message('请选择商品类型')
           }
+           }else{
+             this.$message('商品数量不能为0');
+           }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))
         }
@@ -1471,16 +1506,17 @@ import store from '@/store'
         }
       },
       Returndata(data){
+        this.returndalog = true
         this.returnFrom.warehouse_id = data.warehouse_id
-        this.returnFrom.skus = data.skus
+        this.returnFrom.skus = []
+        this.testfrom = data.skus
         this.returnFrom.receipt_id = data.id
-        this.returnFrom.skus = JSON.stringify(this.returnFrom.skus)
-        warehouseOutboundsAdd(this.returnFrom).then(res=>{
-          this.Rudalog = false
-          this.dialogVisible = false
-          console.log(res);
-        })
-        console.log(data);
+        // this.returnFrom.skus = JSON.stringify(this.returnFrom.skus)
+        // warehouseOutboundsAdd(this.returnFrom).then(res=>{
+        //   this.Rudalog = false
+        //   this.dialogVisible = false
+        //   console.log(res);
+        // })
       },
       getGoodstype(){
         spuTypesList({type:2}).then(response=>{
@@ -1488,13 +1524,27 @@ import store from '@/store'
           this.goodsTypeData = []
           if (response.items !== null) {
           this.goodsTypeData = response.items
-          console.log(this.goodsTypeData,'66666');
           }
         }
         })
       },
       handleChange(val){
         console.log(val);
+      },
+      handleSelectionChange3(val){
+        this.returnFrom.skus = val
+        console.log(this.returnFrom,'95244');
+      },
+      returnbtn(){
+        this.returnFrom.skus.map(item => {
+          item.count = Number(item.count)
+        });
+        this.returnFrom.skus = JSON.stringify(this.returnFrom.skus)
+        warehouseOutboundsAdd(this.returnFrom).then(res=>{
+          this.Rudalog = false
+          this.dialogVisible = false
+          this.returndalog = false
+        })
       }
     },
     mounted() {
