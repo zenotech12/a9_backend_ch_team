@@ -129,6 +129,10 @@
             <el-tab-pane :label="$t('warehouse.goodsviwe')" name="1"></el-tab-pane>
             <el-tab-pane :label="$t('warehouse.locationviwe')" name="2"></el-tab-pane>
             <div v-if="activeName === '1'">
+              <div class="searchBox" style="margin-bottom: 10px">
+                <div><el-input v-model="goodsviewfrom.key"></el-input></div>
+                <div><el-button type="primary" icon="el-icon-search" size="mini" @click="goodsviewSearch"></el-button></div>
+              </div>
               <el-table :data="goodsviewdata" stripe border height="calc(100vh - 400px)" style="width: 100%">
                 <el-table-column label="#" width="60px">
                   <template slot-scope="scope">
@@ -1001,6 +1005,9 @@ export default {
         this.itemCount_num = res.total
         console.log(this.goodsviewdata);
       })
+    },
+    goodsviewSearch(){
+      this.getgrouplist()
     },
     getInventoriesList() {
       warehouseInventories(this.inventoriesSearchForm).then(res => {
