@@ -133,7 +133,7 @@
                 <div><el-input v-model="goodsviewfrom.key"></el-input></div>
                 <div><el-button type="primary" icon="el-icon-search" size="mini" @click="goodsviewSearch"></el-button></div>
               </div>
-              <el-table :data="goodsviewdata" stripe border height="calc(100vh - 400px)" style="width: 100%">
+              <el-table :data="goodsviewdata" stripe border height="calc(100vh - 440px)" style="width: 100%">
                 <el-table-column label="#" width="60px">
                   <template slot-scope="scope">
                     {{scope.$index + goodsviewfrom.skip + 1}}
@@ -462,14 +462,12 @@
                 </el-col>
               </div>
               <el-table stripe border :data="chukuData" height="calc(100% - 40px)">
-					<el-table-column label="#" width="60px">
+					    <el-table-column label="#" width="60px">
                   <template slot-scope="scope">
                     {{scope.$index + chuKuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
-
-
-                                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
+                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="100px">
                   <template slot-scope="scope">
                       <span v-if="scope.row.tp === 1">{{$t('warehouse.order')}}</span>
@@ -1161,6 +1159,7 @@ export default {
         if (res.meta === 0) {
           this.chukuData = res.items
           this.itemCountchuku = res.total
+          console.log(this.chukuData,'666666');
         }
       })
     },

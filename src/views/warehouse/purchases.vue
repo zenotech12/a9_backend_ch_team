@@ -506,7 +506,6 @@
                       <!-- </div> -->
                     </template>
                   </el-table-column>
-
                   <el-table-column property="unit_price" :label="$t('warehouse.price')">
                      <template slot-scope="scope">
                       {{scope.row.unit_price | price}}
@@ -518,7 +517,7 @@
                       <div class="numclass">
                         <span><el-input v-model="scope.row.count"></el-input></span>
                         <span>{{scope.row.arrive_count}}</span>
-                        <span>{{Number(scope.row.count)}}</span>
+                        <span>{{scope.row.count}}</span>
                       </div>
                     </template>
                   </el-table-column>
@@ -559,7 +558,8 @@
           </el-row>
           <el-table :data="totaldata" border stripe highlight-current-row height="calc(100vh - 420px)" style="width: 100%">
             <el-table-column prop="no" :label="$t('warehouse.number')" width="150"></el-table-column>
-            <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="150"></el-table-column>
+            <el-table-column prop="warehouse_name" label="状态" width="150"></el-table-column>
+            <el-table-column prop="status" :label="$t('warehouse.name')" width="150"></el-table-column>
             <!-- <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150"></el-table-column> -->
             <el-table-column prop="warehouse_name" label="">
               <template slot="header" slot-scope="scope">
@@ -580,7 +580,8 @@
                   <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
                     <el-col :span="8">{{item.name}}</el-col>
                     <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                    <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
                     <el-col :span="2" style="text-align: center">{{item.refund_count}}</el-col>
