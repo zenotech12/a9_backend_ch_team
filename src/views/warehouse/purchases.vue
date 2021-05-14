@@ -104,14 +104,14 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="160"></el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
+                <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '8_1') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" v-if="permissionCheck('opt', '8_3') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('tools.edit')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,2)" v-if="permissionCheck('opt', '9_1') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('global.financialApproval')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,3)" v-if="permissionCheck('opt', '9_2') && scope.row.status === 2" size="small">{{$t('global.leadershipApproval')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,100)" v-if="(permissionCheck('opt', '9_1') && scope.row.status === 2) || (permissionCheck('opt', '9_2') && scope.row.status === 3)" size="small">{{$t('tools.cancel')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
-                    <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3" size="small">{{$t('warehouse.payment2')}}</el-button>
+                    <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3 && permissionCheck('opt', '9_1')" size="small">{{$t('warehouse.payment2')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
                     <el-button type="text" @click="warehousing(scope.row)" v-if="scope.row.status === 3" size="small">{{$t('warehouse.Warehousing')}}</el-button>
                   </template>
@@ -554,7 +554,7 @@
                 <el-input v-model="stockfrom.key" style="margin-right: 10px"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
               </div>
-              <el-col :span="24" class="funcList localcss">
+              <el-col :span="24" class="funcList localcss" v-if="permissionCheck('opt', '8_1')">
                 <el-button type="primary" class="overbtn" @click="overBtn" size="mini">{{$t('warehouse.Completereceipt')}}</el-button>
                 <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
                   <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
@@ -593,7 +593,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('tools.opt')" width = "140">
+              <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_1')">
                 <template slot-scope="scope">
                   <el-button type="text" @click="Rukubtn(scope.row)" v-if="scope.row.status === 1" size="small">{{$t('warehouse.Warehousing')}}</el-button>
                   <el-button type="text" @click="Returndata(scope.row)" v-if="scope.row.status === 1" size="small">退还</el-button>
@@ -1025,6 +1025,40 @@ import store from '@/store'
           }
         ],
         orderTimes: [],
+        listV: [
+          {
+            value: 'mpay_ali',
+            label: this.$t('lang.alipay')
+          },
+          {
+            value: 'mpay_wx',
+            label: this.$t('lang.weChat')
+          },
+          {
+            value: '1',
+            label: 'Credit Card'
+          },
+          {
+            value: '15',
+            label: 'UnionPay'
+          },
+          {
+            value: '3',
+            label: 'Acleda Xpay'
+          },
+          {
+            value: '235',
+            label: 'Wing'
+          },
+          {
+            value: '11',
+            label: 'PiPay'
+          },
+          {
+            value: 'yue',
+            label: this.$t('lang.balance')
+          }
+        ],
         chukuGoodsNumber: 0
       }
     },
@@ -1177,6 +1211,15 @@ import store from '@/store'
       }
     },
     methods: {
+      payWay(data) {
+        let str = ''
+        this.listV.forEach(v => {
+          if (v.value === data) {
+            str = v.label
+          }
+        })
+        return str
+      },
       search() {
         this.chuKuSearchForm.skip = 0
         this.currentPagechuku = 1
