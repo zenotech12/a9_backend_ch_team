@@ -40,8 +40,8 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100vh - 185px)">
-              <el-table stripe border :data="tableData" height="calc(100% - 70px)">
+            <div style="height: calc(100vh - 226px)">
+              <el-table stripe border :data="tableData" height="calc(100% - 40px)">
                 <el-table-column label="#" width="60px" fixed = "left">
                   <template slot-scope="scope">
                     {{scope.$index + searchForm.skip + 1}}
