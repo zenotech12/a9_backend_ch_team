@@ -586,7 +586,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
+            <el-table-column :label="$t('tools.opt')" width = "140">
               <template slot-scope="scope">
                 <el-button type="text" @click="Rukubtn(scope.row)" v-if="scope.row.status === 1" size="small">{{$t('warehouse.Warehousing')}}</el-button>
                 <el-button type="text" @click="Returndata(scope.row)" v-if="scope.row.status === 1" size="small">退还</el-button>
@@ -781,6 +781,7 @@ import store from '@/store'
         },
         flag: '',
         flag2: '',
+        flag3: '',
         totaldata: [],
         options: [
           {value: 'US Dollar', label: 'US Dollar'},
@@ -1371,32 +1372,42 @@ import store from '@/store'
         this.flag = this.inwarehouseFrom.skus.every(item => {
           return item.position != ''
         });
+        this.flag3 = this.inwarehouseFrom.skus.every(item => {
+          return item.count != 0
+        });
         if(this.switchtype == true){
           this.flag = true
         }
         if(this.flag == true){
           this.flag2 = this.inwarehouseFrom.skus.some(item => {
             return item.merchant_type_code.length == 0 || item.merchant_type_code == null
+            
           });
-          if(this.flag2 == false){
+           if(this.flag3){
+             if(this.flag2 == false){
             this.inwarehouseFrom.skus.forEach(item => {
-              item.merchant_type_code = item.merchant_type_code[item.merchant_type_code.length -1]
+              const array = []
+              array[0] = item.merchant_type_code[item.merchant_type_code.length -1]
+              item.merchant_type_code = array
             });
             this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
-            // warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-            //   if(res.meta == 0){
-            //     this.commentlog = false
-            //     this.inwarehouselog = false
-            //     this.$message(this.$t('warehouse.addsuccess'))
-            //     this.getstockinfo()
-            //   }
-            // }).catch(res=>{
-              console.log(this.inwarehouseFrom.skus);
-            //   this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
-            // })
+            warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
+              if(res.meta == 0){
+                this.commentlog = false
+                this.inwarehouselog = false
+                this.$message(this.$t('warehouse.addsuccess'))
+                this.getstockinfo()
+              }
+            }).catch(res=>{
+              // console.log(this.inwarehouseFrom.skus);
+              this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
+            })
           }else{
               this.$message('请选择商品类型')
           }
+           }else{
+             this.$message('商品数量不能为0');
+           }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))
         }
