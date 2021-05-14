@@ -252,37 +252,42 @@
                   </template>
                 </el-table-column>
                 <!-- 操作 -->
-                <el-table-column :label="$t('tools.opt')" width="150" fixed="right"  v-if="permissionCheck('opt')">
+                <el-table-column :label="$t('tools.opt')" width="150" fixed="right"  v-if="permissionCheck('opt', '3_1') || permissionCheck('opt', '8_1')">
                   <template slot-scope="scope">
-                    <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2">
+                    <template v-if="permissionCheck('opt', '3_1')">
+                      <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">
+                        {{$t('order.modifyPrice')}}
+                      </el-button>
+                      <el-button v-if="scope.row.status === 2 || scope.row.status === 5"  type="text" @click="showExpressEditor(scope.row,3)" size="small" style="margin-left: 0">
+                        {{$t('order.changeAddress')}}
+                      </el-button>
+                      <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
+                        {{$t('order.purchaseOrderReview')}}
+                      </el-button>
+                    </template>
+                    <template v-else>
+                      <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2 || permissionCheck('opt', '8_1') ">
                       <el-button type="text" v-if="scope.row.status === 4" @click="showExpressEditor(scope.row,5)" size="small">
                       {{$t('order.modifyExpress')}}
                       </el-button>
-                      <el-button v-else type="text" @click="showExpressEditor(scope.row,1)" size="small">
+                      <el-button v-if="permissionCheck('opt', '8_1') || scope.row.status !== 4" type="text" @click="showExpressEditor(scope.row,1)" size="small">
                       {{$t('order.express')}}
                       </el-button>
                     </span>
-                    <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
-                      {{$t('order.confirmTransaction')}}
-                    </el-button>
-                    <el-button v-if="scope.row.status === 4 && scope.row.pay_way_top === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
-                      {{$t('order.confirmTransaction')}}
-                    </el-button>
-                    <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">
-                      {{$t('order.modifyPrice')}}
-                    </el-button>
-                    <el-button v-if="scope.row.status === 2 || scope.row.status === 5"  type="text" @click="showExpressEditor(scope.row,3)" size="small" style="margin-left: 0">
-                      {{$t('order.changeAddress')}}
-                    </el-button>
-                    <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17 && scope.row.expresses && scope.row.expresses.length > 0" type="text" @click="showModifyBz(scope.row, 4)" size="small" style="margin-left: 0">
-                      {{$t('order.price4Note')}}
-                    </el-button>
+                      <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
+                        {{$t('order.confirmTransaction')}}
+                      </el-button>
+                      <el-button v-if="scope.row.status === 4 && scope.row.pay_way_top === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
+                        {{$t('order.confirmTransaction')}}
+                      </el-button>
+                      <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17 && scope.row.expresses && scope.row.expresses.length > 0" type="text" @click="showModifyBz(scope.row, 4)" size="small" style="margin-left: 0">
+                        {{$t('order.price4Note')}}
+                      </el-button>
+                    </template>
                      <el-button type="text" @click="deliveryMsg(scope.row)" v-if="scope.row.status === 5 || scope.row.status === 4 || scope.row.status === 8" size="small" style="margin-left: 0">
                       {{$t('order.Delivery')}}
                     </el-button>
-                    <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
-                      {{$t('order.purchaseOrderReview')}}
-                    </el-button>
+
                   </template>
                 </el-table-column>
               </el-table>
