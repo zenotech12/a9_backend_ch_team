@@ -49,7 +49,7 @@
                 <el-table :data="Totaldata"
                           @selection-change="handleSelectionChange"
                           border stripe height="calc(100vh - 229px)" style="width: 100%">
-                  <el-table-column type="selection" width="55"></el-table-column>
+                  <el-table-column type="selection" width="55" v-if="permissionCheck('opt', '8_3')"></el-table-column>
                   <el-table-column label="#" width="60px">
                     <template slot-scope="scope">
                       {{scope.$index + totalgoodshForm.skip + 1}}
@@ -87,7 +87,7 @@
             <el-row>
               <el-col :span="12" style="display: flex;align-items: center">
                 <span class="totlaInv">{{$t('warehouse.totalInv')}}：{{inventory}}</span>
-                <el-button type="primary" size="small" @click="addData">{{$t('warehouse.purchase')}}</el-button>
+                <el-button type="primary" v-if="permissionCheck('opt', '8_3')" size="small" @click="addData">{{$t('warehouse.purchase')}}</el-button>
               </el-col>
               <el-col :span="12">
                 <div style="text-align: right;margin-top: 10px">

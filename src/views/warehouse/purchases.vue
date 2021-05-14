@@ -540,69 +540,199 @@
         </el-dialog>
         <!-- 入库列表 -->
         <el-dialog
-          :title="$t('warehouse.enterlist')"
+          :title="$t('warehouse.rukuInfo')"
           :visible.sync="dialogVisible"
           width="80%">
-          <el-row>
-            <div class="searchbox">
-              <el-input v-model="stockfrom.key" style="margin-right: 10px"></el-input>
-              <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
-            </div>
-            <el-col :span="24" class="funcList localcss">
-              <el-button type="primary" class="overbtn" @click="overBtn" size="mini">{{$t('warehouse.Completereceipt')}}</el-button>
-              <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
-                <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-                <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+          <el-tabs v-model="activeChuRuKu">
+            <el-tab-pane :label="$t('warehouse.enterlist')" name="1"></el-tab-pane>
+            <el-tab-pane label="退回列表" name="2"></el-tab-pane>
+          </el-tabs>
+          <div v-if="activeChuRuKu === '1'">
+            <el-row>
+              <div class="searchbox">
+                <el-input v-model="stockfrom.key" style="margin-right: 10px"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
               </div>
-            </el-col>
-          </el-row>
-          <el-table :data="totaldata" border stripe highlight-current-row height="calc(100vh - 420px)" style="width: 100%">
-            <el-table-column prop="no" :label="$t('warehouse.number')" width="150"></el-table-column>
-            <el-table-column prop="warehouse_name" label="状态" width="150"></el-table-column>
-            <el-table-column prop="status" :label="$t('warehouse.name')" width="150"></el-table-column>
-            <!-- <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150"></el-table-column> -->
-            <el-table-column prop="warehouse_name" label="">
-              <template slot="header" slot-scope="scope">
-               <div>
-                  <el-row style="width: 100%">
-                    <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
-                    <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
-                    <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
-                    <el-col :span="2" style="text-align: center">退还数量</el-col>
-                  </el-row>
-               </div>
-              </template>
-              <template slot-scope="scope">
-                <div class="goods">
-                  <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                    <el-col :span="8">{{item.name}}</el-col>
-                    <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                    <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>
-                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{item.refund_count}}</el-col>
-                  </el-row>
+              <el-col :span="24" class="funcList localcss">
+                <el-button type="primary" class="overbtn" @click="overBtn" size="mini">{{$t('warehouse.Completereceipt')}}</el-button>
+                <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
+                  <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+                  <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
                 </div>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('tools.opt')" width = "140">
-              <template slot-scope="scope">
-                <el-button type="text" @click="Rukubtn(scope.row)" v-if="scope.row.status === 1" size="small">{{$t('warehouse.Warehousing')}}</el-button>
-                <el-button type="text" @click="Returndata(scope.row)" v-if="scope.row.status === 1" size="small">退还</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div style="text-align: right;margin-top: 10px">
-            <el-pagination
+              </el-col>
+            </el-row>
+            <el-table :data="totaldata" border stripe highlight-current-row height="calc(100vh - 420px)" style="width: 100%">
+              <el-table-column prop="no" :label="$t('warehouse.number')" width="150"></el-table-column>
+              <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="150"></el-table-column>
+              <!-- <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150"></el-table-column> -->
+              <el-table-column prop="warehouse_name" label="">
+                <template slot="header" slot-scope="scope">
+                  <div>
+                    <el-row style="width: 100%">
+                      <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                      <el-col :span="2" style="text-align: center">退还数量</el-col>
+                    </el-row>
+                  </div>
+                </template>
+                <template slot-scope="scope">
+                  <div class="goods">
+                    <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                      <el-col :span="8">{{item.name}}</el-col>
+                      <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
+                      <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.refund_count}}</el-col>
+                    </el-row>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column :label="$t('tools.opt')" width = "140">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="Rukubtn(scope.row)" v-if="scope.row.status === 1" size="small">{{$t('warehouse.Warehousing')}}</el-button>
+                  <el-button type="text" @click="Returndata(scope.row)" v-if="scope.row.status === 1" size="small">退还</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div style="text-align: right;margin-top: 10px">
+              <el-pagination
                 :current-page.sync="currentPage_to"
                 :page-size="pageSize_to"
                 layout="total, prev, pager, next, jumper"
                 :total="itemCount_to">
-            </el-pagination>
+              </el-pagination>
+            </div>
+          </div>
+          <div v-if="activeChuRuKu === '2'">
+            <el-row>
+              <el-col :span="24">
+                <el-form :inline="true" :model="chuKuSearchForm">
+                  <el-form-item>
+                    <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
+                                    v-model="orderTimes"
+                                    type="daterange"
+                                    align="right"
+                                    unlink-panels
+                                    :range-separator="$t('tools.to')"
+                                    :start-placeholder="$t('tools.startDate')"
+                                    :end-placeholder="$t('tools.endDate')">
+                    </el-date-picker>
+                  </el-form-item>
+                  <el-form-item :label="$t('order.status')">
+                    <el-select v-model="chuKuSearchForm.status" clearable>
+                      <el-option
+                        v-for="item in optionStatus"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-input v-model="chuKuSearchForm.key"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+            </el-row>
+            <el-table stripe border :data="chukuData" height="calc(100vh - 440px)">
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + chuKuSearchForm.skip + 1}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
+              <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
+              <el-table-column :label="$t('warehouse.type')" width="100px">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.tp === 1">{{$t('warehouse.order')}}</span>
+                  <span v-if="scope.row.tp === 2">{{$t('warehouse.Scrap')}}</span>
+                  <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column width="800">
+                <template slot="header" slot-scope="scope">
+                  <el-row style="width: 100%">
+                    <el-col :span="10">{{$t('warehouse.Tradename')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.position')}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
+                  </el-row>
+                </template>
+                <template slot-scope="scope">
+                  <div class="goods">
+                    <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
+                      <el-col :span="10" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
+                      <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
+                      <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification)}}</span></el-col>
+                      <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
+                    </el-row>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="shipping_address" :label="$t('warehouse.Address')" width="200px">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.shipping_address != null">
+                      {{scope.row.shipping_address.address.province}}-
+                      {{scope.row.shipping_address.address.city}}-
+                      {{scope.row.shipping_address.address.district}}-
+                      {{scope.row.shipping_address.address.addr}}
+                      </span>
+                  <span v-if="scope.row.shipping_address == null">{{$t('warehouse.noinformation')}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="shipping_address" :label="$t('warehouse.Courierinformation')" width="200px">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.express == null">{{$t('warehouse.noinformation')}}</span>
+                  <span v-if="scope.row.express != null">
+                      <div>{{$t('warehouse.corporateName')}}: {{scope.row.express.company}}</div>
+                      <div>{{$t('warehouse.Singlenumber')}}: {{scope.row.express.novar}}</div>
+                    </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="$t('order.status')" width="180px">
+                <template slot-scope="scope">
+                  <el-tag type="warning" v-if="scope.row.status === 1 || scope.row.status === 0">{{$t('warehouse.pendingProcurementReview')}}</el-tag>
+                  <el-tag type="info" v-if="scope.row.status === 2">{{$t('warehouse.daiInvConfirm')}}</el-tag>
+                  <el-tag type="success" v-if="scope.row.status === 3">{{$t('warehouse.invConfirmComplete')}}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="150px"></el-table-column>
+              <el-table-column :label="$t('tools.opt')" width="150px" fixed = "right" v-if="permissionCheck('opt', '8_1') || permissionCheck('opt', '8_3')">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="shengheFuncChuku(scope.row.id, 2)" v-if="(scope.row.status === 1 || scope.row.status === 0) && permissionCheck('opt', '8_3')" size="small">{{$t('warehouse.caigoushenghe')}}</el-button>
+                  <el-button type="text" @click="shengheFuncChuku(scope.row.id, 3)" v-if="scope.row.status === 2  && permissionCheck('opt', '8_1')" size="small">{{$t('warehouse.invConfirm')}}</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-row>
+              <el-col :span="12" style="display: flex;align-items: center">
+                <span class="totlaInv">{{$t('warehouse.goodsChuKuCount')}}：{{chukuGoodsNumber}}</span>
+              </el-col>
+              <el-col :span="12">
+                <div style="text-align: right;margin-top: 10px">
+                  <el-pagination
+                    :current-page.sync="currentPagechuku"
+                    :page-size="pageSizechuku"
+                    layout="total, prev, pager, next, jumper"
+                    :total="itemCountchuku"
+                  ></el-pagination>
+                </div>
+              </el-col>
+            </el-row>
           </div>
         </el-dialog>
         <el-dialog
@@ -663,7 +793,7 @@
 <script>
   import { mapGetters } from 'vuex'
 import store from '@/store'
-  import { purchaseover, receiptsinventory, warehouseOutboundsAdd, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
+  import { purchaseover, warehouseOutboundReview, warehouseOutbounds, receiptsinventory, warehouseOutboundsAdd, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo, spuTypesList, spuTypesInfo } from '@/api/goods'
   import { fileUploadUrl } from '@/utils/serverConfig'
@@ -859,6 +989,42 @@ import store from '@/store'
         selectdata: '',
         goodsTypeData:'',
         testfrom:[],
+        activeChuRuKu: '1',
+        chukuData: [],
+        currentPagechuku: 1,
+        pageSizechuku: pz,
+        itemCountchuku: 0,
+        chuKuSearchForm: {
+          key: '',
+          tp: 3,
+          warehouse_id: '',
+          purchase_id: '', // 采购单id
+          status: '', // 1待采购审核 2待仓库确认 3仓库确认完成
+          bt: '',
+          et: '',
+          skip: 0,
+          limit: pz
+        },
+        optionStatus: [
+          {
+            label: this.$t('warehouse.all'),
+            value: 0
+          },
+          {
+            label: this.$t('warehouse.pendingProcurementReview'),
+            value: 1
+          },
+          {
+            label: this.$t('warehouse.daiInvConfirm'),
+            value: 2
+          },
+          {
+            label: this.$t('warehouse.invConfirmComplete'),
+            value: 3
+          }
+        ],
+        orderTimes: [],
+        chukuGoodsNumber: 0
       }
     },
     computed: {
@@ -870,6 +1036,20 @@ import store from '@/store'
       // Rudalog(val){
 
       // },
+      currentPagechuku(val) {
+        this.chuKuSearchForm.skip = (val - 1) * this.pageSizechuku
+        this.chuKuSearchForm.limit = this.pageSizechuku
+        this.getChuKuData()
+      },
+      orderTimes(val) {
+        if (val && val.length === 2) {
+          this.chuKuSearchForm.bt = val[0]
+          this.chuKuSearchForm.et = val[1]
+        } else {
+          this.chuKuSearchForm.bt = ''
+          this.chuKuSearchForm.et = ''
+        }
+      },
       tab_status(val) {
         if (this.searchForm.skip !== 0 || this.searchForm.status !== parseInt(val)) {
           this.searchForm.skip = 0
@@ -996,6 +1176,25 @@ import store from '@/store'
       }
     },
     methods: {
+      search() {
+        this.chuKuSearchForm.skip = 0
+        this.currentPagechuku = 1
+        this.getChuKuData()
+      },
+      shengheFuncChuku(id, number) {
+        warehouseOutboundReview(id, { status: number }).then(res => {
+          this.getChuKuData()
+        })
+      },
+      getChuKuData() {
+        warehouseOutbounds(this.chuKuSearchForm).then(res => {
+          if (res.meta === 0) {
+            this.chukuData = res.items
+            this.itemCountchuku = res.total
+            this.chukuGoodsNumber = res.count
+          }
+        })
+      },
       // 海外购图标显示
       otherLogo(text) {
         // console.log(text);
@@ -1335,8 +1534,10 @@ import store from '@/store'
       warehousing(data){
         this.switchtype = false
         console.log(data);
+        this.chuKuSearchForm.purchase_id = data.id
         this.stockfrom.purchase_id = data.id
         this.getstockinfo()
+        this.getChuKuData()
         this.inwarehouseFrom.purchase_id = ''
         this.wareId = ''
         this.inwarehouseFrom.comment = ''
@@ -1356,7 +1557,6 @@ import store from '@/store'
       getstockinfo(){
         warehouseReceipts(this.stockfrom).then(res=>{
         this.totaldata = res.items
-        console.log(this.totaldata,'uuuuu');
         this.itemCount_to = res.total
         })
       },
@@ -1406,7 +1606,7 @@ import store from '@/store'
         if(this.flag == true){
           this.flag2 = this.inwarehouseFrom.skus.some(item => {
             return item.merchant_type_code.length == 0 || item.merchant_type_code == null
-            
+
           });
            if(this.flag3){
              if(this.flag2 == false){
@@ -1543,8 +1743,8 @@ import store from '@/store'
         });
         this.returnFrom.skus = JSON.stringify(this.returnFrom.skus)
         warehouseOutboundsAdd(this.returnFrom).then(res=>{
+          this.getstockinfo()
           this.Rudalog = false
-          this.dialogVisible = false
           this.returndalog = false
         })
       }
@@ -1569,6 +1769,13 @@ import store from '@/store'
 </script>
 
 <style lang="scss" scoped>
+  .totlaInv {
+    height: 48px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+  }
 .goodSkusBox {
   cursor: pointer;
   span {

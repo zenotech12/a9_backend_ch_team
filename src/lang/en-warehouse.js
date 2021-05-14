@@ -153,6 +153,14 @@ export default{
   all: 'All',
   unpaid: 'Unpaid',
   Paid: 'Paid',
+  pendingProcurementReview: 'Pending procurement review',
+  daiInvConfirm: 'To be confirmed by the warehouse',
+  invConfirmComplete: 'Warehouse confirmation completed',
+  caigoushenghe: 'Procurement review',
+  invConfirm: 'Warehouse confirmation',
+  invInfohaved: 'Inventory information already exists',
+  goodsChuKuCount: 'Total merchandise',
+  rukuInfo: 'Inbound information',
 
 }
 

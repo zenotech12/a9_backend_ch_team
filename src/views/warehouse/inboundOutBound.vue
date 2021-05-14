@@ -105,10 +105,20 @@
                                     :end-placeholder="$t('tools.endDate')">
                     </el-date-picker>
                   </el-form-item>
-                  <el-form-item>
+                  <el-form-item :label="$t('warehouse.type')">
                     <el-select v-model="chuKuSearchForm.tp" clearable>
                       <el-option
                         v-for="item in options2"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item :label="$t('order.status')">
+                    <el-select v-model="chuKuSearchForm.status" clearable>
+                      <el-option
+                        v-for="item in optionStatus"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -139,7 +149,7 @@
                   <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
                 </template>
               </el-table-column>
-              <el-table-column>
+              <el-table-column width="800">
                 <template slot="header" slot-scope="scope">
                   <el-row style="width: 100%">
                     <el-col :span="10">{{$t('warehouse.Tradename')}}</el-col>
@@ -185,16 +195,36 @@
                     </span>
                 </template>
               </el-table-column>
+              <el-table-column :label="$t('order.status')" width="180px">
+                <template slot-scope="scope">
+                  <el-tag type="warning" v-if="scope.row.status === 1 || scope.row.status === 0">{{$t('warehouse.pendingProcurementReview')}}</el-tag>
+                  <el-tag type="info" v-if="scope.row.status === 2">{{$t('warehouse.daiInvConfirm')}}</el-tag>
+                  <el-tag type="success" v-if="scope.row.status === 3">{{$t('warehouse.invConfirmComplete')}}</el-tag>
+                </template>
+              </el-table-column>
               <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="150px"></el-table-column>
+              <el-table-column :label="$t('tools.opt')" width="150px" fixed = "right" v-if="permissionCheck('opt', '8_1') || permissionCheck('opt', '8_3') || permissionCheck('opt', '8_5')">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="shengheFuncChuku(scope.row.id, 2)" v-if="(scope.row.status === 1 || scope.row.status === 0) && permissionCheck('opt', '8_3')" size="small">{{$t('warehouse.caigoushenghe')}}</el-button>
+                  <el-button type="text" @click="shengheFuncChuku(scope.row.id, 3)" v-if="scope.row.status === 2  && permissionCheck('opt', '8_1')" size="small">{{$t('warehouse.invConfirm')}}</el-button>
+                </template>
+              </el-table-column>
             </el-table>
-            <div style="text-align: right;margin-top: 10px">
-              <el-pagination
-                :current-page.sync="currentPagechuku"
-                :page-size="pageSizechuku"
-                layout="total, prev, pager, next, jumper"
-                :total="itemCountchuku"
-              ></el-pagination>
-            </div>
+            <el-row>
+              <el-col :span="12" style="display: flex;align-items: center">
+                <span class="totlaInv">{{$t('warehouse.goodsChuKuCount')}}：{{chukuGoodsNumber}}</span>
+              </el-col>
+              <el-col :span="12">
+                <div style="text-align: right;margin-top: 10px">
+                  <el-pagination
+                    :current-page.sync="currentPagechuku"
+                    :page-size="pageSizechuku"
+                    layout="total, prev, pager, next, jumper"
+                    :total="itemCountchuku"
+                  ></el-pagination>
+                </div>
+              </el-col>
+            </el-row>
           </div>
         </el-col>
       </el-row>
@@ -205,6 +235,7 @@
 <script>
 import {
   warehouseReceipts,
+  warehouseOutboundReview,
   warehouseOutbounds
 } from '@/api/warehouse'
 export default {
@@ -220,6 +251,7 @@ export default {
         key: '',
         tp: '',
         warehouse_id: '',
+        status: '', // 1待采购审核 2待仓库确认 3仓库确认完成
         bt: '',
         et: '',
         skip: 0,
@@ -252,7 +284,26 @@ export default {
         { value: '2', label: this.$t('warehouse.Scrap') },
         { value: '3', label: this.$t('warehouse.return') }
       ],
-      rukuTimes: []
+      rukuTimes: [],
+      optionStatus: [
+        {
+          label: this.$t('warehouse.all'),
+          value: 0
+        },
+        {
+          label: this.$t('warehouse.pendingProcurementReview'),
+          value: 1
+        },
+        {
+          label: this.$t('warehouse.daiInvConfirm'),
+          value: 2
+        },
+        {
+          label: this.$t('warehouse.invConfirmComplete'),
+          value: 3
+        }
+      ],
+      chukuGoodsNumber: 0
     }
   },
   watch: {
@@ -286,6 +337,11 @@ export default {
     }
   },
   methods: {
+    shengheFuncChuku(id, number) {
+      warehouseOutboundReview(id, { status: number }).then(res => {
+        this.getChuKuData()
+      })
+    },
     textFilter(data) {
       const index = data.indexOf('{')
       if (index !== -1) {
@@ -316,6 +372,7 @@ export default {
         if (res.meta === 0) {
           this.chukuData = res.items
           this.itemCountchuku = res.total
+          this.chukuGoodsNumber = res.count
         }
       })
     },
@@ -364,4 +421,11 @@ export default {
       margin-left: 0;
     }
   }
+.totlaInv {
+  height: 48px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  margin: 0 20px;
+}
 </style>

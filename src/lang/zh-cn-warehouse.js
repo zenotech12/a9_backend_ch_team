@@ -155,7 +155,13 @@ export default {
   all: '所有',
   unpaid: '未付完',
   Paid: '已付完',
-
-
+  pendingProcurementReview: '待采购审核',
+  daiInvConfirm: '待仓库确认',
+  invConfirmComplete: '仓库确认完成',
+  caigoushenghe: '采购审核',
+  invConfirm: '仓库确认',
+  invInfohaved: '库存信息已存在',
+  goodsChuKuCount: '商品总量',
+  rukuInfo: '入库信息',
 
 }
