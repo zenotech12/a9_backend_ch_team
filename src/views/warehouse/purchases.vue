@@ -528,6 +528,16 @@
                         </el-select>
                       </template>
                     </el-table-column>
+                  <el-table-column property="specification" label="商品分类">
+                    <template  slot-scope="scope">
+                        <el-cascader
+                          v-model="scope.row.merchant_type_code"
+                          :options="goodsTypeData"
+                          @change="handleChange">
+                        </el-cascader>
+                    </template>
+                  </el-table-column>
+
                   <el-table-column property="unit_price" :label="$t('warehouse.price')">
                      <template slot-scope="scope">
                       {{scope.row.unit_price | price}}
@@ -651,6 +661,8 @@
             <el-button type="primary" size="small" @click="Rukuadd">确 定</el-button>
           </span>
         </el-dialog>
+        <!-- 选择商品类型 -->
+        
       </div>
     </div>
   </div>
@@ -849,9 +861,10 @@ import store from '@/store'
           tp: 3,
           skus: [],
           receipt_id: '',
-          typeData: [],
-          goodsTypeData: []
-        }
+        },
+        // selecttypedalog: false, 
+        selectdata: '',
+        goodsTypeData:''
       }
     },
     computed: {
@@ -1380,7 +1393,7 @@ import store from '@/store'
               this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
             })
           }else{
-
+            console.log(4444444);
           }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))
@@ -1471,7 +1484,18 @@ import store from '@/store'
         console.log(data);
       },
       getGoodstype(){
-
+        spuTypesList({type:2}).then(response=>{
+         if (response.meta === 0) {
+          this.goodsTypeData = []
+          if (response.items !== null) {
+          this.goodsTypeData = [{ name: this.$t('tools.all'), code: '', id: '' }, ...response.items]
+          console.log(this.goodsTypeData);
+          }
+        }
+        })
+      },
+      handleChange(val){
+        console.log(val);
       }
     },
     mounted() {
