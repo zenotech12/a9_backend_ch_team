@@ -395,7 +395,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="comment" :label="$t('goods.note')"></el-table-column>
-                <el-table-column prop="pay_time" :label="$t('warehouse.OrderTime')" width="180"></el-table-column>
+                <el-table-column prop="pay_time" label="付款时间" width="180"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="PaymentEit(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
@@ -421,7 +421,7 @@
             <el-form-item :label="$t('warehouse.PaymentAmount')">
               <price-input v-model="paiForm.paid"></price-input>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.OrderTime')">
+            <el-form-item label="付款时间">
               <el-date-picker
                 format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"
                 v-model="paiForm.pay_time"
@@ -1180,11 +1180,15 @@ import store from '@/store'
         this.paiForm.pay_time = data.pay_time
         this.paiForm.comment = data.comment
         this.paiForm.attach_file = data.attach_file
-        const obj = {
-          name: data.attach_file,
-          url: data.attach_file_conv
+        if (data.attach_file !== '') {
+          const obj = {
+            name: data.attach_file,
+            url: data.attach_file_conv
+          }
+          this.fileList[0] = obj
+        } else {
+          this.fileList = []
         }
-        this.fileList[0] = obj
         this.payaddDialog = true
       },
       Paycomplete(val) {
@@ -1235,6 +1239,9 @@ import store from '@/store'
         this.paiForm.id = ''
         this.paiForm.paid = 0
         this.paiForm.pay_time = ''
+        this.paiForm.comment = ''
+        this.paiForm.attach_file = ''
+        this.fileList = []
         this.payaddDialog = true
       },
       showDataEditor(data) {
