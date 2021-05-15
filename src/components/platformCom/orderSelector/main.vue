@@ -208,7 +208,7 @@
         searchForm: {
           key: '',
           user_id: '',
-          order_status: 0,
+          order_status: 5,
           no: '',
           skip: 0,
           limit: 10,
