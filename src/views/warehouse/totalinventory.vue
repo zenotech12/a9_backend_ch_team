@@ -331,7 +331,10 @@ export default {
     },
     handleSelectionChange(val) {
       // console.log('sssl', val)
-      this.skusArray = val
+      val.forEach(v => {
+        v['shouJia'] = v.unit_price
+      })
+      this.skusArray = JSON.parse(JSON.stringify(val))
     },
     getTypeList() {
       spuTypesList({ type: 2 }).then(response => {
