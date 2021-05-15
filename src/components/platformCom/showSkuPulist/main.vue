@@ -27,7 +27,11 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
+        <el-table-column :label="$t('warehouse.pecifications')">
+          <template slot-scope="scope">
+            {{textFilter(scope.row.specification)}}
+          </template>
+        </el-table-column>
         <el-table-column :label="$t('warehouse.barCode')">
           <template slot-scope="scope">
             <el-input v-model="scope.row.barcode"></el-input>

@@ -33,9 +33,9 @@
           <template slot-scope="scope">
             <div class="goods">
               <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                <el-col :span="10">{{item.name}}</el-col>
+                <el-col :span="10" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                 <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                <el-col :span="3" style="text-align: center">{{item.specification}}</el-col>
+                <el-col :span="3" style="text-align: center">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No'}}</el-col>
                 <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                 <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                 <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
@@ -102,13 +102,13 @@ export default {
       });
     },
     confirmButton(data) {
-      
+
     },
-    handleCurrentChange(data,val,k){
-        this.$emit("dataid",data)
-        this.$emit("getvalue",val)
-        this.$emit("key",k)
-    },  
+    handleCurrentChange(data, val, k) {
+      this.$emit("dataid", data)
+      this.$emit("getvalue", val)
+      this.$emit("key", k)
+    },
     setCurrent(row) {
         this.$refs.singleTable.setCurrentRow(row);
       },

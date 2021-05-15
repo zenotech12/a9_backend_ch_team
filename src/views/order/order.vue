@@ -127,7 +127,7 @@
                       <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.servicer_operations ? scope.row.servicer_operations[scope.row.servicer_operations.length-1].receiver_name:''}}</a>
                     </el-popover>
                     <div>
-                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id)" size="small">
+                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'))" size="small">
                       {{$t('order.ownerShipGet')}}
                     </el-button>
                     <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
@@ -313,7 +313,7 @@
           </el-col>
         </el-row>
         <!-- 修改信息模态框 -->
-        <el-dialog :title="dialogTitle" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+        <el-dialog :title="dialogTitle" width="800px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px">
             <el-form-item :label="$t('order.no')">
               {{expressOrder.no}}
@@ -373,7 +373,7 @@
               {{userComment}}
             </el-form-item>
             <el-form-item :label="$t('order.deliveryRecord')">
-              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}}({{expressOrder.expresses && expressOrder.expresses.length}})</el-button>
+              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}}{{expressOrder.expresses && expressOrder.expresses.length}}</el-button>
               <!--<el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-else>{{$t('order.modifyWuLiuInfo')}}</el-button>-->
             </el-form-item>
             <el-form-item :label="$t('order.businessBz')" v-if="expressOrder.merchant_comments && expressOrder.merchant_comments.length > 0">
@@ -1013,12 +1013,14 @@
         })
       },
       // 认领订单
-      orderOwnerShipGetFunc(id) {
-         orderOwnerShipGet(id).then(res => {
-           this.$message.success("success")
-           this.getDataListFun()
-           this.getOrderCount()
-         })
+      orderOwnerShipGetFunc(id, check) {
+        if (check) {
+          orderOwnerShipGet(id).then(res => {
+            this.$message.success("success")
+            this.getDataListFun()
+            this.getOrderCount()
+          })
+        }
       },
       // 转让订单
       orderOwnerShipTransFunc(id, userid) {
