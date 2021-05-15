@@ -1611,9 +1611,7 @@ import store from '@/store'
       },
       onchange(e){
         this.getlocationList()
-        this.inwarehouseFrom.skus.map(item => {
-          item.position = ''
-        });
+       
       },
       // 仓库位置
       getlocationList(){
