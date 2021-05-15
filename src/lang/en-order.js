@@ -188,5 +188,6 @@ export default {
   Return: 'Return',
   Exchange: 'Exchange',
   Leaderboard: 'Leaderboard',
-  noGoodsTip: 'The purchased goods are temporarily out of stock, please purchase first'
+  noGoodsTip: 'The purchased goods are temporarily out of stock, please purchase first',
+  cancelClaim: 'Unclaim'
 }

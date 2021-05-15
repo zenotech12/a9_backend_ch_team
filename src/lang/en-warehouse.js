@@ -161,6 +161,12 @@ export default{
   invInfohaved: 'Inventory information already exists',
   goodsChuKuCount: 'Total merchandise',
   rukuInfo: 'Inbound information',
-
+  Tobetested: 'To be tested',
+  Categories: 'Categories',
+  Returntolist: 'Return to list',
+  returnednum: 'Quantity returned',
+  return3: 'return',
+  confirmmsg: 'confirm',
+  goodstype: 'Please select product type'
 }
 

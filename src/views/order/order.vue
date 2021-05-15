@@ -144,7 +144,7 @@
                         {{$t('tools.confirm')}}
                       </el-button>
                         <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
-                          取消认领
+                          {{$t('order.cancelClaim')}}
                         </el-button>
                       </div>
                       <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
@@ -690,7 +690,7 @@
         searchParamKey: 'orderList',
         doWatch: true,
         showTab: false,
-        servicerOptArr: { 1:this.$t('order.servicerOpt1'), 2 : this.$t('order.servicerOpt2'), 3: '取消认领' },
+        servicerOptArr: { 1:this.$t('order.servicerOpt1'), 2 : this.$t('order.servicerOpt2'), 3: this.$t('order.cancelClaim') },
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],

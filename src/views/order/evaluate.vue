@@ -12,8 +12,8 @@
               <el-form-item>
                 <el-radio-group v-model="searchForm.comprehensive_lv" size="small">
                   <el-radio-button v-for="(item, k) in commentLevel"
-                                   :key="k"
-                                   :label="k">
+                    :key="k"
+                    :label="k">
                     {{item}}
                   </el-radio-button>
                 </el-radio-group>
@@ -21,15 +21,15 @@
               <el-form-item>
                 <el-radio-group v-model="searchForm.replied" size="small">
                   <el-radio-button v-for="(item, k) in commentReplied"
-                                   :key="k"
-                                   :label="k">
+                    :key="k"
+                    :label="k">
                     {{item}}
                   </el-radio-button>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item class="searchBtn">
+              <!-- <el-form-item class="searchBtn">
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
-              </el-form-item>
+              </el-form-item> -->
             </el-form>
           </el-col>
         </el-row>
@@ -204,6 +204,12 @@
         this.searchForm.skip = 0
         this.searchForm.limit = val
         this.getDataListFun()
+      },
+      'searchForm.comprehensive_lv'(val){
+        this.getDataListFun()
+      },
+      'searchForm.replied'(val){
+        this.getDataListFun()
       }
     },
     methods: {
@@ -214,8 +220,7 @@
             this.commentReplied = [this.$t('tools.all'),
               this.$t('order.repliedResponded') + '(' + res.item.replied + ')',
               this.$t('order.notRespondingReviews') + '(' + res.item.noreply + ')']
-            // console.log('res', res)
-            this.commentLevel = [this.$t('tools.all'),
+              this.commentLevel = [this.$t('tools.all'),
               this.$t('order.commentStar1') + '(' + res.item.bad + ')',
               this.$t('order.commentStar2') + '(' + res.item.medium + ')',
               this.$t('order.commentStar3') + '(' + res.item.good + ')']
@@ -282,9 +287,9 @@
           console.log(res);
         })
       },
-      search() {
-        this.getDataListFun()
-      }
+      // search() {
+      //   this.getDataListFun()
+      // }
     },
     mounted() {
       this.getEvaluationsCount()

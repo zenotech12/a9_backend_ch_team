@@ -371,7 +371,7 @@
                   </el-form>
                 </el-col>
               </el-row>
-              <el-table stripe border :data="rukuData" height="calc(100vh - 450px)">
+              <el-table stripe border :data="rukuData" height="calc(100vh - 475px)">
                 <el-table-column label="#" width="60px" fixed = "left">
                   <template slot-scope="scope">
                     {{scope.$index + rukuSearchForm.skip + 1}}
@@ -460,7 +460,7 @@
                         <el-input v-model="chuKuSearchForm.key" clearable></el-input>
                       </el-form-item>
                       <el-form-item>
-                        <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                        <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
                       </el-form-item>
                     </el-form>
                 </el-col>

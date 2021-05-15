@@ -74,7 +74,6 @@
                          <i class="el-icon-caret-bottom jiantouC" @click="sortFunc('-count')"  :class="{jiantouBlue: totalgoodshForm.sort === '-count'}"></i>
                         </span>
                       </div>
-
                     </template>
                     <template slot-scope="scope">
                       <span class="numcss" @click="numinfo(scope.row)">{{scope.row.count}}</span>
