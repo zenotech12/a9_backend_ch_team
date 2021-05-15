@@ -163,7 +163,8 @@
                 <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
                     <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
-                      <el-image class="image" style="width: 400px; height: 100px" :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                      <img class="image imagecss" :src="getImageUrl(gInfo.goods_info.sku_img, 100)">
+              
                       <div class="g-info">
                         <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
                           <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5 && gInfo.goods_info.site_id" alt="">
@@ -175,7 +176,6 @@
                         </p>
                         <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
                       </div>
-                      <div class="clear"></div>
                     </div>
                   </template>
                 </el-table-column>
@@ -1489,7 +1489,7 @@
     clear: both;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    // justify-content: space-between;
     &:last-child {
       border-bottom: none;
       margin-bottom: 0px;
@@ -1500,7 +1500,7 @@
     }
     .g-info{
       text-align: left;
-      padding-left: 110px;
+      padding-left: 10px!important;
       p{
         margin: 0px;
         padding: 3px 0px;
@@ -1571,5 +1571,10 @@
   .num{
       color: rgb(53, 123, 226);
       cursor: pointer;
+  }
+
+  .imagecss{
+    width: 100px !important;
+    object-fit: cover;
   }
 </style>

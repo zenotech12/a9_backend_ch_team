@@ -974,7 +974,7 @@ export default {
       if (index === -1) {
         this.chukuArrayData.push(data)
       } else {
-        this.$message.error('库存信息已存在')
+        this.$message.error(this.$t('warehouse.invInfohaved'))
       }
     },
     searchInStorckList() {

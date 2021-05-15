@@ -169,5 +169,8 @@ export default {
   returnednum: '退还数量',
   return3: '退还',
   confirmmsg: '确认',
-  goodstype: '请选择商品类型'
+  goodstype: '请选择商品类型',
+  Approvalrecord: '审批记录',
+  Approve: '审批',
+  Pleasenote: '请输入备注'
 }

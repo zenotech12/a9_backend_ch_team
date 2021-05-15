@@ -85,7 +85,7 @@
                     <el-tag type="danger" v-if="scope.row.status === 100">{{$t('tools.cancel')}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column label="审批记录" width="100">
+                <el-table-column :label="$t('warehouse.Approvalrecord')" width="100">
                   <template slot-scope="scope">
                     <el-popover placement="left" width="300" trigger="click">
                         <el-timeline style="margin-top: 10px">
@@ -107,7 +107,7 @@
                           </el-timeline-item>
                         </el-timeline>
                       <el-button type="text" slot="reference">
-                        审批记录
+                        {{$t('warehouse.Approvalrecord')}}
                         <i class="el-icon-arrow-right"></i>
                       </el-button>
                     </el-popover>
@@ -826,13 +826,13 @@
           </span>
         </el-dialog>
         <!--审批备注-->
-        <el-dialog title="审批" :visible.sync="shengpiNoteDialog" width="40%">
+        <el-dialog :title="$t('warehouse.Approve')" :visible.sync="shengpiNoteDialog" width="40%">
           <el-form label-width="100px" :model="shengheForm">
             <el-form-item :label="$t('order.note')">
               <el-input
                 type="textarea"
                 :rows="2"
-                placeholder="请输入备注"
+                :placeholder="$t('warehouse.Pleasenote')"
                 v-model="shengheForm.comment">
               </el-input>
             </el-form-item>
