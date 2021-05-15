@@ -163,7 +163,7 @@
                 <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
                     <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
-                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
+                      <el-image class="image" style="width: 400px; height: 100px" :src="getImageUrl(gInfo.goods_info.sku_img, 100)"  fit="cover"></el-image>
                       <div class="g-info">
                         <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
                           <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5 && gInfo.goods_info.site_id" alt="">

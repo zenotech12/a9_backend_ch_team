@@ -677,13 +677,13 @@
         >
         <div class="localval">
           <span>{{$t('warehouse.line')}}</span>
-          <div><el-input v-model="linestar"></el-input></div>&nbsp;-&nbsp;
-          <div><el-input v-model="lineend"></el-input></div>
+          <div><el-input v-model="linestar" type='number' ></el-input></div>&nbsp;-&nbsp;
+          <div><el-input v-model="lineend" type='number' ></el-input></div>
         </div>
         <div class="localval">
           <span>{{$t('warehouse.column')}}</span>
-          <div><el-input v-model="columnstar"></el-input></div>&nbsp;-&nbsp;
-          <div><el-input v-model="columnend"></el-input></div>
+          <div><el-input v-model="columnstar" type='number' ></el-input></div>&nbsp;-&nbsp;
+          <div><el-input v-model="columnend" type='number' ></el-input></div>
         </div>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="wareLocaladd()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -1459,4 +1459,5 @@ export default {
   align-items: center;
   margin: 0 20px;
 }
+    
 </style>
