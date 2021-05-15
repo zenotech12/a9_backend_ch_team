@@ -163,5 +163,11 @@ export default {
   invInfohaved: '库存信息已存在',
   goodsChuKuCount: '商品总量',
   rukuInfo: '入库信息',
-
+  Tobetested: '待检测',
+  Categories: '商品分类',
+  Returntolist: '退回列表',
+  returnednum: '退还数量',
+  return3: '退还',
+  confirmmsg: '确认',
+  goodstype: '请选择商品类型'
 }

@@ -157,5 +157,11 @@ export default{
   invInfohaved: 'មានព័ត៌មានស្តុករួចទៅហើយ',
   goodsChuKuCount: 'ទំនិញសរុប',
   rukuInfo: 'ព័ត៌មានក្នុងស្រុក',
-
+  Tobetested: 'ដើម្បីធ្វើតេស្ត',
+  Categories: 'ប្រភេទ',
+  Returntolist: 'ត្រឡប់ទៅបញ្ជីវិញ',
+  returnednum: 'បរិមាណត្រឡប់មកវិញ',
+  return3: 'ត្រឡប់មកវិញ',
+  confirmmsg: 'បញ្ជាក់',
+  goodstype: 'សូមជ្រើសរើសប្រភេទផលិតផល'
 }

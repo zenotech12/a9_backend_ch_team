@@ -193,7 +193,7 @@
                     <!--{{scope.row.nowCount}}-->
                   <!--</template>-->
                 <!--</el-table-column>-->
-                <el-table-column prop="inventory" label="当前库存"></el-table-column>
+                <el-table-column prop="inventory" :label="$t('warehouse.currentInv')"></el-table-column>
 
                 <el-table-column prop="count" :label="$t('warehouse.Purchasenum')" width="150">
                   <template slot-scope="scope">
@@ -358,7 +358,7 @@
                     {{scope.row.title}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="inventory" label="当前库存"></el-table-column>
+                <el-table-column prop="inventory" :label="$t('warehouse.currentInv')"></el-table-column>
                 <el-table-column prop="barcode" :label="$t('goods.barcode')">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.barcode"></el-input>
@@ -469,7 +469,7 @@
             </el-select>
             <div v-if="wareId">
               <div class="switchbox">
-                <span>待检测</span>
+                <span>{{$t('warehouse.Tobetested')}}</span>
                 <el-switch v-model="switchtype" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
               </div>
               <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
@@ -494,7 +494,7 @@
                         </el-select>
                       </template>
                     </el-table-column>
-                  <el-table-column property="specification" label="商品分类">
+                  <el-table-column property="specification" :label="$t('warehouse.Categories')">
                     <template  slot-scope="scope">
                       <!-- <div v-if="scope.row.merchant_type_code.length == 0 || scope.row.merchant_type_code == null"> -->
                         <el-cascader
@@ -545,7 +545,7 @@
           width="80%">
           <el-tabs v-model="activeChuRuKu">
             <el-tab-pane :label="$t('warehouse.enterlist')" name="1"></el-tab-pane>
-            <el-tab-pane label="退回列表" name="2"></el-tab-pane>
+            <el-tab-pane :label="$t('warehouse.Returntolist')" name="2"></el-tab-pane>
           </el-tabs>
           <div v-if="activeChuRuKu === '1'">
             <el-row>
@@ -575,7 +575,7 @@
                       <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
-                      <el-col :span="2" style="text-align: center">退还数量</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.returnednum')}}</el-col>
                     </el-row>
                   </div>
                 </template>
@@ -595,7 +595,7 @@
               <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_1')">
                 <template slot-scope="scope">
                   <el-button type="text" @click="Rukubtn(scope.row)" v-if="scope.row.status === 1" size="small">{{$t('warehouse.Warehousing')}}</el-button>
-                  <el-button type="text" @click="Returndata(scope.row)" v-if="scope.row.status === 1" size="small">退还</el-button>
+                  <el-button type="text" @click="Returndata(scope.row)" v-if="scope.row.status === 1" size="small">{{$t('warehouse.return3')}}</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -736,15 +736,15 @@
           </div>
         </el-dialog>
         <el-dialog
-          title="入库"
+          :title="$t('warehouse.Warehousing')"
           :visible.sync="Rudalog"
           width="70%">
             <el-table :data="Rukufrom.skus" border stripe style="width: 100%">
-              <el-table-column prop="name" label="名称"></el-table-column>
-              <el-table-column prop="origin" label="产地"></el-table-column>
-              <el-table-column prop="specification" label="规格"></el-table-column>
-              <el-table-column prop="barcode" label="条形码"></el-table-column>
-              <el-table-column prop="name" label="货位">
+              <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+              <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+              <el-table-column prop="specification" :label="$t('warehouse.pecifications')"></el-table-column>
+              <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+              <el-table-column prop="name" :label="$t('warehouse.location')">
                 <template slot-scope="scope">
                   <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
                     <el-option
@@ -756,33 +756,33 @@
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column prop="unit_price" label="单价">
+              <el-table-column prop="unit_price" :label="$t('warehouse.price')">
                 <template slot-scope="scope">
                   {{scope.row.unit_price | price}}
                 </template>
               </el-table-column>
             </el-table><br>
-            <el-input type="textarea" :rows="2" v-model="Rukufrom.comment" placeholder="备注"></el-input>
+            <el-input type="textarea" :rows="2" v-model="Rukufrom.comment" :placeholder="$t('warehouse.remarks')"></el-input>
           <span slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" @click="Rukuadd">确 定</el-button>
+            <el-button type="primary" size="small" @click="Rukuadd">{{$t('warehouse.confirmmsg')}}</el-button>
           </span>
         </el-dialog>
         <!-- 退还 -->
-        <el-dialog title="提示" :visible.sync="returndalog" width="70%">
+        <el-dialog :title="$t('warehouse.Info')" :visible.sync="returndalog" width="70%">
           <el-table :data="testfrom" style="width: 100%" border stripe ref="multipleTable" tooltip-effect="dark" @selection-change="handleSelectionChange3">
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="name" label="名称"></el-table-column>
-            <el-table-column prop="origin" label="产地"></el-table-column>
-            <el-table-column prop="specification" label="规格"></el-table-column>
-            <el-table-column prop="barcode" label="条形码"></el-table-column>
-            <el-table-column prop="count" label="数量">
+            <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+            <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+            <el-table-column prop="specification" :label="$t('warehouse.pecifications')"></el-table-column>
+            <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+            <el-table-column prop="count" :label="$t('warehouse.num')">
                <template slot-scope="scope">
                  <el-input v-model="scope.row.count"></el-input>
                 </template>
             </el-table-column>
           </el-table>
           <span slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" @click="returnbtn">确 定</el-button>
+            <el-button type="primary" size="small" @click="returnbtn">{{$t('warehouse.confirmmsg')}}</el-button>
           </span>
         </el-dialog>
       </div>
@@ -1670,10 +1670,10 @@ import store from '@/store'
               this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
             })
           }else{
-              this.$message('请选择商品类型')
+              this.$message(this.$t('warehouse.goodstype'))
           }
            }else{
-             this.$message('商品数量不能为0');
+             this.$message(this.$t('warehouse.Msgt'));
            }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))

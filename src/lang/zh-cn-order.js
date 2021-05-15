@@ -191,5 +191,6 @@ export default {
   Return: '退货',
   Exchange: '换货',
   Leaderboard: '排行榜',
-  noGoodsTip: '所购商品暂无库存，请先采购'
+  noGoodsTip: '所购商品暂无库存，请先采购',
+  cancelClaim: '取消认领'
 }
