@@ -49,7 +49,7 @@
               </div>
               <div class="sp cp">
                 <p @click="gotoUrl('orderList', { order_status: 5})">{{$t('order.tobedelivered')}}<span>{{statInfo.need_ship}}</span></p>
-                <p @click="gotoUrl('/warehouse/warehouseList')">{{$t('order.Tobestored')}}<span>{{statInfo.purchase_need_warehouse}}</span></p>
+                <p @click="gotoUrl('purchases', { status: 3})">{{$t('order.Tobestored')}}<span>{{statInfo.purchase_need_warehouse}}</span></p>
                 <p>&nbsp;</p>
               </div>
             </el-card>

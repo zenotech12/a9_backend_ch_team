@@ -555,7 +555,7 @@
               </div>
               <el-col :span="24" class="funcList localcss" v-if="permissionCheck('opt', '8_1')">
                 <el-button type="primary" class="overbtn" @click="overBtn" size="mini">{{$t('warehouse.Completereceipt')}}</el-button>
-                <div class="boxFuncBtn mt" @click="addrukudata" v-if="permissionCheck('opt')">
+                <div class="boxFuncBtn mt" @click="addrukudata">
                   <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
                   <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
                 </div>

@@ -482,7 +482,7 @@
             <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
-        <el-dialog :title="$t('order.deliveryRecord')" width="1200px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
+        <el-dialog :title="$t('order.deliveryRecord')" width="1300px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
           <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 320px)">
             <el-table-column label="#" width="60px">
               <template slot-scope="scope">
@@ -534,7 +534,7 @@
             </el-table-column>
             <el-table-column :label="$t('order.deliveryTime')" prop="time" width="180">
             </el-table-column>
-            <el-table-column :label="$t('tools.opt')" width="150" fixed="right" v-if="permissionCheck('opt') && (optType === 5 || optType === 4)">
+            <el-table-column :label="$t('tools.opt')" width="150" fixed="right" v-if="permissionCheck('opt', '8_1') && (optType === 5 || optType === 4)">
               <template slot-scope="scope">
                   <el-button slot="reference" v-if="optType === 5" @click="modifyCurrentExpress(scope.row, 'wuliu')" type="text" size="small">
                     {{$t('order.modifyExpress')}}
