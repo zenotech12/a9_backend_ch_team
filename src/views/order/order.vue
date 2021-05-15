@@ -265,15 +265,15 @@
                         {{$t('order.purchaseOrderReview')}}
                       </el-button>
                     </template>
-                    <template v-else>
+                    <template v-if="permissionCheck('opt', '8_1')">
                       <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2 || permissionCheck('opt', '8_1') ">
-                      <el-button type="text" v-if="scope.row.status === 4" @click="showExpressEditor(scope.row,5)" size="small">
-                      {{$t('order.modifyExpress')}}
-                      </el-button>
-                      <el-button v-if="permissionCheck('opt', '8_1') || scope.row.status !== 4" type="text" @click="showExpressEditor(scope.row,1)" size="small">
-                      {{$t('order.express')}}
-                      </el-button>
-                    </span>
+                        <!--<el-button type="text" v-if="scope.row.status === 4" @click="showExpressEditor(scope.row,5)" size="small">-->
+                        <!--{{$t('order.modifyExpress')}}-->
+                        <!--</el-button>-->
+                        <el-button v-if="permissionCheck('opt', '8_1') && scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">
+                        {{$t('order.express')}}
+                        </el-button>
+                      </span>
                       <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
                         {{$t('order.confirmTransaction')}}
                       </el-button>
@@ -281,7 +281,7 @@
                         {{$t('order.confirmTransaction')}}
                       </el-button>
                       <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17 && scope.row.expresses && scope.row.expresses.length > 0" type="text" @click="showModifyBz(scope.row, 4)" size="small" style="margin-left: 0">
-                        {{$t('order.price4Note')}}
+                        {{$t('order.modifyExpress')}}
                       </el-button>
                     </template>
                      <el-button type="text" @click="deliveryMsg(scope.row)" v-if="scope.row.status === 5 || scope.row.status === 4 || scope.row.status === 8" size="small" style="margin-left: 0">
@@ -350,7 +350,7 @@
                     </div>
                     <div class="clear"></div>
                   </el-col>
-                  <el-col :span="4" class="kuchunBox">
+                  <el-col :span="4" class="kuchunBox" v-if="optType === 1">
                       <el-button type="text" style="font-size: 20px" @click="showInvFunc(returnInvNumber(gInfo.goods_info, wareid), gInfo.goods_info)">{{$t('goods.inventory')}}：{{returnInvNumber(gInfo.goods_info, wareid)}}</el-button>
                   </el-col>
                 </el-row>
@@ -606,7 +606,7 @@
         </el-dialog>
         <!-- 出库信息 -->
         <el-dialog
-          width="70%"
+          width="85%"
           :title="$t('order.Delivery')"
           :visible.sync="DeliveryMsgDialog"
           append-to-body>
@@ -633,9 +633,10 @@
                   <el-row style="width: 100%">
                     <el-col :span="5" style="text-align: center">{{$t('order.Relatedorders')}}</el-col>
                     <el-col :span="6" style="text-align: center">{{$t('warehouse.name2')}}</el-col>
-                    <el-col :span="8" style="text-align: center">{{$t('warehouse.SpecificationsMsg')}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}} </el-col>
+                    <el-col :span="6" style="text-align: center">{{$t('warehouse.SpecificationsMsg')}}</el-col>
                     <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}} </el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}} </el-col>
+                    <el-col :span="2" style="text-align: center">{{$t('warehouse.position')}} </el-col>
                   </el-row>
                 </template>
                 <template slot-scope="scope">
@@ -645,10 +646,11 @@
                         {{scope.row.relation_order_id}}
                       </span>
                       </el-col>
-                    <el-col :span="6" style="text-align: center">{{item.name}}</el-col>
-                    <el-col :span="8" style="text-align: center">{{textFilter(item.specification)}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{item.arrive_count}}</el-col>
-                    <el-col :span="3" style="text-align: center">{{item.barcode}}</el-col>
+                    <el-col :span="6" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
+                    <el-col :span="6" style="text-align: center">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'NO'}}</el-col>
+                     <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode: 'NO'}}</el-col>
+                     <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                     <el-col :span="2" style="text-align: center">{{item.position}}</el-col>
                   </el-row>
                 </template>
               </el-table-column>
@@ -1296,9 +1298,6 @@
             this.sku_ids = JSON.stringify(this.sku_ids)
             this.sku_specifications = JSON.stringify(this.sku_specifications)
           }
-          console.log('this.sku_ids', this.sku_ids)
-          console.log('this.sku_specifications', this.sku_specifications)
-          // console.log('sku_ids', this.sku_ids)
           ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids,sku_specifications:this.sku_specifications, warehouse_id:this.wareid}).then(res => {
             this.$message.success(this.$t('order.expressTip'))
             this.submitDisabled = false
@@ -1306,7 +1305,7 @@
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
-            this.DeliveryMsgDialog = true
+            this.deliveryMsgSubmit()
           }).catch(() => {
             this.submitDisabled = false
           })
@@ -1317,7 +1316,7 @@
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
-            this.DeliveryMsgDialog = true
+            this.deliveryMsgSubmit()
           }).catch(() => {
             this.submitDisabled = false
           })
@@ -1340,7 +1339,7 @@
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
-            this.DeliveryMsgDialog = true
+            this.deliveryMsgSubmit()
           }).catch(() => {
             this.submitDisabled = false
           })
@@ -1351,11 +1350,17 @@
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
-            this.DeliveryMsgDialog = true
+            this.deliveryMsgSubmit()
           }).catch(() => {
             this.submitDisabled = false
           })
         }
+      },
+      deliveryMsgSubmit() {
+        this.DeliveryMsgDialog = true
+        warehouseOutbounds({ order_id: this.expressOrder.id }).then(res=>{
+          this.warehousedata = res.items
+        })
       },
       // 订单列表
       getDataListFun() {
@@ -1381,7 +1386,7 @@
         // data.id = ''
         warehouseOutbounds({order_id:data.id}).then(res=>{
           this.warehousedata = res.items
-	               })
+        })
         this.DeliveryMsgDialog = true
       },
       idsearch(data){
