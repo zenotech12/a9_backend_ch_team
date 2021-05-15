@@ -90,7 +90,7 @@
               ></el-pagination>
             </div>
           </div>
-          <div v-if="activeChuRuKu === '2'">
+          <div v-show="activeChuRuKu === '2'">
             <el-row>
               <el-col :span="24">
                 <el-form :inline="true" :model="chuKuSearchForm">
@@ -203,7 +203,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="150px"></el-table-column>
-              <el-table-column :label="$t('tools.opt')" width="150px" fixed = "right" v-if="permissionCheck('opt', '8_1') || permissionCheck('opt', '8_3') || permissionCheck('opt', '8_5')">
+              <el-table-column :label="$t('tools.opt')" width="150px" fixed = "right" v-show="permissionCheck('opt', '8_1') || permissionCheck('opt', '8_3') || permissionCheck('opt', '8_5')">
                 <template slot-scope="scope">
                   <el-button type="text" @click="shengheFuncChuku(scope.row.id, 2)" v-if="(scope.row.status === 1 || scope.row.status === 0) && permissionCheck('opt', '8_3')" size="small">{{$t('warehouse.caigoushenghe')}}</el-button>
                   <el-button type="text" @click="shengheFuncChuku(scope.row.id, 3)" v-if="scope.row.status === 2  && permissionCheck('opt', '8_1')" size="small">{{$t('warehouse.invConfirm')}}</el-button>
