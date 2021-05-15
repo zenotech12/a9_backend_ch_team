@@ -84,7 +84,7 @@
                     <el-tag type="warning" v-if="scope.row.status === 4">{{$t('warehouse.compleateStorage')}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="80"></el-table-column>
+                <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="150"></el-table-column>
                 <el-table-column prop="currency" :label="$t('warehouse.Currency')" width="85"></el-table-column>
                 <el-table-column prop="payment_term" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
                 <el-table-column prop="delivery_method" :label="$t('warehouse.delivery_method')" width="100"></el-table-column>
@@ -387,7 +387,7 @@
               </div>
             </el-col>
           </el-row>
-          <el-table stripe border :data="paidList" height="calc(100vh - 350px)">
+          <el-table stripe border :data="paidList" height="calc(100vh - 400px)">
                 <!-- <el-table-column prop="purchase_id" label="id"></el-table-column> -->
                 <el-table-column :label="$t('warehouse.money')">
                   <template  slot-scope="scope">
@@ -472,7 +472,7 @@
                 <span>{{$t('warehouse.Tobetested')}}</span>
                 <el-switch v-model="switchtype" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
               </div>
-              <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+              <el-table ref="singleTable" :data="inwarehouseData" tooltip-effect="dark" style="width: 100%" height="calc(100vh - 420px)" @selection-change="handleSelectionChange">
                   <el-table-column type="selection" width="55"></el-table-column>
                   <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
                   <el-table-column property="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
