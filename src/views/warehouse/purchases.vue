@@ -848,7 +848,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-import store from '@/store'
+  import store from '@/store'
   import { purchaseover, warehouseOutboundReview, warehouseOutbounds, receiptsinventory, warehouseOutboundsAdd, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo, spuTypesList, spuTypesInfo } from '@/api/goods'
@@ -993,6 +993,7 @@ import store from '@/store'
         flag2: '',
         flag3: '',
         totaldata: [],
+        searchForm2:{},
         options: [
           {value: 'US Dollar', label: 'US Dollar'},
           {value: 'Riel(Cambodia)', label: 'Riel(Cambodia)'},
@@ -1661,8 +1662,9 @@ import store from '@/store'
         this.wareId = ''
         this.inwarehouseFrom.comment = ''
         this.inwarehouseFrom.purchase_id = data.id
-        warehousesList(this.searchForm).then(res=>{
+        warehousesList(this.searchForm2).then(res=>{
           this.warelist = res.items
+          console.log(res.items,'5555555');
         })
         this.dialogVisible = true
         this.inwarehouseData = data.skus
