@@ -81,7 +81,36 @@
                     <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">{{$t('warehouse.pendFinancialApproval')}}</el-tag>
                     <el-tag type="info" v-if="scope.row.status === 2">{{$t('warehouse.leaderBeApproved')}}</el-tag>
                     <el-tag type="warning" v-if="scope.row.status === 3">{{$t('warehouse.tobeStored')}}</el-tag>
-                    <el-tag type="warning" v-if="scope.row.status === 4">{{$t('warehouse.compleateStorage')}}</el-tag>
+                    <el-tag v-if="scope.row.status === 4">{{$t('warehouse.compleateStorage')}}</el-tag>
+                    <el-tag type="danger" v-if="scope.row.status === 100">{{$t('tools.cancel')}}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column label="审批记录" width="100">
+                  <template slot-scope="scope">
+                    <el-popover placement="left" width="300" trigger="click">
+                        <el-timeline style="margin-top: 10px">
+                          <el-timeline-item
+                            v-for="(record, index) in scope.row.opts"
+                            :key="index"
+                            :timestamp="record.gen_time">
+                            <div class="ui">
+                              <div>
+                                <span>{{record.user_name}}</span>
+                                <span v-if="record.status === 2">{{$t('global.financialApproval')}}</span>
+                                <span v-if="record.status === 3">{{$t('global.leadershipApproval')}}</span>
+                                <span v-if="record.status === 100">{{$t('tools.cancel')}}</span>
+                              </div>
+                              <div>
+                                {{record.comment}}
+                              </div>
+                            </div>
+                          </el-timeline-item>
+                        </el-timeline>
+                      <el-button type="text" slot="reference">
+                        审批记录
+                        <i class="el-icon-arrow-right"></i>
+                      </el-button>
+                    </el-popover>
                   </template>
                 </el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="150"></el-table-column>
@@ -796,6 +825,22 @@
             <el-button type="primary" size="small" @click="returnbtn">{{$t('warehouse.confirmmsg')}}</el-button>
           </span>
         </el-dialog>
+        <!--审批备注-->
+        <el-dialog title="审批" :visible.sync="shengpiNoteDialog" width="40%">
+          <el-form label-width="100px" :model="shengheForm">
+            <el-form-item :label="$t('order.note')">
+              <el-input
+                type="textarea"
+                :rows="2"
+                placeholder="请输入备注"
+                v-model="shengheForm.comment">
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" size="small" @click="shengheSubmit">{{$t('warehouse.confirmmsg')}}</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -1072,7 +1117,12 @@
         ],
         chukuGoodsNumber: 0,
         showRukuBtn: '',
-        RukufromSkus: []
+        RukufromSkus: [],
+        shengpiNoteDialog: false,
+        shengheForm: {
+          status: 2,
+          comment: ''
+        }
       }
     },
     computed: {
@@ -1306,11 +1356,16 @@
         })
       },
       shengheFunc(id, number) {
-        warehousePurchasesReview(id, { status: number }).then(res => {
+        this.shengpiNoteDialog = true
+        this.shengheForm.status = number
+        this.shengheForm.id = id
+        this.shengheForm.comment = ''
+      },
+      shengheSubmit() {
+        warehousePurchasesReview(this.shengheForm.id, this.shengheForm).then(res => {
+          this.shengpiNoteDialog = false
           this.getDataListFun()
           this.getCount()
-          // 18280415659
-          // 15874045326
         })
       },
       deleteRow(index) {
