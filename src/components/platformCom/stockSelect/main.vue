@@ -151,23 +151,23 @@
           this.positionList = res.items
         })
       },
-      textFilter(data) {
-        let index = data.indexOf('{')
-        if(index != -1){
-        let str = ''
-        const text = JSON.parse(data)
-        Object.keys(text).forEach((v, i) => {
-          if (i === 0) {
-            str = v + ':' + text[v] + ';'
-          } else {
-            str = str + v + ':' + text[v] + ';'
-          }
-        })
-        return str
-      }else{
-        return data
-      }
-      },
+      // textFilter(data) {
+      //   let index = data.indexOf('{')
+      //   if(index != -1){
+      //   let str = ''
+      //   const text = JSON.parse(data)
+      //   Object.keys(text).forEach((v, i) => {
+      //     if (i === 0) {
+      //       str = v + ':' + text[v] + ';'
+      //     } else {
+      //       str = str + v + ':' + text[v] + ';'
+      //     }
+      //   })
+      //   return str
+      // }else{
+      //   return data
+      // }
+      // },
       clearInput() {
         this.$emit('goodSelectedChange', this.cesiId)
       },

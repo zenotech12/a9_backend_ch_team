@@ -21,12 +21,14 @@ import '@/assets/css/override-element-ui.scss'
 import { imgGetUrl } from '@/utils/serverConfig'
 import echarts from 'echarts'
 import moment from 'moment'
+import mixins from '@/mixins/index'
 import VueClipboard from 'vue-clipboard2'
 import * as filters from './utils/filters'
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
 Vue.prototype.$moment = moment
 
+Vue.mixin(mixins)
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
 Vue.use(VueClipboard)

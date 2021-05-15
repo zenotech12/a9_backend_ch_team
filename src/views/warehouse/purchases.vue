@@ -64,9 +64,9 @@
                   <template slot-scope="scope">
                     <div class="goods">
                       <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                        <el-col :span="8">{{item.name}}</el-col>
+                        <el-col :span="8" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                         <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                        <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>
+                        <el-col :span="3" class="overOmitted"  style="text-align: center">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No' }}</el-col>
                         <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                         <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
@@ -113,7 +113,7 @@
                     <!--<span class="xiexian">/</span>-->
                     <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3 && permissionCheck('opt', '9_1')" size="small">{{$t('warehouse.payment2')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
-                    <el-button type="text" @click="warehousing(scope.row)" v-if="scope.row.status === 3" size="small">{{$t('warehouse.Warehousing')}}</el-button>
+                    <el-button type="text" @click="warehousing(scope.row)" v-if="scope.row.status >= 3" size="small">{{$t('warehouse.Warehousing')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -175,7 +175,7 @@
                 </el-table-column>
                 <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
                   <template slot-scope="scope">
-                    {{scope.row.specification}}
+                    {{textFilter(scope.row.specification)}}
                   </template>
                 </el-table-column>
                 <el-table-column prop="barcode" :label="$t('warehouse.barCode')">
@@ -476,7 +476,11 @@
                   <el-table-column type="selection" width="55"></el-table-column>
                   <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
                   <el-table-column property="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
-                  <el-table-column property="specification" :label="$t('warehouse.pecifications')"></el-table-column>
+                  <el-table-column property="specification" :label="$t('warehouse.pecifications')">
+                    <template  slot-scope="scope">
+                      {{textFilter(scope.row.specification)}}
+                    </template>
+                  </el-table-column>
                   <el-table-column :label="$t('warehouse.barCode')">
                     <template  slot-scope="scope">
                         <el-input v-model="scope.row.barcode"></el-input>
@@ -543,7 +547,7 @@
           :title="$t('warehouse.rukuInfo')"
           :visible.sync="dialogVisible"
           width="80%">
-          <el-tabs v-model="activeChuRuKu">
+          <el-tabs v-model="activeChuRuKu" @tab-click="tabChange">
             <el-tab-pane :label="$t('warehouse.enterlist')" name="1"></el-tab-pane>
             <el-tab-pane label="退回列表" name="2"></el-tab-pane>
           </el-tabs>
@@ -553,6 +557,7 @@
                 <el-input v-model="stockfrom.key" style="margin-right: 10px" clearable></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="Searchrukudata" size="small"></el-button>
               </div>
+              <!-- && showRukuBtn === 3-->
               <el-col :span="24" class="funcList localcss" v-if="permissionCheck('opt', '8_1')">
                 <el-button type="primary" class="overbtn" @click="overBtn" size="mini">{{$t('warehouse.Completereceipt')}}</el-button>
                 <div class="boxFuncBtn mt" @click="addrukudata">
@@ -584,7 +589,7 @@
                     <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
                       <el-col :span="8">{{item.name}}</el-col>
                       <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                      <el-col :span="3" style="text-align: center">{{item.specification !== '' ? item.specification : 'No' }}</el-col>                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                      <el-col :span="3" style="text-align: center">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No' }}</el-col>                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.refund_count}}</el-col>
@@ -739,10 +744,14 @@
           title="入库"
           :visible.sync="Rudalog"
           width="70%">
-            <el-table :data="Rukufrom.skus" border stripe style="width: 100%">
+            <el-table :data="RukufromSkus" border stripe style="width: 100%">
               <el-table-column prop="name" label="名称"></el-table-column>
               <el-table-column prop="origin" label="产地"></el-table-column>
-              <el-table-column prop="specification" label="规格"></el-table-column>
+              <el-table-column prop="specification" label="规格">
+                <template slot-scope="scope">
+                  {{textFilter(scope.row.specification)}}
+                </template>
+              </el-table-column>
               <el-table-column prop="barcode" label="条形码"></el-table-column>
               <el-table-column prop="name" label="货位">
                 <template slot-scope="scope">
@@ -773,7 +782,11 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
             <el-table-column prop="origin" label="产地"></el-table-column>
-            <el-table-column prop="specification" label="规格"></el-table-column>
+            <el-table-column prop="specification" label="规格">
+              <template slot-scope="scope">
+                {{textFilter(scope.row.specification)}}
+              </template>
+            </el-table-column>
             <el-table-column prop="barcode" label="条形码"></el-table-column>
             <el-table-column prop="count" label="数量">
                <template slot-scope="scope">
@@ -1058,7 +1071,9 @@ import store from '@/store'
             label: this.$t('lang.balance')
           }
         ],
-        chukuGoodsNumber: 0
+        chukuGoodsNumber: 0,
+        showRukuBtn: '',
+        RukufromSkus: []
       }
     },
     computed: {
@@ -1135,7 +1150,7 @@ import store from '@/store'
           const skus = this.getTreePath(0)
           skus.forEach(item => {
             console.log('item', item)
-            const tableItem = { id: '', name: val[0].goodsName, inventory: 0, origin: '', sku_uid: '', specification: this.textFilter(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
+            const tableItem = { id: '', name: val[0].goodsName, inventory: 0, origin: '', sku_uid: '', specification: JSON.stringify(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -1210,6 +1225,12 @@ import store from '@/store'
       }
     },
     methods: {
+      tabChange(number) {
+        if (number.name === '2') {
+          this.getChuKuData()
+        }
+        // console.log('num', number)
+      },
       payWay(data) {
         let str = ''
         this.listV.forEach(v => {
@@ -1361,6 +1382,7 @@ import store from '@/store'
         ordersInfo(id).then(res => {
           if (res.meta === 0) {
             // this.skusArray = []
+            console.log('res.item.merchant_item.goods_items', res.item.merchant_item.goods_items)
             const array = res.item.merchant_item.goods_items
             array && array.forEach(value => {
               const goodsinfo = value.goods_info
@@ -1368,7 +1390,7 @@ import store from '@/store'
                 id: (goodsinfo.sku_url !== '' ? goodsinfo.sku_url : goodsinfo.sku_id) + this.textFilter(goodsinfo.specifications),
                 name: goodsinfo.spu_name,
                 origin: '',
-                specification: this.textFilter(goodsinfo.specifications),
+                specification: JSON.stringify(goodsinfo.specifications),
                 sku_uid: goodsinfo.sku_url !== '' ? goodsinfo.sku_url : goodsinfo.sku_id,
                 barcode: goodsinfo.barcode,
                 unit_price: goodsinfo.unit_pay_price,
@@ -1577,6 +1599,7 @@ import store from '@/store'
       warehousing(data){
         this.switchtype = false
         console.log(data);
+        this.showRukuBtn = data.status
         this.chuKuSearchForm.purchase_id = data.id
         this.stockfrom.purchase_id = data.id
         this.getstockinfo()
@@ -1590,6 +1613,7 @@ import store from '@/store'
         })
         this.dialogVisible = true
         this.inwarehouseData = data.skus
+        console.log('this.inwarehouseData', this.inwarehouseData)
         // this.inwarehouseData.forEach(item => {
         //   item.count = 1
         // });
@@ -1611,7 +1635,7 @@ import store from '@/store'
       },
       onchange(e){
         this.getlocationList()
-        this.inwarehouseFrom.skus.map(item => {
+        this.inwarehouseFrom.skus && this.inwarehouseFrom.skus.map(item => {
           item.position = ''
         });
       },
@@ -1634,7 +1658,7 @@ import store from '@/store'
           this.inwarehouseFrom.status = 1
         }
         this.inwarehouseFrom.warehouse_id = this.wareId
-        this.inwarehouseFrom.skus.map(item => {
+        this.inwarehouseFrom.skus && this.inwarehouseFrom.skus.map(item => {
           item.count = Number(item.count)
         });
         this.flag = this.inwarehouseFrom.skus.every(item => {
@@ -1651,65 +1675,36 @@ import store from '@/store'
             return item.merchant_type_code.length == 0 || item.merchant_type_code == null
 
           });
-           if(this.flag3){
-             if(this.flag2 == false){
-            this.inwarehouseFrom.skus.forEach(item => {
-              const array = []
-              array[0] = item.merchant_type_code[item.merchant_type_code.length -1]
-              item.merchant_type_code = array
-            });
-            this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
-            warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-              if(res.meta == 0){
-                this.commentlog = false
-                this.inwarehouselog = false
-                this.$message(this.$t('warehouse.addsuccess'))
-                this.getstockinfo()
-              }
-            }).catch(res=>{
-              this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
-            })
-          }else{
-              this.$message('请选择商品类型')
-          }
-           }else{
-             this.$message('商品数量不能为0');
-           }
+         if(this.flag3){
+           if(this.flag2 == false){
+          this.inwarehouseFrom.skus.forEach(item => {
+            const array = []
+            array[0] = item.merchant_type_code[item.merchant_type_code.length -1]
+            item.merchant_type_code = array
+          });
+          this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
+          warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
+            if(res.meta == 0){
+              this.commentlog = false
+              this.inwarehouselog = false
+              this.$message(this.$t('warehouse.addsuccess'))
+              this.getstockinfo()
+            }
+          }).catch(res=>{
+            this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
+          })
+        }else{
+            this.$message('请选择商品类型')
+        }
+         }else{
+           this.$message('商品数量不能为0');
+         }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))
         }
       },
       Searchlist(){
         this.getDataListFun()
-      },
-      textFilter(data) {
-        if (data instanceof Object) {
-          let str = ''
-          Object.keys(data).forEach((v, i) => {
-            if (i === 0) {
-              str = v + ':' + data[v] + ';'
-            } else {
-              str = str + v + ':' + data[v] + ';'
-            }
-          })
-          return str
-        } else if (data instanceof String) {
-          let index = data.indexOf('{')
-          if (index !== -1) {
-            let str = ''
-            const text = JSON.parse(data)
-            Object.keys(text).forEach((v, i) => {
-              if (i === 0) {
-                str = v + ':' + text[v] + ';'
-              } else {
-                str = str + v + ':' + text[v] + ';'
-              }
-            })
-            return str
-          } else {
-            return data
-          }
-        }
       },
       Searchrukudata(){
         this.getstockinfo()
@@ -1723,10 +1718,12 @@ import store from '@/store'
       },
       Rukubtn(data){
         this.Rukufrom.skus = []
+        this.RukufromSkus = []
         this.Rudalog = true
         console.log(data);
         this.rukuid = data.id
         this.Rukufrom.warehouse_id = data.warehouse_id
+        this.RukufromSkus = data.skus
         this.Rukufrom.skus = data.skus
         console.log(this.Rukufrom.skus);
         Locationlist(data.warehouse_id).then(res=>{
@@ -1734,13 +1731,13 @@ import store from '@/store'
         })
       },
       Rukuadd(){
-         this.flag = this.Rukufrom.skus.every(item => {
+         this.flag = this.RukufromSkus.every(item => {
           return item.position != ''
         });
         console.log(this.Rukufrom);
         if(this.flag == true){
-          this.Rukufrom.skus = JSON.stringify(this.Rukufrom.skus)
-          receiptsinventory(this.rukuid,this.Rukufrom).then(res=>{
+          this.Rukufrom.skus = JSON.stringify(this.RukufromSkus)
+          receiptsinventory(this.rukuid, this.Rukufrom).then(res=>{
             this.Rudalog = false
             this.dialogVisible = false
             this.$message(this.$t('warehouse.addsuccess'))
@@ -1757,12 +1754,12 @@ import store from '@/store'
         this.returnFrom.skus = []
         this.testfrom = data.skus
         this.returnFrom.receipt_id = data.id
-        // this.returnFrom.skus = JSON.stringify(this.returnFrom.skus)
-        // warehouseOutboundsAdd(this.returnFrom).then(res=>{
-        //   this.Rudalog = false
-        //   this.dialogVisible = false
-        //   console.log(res);
-        // })
+        this.returnFrom.skus = JSON.stringify(this.returnFrom.skus)
+        warehouseOutboundsAdd(this.returnFrom).then(res=>{
+          this.Rudalog = false
+          this.dialogVisible = false
+          console.log(res);
+        })
       },
       getGoodstype(){
         spuTypesList({type:2}).then(response=>{

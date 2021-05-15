@@ -127,18 +127,6 @@
     mounted() {
     },
     methods: {
-      textFilter(data) {
-        let str = ''
-        const text = JSON.parse(data)
-        Object.keys(text).forEach((v, i) => {
-          if (i === 0) {
-            str = v + ':' + text[v] + ';'
-          } else {
-            str = str + v + ':' + text[v] + ';'
-          }
-        })
-        return str
-      },
       getOrderInfo(id) {
         ordersInfo(id).then(res => {
           if (res.meta === 0) {

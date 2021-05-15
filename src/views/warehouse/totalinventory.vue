@@ -149,7 +149,7 @@
                     </el-table-column>
                     <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
                       <template slot-scope="scope">
-                        {{scope.row.specification}}
+                        {{textFilter(scope.row.specification)}}
                       </template>
                     </el-table-column>
                     <el-table-column prop="barcode" :label="$t('warehouse.barCode')">
@@ -377,35 +377,6 @@ export default {
       } else {
         return (<span class='custom-tree-node'>
           <span title={node.label}>{node.label}</span></span>)
-      }
-    },
-    textFilter(data) {
-      if (data instanceof Object) {
-        let str = ''
-        Object.keys(data).forEach((v, i) => {
-          if (i === 0) {
-            str = v + ':' + data[v] + ';'
-          } else {
-            str = str + v + ':' + data[v] + ';'
-          }
-        })
-        return str
-      } else if (data instanceof String) {
-        let index = data.indexOf('{')
-        if (index !== -1) {
-          let str = ''
-          const text = JSON.parse(data)
-          Object.keys(text).forEach((v, i) => {
-            if (i === 0) {
-              str = v + ':' + text[v] + ';'
-            } else {
-              str = str + v + ':' + text[v] + ';'
-            }
-          })
-          return str
-        } else {
-          return data
-        }
       }
     },
     gettotaldata() {
