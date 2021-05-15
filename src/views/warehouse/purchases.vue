@@ -748,10 +748,10 @@
               <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
               <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
               <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
-				<template slot-scope="scope">
+				        <template slot-scope="scope">
                   {{textFilter(scope.row.specification)}}
                 </template>
-				</el-table-column>
+				      </el-table-column>
               <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
               <el-table-column prop="name" :label="$t('warehouse.location')">                <template slot-scope="scope">
                   <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
@@ -782,10 +782,10 @@
            <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
             <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
             <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
-				<template slot-scope="scope">
+              <template slot-scope="scope">
                 {{textFilter(scope.row.specification)}}
               </template>
-				</el-table-column>
+				    </el-table-column>
             <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
             <el-table-column prop="count" :label="$t('warehouse.num')">               <template slot-scope="scope">
                  <el-input v-model="scope.row.count"></el-input>
@@ -1633,9 +1633,6 @@ import store from '@/store'
       },
       onchange(e){
         this.getlocationList()
-        this.inwarehouseFrom.skus && this.inwarehouseFrom.skus.map(item => {
-          item.position = ''
-        });
       },
       // 仓库位置
       getlocationList(){
@@ -1673,29 +1670,30 @@ import store from '@/store'
             return item.merchant_type_code.length == 0 || item.merchant_type_code == null
 
           });
- if(this.flag3){
+            if(this.flag3){
              if(this.flag2 == false){
-            this.inwarehouseFrom.skus.forEach(item => {
-              const array = []
-              array[0] = item.merchant_type_code[item.merchant_type_code.length -1]
-              item.merchant_type_code = array
-            });
-            this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
-            warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
-              if(res.meta == 0){
-                this.commentlog = false
-                this.inwarehouselog = false
-                this.$message(this.$t('warehouse.addsuccess'))
-                this.getstockinfo()
-              }
-            }).catch(res=>{
-              this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
-            })        }else{
-            this.$message(this.$t('warehouse.goodstype'))
-        }
-         }else{
-           this.$message(this.$t('warehouse.Msgt'))
-         }
+              this.inwarehouseFrom.skus.forEach(item => {
+                const array = []
+                array[0] = item.merchant_type_code[item.merchant_type_code.length -1]
+                item.merchant_type_code = array
+              });
+              this.inwarehouseFrom.skus = JSON.stringify(this.inwarehouseFrom.skus)
+              warehouseReceiptsAdd(this.inwarehouseFrom).then(res=>{
+                if(res.meta == 0){
+                  this.commentlog = false
+                  this.inwarehouselog = false
+                  this.$message(this.$t('warehouse.addsuccess'))
+                  this.getstockinfo()
+                }
+              }).catch(res=>{
+                this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
+              })
+             }else{
+              this.$message(this.$t('warehouse.goodstype'))
+          }
+           }else{
+             this.$message(this.$t('warehouse.Msgt'))
+           }
         }else{
           this.$message(this.$t('warehouse.placeLoc'))
         }
@@ -1736,7 +1734,8 @@ import store from '@/store'
           this.Rukufrom.skus = JSON.stringify(this.RukufromSkus)
           receiptsinventory(this.rukuid, this.Rukufrom).then(res=>{
             this.Rudalog = false
-            this.dialogVisible = false
+            // this.dialogVisible = false
+            this.getstockinfo()
             this.$message(this.$t('warehouse.addsuccess'))
           }).catch(res=>{
 
@@ -1752,11 +1751,6 @@ import store from '@/store'
         this.testfrom = data.skus
         this.returnFrom.receipt_id = data.id
         this.returnFrom.skus = JSON.stringify(this.returnFrom.skus)
-        warehouseOutboundsAdd(this.returnFrom).then(res=>{
-          this.Rudalog = false
-          this.dialogVisible = false
-          console.log(res);
-        })
       },
       getGoodstype(){
         spuTypesList({type:2}).then(response=>{
