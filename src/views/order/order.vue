@@ -1298,10 +1298,12 @@
             this.sku_ids = JSON.stringify(this.sku_ids)
             this.sku_specifications = JSON.stringify(this.sku_specifications)
           }
+          // console.log('this.sku_ids', this.sku_ids)
+          // console.log('this.sku_specifications', this.sku_specifications)
           ordersExpress(this.expressOrder.id, { express_company: this.expressCompany, express_no: this.expressNo, comment: this.comment, sku_ids: this.sku_ids,sku_specifications:this.sku_specifications, warehouse_id:this.wareid}).then(res => {
             this.$message.success(this.$t('order.expressTip'))
             this.submitDisabled = false
-            this.allGoodsSend = true
+            // this.allGoodsSend = true
             this.getDataListFun()
             this.getOrderCount()
             this.formEditDialog = false
