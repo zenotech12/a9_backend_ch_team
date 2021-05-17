@@ -170,7 +170,8 @@ export default {
   return3: '退还',
   confirmmsg: '确认',
   goodstype: '请选择商品类型',
-  Approvalrecord: '审批记录',
+  Approvalrecord: '操作日志',
   Approve: '审批',
-  Pleasenote: '请输入备注'
+  Pleasenote: '请输入备注',
+  area:'区域'
 }

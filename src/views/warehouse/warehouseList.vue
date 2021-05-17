@@ -676,6 +676,11 @@
           center
         >
         <div class="localval">
+          <span>{{$t('warehouse.area')}}</span>
+          <div><el-input v-model="areastar"></el-input></div>&nbsp;-&nbsp;
+          <div><el-input v-model="areaend"></el-input></div>
+        </div>
+        <div class="localval">
           <span>{{$t('warehouse.line')}}</span>
           <div><el-input v-model="linestar" type='number' ></el-input></div>&nbsp;-&nbsp;
           <div><el-input v-model="lineend" type='number' ></el-input></div>
@@ -700,7 +705,6 @@ import {
   warehousesModify,
   warehousesList,
   warehousesDel,
-  // warehousesInfo,
   warehouseInventories,
   warehouseReceiptsAdd,
   warehouseReceipts,
@@ -835,6 +839,8 @@ export default {
         skus: ''
       },
       chukuDlalog: false,
+      areastar: '',
+      areaend: '',
       linestar: '',
       lineend: '',
       columnstar: '',
@@ -1262,9 +1268,11 @@ export default {
     wareLocaladd() {
       if (this.linestar < this.lineend && this.columnstar < this.columnend) {
         const positions = []
-        for (let i = this.linestar; i <= this.lineend; i++) {
-          for (let j = this.columnstar; j <= this.columnend; j++) {
-            positions.push(i + '-' + j)
+        for(let a = this.areastar; a<=this.areaend;a++){
+          for (let i = this.linestar; i <= this.lineend; i++) {
+            for (let j = this.columnstar; j <= this.columnend; j++) {
+              positions.push(a + '-' + i + '-' + j)
+            }
           }
         }
         warelocalAll(this.locsearchFrom.id, { positions: JSON.stringify(positions) }).then(res => {
