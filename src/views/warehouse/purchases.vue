@@ -48,6 +48,15 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="no" :label="$t('warehouse.Singlenumber')" width="120" fixed = "left"></el-table-column>
+                <el-table-column :label="$t('warehouse.type2')" width="100">
+                  <template slot-scope="scope">
+                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">{{$t('warehouse.pendFinancialApproval')}}</el-tag>
+                    <el-tag type="info" v-if="scope.row.status === 2">{{$t('warehouse.leaderBeApproved')}}</el-tag>
+                    <el-tag type="warning" v-if="scope.row.status === 3">{{$t('warehouse.tobeStored')}}</el-tag>
+                    <el-tag v-if="scope.row.status === 4">{{$t('warehouse.compleateStorage')}}</el-tag>
+                    <el-tag type="danger" v-if="scope.row.status === 100">{{$t('tools.cancel')}}</el-tag>
+                  </template>
+                </el-table-column>
                 <el-table-column width="800">
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
@@ -74,15 +83,6 @@
                         <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
                       </el-row>
                     </div>
-                  </template>
-                </el-table-column>
-                <el-table-column :label="$t('warehouse.type2')" width="100">
-                  <template slot-scope="scope">
-                    <el-tag type="success" v-if="scope.row.status === 1 || scope.row.status === 0">{{$t('warehouse.pendFinancialApproval')}}</el-tag>
-                    <el-tag type="info" v-if="scope.row.status === 2">{{$t('warehouse.leaderBeApproved')}}</el-tag>
-                    <el-tag type="warning" v-if="scope.row.status === 3">{{$t('warehouse.tobeStored')}}</el-tag>
-                    <el-tag v-if="scope.row.status === 4">{{$t('warehouse.compleateStorage')}}</el-tag>
-                    <el-tag type="danger" v-if="scope.row.status === 100">{{$t('tools.cancel')}}</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('warehouse.Approvalrecord')" width="100">
@@ -143,6 +143,23 @@
                     <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3 && permissionCheck('opt', '9_1')" size="small">{{$t('warehouse.payment2')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
                     <el-button type="text" @click="warehousing(scope.row)" v-if="scope.row.status >= 3" size="small">{{$t('warehouse.Warehousing')}}</el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="supplier_name" width="300">
+                  <template slot-scope="scope" slot="header">
+                    <el-row style="width: 100%">
+                      <el-col :span="12">操作人(账户)</el-col>
+                      <el-col :span="12" style="text-align: center">操作内容</el-col>
+                    </el-row>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-row style="width: 100%" v-for="(item,key) in scope.row.opts" :key="key">
+                      <el-col :span="13">{{item.user_name}}</el-col>
+                      <el-col :span="11" style="text-align: center" v-if="item.status == 1">创建</el-col>
+                      <el-col :span="11" style="text-align: center" v-if="item.status == 2">财务审批</el-col>
+                      <el-col :span="11" style="text-align: center" v-if="item.status == 3">管理层审批</el-col>
+                      <el-col :span="11" style="text-align: center" v-if="item.status == 4">完成收货</el-col>
+                    </el-row>
                   </template>
                 </el-table-column>
               </el-table>

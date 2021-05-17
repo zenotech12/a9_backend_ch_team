@@ -95,14 +95,14 @@
               <el-col :span="24">
                 <el-form :inline="true" :model="chuKuSearchForm">
                   <el-form-item>
-                    <el-date-picker format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" clearable
-                                    v-model="orderTimes"
-                                    type="daterange"
-                                    align="right"
-                                    unlink-panels
-                                    :range-separator="$t('tools.to')"
-                                    :start-placeholder="$t('tools.startDate')"
-                                    :end-placeholder="$t('tools.endDate')">
+                    <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
+                      v-model="orderTimes"
+                      type="daterange"
+                      align="right"
+                      unlink-panels
+                      :range-separator="$t('tools.to')"
+                      :start-placeholder="$t('tools.startDate')"
+                      :end-placeholder="$t('tools.endDate')">
                     </el-date-picker>
                   </el-form-item>
                   <el-form-item :label="$t('warehouse.type')">

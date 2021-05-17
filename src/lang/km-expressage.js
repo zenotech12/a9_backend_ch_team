@@ -1,9 +1,9 @@
 ﻿export default {
-  rider: 'Rider',
+  rider: 'អ្នកបើកបរដឹកជញ្ចូន',
   zto: 'ZTO',
-  noexpress: 'មិនត្រូវការភ្នាក់ងារដឹកជញ្ជូន',
-  shunfeng: 'SF​ ដឹកជញ្ជូន',
-  shentong: 'Shentong ដឹកជញ្ជូន',
-  yuantong: 'YTO ដឹកជញ្ជូន',
-  yunda: 'Yunda ដឹកជញ្ជូន'
+  noexpress: 'មិនត្រូវការការដឹកជញ្ជូន',
+  shunfeng: 'ស៊ុនហ្វុងដឹកជញ្ជូន',
+  shentong: 'សិនថុងដឹកជញ្ជូន',
+  yuantong: 'យ័នថុងដឹកជញ្ជូន',
+  yunda: 'យន់ដារដឹកជញ្ជូន'
 }
