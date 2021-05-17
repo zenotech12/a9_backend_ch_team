@@ -300,3 +300,37 @@ export function freePostageModify(id, data) {
     data: data
   })
 }
+
+// 数据选项.添加
+export function dataSelects(data) {
+  return request({
+    url: 'data-selects',
+    method: 'post',
+    data: data
+  })
+}
+
+// 数据选项.修改
+export function dataSelectsModify(id, data) {
+  return request({
+    url: 'data-selects/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+// 数据选项.列表
+export function dataSelectsGet(param) {
+  return request({
+    url: 'data-selects',
+    method: 'get',
+    params: param
+  })
+}
+// 数据选项.删除
+export function dataSelectsDel(id) {
+  return request({
+    url: 'data-selects/' + id,
+    method: 'delete'
+  })
+}

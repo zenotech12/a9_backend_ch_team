@@ -1,0 +1,374 @@
+<template>
+  <div class="sys-body">
+    <div class="sys-neiBody">
+      <el-row>
+        <el-col :span="4" class="funcTree" style="margin-left: 0">
+          <el-row>
+            <el-col :span="24" class="funcBoxTitle">
+              <div class="small_title">{{$t('goods.type')}}</div>
+            </el-col>
+          </el-row>
+          <el-row >
+            <el-col :span="24" class="funcBoxTitle2">
+              <template v-if="permissionCheck('opt')">
+                <i class="el-icon-circle-plus-outline" @click="showTypeEditForm"></i>
+                <span @click="showTypeEditForm" >{{$t('goods.addType')}}</span>
+              </template>
+            </el-col>
+          </el-row>
+          <div class="custom-tree-container">
+            <div class="block">
+              <el-tree style="height: calc(100vh - 240px); overflow-y: auto;"
+                       :data="typeDataList"
+                       node-key="id"
+                       :show-checkbox="false"
+                       :props="defaultProps"
+                       :current-node-key="currentNodeKey"
+                       :highlight-current="true"
+                       @node-click="typeChangeFunc"
+                       :expand-on-click-node="false"
+                       :render-content="renderContent"
+              >
+              </el-tree>
+            </div>
+          </div>
+          <el-dialog title="基础数据分类" :visible.sync="FormVisible" center width="500px" :close-on-click-modal="false">
+            <el-form :model="formType" label-width="80px">
+              <el-form-item :label="$t('goods.name')" prop="name" label-width="80px">
+                <el-input v-model="formType.name" auto-complete="off" clearable></el-input>
+              </el-form-item>
+              <el-form-item label="编码" label-width="80px" style="margin-top: 20px">
+                <el-input v-model="formType.code" auto-complete="off" clearable></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <confirm-button @confirmButton="editType()"></confirm-button>
+              <el-button @click="FormVisible = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+            </div>
+          </el-dialog>
+        </el-col>
+        <el-col :span="20" class="funcBox">
+          <div class="rightbox">
+            <el-row>
+              <el-col :span="24" class="funcList" style="padding-left: 20px">
+                <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
+                  <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
+                  <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+                </div>
+              </el-col>
+            </el-row>
+            <el-table :data="dataList" border stripe height="calc(100vh - 232px)" style="width: 100%">
+                  <el-table-column label="#" width="60px">
+                    <template slot-scope="scope">
+                      {{scope.$index + searchForm.skip + 1}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+                  <el-table-column prop="code" label="编码"></el-table-column>
+                  <el-table-column prop="gen_time" :label="$t('sys.addTime')"></el-table-column>
+                  <el-table-column :label="$t('warehouse.operation')" width = "140"  v-if="permissionCheck('opt')">
+                    <template slot-scope="scope">
+                      <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
+                      <span class="xiexian">/</span>
+                      <delete-button @delData="deleteDataFunc(scope.row)"></delete-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+            <el-row>
+              <el-col :span="24">
+                <div style="text-align: right;margin-top: 10px">
+                  <el-pagination
+                    :current-page.sync="currentPage_to"
+                    :page-size="pageSize_to"
+                    layout="total, prev, pager, next, jumper"
+                    :total="itemCount_to"
+                  ></el-pagination>
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-dialog title="基础数据设置" width="500px" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+              <el-form label-width="100px" :model="form">
+                <el-form-item :label="$t('goods.parentType')">
+                  <el-select v-model="form.parent_tree_code" placeholder="请选择">
+                    <el-option
+                      v-for="item in typeDataList"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.tree_code">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('goods.name')">
+                  <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="编码">
+                  <el-input v-model="form.code"></el-input>
+                </el-form-item>
+              </el-form>
+
+              <div slot="footer" class="dialog-footer">
+                <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+                <el-button @click="formEditDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+              </div>
+            </el-dialog>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
+</template>
+
+<script>
+
+import { dataSelects, dataSelectsGet, dataSelectsDel, dataSelectsModify } from '@/api/system'
+
+export default {
+  data() {
+    return {
+      currentPage_to: 1,
+      pageSize_to: 15,
+      itemCount_to: 0,
+      dialogVisible: false,
+      typeDataList: [],
+      defaultProps: {
+        children: 'items',
+        label: 'name'
+      },
+      funcTreeWidth: 0,
+      funcBoxWidth: 0,
+      formEditDialog: false,
+      submitDisabled: false,
+      form: {
+        id: '',
+        name: '',
+        code: '',
+        parent_tree_code: ''
+      },
+      formType: {
+        id: '',
+        name: '',
+        code: ''
+      },
+      dataList: [],
+      FormVisible: false,
+      searchForm: {
+        skip: 0,
+        limit: 10,
+        parent_tree_code: ''
+      },
+      currentNodeKey: 1,
+      currentTreeCode: ''
+    }
+  },
+  watch: {
+    currentPage_to(val) {
+      this.searchForm.skip = (val - 1) * this.pageSize_to
+      this.searchForm.limit = this.pageSize_to
+      this.getDataList()
+    }
+  },
+  async mounted() {
+    await this.getTypeList()
+    await this.getDataList()
+  },
+  methods: {
+    async getTypeList() {
+      await dataSelectsGet().then(res => {
+        if (res.meta === 0) {
+          this.typeDataList = []
+          if (res.items !== null) {
+            this.typeDataList = res.items
+            if (this.typeDataList.length > 0) {
+              this.currentTreeCode = this.typeDataList[0].tree_code
+            }
+          }
+        }
+        console.log(111)
+      })
+    },
+    async getDataList() {
+      this.searchForm.parent_tree_code = this.currentTreeCode
+      await dataSelectsGet(this.searchForm).then((res) => {
+        this.dataList = res.items
+        this.itemCount_to = res.total
+        console.log(2)
+      })
+    },
+    showDataEditor(data) {
+      this.form.id = data.id
+      this.form.name = data.name
+      this.form.code = data.code
+      this.form.parent_tree_code = data.tree_code
+      this.formEditDialog = true
+    },
+    showTypeEditForm() {
+      this.formType.id = ''
+      this.formType.name = ''
+      this.formType.code = ''
+      this.FormVisible = true
+    },
+    editType() {
+      if (this.formType.name === '' || this.formType.code === '') {
+        this.$message.error('请输入完整')
+        return
+      }
+      if (this.formType.id === '') {
+        dataSelects(this.formType).then(res => {
+          if (res.meta === 0) {
+            this.getTypeList()
+            this.FormVisible = false
+          }
+        })
+      } else {
+        dataSelectsModify(this.formType.id, this.formType).then(res => {
+          if (res.meta === 0) {
+            this.getTypeList()
+            this.FormVisible = false
+          }
+        })
+      }
+    },
+    addData() {
+      this.form.id = ''
+      this.form.name = ''
+      this.form.code = ''
+      this.form.parent_tree_code = ''
+      this.formEditDialog = true
+    },
+    saveDataFunc() {
+      if (this.form.name === '' || this.form.code === '' || this.form.parent_tree_code === '') {
+        this.$message.error('请填写完整')
+        return
+      }
+      this.submitDisabled = true
+      // console.log(this.form)
+      if (this.form.id === '') {
+        dataSelects(this.form).then(res => {
+          this.getDataList()
+          this.formEditDialog = false
+          this.submitDisabled = false
+        }).catch(() => {
+          this.submitDisabled = false
+        })
+      } else {
+        dataSelectsModify(this.form.id, this.form).then(res => {
+          this.getDataList()
+          this.formEditDialog = false
+          this.submitDisabled = false
+        }).catch(() => {
+          this.submitDisabled = false
+        })
+      }
+    },
+    deleteDataFunc(data) {
+      dataSelectsDel(data.id).then(res => {
+        this.getDataList()
+      })
+    },
+    typeChangeFunc(data) {
+      this.currentPage_to = 1
+      this.searchForm.skip = 0
+      this.currentTreeCode = data.tree_code
+      this.getDataList()
+    },
+    deleteResourcesType(data) {
+      dataSelectsDel(data.id).then(res => {
+        this.getTypeList()
+        this.getDataList()
+      })
+    },
+    renderContent(h, { node, data, store }) {
+      if (this.permissionCheck('opt')) {
+        return (
+          <span class='custom-tree-node'>
+            <span title={node.label}>{node.label}</span>
+            <span class='showHide' v-show={data.tree_code}>
+              <el-popover
+                placement='bottom-end'
+                width='250'
+                visible-arrow
+                trigger='hover'>
+                  <div class='labelName'>{node.label}</div>
+                <div class='funcListBox'>
+                  <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
+              <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
+                  <span class='permissionsDel'>{this.$t('tools.delete')}</span>
+                </div>
+                <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
+              <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
+                  <span class='permissionsEdit'>{this.$t('tools.edit')}</span>
+                </div>
+                </div>
+                <i class='el-icon-more imgMore' slot='reference'></i>
+              </el-popover>
+            </span>
+          </span>)
+      } else {
+        return (<span class='custom-tree-node'>
+          <span title={node.label}>{node.label}</span></span>)
+      }
+    },
+    showEditDataFunc(data) {
+      this.FormVisible = true
+      this.formType.id = data.id
+      this.formType.name = data.name
+      this.formType.code = data.code
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.searchbtn {
+  display: flex;
+  margin-bottom: 5px;
+  align-items: center;
+}
+.numcss {
+  display: inline-block;
+  width: 100%;
+  cursor: pointer;
+  color: #409eff;
+}
+.bigbox {
+  display: flex;
+  > div:nth-child(1) {
+    width: 15%;
+  }
+  > div:nth-child(2) {
+    width: 85%;
+  }
+}
+  /deep/ {
+    .el-form-item {
+
+    }
+    .el-tree-node {
+      margin-left: 0;
+    }
+  }
+  .cellBoxTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sortBox {
+    display: flex;
+    flex-direction: column;
+    margin-left: 4px;
+    .jiantouC {
+      color: #C0C4CC;
+      cursor: pointer;
+    }
+    .jiantouBlue {
+      color: #409EFF;
+    }
+  }
+  .totlaInv {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+  }
+
+</style>

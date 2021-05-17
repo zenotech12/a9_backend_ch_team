@@ -56,16 +56,16 @@
                     </template>
                   </el-table-column>
                   <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
-                  <el-table-column prop="date" :label="$t('warehouse.SpecificationsMsg')">
+                  <el-table-column prop="date" width="200" :label="$t('warehouse.SpecificationsMsg')">
                     <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
                   </el-table-column>
-                  <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
-                  <el-table-column prop="unit_price" :label="$t('warehouse.price')">
+                  <el-table-column prop="barcode" width="140" :label="$t('warehouse.barCode')"></el-table-column>
+                  <el-table-column prop="unit_price" width="100" :label="$t('warehouse.price')">
                     <template slot-scope="scope">
                       {{scope.row.unit_price | price}}
                     </template>
                   </el-table-column>
-                  <el-table-column prop="count">
+                  <el-table-column prop="count" width="100">
                     <template slot="header" slot-scope="scope">
                       <div class="cellBoxTitle">
                         {{$t('warehouse.num')}}
@@ -79,7 +79,7 @@
                       <span class="numcss" @click="numinfo(scope.row)">{{scope.row.count}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+                  <el-table-column prop="origin" width="200" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
                 </el-table>
               </div>
             </div>
