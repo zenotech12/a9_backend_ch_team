@@ -64,5 +64,6 @@ export default {
   specialPermission: '特殊权限',
   financialApproval: '财务审批',
   leadershipApproval: '领导审批',
-  journal: '出入库日志'
+  journal: '出入库日志',
+  baseData: '基础数据'
 }

@@ -23,9 +23,15 @@
                 <el-table-column prop="no" :label="$t('warehouse.SupplierNum')"></el-table-column>
                 <el-table-column prop="company_name" :label="$t('warehouse.corporateName')"></el-table-column>
                 <el-table-column prop="business_scope" :label="$t('warehouse.MainBusiness')"></el-table-column>
-                <el-table-column prop="warehouse_business_addr" :label="$t('warehouse.WarehouseAddress')"></el-table-column>
+                <el-table-column prop="warehouse_business_addr" :label="$t('warehouse.WarehouseAddress')">
+                  <template slot-scope="scope">
+                    <div class="overOmitted" title="scope.row.warehouse_business_addr">
+                      {{scope.row.warehouse_business_addr}}
+                    </div>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="contacter_name" :label="$t('warehouse.contactsName')"></el-table-column>
-                <el-table-column prop="mobile" :label="$t('warehouse.Tel2')"></el-table-column>
+                <el-table-column prop="mobile" width="140" :label="$t('warehouse.Tel2')"></el-table-column>
                 <!-- <el-table-column prop="business_license" :label="$t('warehouse.License')">
                   <template  slot-scope="scope">
                     <el-popover v-if="scope.row.business_license" class="pointer"
@@ -191,11 +197,13 @@
         this.typeOpt = 'edit'
         this.form = this.setForm(data)
         const url = imgGetUrl + '?md5=' + data.goods_application_file
-        const obj = {
-          name: data.goods_application_file,
-          url: url
+        if (data.goods_application_file !== '') {
+          const obj = {
+            name: data.goods_application_file,
+            url: url
+          }
+          this.fileList.push(obj)
         }
-        this.fileList.push(obj)
         this.formEditDialog = true
       },
       imageUploadSuccess(res) {

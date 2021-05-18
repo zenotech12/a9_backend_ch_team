@@ -65,5 +65,6 @@ export default {
   specialPermission: 'Special Permission',
   financialApproval: 'Financial Approval',
   leadershipApproval: 'Leadership Approval',
-  journal: 'Inbound and outbound log'
+  journal: 'Inbound and outbound log',
+  baseData: 'Basic data'
 }

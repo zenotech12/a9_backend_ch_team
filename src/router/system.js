@@ -48,6 +48,12 @@ const system = [{
     path: 'optLog',
     meta: { title: 'optLog', icon: 'permission', code: '6_6' },
     component: () => import('@/views/system/optLog')
+  },
+  {
+    name: 'baseData',
+    path: 'baseData',
+    meta: { title: 'baseData', icon: 'permission', code: '6_7' },
+    component: () => import('@/views/system/baseData')
   }]
 }]
 export default system

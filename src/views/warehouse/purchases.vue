@@ -185,7 +185,7 @@
                       :value="item.id">
                     </el-option>
                   </el-select>
-                  <el-select v-model="currency" clearable :placeholder="$t('warehouse.Currency')">
+                  <el-select v-model="form.currency" clearable :placeholder="$t('warehouse.Currency')">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
@@ -193,7 +193,7 @@
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  <el-select v-model="payment_term" clearable :placeholder="$t('warehouse.payment_term')">
+                  <el-select v-model="form.payment_term" clearable :placeholder="$t('warehouse.payment_term')">
                     <el-option
                       v-for="item in paymenttermdata"
                       :key="item.value"
@@ -201,7 +201,7 @@
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  <el-select v-model="delivery_method" clearable :placeholder="$t('warehouse.delivery_method')">
+                  <el-select v-model="form.delivery_method" clearable :placeholder="$t('warehouse.delivery_method')">
                     <el-option
                       v-for="item in deliverymedata"
                       :key="item.value"
@@ -210,6 +210,14 @@
                     </el-option>
                   </el-select>
               </el-form-item>
+            <el-form-item :label="$t('goods.note')">
+              <el-input
+                type="textarea"
+                :rows="2"
+                placeholder=""
+                v-model="form.comment">
+              </el-input>
+            </el-form-item>
             <el-form-item :label="$t('warehouse.Purchaselist')">
               <!--<el-button type="primary" @click="addSkus" size="mini">{{$t('warehouse.add2')}}</el-button>-->
               <el-table :data="skusArray" height="calc(100vh - 440px)" style="width: 100%">
@@ -1592,7 +1600,8 @@
             skus: '',
             currency: '',
             payment_term: '',
-            delivery_method: ''
+            delivery_method: '',
+            comment: ''
           }
         }
       },
@@ -1604,9 +1613,9 @@
         })
       },
       addData() {
-        this.currency = ''
-        this.payment_term = ''
-        this.delivery_method = ''
+        // this.currency = ''
+        // this.payment_term = ''
+        // this.delivery_method = ''
         this.form = this.setForm()
         this.skusArray = []
         this.formEditDialog = true
@@ -1648,9 +1657,9 @@
           })
         } else {
           console.log(this.form);
-          this.form.currency = this.currency
-          this.form.payment_term = this.payment_term
-          this.form.delivery_method = this.delivery_method
+          // this.form.currency = this.currency
+          // this.form.payment_term = this.payment_term
+          // this.form.delivery_method = this.delivery_method
           purchaseAdd(this.form).then(res => {
             this.getDataListFun()
             this.formEditDialog = false
