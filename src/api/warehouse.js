@@ -334,7 +334,8 @@ export function warehouseReceiptsExport(data) {
   return request({
     url: 'warehouse-receipts-export',
     method: 'get',
-    params: data
+    params: data,
+    responseType: 'blob'
   })
 }
 
@@ -343,7 +344,8 @@ export function warehouseOutboundsExport(data) {
   return request({
     url: 'warehouse-outbounds-export',
     method: 'get',
-    params: data
+    params: data,
+    responseType: 'blob'
   })
 }
 
@@ -352,6 +354,7 @@ export function warehousePurchasesExport(data) {
   return request({
     url: 'warehouse-purchases-export',
     method: 'get',
-    params: data
+    params: data,
+    responseType: 'blob'
   })
 }

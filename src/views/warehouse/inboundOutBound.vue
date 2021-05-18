@@ -41,7 +41,7 @@
                 </el-form>
               </el-col>
               <el-col :span="6" align="right" v-if="permissionCheck('opt')">
-                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportRuKu">导出</el-button>
+                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportRuKu">{{$t('warehouse.exportData')}}</el-button>
               </el-col>
             </el-row>
             <el-table stripe border ref="rukuTable" :data="rukuData" @selection-change="rukuChangeChoose" height="calc(100vh - 270px)">
@@ -139,7 +139,7 @@
                 </el-form>
               </el-col>
               <el-col :span="6" align="right" v-if="permissionCheck('opt')">
-                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu">导出</el-button>
+                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu">{{$t('warehouse.exportData')}}</el-button>
               </el-col>
             </el-row>
             <el-table stripe border @selection-change="ChukuChangeChoose" :data="chukuData" height="calc(100vh - 270px)">
@@ -361,14 +361,19 @@ export default {
     },
     // 入库单列表导出
     exportRuKu() {
+      if (this.rukuIdsExport.length === 0) {
+        this.$message.error(this.$t('warehouse.needCheckDataExoprt'))
+        return
+      }
       warehouseReceiptsExport({ ids: JSON.stringify(this.rukuIdsExport) }).then(res => {
-        if (res.meta === 0) {
-          var a = document.createElement('a')
-          const blod = new Blob([res], { type: 'app;ication/vnd.ms-excel' })
-          a.href = URL.createObjectURL(blod)
-          a.download = 'Inventoryinfo.xlsx'
-          a.click()
-        }
+        var link = document.createElement('a')
+        const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blod)
+        link.download = 'WarehousInfo.xlsx'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       })
     },
     ChukuChangeChoose(val) {
@@ -380,14 +385,19 @@ export default {
       }
     },
     exportChuKu() {
+      if (this.chukuIdsExport.length === 0) {
+        this.$message.error(this.$t('warehouse.needCheckDataExoprt'))
+        return
+      }
       warehouseOutboundsExport({ ids: JSON.stringify(this.chukuIdsExport) }).then(res => {
-        if (res.meta === 0) {
-          var a = document.createElement('a')
-          const blod = new Blob([res], { type: 'app;ication/vnd.ms-excel' })
-          a.href = URL.createObjectURL(blod)
-          a.download = 'Inventoryinfo.xlsx'
-          a.click()
-        }
+        var link = document.createElement('a')
+        const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blod)
+        link.download = 'outOfStockInfo.xlsx'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       })
     },
     shengheFuncChuku(id, number) {

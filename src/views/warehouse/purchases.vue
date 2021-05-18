@@ -32,7 +32,7 @@
             </el-form>
           </el-col>
           <el-col :span="6" style="display: flex;align-items: center;height: 48px;justify-content: flex-end;padding-right: 20px;" v-if="permissionCheck('opt')">
-            <el-button type="primary" size="small" style="margin-right: 20px" @click="exportExcel">导出</el-button>
+            <el-button type="primary" size="small" style="margin-right: 20px" @click="exportExcel">{{$t('warehouse.exportData')}}</el-button>
             <div style="display: flex;align-items: center;justify-content: flex-end;" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
@@ -1296,14 +1296,19 @@
         }
       },
       exportExcel() {
+        if (this.purchasesIds.length === 0) {
+          this.$message.error(this.$t('warehouse.needCheckDataExoprt'))
+          return
+        }
         warehousePurchasesExport({ ids: JSON.stringify(this.purchasesIds) }).then(res => {
-          if (res.meta === 0) {
-            var a = document.createElement('a')
-            const blod = new Blob([res], { type: 'app;ication/vnd.ms-excel' })
-            a.href = URL.createObjectURL(blod)
-            a.download = 'Inventoryinfo.xlsx'
-            a.click()
-          }
+          var link = document.createElement('a')
+          const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+          link.style.display = 'none'
+          link.href = URL.createObjectURL(blod)
+          link.download = 'PurchasesInfo.xlsx'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
         })
       },
       tabChange(number) {
