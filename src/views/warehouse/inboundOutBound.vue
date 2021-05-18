@@ -317,7 +317,7 @@ export default {
       ],
       chukuGoodsNumber: 0,
       rukuIdsExport: [],
-      chukuIdsExport: [],
+      chukuIdsExport: []
     }
   },
   watch: {

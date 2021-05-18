@@ -204,7 +204,7 @@ export default {
       this.FormVisible = true
     },
     editType() {
-      if (this.formType.name === '' || this.formType.code === '') {
+      if (this.formType.name === '') {
         this.$message.error(this.$t('warehouse.Msg'))
         return
       }
@@ -232,7 +232,7 @@ export default {
       this.formEditDialog = true
     },
     saveDataFunc() {
-      if (this.form.name === '' || this.form.code === '' || this.form.parent_tree_code === '') {
+      if (this.form.name === '' || this.form.parent_tree_code === '') {
         this.$message.error(this.$t('warehouse.Msg'))
         return
       }
@@ -277,7 +277,7 @@ export default {
       if (this.permissionCheck('opt')) {
         return (
           <span class='custom-tree-node'>
-            <span title={node.label}>{node.label}</span>
+            <span title={node.label}>[{data.tree_code}]{node.label}</span>
             <span class='showHide' v-show={data.tree_code}>
               <el-popover
                 placement='bottom-end'

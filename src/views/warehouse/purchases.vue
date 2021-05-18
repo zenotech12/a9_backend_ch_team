@@ -172,30 +172,33 @@
                       :value="item.id">
                     </el-option>
                   </el-select>
-                  <el-select v-model="form.currency" clearable :placeholder="$t('warehouse.Currency')">
-                    <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <el-select v-model="form.payment_term" clearable :placeholder="$t('warehouse.payment_term')">
-                    <el-option
-                      v-for="item in paymenttermdata"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <el-select v-model="form.delivery_method" clearable :placeholder="$t('warehouse.delivery_method')">
-                    <el-option
-                      v-for="item in deliverymedata"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
+                  <!--<el-select v-model="form.currency" clearable :placeholder="$t('warehouse.Currency')">-->
+                    <!--<el-option-->
+                      <!--v-for="item in options"-->
+                      <!--:key="item.value"-->
+                      <!--:label="item.label"-->
+                      <!--:value="item.value">-->
+                    <!--</el-option>-->
+                  <!--</el-select>-->
+                  <!--<el-select v-model="form.payment_term" clearable :placeholder="$t('warehouse.payment_term')">-->
+                    <!--<el-option-->
+                      <!--v-for="item in paymenttermdata"-->
+                      <!--:key="item.value"-->
+                      <!--:label="item.label"-->
+                      <!--:value="item.value">-->
+                    <!--</el-option>-->
+                  <!--</el-select>-->
+                  <!--<el-select v-model="form.delivery_method" clearable :placeholder="$t('warehouse.delivery_method')">-->
+                    <!--<el-option-->
+                      <!--v-for="item in deliverymedata"-->
+                      <!--:key="item.value"-->
+                      <!--:label="item.label"-->
+                      <!--:value="item.value">-->
+                    <!--</el-option>-->
+                  <!--</el-select>-->
+                  <base-data-select v-model="form.currency" :treeCode="currencyCode" :placeString="$t('warehouse.Currency')"></base-data-select>
+                  <base-data-select v-model="form.payment_term" :treeCode="zhifuCode" :placeString="$t('warehouse.payment_term')"></base-data-select>
+                  <base-data-select v-model="form.delivery_method" :treeCode="yunshuCode" :placeString="$t('warehouse.delivery_method')"></base-data-select>
               </el-form-item>
             <el-form-item :label="$t('goods.note')">
               <el-input
@@ -999,7 +1002,7 @@
         Rukufrom: {
           warehouse_id: '',
           comment: '',
-          skus: '',
+          skus: ''
         },
         flag: '',
         flag2: '',
@@ -1135,7 +1138,10 @@
           status: 2,
           comment: ''
         },
-        purchasesIds: []
+        purchasesIds: [],
+        currencyCode: '008',
+        zhifuCode: '009',
+        yunshuCode: '010'
       }
     },
     computed: {
