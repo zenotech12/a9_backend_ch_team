@@ -42,17 +42,17 @@
               </el-col>
             </el-row>
             <el-table stripe border :data="rukuData" height="calc(100vh - 270px)">
-              <el-table-column label="#" width="60px">
+              <el-table-column label="#" width="60px" fixed = "left">
                 <template slot-scope="scope">
                   {{scope.$index + rukuSearchForm.skip + 1}}
                 </template>
               </el-table-column>
-              <el-table-column prop="no" :label="$t('warehouse.number')" width="120px"></el-table-column>
+              <el-table-column prop="no" :label="$t('warehouse.number')" width="120px" fixed = "left"></el-table-column>
               <el-table-column prop="pu_no" :label="$t('warehouse.pu_no')" width="120px"></el-table-column>
               <el-table-column prop="comment" :label="$t('warehouse.remarks')" width="150px"></el-table-column>
               <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="200px"></el-table-column>
               <el-table-column prop="supplier_name" :label="$t('warehouse.SupplierNmae')" width="150px"></el-table-column>
-              <el-table-column >
+              <el-table-column width="700px">
                 <template slot="header" slot-scope="scope">
                   <el-row style="width: 100%">
                     <el-col :span="10">{{$t('warehouse.Tradename')}}</el-col>
@@ -80,6 +80,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="160px"></el-table-column>
+              <el-table-column prop="adder_name" :label="$t('warehouse.Operator')" width="180px"></el-table-column>
             </el-table>
             <div style="text-align: right;margin-top: 10px">
               <el-pagination
@@ -203,6 +204,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="150px"></el-table-column>
+              <el-table-column prop="adder_name" :label="$t('warehouse.Operator')" width="180px"></el-table-column>
               <el-table-column :label="$t('tools.opt')" width="150px" fixed = "right" v-show="permissionCheck('opt', '8_1') || permissionCheck('opt', '8_3') || permissionCheck('opt', '8_5')">
                 <template slot-scope="scope">
                   <el-button type="text" @click="shengheFuncChuku(scope.row.id, 2)" v-if="(scope.row.status === 1 || scope.row.status === 0) && permissionCheck('opt', '8_3')" size="small">{{$t('warehouse.caigoushenghe')}}</el-button>

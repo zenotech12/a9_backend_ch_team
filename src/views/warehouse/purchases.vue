@@ -96,8 +96,10 @@
                             <div class="ui">
                               <div>
                                 <span>{{record.user_name}}</span>
+                                <span v-if="record.status === 1">{{$t('warehouse.create')}}</span>
                                 <span v-if="record.status === 2">{{$t('global.financialApproval')}}</span>
                                 <span v-if="record.status === 3">{{$t('global.leadershipApproval')}}</span>
+                                <span v-if="record.status === 4">{{$t('warehouse.Completereceipt')}}</span>
                                 <span v-if="record.status === 100">{{$t('tools.cancel')}}</span>
                               </div>
                               <div>
@@ -143,23 +145,6 @@
                     <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3 && permissionCheck('opt', '9_1')" size="small">{{$t('warehouse.payment2')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
                     <el-button type="text" @click="warehousing(scope.row)" v-if="scope.row.status >= 3" size="small">{{$t('warehouse.Warehousing')}}</el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="supplier_name" width="300">
-                  <template slot-scope="scope" slot="header">
-                    <el-row style="width: 100%">
-                      <el-col :span="12">操作人(账户)</el-col>
-                      <el-col :span="12" style="text-align: center">操作内容</el-col>
-                    </el-row>
-                  </template>
-                  <template slot-scope="scope">
-                    <el-row style="width: 100%" v-for="(item,key) in scope.row.opts" :key="key">
-                      <el-col :span="13">{{item.user_name}}</el-col>
-                      <el-col :span="11" style="text-align: center" v-if="item.status == 1">创建</el-col>
-                      <el-col :span="11" style="text-align: center" v-if="item.status == 2">财务审批</el-col>
-                      <el-col :span="11" style="text-align: center" v-if="item.status == 3">领导审批</el-col>
-                      <el-col :span="11" style="text-align: center" v-if="item.status == 4">完成收货</el-col>
-                    </el-row>
                   </template>
                 </el-table-column>
               </el-table>

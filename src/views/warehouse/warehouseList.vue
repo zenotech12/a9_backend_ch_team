@@ -411,6 +411,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="160px"></el-table-column>
+                <el-table-column prop="adder_name" :label="$t('warehouse.Operator')" width="180px"></el-table-column>
               </el-table>
               <div style="text-align: right;margin-top: 10px">
                 <el-pagination
@@ -539,6 +540,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="120px"></el-table-column>
+                <el-table-column prop="adder_name" :label="$t('warehouse.Operator')" width="180px"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" width="150px" v-if="permissionCheck('opt', '8_1') || permissionCheck('opt', '8_3')" fixed = "right">
                   <template slot-scope="scope">
                     <el-button type="text" @click="shengheFuncChuku(scope.row.id, 2)" v-if="(scope.row.status === 1 || scope.row.status === 0) && permissionCheck('opt', '8_3')" size="small">{{$t('warehouse.caigoushenghe')}}</el-button>
