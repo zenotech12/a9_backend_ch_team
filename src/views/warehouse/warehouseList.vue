@@ -648,6 +648,7 @@
         >
           <confirm-button @confirmButton="locallistAdd()" :disabled="submitDisabled" :confirmButtonInfor="$t('warehouse.batchAdd')"></confirm-button>
           <el-table
+            height="calc(100vh - 450px)"
             ref="multipleTable"
             :data="locData"
             tooltip-effect="dark"
@@ -662,6 +663,14 @@
               <template slot-scope="scope">{{ scope.row.name }}</template>
             </el-table-column>
           </el-table>
+          <div style="text-align: right;margin-top: 10px">
+            <el-pagination
+              :current-page.sync="currentPageloca"
+              :page-size="pageSizeloca"
+              layout="total, prev, pager, next, jumper"
+              :total="itemCountloca"
+            ></el-pagination>
+          </div>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataDel()" :disabled="submitDisabled" :confirmButtonInfor="$t('warehouse.batchDel')"></confirm-button>
             <confirm-button @confirmButton="closeDialog()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
@@ -679,8 +688,7 @@
         >
         <div class="localval">
           <span>{{$t('warehouse.area')}}</span>
-          <div><el-input v-model="areastar"></el-input></div>&nbsp;-&nbsp;
-          <div><el-input v-model="areaend"></el-input></div>
+          <div><el-input v-model="areastar"></el-input></div>
         </div>
         <div class="localval">
           <span>{{$t('warehouse.line')}}</span>
@@ -803,6 +811,9 @@ export default {
       currentPagechuku: 1,
       pageSizechuku: pz,
       itemCountchuku: 0,
+      currentPageloca: 1,
+      pageSizeloca: 20,
+      itemCountloca: 0,
       skusArray: [],
       orderTimes: [],
       // 入库单列表信息
@@ -842,7 +853,6 @@ export default {
       },
       chukuDlalog: false,
       areastar: '',
-      areaend: '',
       linestar: '',
       lineend: '',
       columnstar: '',
@@ -905,7 +915,11 @@ export default {
           value: 3
         }
       ],
-      chukuGoodsNumber: 0
+      chukuGoodsNumber: 0,
+      locationfrom:{
+        skip: 0,
+        limit: 20,
+      }
     }
   },
 
@@ -918,6 +932,11 @@ export default {
         this.rukuSearchForm.bt = ''
         this.rukuSearchForm.et = ''
       }
+    },
+    currentPageloca(val) {
+      this.locationfrom.skip = (val - 1) * this.pageSizeloca
+      this.locationfrom.limit = this.pageSizeloca
+      this.getlocalList()
     },
     currentPage_num(val) {
       this.goodsviewfrom.skip = (val - 1) * this.pageSize_num
@@ -1248,6 +1267,7 @@ export default {
       this.ids = []
     },
     locallistAdd() {
+      this.areastar = ''
       this.linestar = ''
       this.lineend = ''
       this.columnstar = ''
@@ -1256,9 +1276,9 @@ export default {
       this.locAddDialog = true
     },
     getlocalList() {
-      waregetlocallist(this.locsearchFrom.id).then(res => {
+      waregetlocallist(this.locsearchFrom.id,this.locationfrom).then(res => {
         this.locData = res.items
-        this.itemCountloc = res.total
+        this.itemCountloca = res.total
       })
     },
     handleSelectionChange(val) {
@@ -1270,13 +1290,12 @@ export default {
     wareLocaladd() {
       if (this.linestar < this.lineend && this.columnstar < this.columnend) {
         const positions = []
-        for(let a = this.areastar; a<=this.areaend;a++){
           for (let i = this.linestar; i <= this.lineend; i++) {
             for (let j = this.columnstar; j <= this.columnend; j++) {
-              positions.push(a + '-' + i + '-' + j)
+              positions.push(this.areastar + '-' + i + '-' + j)
             }
           }
-        }
+          console.log(positions);
         warelocalAll(this.locsearchFrom.id, { positions: JSON.stringify(positions) }).then(res => {
           this.getlocalList()
         })
@@ -1329,7 +1348,7 @@ export default {
       })
     },
     goodsnuminfo(data){
-      console.log(data);
+      // console.log(data);
       this.goodsnumfrom.sku_uid = data.sku_uid
       this.goodsnumfrom.warehouse_id = this.inventoriesSearchForm.warehouse_id
       this.goodsnumfrom.specification = data.specification

@@ -78,5 +78,9 @@ export default {
   youhuiMethod: 'Promotion method',
   manjianDate: 'Full reduction date',
   permission_view: 'View',
-  permission_opt: 'Operating'
+  permission_opt: 'Operating',
+  Basicdata: 'Basic data classification',
+  coding: 'coding',
+  BasicdataSet: 'Basic data settings',
+  pleasechoose: 'please choose'
 }

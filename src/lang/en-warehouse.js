@@ -171,6 +171,11 @@ export default{
   Approvalrecord: 'Operation log',
   Approve: 'Approve',
   Pleasenote: 'Please enter a note',
-  area:'area'
+  area:'Prefix',
+  Operator: 'Operator',
+  Completereceipt: 'Complete receipt',
+  create: 'create',
+  chukuorderMsg: 'Outbound order to be confirmed by the warehouse',
+  chukuorderMsg2: 'Outbound order pending purchase confirmation'
 }
 
