@@ -9,7 +9,7 @@
           <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
         </div>
       <el-table :data="tableData" border stripe ref="singleTable" highlight-current-row height="calc(100vh - 420px)"  @current-change="handleCurrentChange">
-          <el-table-column label="#" width="60px" fixed = "left">
+          <el-table-column label="#" width="60px">
             <template slot-scope="scope">
               {{scope.$index + searchFrom.skip + 1}}
             </template>

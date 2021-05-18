@@ -11,7 +11,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="20" style="padding: 0px 15px ">
+          <el-col :span="18" style="padding: 0px 15px ">
             <el-form :inline="true" :model="searchForm">
               <el-form-item>
                 <el-select v-model="searchForm.pay_status" :placeholder="$t('warehouse.pleaseChoose')">
@@ -31,8 +31,9 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :span="4" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
-            <div style="display: flex;align-items: center;justify-content: flex-end" @click="addData"  v-if="permissionCheck('opt')">
+          <el-col :span="6" style="display: flex;align-items: center;height: 48px;justify-content: flex-end;padding-right: 20px;" v-if="permissionCheck('opt')">
+            <el-button type="primary" size="small" style="margin-right: 20px" @click="exportExcel">导出</el-button>
+            <div style="display: flex;align-items: center;justify-content: flex-end;" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
             </div>
@@ -41,7 +42,8 @@
         <el-row>
           <el-col :span="24">
             <div style="height: calc(100vh - 226px)">
-              <el-table stripe border :data="tableData" height="calc(100% - 40px)">
+              <el-table stripe border :data="tableData" @selection-change="exportChangeChoose" height="calc(100% - 40px)">
+                <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column label="#" width="60px" fixed = "left">
                   <template slot-scope="scope">
                     {{scope.$index + searchForm.skip + 1}}
@@ -859,7 +861,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import store from '@/store'
-  import { purchaseover, warehouseOutboundReview, warehouseOutbounds, receiptsinventory, warehouseOutboundsAdd, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
+  import { purchaseover, warehousePurchasesExport, warehouseOutboundReview, warehouseOutbounds, receiptsinventory, warehouseOutboundsAdd, purchaseAdd, warehousePurchasesCount, warehousePurchasesReview, Locationlist, warehouseReceiptsAdd, warehouseReceipts, purchaseModify, suppliersList, purchaseList, paysList, Paymentcomplete, AddpaysList, modifypaysList, warehousesList, warehouseInventories } from '@/api/warehouse'
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo, spuTypesList, spuTypesInfo } from '@/api/goods'
   import { fileUploadUrl } from '@/utils/serverConfig'
@@ -1132,7 +1134,8 @@
         shengheForm: {
           status: 2,
           comment: ''
-        }
+        },
+        purchasesIds: []
       }
     },
     computed: {
@@ -1284,6 +1287,25 @@
       }
     },
     methods: {
+      exportChangeChoose(val) {
+        if (val.length > 0) {
+          this.purchasesIds = []
+          val.forEach(item => {
+            this.purchasesIds.push(item.id)
+          })
+        }
+      },
+      exportExcel() {
+        warehousePurchasesExport({ ids: JSON.stringify(this.purchasesIds) }).then(res => {
+          if (res.meta === 0) {
+            var a = document.createElement('a')
+            const blod = new Blob([res], { type: 'app;ication/vnd.ms-excel' })
+            a.href = URL.createObjectURL(blod)
+            a.download = 'Inventoryinfo.xlsx'
+            a.click()
+          }
+        })
+      },
       tabChange(number) {
         if (number.name === '2') {
           this.getChuKuData()
