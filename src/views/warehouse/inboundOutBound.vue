@@ -386,6 +386,14 @@ export default {
     }
   },
   mounted() {
+    if (this.$route.params.status) {
+      if (this.$route.params.status !== this.chuKuSearchForm.status) {
+        this.chuKuSearchForm.skip = 0
+        this.currentPagechuku = 1
+        this.activeChuRuKu = '2'
+        this.chuKuSearchForm.status = this.$route.params.status
+      }
+    }
     this.getChuKuData()
     this.getRuKuData()
   },

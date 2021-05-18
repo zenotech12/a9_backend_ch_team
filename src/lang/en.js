@@ -1,6 +1,6 @@
 ﻿// 全局菜单
 export default {
-  webTitle: 'A9 Merchant platform',
+  webTitle: 'A9 BACKEND',
   zh: 'Chinese',
   en: 'English',
   km: 'Khmer language',

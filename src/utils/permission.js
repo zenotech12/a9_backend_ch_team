@@ -32,7 +32,8 @@ export default [
     { 'name': '满减设置', 'lk': 'fullReductionSet', 'code': '6_8', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '地址管理', 'lk': 'address', 'code': '6_4', 'permissions': ['view', 'opt'], 'urls': [] },
     // { 'name': '聊天机器人', 'lk': 'chatRobot', 'code': '6_5', 'permissions': ['view', 'opt'], 'urls': [] },
-    { 'name': '操作日志', 'lk': 'optLog', 'code': '6_6', 'permissions': ['view'], 'urls': [] }
+    { 'name': '操作日志', 'lk': 'optLog', 'code': '6_6', 'permissions': ['view'], 'urls': [] },
+    { 'name': '基础数据', 'lk': 'baseData', 'code': '6_9', 'permissions': ['view', 'opt'], 'urls': [] }
   ] },
   { 'name': '仓库管理', 'lk': 'warehouseMgr', 'code': '8', 'permissions': [], 'urls': [], 'son': [
     { 'name': '总库存', 'lk': 'totalinventory', 'code': '8_4', 'permissions': ['view'], 'urls': [] },
