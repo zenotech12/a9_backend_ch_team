@@ -117,7 +117,7 @@
                 <el-table-column prop="currency" :label="$t('warehouse.Currency')" width="85"></el-table-column>
                 <el-table-column prop="payment_term" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
                 <el-table-column prop="delivery_method" :label="$t('warehouse.delivery_method')" width="100"></el-table-column>
-                <el-table-column :label="$t('warehouse.payment')" width="100">
+                <el-table-column :label="$t('warehouse.payment')" width="120">
                   <template  slot-scope="scope">
                     {{scope.row.paid_complete ? $t('warehouse.yes') : $t('warehouse.no')}}
                   </template>
@@ -157,7 +157,7 @@
                       <el-col :span="13">{{item.user_name}}</el-col>
                       <el-col :span="11" style="text-align: center" v-if="item.status == 1">创建</el-col>
                       <el-col :span="11" style="text-align: center" v-if="item.status == 2">财务审批</el-col>
-                      <el-col :span="11" style="text-align: center" v-if="item.status == 3">管理层审批</el-col>
+                      <el-col :span="11" style="text-align: center" v-if="item.status == 3">领导审批</el-col>
                       <el-col :span="11" style="text-align: center" v-if="item.status == 4">完成收货</el-col>
                     </el-row>
                   </template>
