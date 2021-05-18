@@ -78,5 +78,9 @@ export default {
   youhuiMethod: 'វិធីប្រូម៉ូហ្សិន',
   manjianDate: 'ថ្ងៃដកពេញលេញ',
   permission_view: 'មើល',
-  permission_opt: 'ប្រតិបត្ដិការ'
+  permission_opt: 'ប្រតិបត្ដិការ',
+  Basicdata: 'ការបែងចែកទិន្នន័យមូលដ្ឋាន',
+  coding: 'ការសរសេរកូដ',
+  BasicdataSet: 'ការកំណត់ទិន្នន័យមូលដ្ឋាន',
+  pleasechoose: 'សូម​ជ្រើសរើស'
 }

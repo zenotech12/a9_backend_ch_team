@@ -52,7 +52,7 @@
               <div class="sp cp">
                 <p @click="gotoUrl('orderList', { order_status: 5})">{{$t('order.tobedelivered')}}<span>{{statInfo.need_ship}}</span></p>
                 <p @click="gotoUrl('purchases', { status: 3})">{{$t('order.Tobestored')}}<span>{{statInfo.purchase_need_warehouse}}</span></p>
-                <p @click="gotoUrl('inboundOutBound', { status: 2})">出库单待仓库确认：<span>{{statInfo.outbound_warehouser_confirm  }}</span></p>
+                <p @click="gotoUrl('inboundOutBound', { status: 2})">{{$t('warehouse.chukuorderMsg')}}：<span>{{statInfo.outbound_warehouser_confirm  }}</span></p>
                 <p>&nbsp;</p>
               </div>
             </el-card>
@@ -66,12 +66,11 @@
                 <p @click="gotoUrl('totalinventory', { zero_inventory: true})">{{$t('order.Tobepurchased')}}<span>{{statInfo.need_purchase}}</span></p>
                 <p @click="gotoUrl('purchases', { status: 1})">{{$t('order.Pendingapproval')}}<span>{{statInfo.purchase_finance_approve}}</span></p>
                 <p @click="gotoUrl('purchases', { status: 2})">{{$t('order.Tobeleadership')}}<span>{{statInfo.purchase_leader_approve}}</span></p>
-                <p @click="gotoUrl('inboundOutBound', { status: 1})">出库单待采购确认：<span>{{statInfo.outbound_purchaser_approve }}</span></p>
+                <p @click="gotoUrl('inboundOutBound', { status: 1})">{{$t('warehouse.chukuorderMsg2')}}：<span>{{statInfo.outbound_purchaser_approve }}</span></p>
               </div>
             </el-card>
           </el-col>
         </el-row>
-
       </el-col>
     </el-row>
     <!--概况统计-->

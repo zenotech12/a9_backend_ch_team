@@ -88,5 +88,9 @@ export default {
   zhekou: '折扣',
   manjian: '满减',
   youhuiMethod: '优惠方式',
-  manjianDate: '满减日期'
+  manjianDate: '满减日期',
+  Basicdata: '基础数据分类',
+  coding: '编码',
+  BasicdataSet: '基础数据设置',
+  pleasechoose: '请选择'
 }

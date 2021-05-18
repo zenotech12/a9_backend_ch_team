@@ -32,12 +32,12 @@
               </el-tree>
             </div>
           </div>
-          <el-dialog title="基础数据分类" :visible.sync="FormVisible" center width="500px" :close-on-click-modal="false">
+          <el-dialog :title="$t('sys.Basicdata')" :visible.sync="FormVisible" center width="500px" :close-on-click-modal="false">
             <el-form :model="formType" label-width="80px">
               <el-form-item :label="$t('goods.name')" prop="name" label-width="80px">
                 <el-input v-model="formType.name" auto-complete="off" clearable></el-input>
               </el-form-item>
-              <el-form-item label="编码" label-width="80px" style="margin-top: 20px">
+              <el-form-item :label="$t('sys.coding')" label-width="80px" style="margin-top: 20px">
                 <el-input v-model="formType.code" auto-complete="off" clearable></el-input>
               </el-form-item>
             </el-form>
@@ -64,7 +64,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
-                  <el-table-column prop="code" label="编码"></el-table-column>
+                  <el-table-column prop="code" :label="$t('sys.coding')"></el-table-column>
                   <el-table-column prop="gen_time" :label="$t('sys.addTime')"></el-table-column>
                   <el-table-column :label="$t('warehouse.operation')" width = "140"  v-if="permissionCheck('opt')">
                     <template slot-scope="scope">
@@ -86,11 +86,10 @@
                 </div>
               </el-col>
             </el-row>
-
-            <el-dialog title="基础数据设置" width="500px" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+            <el-dialog :title="$t('sys.BasicdataSet')" width="500px" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
               <el-form label-width="100px" :model="form">
                 <el-form-item :label="$t('goods.parentType')">
-                  <el-select v-model="form.parent_tree_code" placeholder="请选择">
+                  <el-select v-model="form.parent_tree_code" :placeholder="$t('sys.pleasechoose')">
                     <el-option
                       v-for="item in typeDataList"
                       :key="item.id"
@@ -102,11 +101,10 @@
                 <el-form-item :label="$t('goods.name')">
                   <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="编码">
+                <el-form-item :label="$t('sys.coding')">
                   <el-input v-model="form.code"></el-input>
                 </el-form-item>
               </el-form>
-
               <div slot="footer" class="dialog-footer">
                 <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
                 <el-button @click="formEditDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
@@ -118,11 +116,8 @@
     </div>
   </div>
 </template>
-
 <script>
-
 import { dataSelects, dataSelectsGet, dataSelectsDel, dataSelectsModify } from '@/api/system'
-
 export default {
   data() {
     return {
@@ -210,7 +205,7 @@ export default {
     },
     editType() {
       if (this.formType.name === '' || this.formType.code === '') {
-        this.$message.error('请输入完整')
+        this.$message.error(this.$t('warehouse.Msg'))
         return
       }
       if (this.formType.id === '') {
@@ -238,7 +233,7 @@ export default {
     },
     saveDataFunc() {
       if (this.form.name === '' || this.form.code === '' || this.form.parent_tree_code === '') {
-        this.$message.error('请填写完整')
+        this.$message.error(this.$t('warehouse.Msg'))
         return
       }
       this.submitDisabled = true

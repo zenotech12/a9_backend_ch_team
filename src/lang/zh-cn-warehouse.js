@@ -173,8 +173,10 @@ export default {
   Approvalrecord: '操作日志',
   Approve: '审批',
   Pleasenote: '请输入备注',
-  area:'区域',
+  area:'前缀',
   Operator: '操作人',
   Completereceipt: '完成收货',
-  create: '创建'
+  create: '创建',
+  chukuorderMsg: '出库单待仓库确认',
+  chukuorderMsg2: '出库单待采购确认'
 }
