@@ -93,9 +93,10 @@
   }
   .el-menu-item.is-active {
     color: #fff!important;
-    background-color: $menuHover !important;
+    background-color: rgba(0,0,0,0.3)!important;
+    //background-color: $menuHover !important;
     .itemCurrent,.itemCurrent1 {
-      background-color: #F99426;
+      //background-color: #F99426;
     }
   }
   .el-menu-item {
@@ -114,7 +115,7 @@
     position: absolute;
     left: 0;
     top: 13px;
-    background-color: $menuHover;
+    //background-color: $menuHover;
     display: inline-block;
     width: 4px;
     height: 30px;
@@ -129,7 +130,7 @@
     min-width: 180px!important;
     //background-color: $subMenuBg!important;
     &:hover {
-      background-color: $menuHover!important;
+      //background-color: $menuHover!important;
     }
   }
   .el-menu--collapse .el-menu .el-submenu{

@@ -1,5 +1,5 @@
 <template>
-  <scroll-bar>
+  <scroll-bar :style="{backgroundColor: backObj[position]}">
     <div class="sliderBg">
       <div class="logoTitle" >
         <div class="logoImgBox">
@@ -8,11 +8,11 @@
         <span class="comName">{{$t('login.merchantSystem')}}</span>
         <span class="userZhiwei">{{shopInfo.user_info.title}}</span>
       </div>
-      <div @click="jump()" :class="[toggle ?'guide' : 'mini-guide']">
+      <div @click="jump()" :class="[toggle ?'guide' : 'mini-guide']" :style="{backgroundColor: backObjQian[position]}">
         <span>{{$t('global.home')}}</span>
       </div>
     </div>
-    <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
+    <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse" :background-color="backObj[position]" text-color="#fff" active-text-color="#000">
       <sidebar-item :routes="routes"></sidebar-item>
     </el-menu>
     <div class="hamburger_btn">
@@ -34,7 +34,22 @@ export default {
     return {
       toggle: true,
       imgPng: require('../../../../assets/images/dl/logoMerchant.png'),
-      opened: !+Cookies.get('sidebarStatus')
+      opened: !+Cookies.get('sidebarStatus'),
+      backObj: {
+        controller: '#37474F',
+        finance: '#EF6C00', // 橘色
+        seller: '#9ac338', // 绿色
+        purchaser: '#1976D2', // 蓝色
+        warehouse: '#424242' // 炭黑色
+      },
+      backObjQian: {
+        controller: '#263238',
+        finance: '#E65100', // 橘色
+        seller: '#798633', // 绿色
+        purchaser: '#0D47A1', // 蓝色
+        warehouse: '#212121' // 炭黑色
+      },
+      position: ''
     }
   },
   computed: {
@@ -58,6 +73,10 @@ export default {
       this.toggle = val
     }
   },
+  mounted() {
+    this.position = this.shopInfo.user_info.title.toLowerCase()
+    console.log('td', this.position)
+  },
   methods: {
     jump() {
       this.$router.push('/')
@@ -70,7 +89,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .logoTitle {
-    background-color: #9ac338;
+    /*background-color: #9ac338;*/
     text-align: center;
     height: 150px;
     display: flex;
@@ -112,7 +131,7 @@ export default {
   .guide {
     width:170px;
     height:28px;
-    background-color: #798633;
+    /*background-color: #798633;*/
     margin: 0 auto 20px auto;
     display: flex;
     align-items: center;
