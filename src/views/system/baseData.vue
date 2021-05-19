@@ -194,7 +194,7 @@ export default {
       this.form.id = data.id
       this.form.name = data.name
       this.form.code = data.code
-      this.form.parent_tree_code = data.tree_code
+      this.form.parent_tree_code = data.father_tree_code
       this.formEditDialog = true
     },
     showTypeEditForm() {
@@ -278,26 +278,7 @@ export default {
         return (
           <span class='custom-tree-node'>
             <span title={node.label}>[{data.tree_code}]{node.label}</span>
-            <span class='showHide' v-show={data.tree_code}>
-              <el-popover
-                placement='bottom-end'
-                width='250'
-                visible-arrow
-                trigger='hover'>
-                  <div class='labelName'>{node.label}</div>
-                <div class='funcListBox'>
-                  <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
-              <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
-                  <span class='permissionsDel'>{this.$t('tools.delete')}</span>
-                </div>
-                <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
-              <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
-                  <span class='permissionsEdit'>{this.$t('tools.edit')}</span>
-                </div>
-                </div>
-                <i class='el-icon-more imgMore' slot='reference'></i>
-              </el-popover>
-            </span>
+            <i class='el-icon-edit treeDelEditImg permissionsEdit' on-click={ () => this.showEditDataFunc(data)}></i>
           </span>)
       } else {
         return (<span class='custom-tree-node'>

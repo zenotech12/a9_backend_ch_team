@@ -5,7 +5,7 @@
         v-for="item in options"
         :key="item.id"
         :label="item.name"
-        :value="item.name">
+        :value="item[selectType]">
       </el-option>
     </el-select>
   <!--</div>-->
@@ -42,11 +42,24 @@ export default {
       default() {
         return ''
       }
+    },
+    selectType: {
+      type: String,
+      default() {
+        return 'name'
+      }
     }
   },
   methods: {
     changeValue(item) {
+      console.log('ddd', item)
       this.$emit('selectValue', this.value)
+      // const data = this.options.find(res => {
+      //   if (res.name === item) {
+      //     return res
+      //   }
+      // })
+      // this.$emit('chooseData', data)
     },
     getDataList() {
       dataSelectsGet(this.searchForm).then(res => {

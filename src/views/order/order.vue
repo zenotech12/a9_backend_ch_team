@@ -164,7 +164,7 @@
                   <template  slot-scope="scope">
                     <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
                       <img class="image imagecss" :src="getImageUrl(gInfo.goods_info.sku_img, 100)">
-              
+
                       <div class="g-info">
                         <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
                           <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5 && gInfo.goods_info.site_id" alt="">
@@ -390,15 +390,16 @@
               <el-form-item :label="$t('order.expressInfo')" >
                 <el-row :gutter="20">
                   <el-col :span="8">
-                    <el-select v-model="expressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
-                      <el-option
-                        v-for="(item, k) in expressageList"
-                        :key="k"
-                        v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "
-                        :label="item"
-                        :value="k">
-                      </el-option>
-                    </el-select>
+                    <!--<el-select v-model="expressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">-->
+                      <!--<el-option-->
+                        <!--v-for="(item, k) in expressageList"-->
+                        <!--:key="k"-->
+                        <!--v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "-->
+                        <!--:label="item"-->
+                        <!--:value="k">-->
+                      <!--</el-option>-->
+                    <!--</el-select>-->
+                    <base-data-select v-model="expressCompany" selectType="code" treeCode="011" :placeString="$t('order.expressCompany')"></base-data-select>
                   </el-col>
                   <el-col :span="14" v-if="expressCompany !== 'noexpress' && !expressOrder.rider_post">
                     <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>

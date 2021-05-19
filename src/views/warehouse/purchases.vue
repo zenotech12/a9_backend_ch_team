@@ -196,9 +196,9 @@
                       <!--:value="item.value">-->
                     <!--</el-option>-->
                   <!--</el-select>-->
-                  <base-data-select v-model="form.currency" :treeCode="currencyCode" :placeString="$t('warehouse.Currency')"></base-data-select>
-                  <base-data-select v-model="form.payment_term" :treeCode="zhifuCode" :placeString="$t('warehouse.payment_term')"></base-data-select>
-                  <base-data-select v-model="form.delivery_method" :treeCode="yunshuCode" :placeString="$t('warehouse.delivery_method')"></base-data-select>
+                  <base-data-select v-model="form.currency" treeCode="008" :placeString="$t('warehouse.Currency')"></base-data-select>
+                  <base-data-select v-model="form.payment_term" treeCode="009" :placeString="$t('warehouse.payment_term')"></base-data-select>
+                  <base-data-select v-model="form.delivery_method" treeCode="010" :placeString="$t('warehouse.delivery_method')"></base-data-select>
               </el-form-item>
             <el-form-item :label="$t('goods.note')">
               <el-input
@@ -1138,10 +1138,7 @@
           status: 2,
           comment: ''
         },
-        purchasesIds: [],
-        currencyCode: '008',
-        zhifuCode: '009',
-        yunshuCode: '010'
+        purchasesIds: []
       }
     },
     computed: {
@@ -1293,6 +1290,9 @@
       }
     },
     methods: {
+      chooseData(data) {
+        console.log('data', data)
+      },
       exportChangeChoose(val) {
         if (val.length > 0) {
           this.purchasesIds = []
