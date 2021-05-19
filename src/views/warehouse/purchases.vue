@@ -137,9 +137,10 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="160"></el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '8_1') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
+                <el-table-column :label="$t('tools.opt')" width = "160" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '8_1') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
                   <template slot-scope="scope">
-                    <el-button type="text" @click="showDataEditor(scope.row)" v-if="permissionCheck('opt', '8_3') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('tools.edit')}}</el-button>
+                    <el-button type="text" @click="showDataEditor(scope.row, true)" v-if="permissionCheck('opt', '8_3') && scope.row.status === 100 " size="small">{{$t('warehouse.repurchase')}}</el-button>
+                    <el-button type="text" @click="showDataEditor(scope.row, false)" v-if="permissionCheck('opt', '8_3') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('tools.edit')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,2)" v-if="permissionCheck('opt', '9_1') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('global.financialApproval')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,3)" v-if="permissionCheck('opt', '9_2') && scope.row.status === 2" size="small">{{$t('global.leadershipApproval')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,100)" v-if="(permissionCheck('opt', '9_1') && scope.row.status === 2) || (permissionCheck('opt', '9_2') && scope.row.status === 3)" size="small">{{$t('tools.cancel')}}</el-button>
@@ -1038,12 +1039,14 @@
           { value: '1', label: this.$t('warehouse.pendFinancialApproval') },
           { value: '2', label: this.$t('warehouse.leaderBeApproved') },
           { value: '3', label: this.$t('warehouse.tobeStored') },
-          { value: '4', label: this.$t('warehouse.compleateStorage') }],
+          { value: '4', label: this.$t('warehouse.compleateStorage') },
+          { value: '100', label: this.$t('order.status7') }],
         statusTabList: [{ value: '0', label: this.$t('tools.all') },
           { value: '1', label: this.$t('warehouse.pendFinancialApproval') },
           { value: '2', label: this.$t('warehouse.leaderBeApproved') },
           { value: '3', label: this.$t('warehouse.tobeStored') },
-          { value: '4', label: this.$t('warehouse.compleateStorage') }],
+          { value: '4', label: this.$t('warehouse.compleateStorage') },
+          { value: '100', label: this.$t('order.status7') }],
         tab_status: '0',
         showTab: false,
         fileList: [],
@@ -1648,9 +1651,13 @@
         this.fileList = []
         this.payaddDialog = true
       },
-      showDataEditor(data) {
-        console.log(data)
+      showDataEditor(data, show) {
+        // console.log(data)
         this.form = this.setForm(data)
+        if (show) {
+          this.form.id = ''
+        }
+        // console.log('this.form', this.form)
         data.skus && data.skus.forEach(value => {
           value['id'] = value.sku_uid + value.specification
         })

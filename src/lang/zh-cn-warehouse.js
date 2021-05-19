@@ -179,5 +179,6 @@ export default {
   chukuorderMsg: '出库单待仓库确认',
   chukuorderMsg2: '出库单待采购确认',
   exportData: '导出',
-  needCheckDataExoprt: '请先勾选需要导出的数据!'
+  needCheckDataExoprt: '请先勾选需要导出的数据!',
+  repurchase: '重新采购'
 }

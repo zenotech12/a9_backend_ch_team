@@ -177,6 +177,7 @@ export default{
   chukuorderMsg: 'Outbound order to be confirmed by the warehouse',
   chukuorderMsg2: 'Outbound order pending purchase confirmation',
   exportData: 'Export',
-  needCheckDataExoprt: 'Please check the data to be exported first!'
+  needCheckDataExoprt: 'Please check the data to be exported first!',
+  repurchase: 'Repurchase'
 }
 

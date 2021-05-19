@@ -31,6 +31,12 @@ export default {
     event: 'selectValue'
   },
   props: {
+    value: {
+      type: String,
+      default: function() {
+        return ''
+      }
+    },
     treeCode: {
       type: String,
       default: function() {
