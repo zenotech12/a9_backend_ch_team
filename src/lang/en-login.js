@@ -9,7 +9,7 @@ export default {
   welcome: 'Welcome',
   login: 'Login',
   loginOut: 'Logout',
-  merchantSystem: 'A9 Merchant Center',
+  merchantSystem: 'A9 BACKEND',
   slogan: 'Benefit sharing - Develop together',
   copyright: 'Copyright 2000-2020 Sa Sa dot com Limited All right reserved A9 Member of International Holdings Limited',
   forget: 'Forget password？',
