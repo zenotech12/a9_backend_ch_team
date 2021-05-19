@@ -16,7 +16,7 @@ export default {
   putawayE: '下架（保存到仓库）',
   putawayF: '回收站',
   putawayG: '销售状态',
-  putawayTip: '点击可直接修改上下架架状态',
+  putawayTip: '点击可直接修改上下架状态',
   price: '价格',
   inventory: '库存',
   saled: '已售',
