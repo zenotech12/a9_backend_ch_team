@@ -7,8 +7,7 @@
     </el-row>
     <el-row>
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55">
-    </el-table-column>
+        <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
         <el-table-column :label="$t('warehouse.PlaceofOrigin')">
           <template slot-scope="scope">

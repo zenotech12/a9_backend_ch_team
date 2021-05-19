@@ -23,6 +23,7 @@ import stockSelect from './stockSelect'
 import showSkuPlist from './showSkuPulist'
 import purchasesList from './purchaseslist'
 import totalData from './totalData'
+import baseDataSelect from './baseDataSelect'
 
 // 形成组件库
 const components = [
@@ -47,8 +48,9 @@ const components = [
   stockSelect,
   showSkuPlist,
   purchasesList,
-  totalData
- 
+  totalData,
+  baseDataSelect
+
 ]
 
 // 注册全局组件

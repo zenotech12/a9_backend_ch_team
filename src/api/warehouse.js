@@ -299,7 +299,7 @@ export function purchaseover(id, data) {
   return request({
     url: `warehouse-purchases/${id}/receive-complete`,
     method: 'put',
-    params: data
+    data: data
   })
 }
 
@@ -326,5 +326,35 @@ export function warehouseOutboundReview(id, data) {
     url: 'warehouse-outbounds/' + id + '/review',
     method: 'put',
     data: data
+  })
+}
+
+// 入库单.导出
+export function warehouseReceiptsExport(data) {
+  return request({
+    url: 'warehouse-receipts-export',
+    method: 'get',
+    params: data,
+    responseType: 'blob'
+  })
+}
+
+// 出库单.导出
+export function warehouseOutboundsExport(data) {
+  return request({
+    url: 'warehouse-outbounds-export',
+    method: 'get',
+    params: data,
+    responseType: 'blob'
+  })
+}
+
+// 采购单.导出
+export function warehousePurchasesExport(data) {
+  return request({
+    url: 'warehouse-purchases-export',
+    method: 'get',
+    params: data,
+    responseType: 'blob'
   })
 }

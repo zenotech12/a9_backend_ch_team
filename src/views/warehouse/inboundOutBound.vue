@@ -9,7 +9,7 @@
           </el-tabs>
           <div v-if="activeChuRuKu === '1'">
             <el-row>
-              <el-col :span="24">
+              <el-col :span="18">
                 <el-form :inline="true" :model="rukuSearchForm">
                   <el-form-item>
                     <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm" clearable
@@ -40,8 +40,12 @@
                   </el-form-item>
                 </el-form>
               </el-col>
+              <el-col :span="6" align="right" v-if="permissionCheck('opt')">
+                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportRuKu">{{$t('warehouse.exportData')}}</el-button>
+              </el-col>
             </el-row>
-            <el-table stripe border :data="rukuData" height="calc(100vh - 270px)">
+            <el-table stripe border ref="rukuTable" :data="rukuData" @selection-change="rukuChangeChoose" height="calc(100vh - 270px)">
+              <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column label="#" width="60px" fixed = "left">
                 <template slot-scope="scope">
                   {{scope.$index + rukuSearchForm.skip + 1}}
@@ -93,7 +97,7 @@
           </div>
           <div v-show="activeChuRuKu === '2'">
             <el-row>
-              <el-col :span="24">
+              <el-col :span="18">
                 <el-form :inline="true" :model="chuKuSearchForm">
                   <el-form-item>
                     <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
@@ -134,8 +138,12 @@
                   </el-form-item>
                 </el-form>
               </el-col>
+              <el-col :span="6" align="right" v-if="permissionCheck('opt')">
+                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu">{{$t('warehouse.exportData')}}</el-button>
+              </el-col>
             </el-row>
-            <el-table stripe border :data="chukuData" height="calc(100vh - 270px)">
+            <el-table stripe border @selection-change="ChukuChangeChoose" :data="chukuData" height="calc(100vh - 270px)">
+              <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column label="#" width="60px">
                 <template slot-scope="scope">
                   {{scope.$index + chuKuSearchForm.skip + 1}}
@@ -238,6 +246,8 @@
 import {
   warehouseReceipts,
   warehouseOutboundReview,
+  warehouseReceiptsExport,
+  warehouseOutboundsExport,
   warehouseOutbounds
 } from '@/api/warehouse'
 export default {
@@ -305,7 +315,9 @@ export default {
           value: 3
         }
       ],
-      chukuGoodsNumber: 0
+      chukuGoodsNumber: 0,
+      rukuIdsExport: [],
+      chukuIdsExport: []
     }
   },
   watch: {
@@ -339,6 +351,55 @@ export default {
     }
   },
   methods: {
+    rukuChangeChoose(val) {
+      if (val.length > 0) {
+        this.rukuIdsExport = []
+        val.forEach(item => {
+          this.rukuIdsExport.push(item.id)
+        })
+      }
+    },
+    // 入库单列表导出
+    exportRuKu() {
+      if (this.rukuIdsExport.length === 0) {
+        this.$message.error(this.$t('warehouse.needCheckDataExoprt'))
+        return
+      }
+      warehouseReceiptsExport({ ids: JSON.stringify(this.rukuIdsExport) }).then(res => {
+        var link = document.createElement('a')
+        const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blod)
+        link.download = 'WarehousInfo.xlsx'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
+    ChukuChangeChoose(val) {
+      if (val.length > 0) {
+        this.chukuIdsExport = []
+        val.forEach(item => {
+          this.chukuIdsExport.push(item.id)
+        })
+      }
+    },
+    exportChuKu() {
+      if (this.chukuIdsExport.length === 0) {
+        this.$message.error(this.$t('warehouse.needCheckDataExoprt'))
+        return
+      }
+      warehouseOutboundsExport({ ids: JSON.stringify(this.chukuIdsExport) }).then(res => {
+        var link = document.createElement('a')
+        const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blod)
+        link.download = 'outOfStockInfo.xlsx'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
     shengheFuncChuku(id, number) {
       warehouseOutboundReview(id, { status: number }).then(res => {
         this.getChuKuData()
