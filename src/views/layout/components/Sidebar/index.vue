@@ -1,5 +1,5 @@
 <template>
-  <scroll-bar :style="{backgroundColor: backObj[position]}">
+  <scroll-bar :style="{backgroundColor: backObj[position] ? backObj[position] : '#9ac338'}">
     <div class="sliderBg">
       <div class="logoTitle" >
         <div class="logoImgBox">
@@ -8,11 +8,11 @@
         <span class="comName">{{$t('login.merchantSystem')}}</span>
         <span class="userZhiwei">{{shopInfo.user_info.title}}</span>
       </div>
-      <div @click="jump()" :class="[toggle ?'guide' : 'mini-guide']" :style="{backgroundColor: backObjQian[position]}">
+      <div @click="jump()" :class="[toggle ?'guide' : 'mini-guide']" :style="{backgroundColor: backObjQian[position] ? backObjQian[position] : '#9ac338'}">
         <span>{{$t('global.home')}}</span>
       </div>
     </div>
-    <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse" :background-color="backObj[position]" text-color="#fff" active-text-color="#000">
+    <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse" :background-color="backObj[position] ? backObj[position] : '#9ac338'" text-color="#fff" active-text-color="#000">
       <sidebar-item :routes="routes"></sidebar-item>
     </el-menu>
     <div class="hamburger_btn">

@@ -66,5 +66,7 @@ export default {
   financialApproval: 'Financial Approval',
   leadershipApproval: 'Leadership Approval',
   journal: 'Inbound and outbound log',
-  baseData: 'Basic data'
+  baseData: 'Basic data',
+  ProcurementManagement: 'Procurement management',
+  procurementWarehouse: 'Warehouse & Purchasing'
 }

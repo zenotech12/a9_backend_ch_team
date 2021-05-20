@@ -4,7 +4,7 @@ const warehouse = [{
   component: Layout,
   name: 'warehouse',
   redirect: '/warehouse/List',
-  meta: { title: 'warehouseMgr', icon: 'inventory', code: '8' },
+  meta: { title: 'procurementWarehouse', icon: 'inventory', code: '8' },
   children: [
     {
       path: 'totalinventory',

@@ -147,7 +147,7 @@
                     <!--<span class="xiexian">/</span>-->
                     <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3 && permissionCheck('opt', '9_1')" size="small">{{$t('warehouse.payment2')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
-                    <el-button type="text" @click="warehousing(scope.row)" v-if="scope.row.status >= 3" size="small">{{$t('warehouse.Warehousing')}}</el-button>
+                    <el-button type="text" @click="warehousing(scope.row)" v-if="scope.row.status >= 3 && scope.row.status !== 100" size="small">{{$t('warehouse.Warehousing')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>

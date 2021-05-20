@@ -65,5 +65,7 @@ export default {
   financialApproval: '财务审批',
   leadershipApproval: '领导审批',
   journal: '出入库日志',
-  baseData: '基础数据'
+  baseData: '基础数据',
+  ProcurementManagement: '采购管理',
+  procurementWarehouse: '仓库&采购'
 }

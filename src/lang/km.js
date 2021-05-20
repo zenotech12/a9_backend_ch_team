@@ -66,5 +66,7 @@ export default {
   financialApproval: 'ការយល់ព្រមផ្នែកហិរញ្ញវត្ថុ',
   leadershipApproval: 'ការអនុម័តភាពជាអ្នកដឹកនាំ',
   journal: 'កំណត់ហេតុក្នុងនិងក្រៅប្រទេស',
-  baseData: 'ទិន្នន័យមូលដ្ឋាន'
+  baseData: 'ទិន្នន័យមូលដ្ឋាន',
+  ProcurementManagement: 'ការគ្រប់គ្រងលទ្ធកម្ម',
+  procurementWarehouse: 'ឃ្លាំងនិងការទិញ'
 }

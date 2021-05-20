@@ -35,8 +35,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'SidebarItem',
+  data() {
+    return {
+      position: ''
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'shopInfo'
+    ])
+  },
   props: {
     routes: {
       type: Array
@@ -45,6 +56,18 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  mounted() {
+    const position = this.shopInfo.user_info.title.toLowerCase()
+    this.routes.forEach(res => {
+      if (res.name === 'warehouse') {
+        if (position === 'purchaser') {
+          res.meta.title = 'ProcurementManagement'
+        } else if (position === 'warehouse') {
+          res.meta.title = 'warehouseMgr'
+        }
+      }
+    })
   }
 }
 </script>
