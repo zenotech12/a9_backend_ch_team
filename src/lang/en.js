@@ -68,5 +68,6 @@ export default {
   journal: 'Inbound and outbound log',
   baseData: 'Basic data',
   ProcurementManagement: 'Purchasing Management',
-  procurementWarehouse: 'Purchasing / Warehouse'
+  procurementWarehouse: 'Purchasing / Warehouse',
+  procurementPrice: 'Purchase order price'
 }

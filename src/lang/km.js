@@ -68,5 +68,6 @@ export default {
   journal: 'កំណត់ហេតុក្នុងនិងក្រៅប្រទេស',
   baseData: 'ទិន្នន័យមូលដ្ឋាន',
   ProcurementManagement: 'ការគ្រប់គ្រងលទ្ធកម្ម',
-  procurementWarehouse: 'ឃ្លាំងនិងការទិញ'
+  procurementWarehouse: 'ឃ្លាំងនិងការទិញ',
+  procurementPrice: 'តម្លៃបញ្ជាទិញ'
 }

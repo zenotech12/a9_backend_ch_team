@@ -63,9 +63,9 @@
                     <el-col :span="2" style="text-align: center">{{$t('warehouse.position')}}</el-col>
                     <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
                     <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                    <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{$t('warehouse.price')}}</el-col>
                     <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
+                    <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
                   </el-row>
                 </template>
                 <template slot-scope="scope">
@@ -75,9 +75,9 @@
                       <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
                       <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No'}}</span></el-col>
                       <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
-                      <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                      <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{item.unit_price | price}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
-                      <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
+                      <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{item.total_price | price}}</el-col>
                     </el-row>
                   </div>
 
@@ -165,9 +165,9 @@
                     <el-col :span="2" style="text-align: center">{{$t('warehouse.position')}}</el-col>
                     <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
                     <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{$t('warehouse.price')}}</el-col>
+                    <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{$t('warehouse.price')}}</el-col>
                     <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
-                    <el-col :span="2" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
+                    <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{$t('warehouse.allprice')}}</el-col>
                   </el-row>
                 </template>
                 <template slot-scope="scope">
@@ -177,9 +177,9 @@
                       <el-col :span="2" style="text-align: center;min-width: 20px">{{item.position !== '' ? item.position : 'No' }}</el-col>
                       <el-col :span="3" class="overOmitted" style="text-align: center"><span :title="textFilter(item.specification)">{{textFilter(item.specification)}}</span></el-col>
                       <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
-                      <el-col :span="2" style="text-align: center">{{item.unit_price | price}}</el-col>
+                      <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{item.unit_price | price}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
-                      <el-col :span="2" style="text-align: center">{{item.total_price | price}}</el-col>
+                      <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{item.total_price | price}}</el-col>
                     </el-row>
                   </div>
                 </template>

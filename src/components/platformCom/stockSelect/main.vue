@@ -40,11 +40,11 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
-                <el-table-column prop="unit_price" :label="$t('warehouse.price')">
+                <el-table-column v-if="permissionCheck('opt', '9_3')" prop="unit_price" :label="$t('warehouse.price')">
                   <template slot-scope="scope">{{scope.row.unit_price | price}}</template>
                 </el-table-column>
                 <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
-                <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
+                <el-table-column v-if="permissionCheck('opt', '9_3')" prop="total_price" :label="$t('warehouse.allprice')">
                   <template slot-scope="scope">{{scope.row.total_price | price}}</template>
                 </el-table-column>
                 <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>

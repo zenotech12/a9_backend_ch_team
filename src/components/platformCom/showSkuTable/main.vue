@@ -32,7 +32,7 @@
                 <!--<el-input v-model="scope.row.position"></el-input>-->
               </template>
             </el-table-column>
-            <el-table-column prop="unit_price" :label="$t('warehouse.price')">
+            <el-table-column prop="unit_price" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.price')">
               <template slot-scope="scope">
                 {{scope.row.unit_price | price}}
               </template>
@@ -47,7 +47,7 @@
                 <el-input-number v-model="scope.row.count" :min="1" :max="scope.row.count"></el-input-number>
               </template>
             </el-table-column>
-            <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
+            <el-table-column prop="total_price" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.allprice')">
               <template slot-scope="scope">
                 {{scope.row.total_price | price}}
               </template>

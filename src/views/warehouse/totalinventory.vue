@@ -60,11 +60,11 @@
                     <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
                   </el-table-column>
                   <el-table-column prop="barcode" width="140" :label="$t('warehouse.barCode')"></el-table-column>
-                  <el-table-column prop="unit_price" width="100" :label="$t('warehouse.price')">
-                    <template slot-scope="scope">
-                      {{scope.row.unit_price | price}}
-                    </template>
-                  </el-table-column>
+                  <!--<el-table-column prop="unit_price" width="100" :label="$t('warehouse.price')">-->
+                    <!--<template slot-scope="scope">-->
+                      <!--{{scope.row.unit_price | price}}-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
                   <el-table-column prop="count" width="100">
                     <template slot="header" slot-scope="scope">
                       <div class="cellBoxTitle">

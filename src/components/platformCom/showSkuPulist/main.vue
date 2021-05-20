@@ -36,7 +36,7 @@
             <el-input v-model="scope.row.barcode"></el-input>
           </template>
         </el-table-column>
-        <el-table-column property="unit_price" :label="$t('warehouse.price')">
+        <el-table-column v-if="permissionCheck('opt', '9_3')" property="unit_price" :label="$t('warehouse.price')">
            <template slot-scope="scope">
                       {{scope.row.unit_price | price}}
                     </template>
@@ -46,7 +46,7 @@
             <el-input v-model.number="scope.row.count"></el-input>
           </template>
         </el-table-column>
-        <el-table-column property="total_price" :label="$t('warehouse.allprice')">
+        <el-table-column v-if="permissionCheck('opt', '9_3')" property="total_price" :label="$t('warehouse.allprice')">
            <template slot-scope="scope">
                       {{scope.row.total_price | price}}
                     </template>
