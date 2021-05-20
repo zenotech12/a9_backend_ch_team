@@ -67,5 +67,5 @@ export default {
   journal: '出入库日志',
   baseData: '基础数据',
   ProcurementManagement: '采购管理',
-  procurementWarehouse: '仓库&采购'
+  procurementWarehouse: '仓库/采购'
 }

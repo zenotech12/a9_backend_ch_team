@@ -13,6 +13,16 @@
         <el-row>
           <el-col :span="18" style="padding: 0px 15px ">
             <el-form :inline="true" :model="searchForm">
+              <el-form-item :label="$t('warehouse.supplier')">
+                <el-select v-model="searchForm.supplier_id" filterable clearable :placeholder="$t('warehouse.choice')">
+                  <el-option
+                    v-for="item in supplierList"
+                    :key="item.id"
+                    :label="item.company_name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-select v-model="searchForm.pay_status" :placeholder="$t('warehouse.pleaseChoose')">
                   <el-option
@@ -143,7 +153,7 @@
                     <el-button type="text" @click="showDataEditor(scope.row, false)" v-if="permissionCheck('opt', '8_3') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('tools.edit')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,2)" v-if="permissionCheck('opt', '9_1') && (scope.row.status === 1 || scope.row.status === 0 )" size="small">{{$t('global.financialApproval')}}</el-button>
                     <el-button type="text" @click="shengheFunc(scope.row.id,3)" v-if="permissionCheck('opt', '9_2') && scope.row.status === 2" size="small">{{$t('global.leadershipApproval')}}</el-button>
-                    <el-button type="text" @click="shengheFunc(scope.row.id,100)" v-if="(permissionCheck('opt', '9_1') && scope.row.status === 2) || (permissionCheck('opt', '9_2') && scope.row.status === 3)" size="small">{{$t('tools.cancel')}}</el-button>
+                    <el-button type="text" @click="shengheFunc(scope.row.id,100)" v-if="(permissionCheck('opt', '8_3') && scope.row.status <= 1) || (permissionCheck('opt', '9_1') && scope.row.status <= 2) || (permissionCheck('opt', '9_2') && (scope.row.status === 2 || scope.row.status === 3))" size="small">{{$t('tools.cancel')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
                     <el-button type="text" @click="paidListFunc(scope.row)" v-if="scope.row.status === 3 && permissionCheck('opt', '9_1')" size="small">{{$t('warehouse.payment2')}}</el-button>
                     <!--<span class="xiexian">/</span>-->
@@ -885,6 +895,7 @@
           skip: 0,
           limit: pz,
           no: '',
+          supplier_id: '', // 供应商
           pay_status: '', // 0 所有 1未付完 2已付完
           status: 0 // 0所有 1申请 2财务审批 3管理层审批（已完成）4完成收货
         },
