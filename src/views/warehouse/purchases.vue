@@ -128,20 +128,20 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="150"></el-table-column>
-                <el-table-column prop="currency" :label="$t('warehouse.Currency')" width="85"></el-table-column>
-                <el-table-column prop="payment_term" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
+                <el-table-column prop="currency" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.Currency')" width="85"></el-table-column>
+                <el-table-column prop="payment_term" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.payment_term')" width="100"></el-table-column>
                 <el-table-column prop="delivery_method" :label="$t('warehouse.delivery_method')" width="100"></el-table-column>
-                <el-table-column :label="$t('warehouse.payment')" width="120">
+                <el-table-column :label="$t('warehouse.payment')" v-if="permissionCheck('opt', '9_3')" width="120">
                   <template  slot-scope="scope">
                     {{scope.row.paid_complete ? $t('warehouse.yes') : $t('warehouse.no')}}
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('warehouse.PaymentAmount')" width="100">
+                <el-table-column :label="$t('warehouse.PaymentAmount')" v-if="permissionCheck('opt', '9_3')" width="100">
                   <template  slot-scope="scope">
                     {{scope.row.paid_money | price}}
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('warehouse.Pallprice')" width="100">
+                <el-table-column :label="$t('warehouse.Pallprice')" v-if="permissionCheck('opt', '9_3')" width="100">
                   <template  slot-scope="scope">
                     {{scope.row.money | price}}
                   </template>

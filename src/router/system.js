@@ -52,7 +52,7 @@ const system = [{
   {
     name: 'baseData',
     path: 'baseData',
-    meta: { title: 'baseData', icon: 'permission', code: '6_7' },
+    meta: { title: 'baseData', icon: 'permission', code: '6_9' },
     component: () => import('@/views/system/baseData')
   }]
 }]
