@@ -32,7 +32,7 @@ export default {
   imageTip1: 'Please select an image',
   imageFormatTip: 'Upload image can only be JPG, PNG format!',
   imageFormatTip1: 'Upload image can only be JPG, PNG format! Upload image size cannot exceed 1M!',
-  imageFormatTip2: 'Upload image size cannot be bigger or smaller',
+  imageFormatTip2: 'Upload image size cannot exceed the limit​',
   imageSizeTip: 'File size limit exceeded',
   pleaseSelect: 'Please Select',
   all: 'All',
@@ -44,7 +44,7 @@ export default {
   linkType: 'Type',
   linkType1: 'Product',
   linkType2: 'Article',
-  linkType3: 'address',
+  linkType3: 'Address',
   qullEditorTip1: 'Please select the object you want to insert the link to',
   qullEditorTip2: 'Upload video can only be in MP4 format!',
   qullEditorTip3: 'Upload video size cannot exceed 20MB!',
@@ -55,6 +55,6 @@ export default {
   imgUploadTip2: 'Click to upload',
   imgUploadTip3: 'Only JPG / PNG files can be uploaded, and does not exceed',
   uploadImgFormat: 'Upload pictures can only be in JPG, PNG format!',
-  uploadImgNoMoreThan: 'Upload image size cannot exceed',
+  uploadImgNoMoreThan: 'Upload image size cannot exceed the limit',
   exportDetails: 'export details'
 }
