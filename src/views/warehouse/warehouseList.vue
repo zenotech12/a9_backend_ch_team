@@ -212,15 +212,20 @@
                 {{textFilter(scope.row.specification)}}
               </template>
             </el-table-column>
-            <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
-            <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
+            <el-table-column prop="barcode" width="150" :label="$t('warehouse.barCode')"></el-table-column>
+            <el-table-column prop="count" :label="$t('warehouse.num')" width="100"></el-table-column>
+            <el-table-column :label="$t('warehouse.baozhiqiguoqi')" width="200">
+              <template slot-scope="scope">
+                {{scope.row.shelf_life}}{{$t('warehouse.day')}} / {{scope.row.exp}}
+              </template>
+            </el-table-column>
             <!--<el-table-column prop="unit_price" :label="$t('warehouse.price')">-->
               <!--<template slot-scope="scope">{{scope.row.unit_price | price}}</template>-->
             <!--</el-table-column>-->
             <!-- <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
               <template slot-scope="scope">{{scope.row.total_price | price}}</template>
             </el-table-column> -->
-            <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
+            <el-table-column prop="position" width="150" :label="$t('warehouse.position')"></el-table-column>
           </el-table>
           <div style="text-align: right;margin-top: 10px">
             <el-pagination

@@ -31,7 +31,7 @@
               </el-form>
             </el-col>
             <el-col :span="24">
-              <el-table stripe border v-loading="tableData.loading" :data="tableData.body" :row-key="productRowKey" highlight-current-row height="calc(100vh - 390px)" @current-change="selectionChange">
+              <el-table stripe border v-loading="tableData.loading" :data="tableData.body" :row-key="productRowKey" highlight-current-row height="calc(100vh - 420px)" @current-change="selectionChange">
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
                 <!--<el-table-column prop="origin" label="产地"></el-table-column>-->
                 <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
@@ -46,6 +46,11 @@
                 <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
                 <el-table-column v-if="permissionCheck('opt', '9_3')" prop="total_price" :label="$t('warehouse.allprice')">
                   <template slot-scope="scope">{{scope.row.total_price | price}}</template>
+                </el-table-column>
+                <el-table-column :label="$t('warehouse.baozhiqiguoqi')" width="200">
+                  <template slot-scope="scope">
+                    {{scope.row.shelf_life}}{{$t('warehouse.day')}} / {{scope.row.exp}}
+                  </template>
                 </el-table-column>
                 <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
               </el-table>

@@ -173,5 +173,10 @@ export default{
   chukuorderMsg2: 'ការបញ្ជាទិញនៅក្រៅប្រទេសកំពុងរង់ចាំការបញ្ជាក់ពីការទិញ',
   exportData: 'នាំចេញ',
   needCheckDataExoprt: 'សូមពិនិត្យមើលទិន្នន័យដែលត្រូវនាំចេញជាមុនសិន!',
-  repurchase: 'ទិញមកវិញ'
+  repurchase: 'ទិញមកវិញ',
+  day: 'ថ្ងៃ',
+  baozhiqiguoqi: 'អាយុកាលធ្នើ / ពេលវេលាផុតកំណត់',
+  baozhiqi: 'អាយុកាលធ្នើ (ថ្ងៃ)',
+  guoqiTime: 'កាលបរិច្ឆេទផុតកំណត់',
+  chooseDate: 'ជ្រើសរើសកាលបរិច្ឆេទ'
 }

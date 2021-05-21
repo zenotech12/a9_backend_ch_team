@@ -180,5 +180,10 @@ export default {
   chukuorderMsg2: '出库单待采购确认',
   exportData: '导出',
   needCheckDataExoprt: '请先勾选需要导出的数据!',
-  repurchase: '重新采购'
+  repurchase: '重新采购',
+  day: '天',
+  baozhiqiguoqi: '保质期/过期时间',
+  baozhiqi: '保质期(天)',
+  guoqiTime: '过期时间',
+  chooseDate: '选择日期',
 }

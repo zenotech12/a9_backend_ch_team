@@ -565,6 +565,22 @@
                       <!-- </div> -->
                     </template>
                   </el-table-column>
+                  <el-table-column :label="$t('warehouse.baozhiqi')">
+                    <template  slot-scope="scope">
+                      <el-input v-model.number="scope.row.shelf_life" clearable>
+                      </el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('warehouse.guoqiTime')">
+                    <template  slot-scope="scope">
+                      <el-date-picker
+                        v-model="scope.row.exp"
+                        value-format="yyyy-MM-dd"
+                        type="date"
+                        :placeholder="$t('warehouse.chooseDate')">
+                      </el-date-picker>
+                    </template>
+                  </el-table-column>
                   <el-table-column property="unit_price" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.price')">
                      <template slot-scope="scope">
                       {{scope.row.unit_price | price}}
@@ -629,25 +645,30 @@
                 <template slot="header" slot-scope="scope">
                   <div>
                     <el-row style="width: 100%">
-                      <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
+                      <el-col :span="6">{{$t('warehouse.name2')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
                       <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
                       <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
                       <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{$t('warehouse.price')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
                       <el-col :span="2" style="text-align: center">{{$t('warehouse.returnednum')}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{$t('warehouse.baozhiqiguoqi')}}</el-col>
                     </el-row>
                   </div>
                 </template>
                 <template slot-scope="scope">
                   <div class="goods">
                     <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                      <el-col :span="8">{{item.name}}</el-col>
+                      <el-col :span="6" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                       <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                      <el-col :span="3" style="text-align: center">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No' }}</el-col>                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
+                      <el-col :span="3" class="overOmitted" style="text-align: center">
+                        <span :title="textFilter(item.specification)">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No' }}</span>
+                      </el-col>
+                      <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                       <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{item.unit_price | price}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
                       <el-col :span="2" style="text-align: center">{{item.refund_count}}</el-col>
+                      <el-col :span="2" style="text-align: center">{{item.shelf_life}}{{$t('warehouse.day')}} / {{item.exp}}</el-col>
                     </el-row>
                   </div>
                 </template>

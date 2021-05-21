@@ -178,6 +178,11 @@ export default{
   chukuorderMsg2: 'Outbound order pending purchase confirmation',
   exportData: 'Export',
   needCheckDataExoprt: 'Please check the data to be exported first!',
-  repurchase: 'Repurchase'
+  repurchase: 'Repurchase',
+  day: 'day',
+  baozhiqiguoqi: 'Shelf life/expiration time',
+  baozhiqi: 'Shelf life (days)',
+  guoqiTime: 'expire date',
+  chooseDate: 'Select date',
 }
 
