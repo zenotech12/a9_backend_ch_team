@@ -1498,18 +1498,18 @@
         }
         return path
       },
-      // textFilter(data) {
-      //   let str = ''
-      //   const text = data
-      //   Object.keys(text).forEach((v, i) => {
-      //     if (i === 0) {
-      //       str = v + ':' + text[v] + ';'
-      //     } else {
-      //       str = str + v + ':' + text[v] + ';'
-      //     }
-      //   })
-      //   return str
-      // },
+      textFilter1(data) {
+        let str = ''
+        const text = data
+        Object.keys(text).forEach((v, i) => {
+          if (i === 0) {
+            str = v + ':' + text[v] + ';'
+          } else {
+            str = str + v + ':' + text[v] + ';'
+          }
+        })
+        return str
+      },
       getOrderInfo(id) {
         ordersInfo(id).then(res => {
           if (res.meta === 0) {
@@ -1519,7 +1519,7 @@
             array && array.forEach(value => {
               const goodsinfo = value.goods_info
               const obj = {
-                id: (goodsinfo.sku_url !== '' ? goodsinfo.sku_url : goodsinfo.sku_id) + this.textFilter(goodsinfo.specifications),
+                id: (goodsinfo.sku_url !== '' ? goodsinfo.sku_url : goodsinfo.sku_id) + this.textFilter1(goodsinfo.specifications),
                 name: goodsinfo.spu_name,
                 origin: '',
                 specification: JSON.stringify(goodsinfo.specifications),
@@ -1536,6 +1536,7 @@
                   return z
                 }
               })
+              console.log('obj.id', obj.id)
               if (index === -1) {
                 this.skusArray.push(obj)
               }

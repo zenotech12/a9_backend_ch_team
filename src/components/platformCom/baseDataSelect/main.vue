@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       options: [],
-      value: '',
+      // value: '',
       searchForm: {
         skip: 0,
         limit: 100,
