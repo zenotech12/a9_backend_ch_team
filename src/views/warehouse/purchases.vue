@@ -1514,7 +1514,7 @@
         ordersInfo(id).then(res => {
           if (res.meta === 0) {
             // this.skusArray = []
-            console.log('res.item.merchant_item.goods_items', res.item.merchant_item.goods_items)
+            // console.log('res.item.merchant_item.goods_items', res.item.merchant_item.goods_items)
             const array = res.item.merchant_item.goods_items
             array && array.forEach(value => {
               const goodsinfo = value.goods_info
@@ -1536,7 +1536,7 @@
                   return z
                 }
               })
-              console.log('obj.id', obj.id)
+              // console.log('obj.id', obj.id)
               if (index === -1) {
                 this.skusArray.push(obj)
               }
