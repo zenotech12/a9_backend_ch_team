@@ -187,4 +187,5 @@ export default {
   guoqiTime: '过期时间',
   chooseDate: '选择日期',
   exportData2: '导出 Delivery Note',
+  exportData3: '导出',
 }

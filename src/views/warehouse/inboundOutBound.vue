@@ -41,7 +41,7 @@
                 </el-form>
               </el-col>
               <el-col :span="6" align="right" v-if="permissionCheck('opt')">
-                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportRuKu">{{$t('warehouse.exportData')}}</el-button>
+                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportRuKu">{{$t('warehouse.exportData3')}}</el-button>
               </el-col>
             </el-row>
             <el-table stripe border ref="rukuTable" :data="rukuData" @selection-change="rukuChangeChoose" height="calc(100vh - 270px)">

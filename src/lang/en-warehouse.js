@@ -176,7 +176,7 @@ export default{
   create: 'create',
   chukuorderMsg: 'Outbound order to be confirmed by the warehouse',
   chukuorderMsg2: 'Outbound order pending purchase confirmation',
-  exportData: 'Export',
+  exportData: 'Export Issue Note',
   needCheckDataExoprt: 'Please check the data to be exported first!',
   repurchase: 'Repurchase',
   day: 'day',
@@ -184,5 +184,8 @@ export default{
   baozhiqi: 'Shelf life (days)',
   guoqiTime: 'expire date',
   chooseDate: 'Select date',
+  exportData2: 'Export Delivery Note',
+  exportData3: 'Export',
+
 }
 
