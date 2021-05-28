@@ -139,8 +139,10 @@
                 </el-form>
               </el-col>
               <el-col :span="6" align="right" v-if="permissionCheck('opt')">
+                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu_deliverynote">{{$t('warehouse.exportData2')}}</el-button>
                 <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu">{{$t('warehouse.exportData')}}</el-button>
               </el-col>
+              
             </el-row>
             <el-table stripe border @selection-change="ChukuChangeChoose" :data="chukuData" height="calc(100vh - 270px)">
               <el-table-column type="selection" width="55"></el-table-column>
@@ -248,7 +250,8 @@ import {
   warehouseOutboundReview,
   warehouseReceiptsExport,
   warehouseOutboundsExport,
-  warehouseOutbounds
+  warehouseOutbounds,
+  warehouseDeliveryNoteExport
 } from '@/api/warehouse'
 export default {
   data() {
@@ -394,7 +397,23 @@ export default {
         const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
         link.style.display = 'none'
         link.href = URL.createObjectURL(blod)
-        link.download = 'outOfStockInfo.xlsx'
+        link.download = 'IssuenoteInfo.xlsx'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
+    exportChuKu_deliverynote(){
+      if (this.chukuIdsExport.length === 0) {
+        this.$message.error(this.$t('warehouse.needCheckDataExoprt'))
+        return
+      }
+      warehouseDeliveryNoteExport({ ids: JSON.stringify(this.chukuIdsExport) }).then(res => {
+        var link = document.createElement('a')
+        const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blod)
+        link.download = 'deliverynoteInfo.xlsx'
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)

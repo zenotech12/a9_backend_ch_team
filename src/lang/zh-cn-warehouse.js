@@ -178,7 +178,7 @@ export default {
   create: '创建',
   chukuorderMsg: '出库单待仓库确认',
   chukuorderMsg2: '出库单待采购确认',
-  exportData: '导出',
+  exportData: '导出 Issue Note',
   needCheckDataExoprt: '请先勾选需要导出的数据!',
   repurchase: '重新采购',
   day: '天',
@@ -186,4 +186,5 @@ export default {
   baozhiqi: '保质期(天)',
   guoqiTime: '过期时间',
   chooseDate: '选择日期',
+  exportData2: '导出 Delivery Note',
 }

@@ -339,10 +339,20 @@ export function warehouseReceiptsExport(data) {
   })
 }
 
-// 出库单.导出
+// 出库单.导出Issue Note
 export function warehouseOutboundsExport(data) {
   return request({
     url: 'warehouse-outbounds-export',
+    method: 'get',
+    params: data,
+    responseType: 'blob'
+  })
+}
+
+// 出库单.导出Delivery Note
+export function warehouseDeliveryNoteExport(data) {
+  return request({
+    url: 'warehouse-outbounds-export-deliverynote',
     method: 'get',
     params: data,
     responseType: 'blob'
