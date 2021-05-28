@@ -42,7 +42,7 @@
             </el-form>
           </el-col>
           <el-col :span="6" style="display: flex;align-items: center;height: 48px;justify-content: flex-end;padding-right: 20px;" v-if="permissionCheck('opt')">
-            <el-button type="primary" size="small" style="margin-right: 20px" @click="exportExcel">{{$t('warehouse.exportData')}}</el-button>
+            <el-button type="primary" size="small" style="margin-right: 20px" @click="exportExcel">{{$t('warehouse.exportData3')}}</el-button>
             <div style="display: flex;align-items: center;justify-content: flex-end;" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
