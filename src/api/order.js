@@ -211,3 +211,11 @@ export function warehouseGroupInven(data) {
     params: data
   })
 }
+
+// 订单.取消
+export function cancelGoods(id) {
+  return request({
+    url: 'orders/' + id + '/cancel',
+    method: 'post',
+  })
+}

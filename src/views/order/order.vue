@@ -264,6 +264,10 @@
                       <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
                         {{$t('order.purchaseOrderReview')}}
                       </el-button>
+                      <!--  2 5 -->
+                      <el-button  v-if="scope.row.status === 2 || scope.row.status === 5" type="text" @click="cancelOrder(scope.row)" size="small" style="margin-left: 0">
+                       {{$t('order.opt7')}}
+                      </el-button>
                     </template>
                     <template v-if="permissionCheck('opt', '8_1')">
                       <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2 || permissionCheck('opt', '8_1') ">
@@ -677,7 +681,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, warehouseGroupInven, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans} from '@/api/order'
+  import { ordersList, warehouseGroupInven, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods} from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
   import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
@@ -1376,6 +1380,15 @@
           this.tableData = res.items
           this.itemCount = res.total
           // console.log(this.tableData);
+        })
+      },
+      // 取消订单
+      cancelOrder(data){
+        cancelGoods(data.id).then(res=>{
+          if(res.meta == 0){
+            this.getDataListFun()
+            this.getOrderCount()
+          }
         })
       },
       search() {
