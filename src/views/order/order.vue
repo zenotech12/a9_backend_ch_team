@@ -264,8 +264,7 @@
                       <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
                         {{$t('order.purchaseOrderReview')}}
                       </el-button>
-                      <!--  2 5 -->
-                      <el-button  v-if="scope.row.status === 2 || scope.row.status === 5" type="text" @click="cancelOrder(scope.row)" size="small" style="margin-left: 0">
+                      <el-button  v-if="scope.row.status === 2 || scope.row.status === 5 ||  scope.row.status === 4" type="text" @click="cancelOrder(scope.row)" size="small" style="margin-left: 0">
                        {{$t('order.opt7')}}
                       </el-button>
                     </template>
