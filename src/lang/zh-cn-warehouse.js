@@ -188,4 +188,5 @@ export default {
   chooseDate: '选择日期',
   exportData2: '导出 Delivery Note',
   exportData3: '导出',
+  Internaluse: '内部领用'
 }

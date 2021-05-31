@@ -158,6 +158,7 @@
                   <span v-if="scope.row.tp === 1">{{$t('warehouse.order')}}</span>
                   <span v-if="scope.row.tp === 2">{{$t('warehouse.Scrap')}}</span>
                   <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
+                  <span v-if="scope.row.tp === 4">{{$t('warehouse.Internaluse')}}</span>
                 </template>
               </el-table-column>
               <el-table-column width="800">

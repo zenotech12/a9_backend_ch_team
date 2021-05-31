@@ -489,6 +489,7 @@
                       <span v-if="scope.row.tp === 1">{{$t('warehouse.order')}}</span>
                       <span v-if="scope.row.tp === 2">{{$t('warehouse.Scrap')}}</span>
                       <span v-if="scope.row.tp === 3">{{$t('warehouse.return')}}</span>
+                      <span v-if="scope.row.tp === 4">{{$t('warehouse.Internaluse')}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column width="700">
@@ -606,6 +607,7 @@
               <el-radio-group v-model="chukuForm.tp" @change="tpChange">
                 <el-radio :label="2">{{$t('warehouse.Scrap')}}</el-radio>
                 <el-radio :label="3">{{$t('warehouse.return')}}</el-radio>
+                <el-radio :label="4">{{$t('warehouse.Internaluse')}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('warehouse.stockmsg')">
@@ -1392,6 +1394,7 @@ export default {
     this.getPurchaseList()
     this.pulist()
     this.getid()
+    console.log(this.chukuArrayData,'5555');
   },
   created() {}
 }

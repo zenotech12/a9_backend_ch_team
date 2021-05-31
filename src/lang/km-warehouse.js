@@ -181,4 +181,5 @@ export default{
   chooseDate: 'ជ្រើសរើសកាលបរិច្ឆេទ',
   exportData2: 'នាំចេញ លិខិតដឹកជញ្ជូន',
   exportData3: 'នាំចេញ',
+  Internaluse: 'ការប្រើប្រាស់ផ្ទៃក្នុង'
 }
