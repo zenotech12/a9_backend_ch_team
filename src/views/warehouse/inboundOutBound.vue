@@ -163,7 +163,8 @@
               </el-table-column>
               <el-table-column prop="relation_order_no" :label="$t('order.Relatedorders')" width="200px">
                 <template slot-scope="scope">
-                  <a class="textcolor" @click="Orderinfo(scope.row.relation_order_no)">{{scope.row.relation_order_no}}</a>
+                  <a class="textcolor" @click="Orderinfo(scope.row.relation_order_no)" v-if="scope.row.tp === 1">{{scope.row.relation_order_no}}</a>
+                  <a class="textcolor" v-if="scope.row.tp !== 1">/</a>
                 </template>
               </el-table-column>
               <el-table-column width="800">
