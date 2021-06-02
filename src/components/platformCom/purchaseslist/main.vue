@@ -78,6 +78,9 @@ export default {
       itemCount: 0,
       dialogFormVisible: false,
       tableData: [],
+      data: '',
+      val: '',
+      key: '',
     };
   },
 
@@ -105,15 +108,21 @@ export default {
 
     },
     handleCurrentChange(data, val, k) {
-      this.$emit("dataid", data)
-      this.$emit("getvalue", val)
-      this.$emit("key", k)
+      // this.$emit("dataid", data)
+      this.data = data
+      // this.$emit("getvalue", val)
+      this.val = val
+      // this.$emit("key", k)
+      this.k = k
     },
     setCurrent(row) {
         this.$refs.singleTable.setCurrentRow(row);
       },
     confgBtn(){
       this.dialogFormVisible = false
+      this.$emit("dataid", this.data)
+      this.$emit("getvalue", this.val)
+      this.$emit("key", this.key)
       this.setCurrent()
     },
     Searchlist(){

@@ -110,7 +110,7 @@ export default {
   includePostage: 'Include delivery fees',
   businessBz: 'Merchant remarks',
   orderNumber: 'Order quantity',
-  customerPrice: 'Customer unit price',
+  customerPrice: 'Average sale total / order',
   refundAmountSale: 'Apply for refund during sale',
   paymentAmount: 'Payment amount',
   pageviews: 'Page view quantity',

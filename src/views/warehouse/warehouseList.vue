@@ -133,7 +133,7 @@
                 <div><el-input v-model="goodsviewfrom.key" clearable></el-input></div>
                 <div><el-button type="primary" icon="el-icon-search" size="mini" @click="goodsviewSearch"></el-button></div>
               </div>
-              <el-table :data="goodsviewdata" stripe border height="calc(100vh - 400px)" style="width: 100%">
+              <el-table :data="goodsviewdata" stripe border height="calc(100vh - 450px)" style="width: 100%">
                 <el-table-column label="#" width="60px">
                   <template slot-scope="scope">
                     {{scope.$index + goodsviewfrom.skip + 1}}
@@ -199,7 +199,7 @@
               </el-form>
             </el-col>
           </el-row>
-          <el-table stripe border :data="inventoriesList" highlight-current-row  height="calc(100vh - 450px)">
+          <el-table stripe border :data="inventoriesList" highlight-current-row  height="calc(100vh - 460px)">
             <el-table-column label="#" width="60px">
               <template slot-scope="scope">
                 {{scope.$index + inventoriesSearchForm.skip + 1}}
