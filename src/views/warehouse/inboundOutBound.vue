@@ -161,6 +161,11 @@
                   <span v-if="scope.row.tp === 4">{{$t('warehouse.Internaluse')}}</span>
                 </template>
               </el-table-column>
+              <el-table-column prop="relation_order_no" :label="$t('order.Relatedorders')" width="200px">
+                <template slot-scope="scope">
+                  <a class="textcolor" @click="Orderinfo(scope.row.relation_order_no)">{{scope.row.relation_order_no}}</a>
+                </template>
+              </el-table-column>
               <el-table-column width="800">
                 <template slot="header" slot-scope="scope">
                   <el-row style="width: 100%">
@@ -466,6 +471,12 @@ export default {
       this.chuKuSearchForm.skip = 0
       this.currentPagechuku = 1
       this.getChuKuData()
+    },
+    Orderinfo(data){
+      sessionStorage.setItem("orderid",data);
+      this.$router.push({
+        path: '/order/list',
+      })
     }
   },
   mounted() {
@@ -518,5 +529,8 @@ export default {
   display: flex;
   align-items: center;
   margin: 0 20px;
+}
+.textcolor{
+  color: #409eff;
 }
 </style>

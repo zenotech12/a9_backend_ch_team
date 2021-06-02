@@ -1411,7 +1411,15 @@
       }
     },
     mounted() {
-      // console.log(this.$route)
+     this.searchForm.no = sessionStorage.getItem("orderid");
+     this. getDataListFun()
+     setTimeout(() => {
+       sessionStorage.clear()
+     }, 1000);
+      // if(this.$route.query.data.length != 0){
+      //   this.searchForm.no = this.$route.query.data.substring(1, this.$route.query.data.length - 1)
+      //   this. getDataListFun()
+      // }
       areaInfo.forEach(item => {
         const obj = {
           name: item.provinceInfo.name,
