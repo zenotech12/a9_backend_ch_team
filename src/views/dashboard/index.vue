@@ -637,36 +637,65 @@
     methods: {
       // 本周时间
       getCurrentWeek(value) {
-        if (value === '' || value === undefined) {
-          return value
+        // if (value === '' || value === undefined) {
+        //   return value
+        // }
+        // if (value.length === 10) {
+        //   value = value * 1000
+        // }
+        // const myDate = new Date(value)
+        // const day = myDate.getDay() // 回退7天后是星期几？
+        // const time = myDate.getDate() - day + (day === 0 ? -6 : 1)
+        // const startTime = new Date(myDate.setDate(time))
+        // console.log('startTime', startTime.getMonth())
+        // let monthD = startTime.getMonth() + 1
+        // if (monthD < 10) {
+        //   monthD = '0' + monthD
+        // }
+        // let dayD = startTime.getDate()
+        // if (dayD < 10) {
+        //   dayD = '0' + dayD
+        // }
+        // const bt = startTime.getFullYear() + '-' + monthD + '-' + dayD + ' 00:00:00'
+        // const endTime = new Date(myDate.setDate(time + 6))
+        // let monthE = endTime.getMonth() + 1
+        // if (monthE < 10) {
+        //   monthE = '0' + monthE
+        // }
+        // let dayE = endTime.getDate()
+        // if (dayE < 10) {
+        //   dayE = '0' + dayE
+        // }
+        // const et = endTime.getFullYear() + '-' + monthE + '-' + dayE + ' 23:59:59'
+        const vTime = this.$moment(value).format('YYYY-MM-DD')
+        var currentDate = new Date(vTime)
+        var timesStamp = currentDate.getTime()
+        var currenDay = currentDate.getDay()
+        var dates = []
+        for (var i = 0; i < 7; i++) {
+          dates.push(new Date(timesStamp + 24 * 60 * 60 * 1000 * (i - (currenDay + 6) % 7)).toLocaleDateString().replace(/\//g, '-'))
         }
-        if (value.length === 10) {
-          value = value * 1000
-        }
-        const myDate = new Date(value)
-        const day = myDate.getDay() // 回退7天后是星期几？
-        const time = myDate.getDate() - day + (day === 0 ? -6 : 1)
-        const startTime = new Date(myDate.setDate(time))
-        console.log('startTime', startTime.getMonth())
-        let monthD = startTime.getMonth() + 1
-        if (monthD < 10) {
-          monthD = '0' + monthD
-        }
-        let dayD = startTime.getDate()
-        if (dayD < 10) {
-          dayD = '0' + dayD
-        }
-        const bt = startTime.getFullYear() + '-' + monthD + '-' + dayD + ' 00:00:00'
-        const endTime = new Date(myDate.setDate(time + 6))
-        let monthE = endTime.getMonth() + 1
-        if (monthE < 10) {
-          monthE = '0' + monthE
-        }
-        let dayE = endTime.getDate()
-        if (dayE < 10) {
-          dayE = '0' + dayE
-        }
-        const et = endTime.getFullYear() + '-' + monthE + '-' + dayE + ' 23:59:59'
+        const array = []
+        dates.forEach((value, k) => {
+          if (k === 0 || k === 6) {
+            let numberMonth = Number(value.split('-')[1])
+            if (numberMonth < 10) {
+              numberMonth = '0' + numberMonth
+            }
+            let numberDay = Number(value.split('-')[2])
+            if (numberDay < 10) {
+              numberDay = '0' + numberDay
+            }
+            const arr = value.split('-')
+            arr[1] = numberMonth
+            arr[2] = numberDay
+            array.push(arr.join('-'))
+          }
+        })
+        const bt = array[0] + ' 00:00:00'
+        const et = array[1] + ' 23:59:59'
+        // console.log('array', array)
+        // return dates
         return {
           bt: bt,
           et: et
