@@ -290,7 +290,7 @@ export default {
 }
 .login-content{
     margin-top: 50px;
-  overflow: hidden;
+    overflow: hidden;
     position: relative;
     min-height: calc(100vh - 256px);
     /*background-color: #182538;*/

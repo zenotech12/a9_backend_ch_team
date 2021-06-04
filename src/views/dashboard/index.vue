@@ -673,29 +673,11 @@
         var currenDay = currentDate.getDay()
         var dates = []
         for (var i = 0; i < 7; i++) {
-          dates.push(new Date(timesStamp + 24 * 60 * 60 * 1000 * (i - (currenDay + 6) % 7)).toLocaleDateString().replace(/\//g, '-'))
+          const dataStr = this.$moment(timesStamp + 24 * 60 * 60 * 1000 * (i - (currenDay + 6) % 7)).format('YYYY-MM-DD')
+          dates.push(dataStr)
         }
-        const array = []
-        dates.forEach((value, k) => {
-          if (k === 0 || k === 6) {
-            let numberMonth = Number(value.split('-')[1])
-            if (numberMonth < 10) {
-              numberMonth = '0' + numberMonth
-            }
-            let numberDay = Number(value.split('-')[2])
-            if (numberDay < 10) {
-              numberDay = '0' + numberDay
-            }
-            const arr = value.split('-')
-            arr[1] = numberMonth
-            arr[2] = numberDay
-            array.push(arr.join('-'))
-          }
-        })
-        const bt = array[0] + ' 00:00:00'
-        const et = array[1] + ' 23:59:59'
-        // console.log('array', array)
-        // return dates
+        const bt = dates[0] + ' 00:00:00'
+        const et = dates[6] + ' 23:59:59'
         return {
           bt: bt,
           et: et
