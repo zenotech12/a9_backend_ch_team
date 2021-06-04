@@ -84,9 +84,8 @@
           <el-radio-button :label="1">{{$t('order.today')}}</el-radio-button>
           <el-radio-button :label="2">{{$t('order.Thisweek')}}</el-radio-button>
           <el-radio-button :label="3">{{$t('order.thismonth')}}</el-radio-button>
-          <el-radio-button :label="4">{{$t('order.customize')}}</el-radio-button>
         </el-radio-group>
-        <el-date-picker v-if="timeValue === 4" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getDataInfo"
+        <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getDataInfo"
                         v-model="dataTime"
                         type="daterange"
                         align="right"
@@ -617,18 +616,22 @@
           if (val === 1) {
             this.searchForm.bt = this.$moment().format('YYYY-MM-DD') + ' 00:00:00'
             this.searchForm.et = this.$moment().format('YYYY-MM-DD') + ' 23:59:59'
+            this.dataTime = [this.searchForm.bt, this.searchForm.et]
             this.getDataInfo()
           } else if (val === 2) {
             this.searchForm.bt = this.getCurrentWeek(new Date).bt
             this.searchForm.et = this.getCurrentWeek(new Date).et
+            this.dataTime = [this.searchForm.bt, this.searchForm.et]
             this.getDataInfo()
           } else if (val === 3) {
             this.searchForm.bt = this.getCurrentMonth(new Date).bt
             this.searchForm.et = this.getCurrentMonth(new Date).et
+            this.dataTime = [this.searchForm.bt, this.searchForm.et]
             this.getDataInfo()
-          } else if (val === 4) {
+          } else {
             this.searchForm.bt = ''
             this.searchForm.et = ''
+            this.dataTime = ['', '']
           }
         },
         immediate: true
@@ -637,36 +640,6 @@
     methods: {
       // 本周时间
       getCurrentWeek(value) {
-        // if (value === '' || value === undefined) {
-        //   return value
-        // }
-        // if (value.length === 10) {
-        //   value = value * 1000
-        // }
-        // const myDate = new Date(value)
-        // const day = myDate.getDay() // 回退7天后是星期几？
-        // const time = myDate.getDate() - day + (day === 0 ? -6 : 1)
-        // const startTime = new Date(myDate.setDate(time))
-        // console.log('startTime', startTime.getMonth())
-        // let monthD = startTime.getMonth() + 1
-        // if (monthD < 10) {
-        //   monthD = '0' + monthD
-        // }
-        // let dayD = startTime.getDate()
-        // if (dayD < 10) {
-        //   dayD = '0' + dayD
-        // }
-        // const bt = startTime.getFullYear() + '-' + monthD + '-' + dayD + ' 00:00:00'
-        // const endTime = new Date(myDate.setDate(time + 6))
-        // let monthE = endTime.getMonth() + 1
-        // if (monthE < 10) {
-        //   monthE = '0' + monthE
-        // }
-        // let dayE = endTime.getDate()
-        // if (dayE < 10) {
-        //   dayE = '0' + dayE
-        // }
-        // const et = endTime.getFullYear() + '-' + monthE + '-' + dayE + ' 23:59:59'
         const vTime = this.$moment(value).format('YYYY-MM-DD')
         var currentDate = new Date(vTime)
         var timesStamp = currentDate.getTime()
@@ -876,6 +849,11 @@
   /deep/ {
     .el-date-editor .el-range-separator {
       width: 7%;
+    }
+    .el-radio-button__orig-radio:checked+.el-radio-button__inner {
+      color: #000;
+      background: #fff;
+      border-color: #DCDFE6;
     }
   }
 </style>
