@@ -96,7 +96,7 @@
         </el-date-picker>
       </el-col>
       <el-col :span="6" align="right">
-        <el-button size="small" type="primary" @click="exportCurrentData">导出</el-button>
+        <el-button size="small" type="primary" @click="exportCurrentData">{{$t('warehouse.exportData3')}}</el-button>
       </el-col>
       <el-col :span="24">
         <el-row>
