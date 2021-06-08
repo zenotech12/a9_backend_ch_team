@@ -100,56 +100,71 @@
       </el-col>
       <el-col :span="24">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-card shadow="always" class="stat-item">
               <div class="sp cp">
                 <p>{{$t('order.orderNumber')}}：<span>{{dataInfo.order_count}}</span></p>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-card shadow="always" class="stat-item">
               <div class="sp cp" @click="gotoUrl('orderList', { order_status: 2})">
                 <p>{{$t('lang.orderStat1')}}：<span>{{dataInfo.need_pay}}</span></p>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6">
-            <el-card shadow="always" class="stat-item">
+          <el-col :span="8">
+            <el-card shadow="always">
               <div class="sp cp">
                 <p>{{$t('order.orderamount')}}：<span>{{dataInfo.sales | price}}</span></p>
+                <div class="little_title">
+                  <span style="margin-right: 10px">{{$t('order.localGoodsPrice')}}：{{dataInfo.local_goods_payprice | price}}</span>
+                  <span>{{$t('order.overseaGoodsPrice')}}：{{dataInfo.oversea_goods_payprice | price}}</span>
+                </div>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6">
-            <el-card shadow="always">
+          <el-col :span="8">
+            <el-card shadow="always" class="stat-item liuliang">
+              <div class="sp cp">
+                <p>{{$t('order.goodsCount')}}：<span>{{dataInfo.allGoodsCount}}</span></p>
+                <div class="little_title">
+                  <span style="margin-right: 10px">{{$t('order.localGoodsCount')}}：{{dataInfo.local_goods_count}}</span>
+                  <span>{{$t('order.overseaGoodsCount')}}：{{dataInfo.oversea_goods_count}}</span>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="always" class="stat-item liuliang">
               <div class="sp cp">
                 <p>{{$t('order.visitorsNumber')}}：<span>{{dataInfo.visit}}</span></p>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6">
-            <el-card shadow="always" class="stat-item liuliang">
+          <el-col :span="8">
+            <el-card shadow="always" class=" liuliang">
               <div class="sp cp">
                 <p>{{$t('order.pageviews')}}：<span>{{dataInfo.traffic}}</span></p>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6">
-            <el-card shadow="always"  class="stat-item liuliang">
+          <el-col :span="8">
+            <el-card shadow="always" class="stat-item liuliang">
               <div class="sp cp">
                 <p>{{$t('order.customerPrice')}}：<span>{{dataInfo.per_order_money | price}}</span></p>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-card shadow="always" class="stat-item liuliang">
               <div class="sp cp" @click="gotoUrl('/order/orderReturn')">
                 <p>{{$t('order.Return')}}：<span>{{dataInfo.refund}}</span></p>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-card shadow="always" class="liuliang">
               <div class="sp cp" @click="gotoUrl('/order/orderExchange')">
                 <p>{{$t('order.Exchange')}}：<span>{{dataInfo.exchange_count}}</span></p>
@@ -699,7 +714,8 @@
       },
       getDataInfo() {
         statisticsCountV2(this.searchForm).then(res => {
-          this.dataInfo = res.item
+          this.dataInfo = JSON.parse(JSON.stringify(res.item))
+          this.dataInfo['allGoodsCount'] = this.dataInfo.local_goods_count + this.dataInfo.oversea_goods_count
         })
       },
       getListData() {
@@ -797,6 +813,18 @@
       margin: 30px;
       .cp{
         cursor: pointer;
+        position: relative;
+        p {
+          margin: 0;
+          height: 50px;
+          display: flex;
+          align-items: center;
+        }
+        .little_title {
+          font-size: 12px;
+          position: absolute;
+          right: 0px;
+        }
       }
       .star-info{
         .title{

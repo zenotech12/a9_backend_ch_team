@@ -192,5 +192,10 @@ export default {
   Exchange: '换货',
   Leaderboard: '排行榜',
   noGoodsTip: '所购商品暂无库存，请先采购',
-  cancelClaim: '取消认领'
+  cancelClaim: '取消认领',
+  goodsCount: '商品总数',
+  localGoodsCount: '本地商品数量',
+  overseaGoodsCount: '海外商品数量',
+  localGoodsPrice: '本地商品金额',
+  overseaGoodsPrice: '海外商品金额'
 }

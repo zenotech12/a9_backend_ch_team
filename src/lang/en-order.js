@@ -189,5 +189,10 @@ export default {
   Exchange: 'Exchange',
   Leaderboard: 'Leaderboard',
   noGoodsTip: 'The purchased goods are temporarily out of stock, please purchase first',
-  cancelClaim: 'Cancel claim'
+  cancelClaim: 'Cancel claim',
+  goodsCount: 'Total number of products',
+  localGoodsCount: 'Number of local products',
+  overseaGoodsCount: 'Number of overseas products',
+  localGoodsPrice: 'Local merchandise amount',
+  overseaGoodsPrice: 'Amount of overseas products'
 }

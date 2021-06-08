@@ -162,5 +162,10 @@ export default {
   Exchange: 'ផ្លាស់ប្តូរ',
   Leaderboard: 'តារាងពិន្ទុ',
   noGoodsTip: 'ទំនិញដែលបានទិញអស់ស្តុកជាបណ្តោះអាសន្ន សូមបញ្ជាទិញជាមុនសិន',
-  cancelClaim: 'បដិសេធមិនទទួល'
+  cancelClaim: 'បដិសេធមិនទទួល',
+  goodsCount: 'ចំនួនផលិតផលសរុប',
+  localGoodsCount: 'ចំនួនផលិតផលក្នុងស្រុក',
+  overseaGoodsCount: 'ចំនួនផលិតផលក្រៅប្រទេស',
+  localGoodsPrice: 'ចំនួនទំនិញក្នុងស្រុក',
+  overseaGoodsPrice: 'បរិមាណផលិតផលក្រៅប្រទេស'
 }
