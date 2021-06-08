@@ -78,7 +78,7 @@
       <el-col :span="24" class="new_style_title">
         {{$t('order.Overviewstatistics')}}
       </el-col>
-      <el-col :span="24" class="timeBoxRow">
+      <el-col :span="18" class="timeBoxRow">
         {{$t('order.time')}}：
         <el-radio-group v-model="timeValue" size="medium" style="margin-right: 5px">
           <el-radio-button :label="1">{{$t('order.today')}}</el-radio-button>
@@ -94,6 +94,9 @@
                         :start-placeholder="$t('tools.startDate')"
                         :end-placeholder="$t('tools.endDate')">
         </el-date-picker>
+      </el-col>
+      <el-col :span="6" align="right">
+        <el-button size="small" type="primary" @click="exportCurrentData">导出</el-button>
       </el-col>
       <el-col :span="24">
         <el-row>
@@ -424,7 +427,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { shopStat } from '@/api/operation'
-  import { statisticsCountV2, rankingList } from '@/api/homePage'
+  import { statisticsCountV2, rankingList, statisticsCountExport } from '@/api/homePage'
   import { imgGetUrl } from '@/utils/serverConfig'
 
   export default {
@@ -638,6 +641,18 @@
       }
     },
     methods: {
+      exportCurrentData() {
+        statisticsCountExport(this.searchForm).then(res => {
+          var link = document.createElement('a')
+          const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+          link.style.display = 'none'
+          link.href = URL.createObjectURL(blod)
+          link.download = 'statistics.xlsx'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        })
+      },
       // 本周时间
       getCurrentWeek(value) {
         const vTime = this.$moment(value).format('YYYY-MM-DD')

@@ -43,3 +43,13 @@ export function rankingList(data) {
     params: data
   })
 }
+
+// 统计.数量统计v2导出
+export function statisticsCountExport(data) {
+  return request({
+    url: 'statistics/v2/count-export',
+    method: 'get',
+    params: data,
+    responseType: 'blob'
+  })
+}
