@@ -142,7 +142,7 @@
                 <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu_deliverynote">{{$t('warehouse.exportData2')}}</el-button>
                 <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu">{{$t('warehouse.exportData')}}</el-button>
               </el-col>
-              
+
             </el-row>
             <el-table stripe border @selection-change="ChukuChangeChoose" :data="chukuData" height="calc(100vh - 270px)">
               <el-table-column type="selection" width="55"></el-table-column>
@@ -304,7 +304,8 @@ export default {
       options2: [
         { value: '1', label: this.$t('warehouse.Orderdelivery2') },
         { value: '2', label: this.$t('warehouse.Scrap') },
-        { value: '3', label: this.$t('warehouse.return') }
+        { value: '3', label: this.$t('warehouse.return') },
+        { value: '5', label: this.$t('warehouse.specialSale') }
       ],
       rukuTimes: [],
       optionStatus: [

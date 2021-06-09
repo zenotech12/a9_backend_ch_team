@@ -614,6 +614,7 @@
                 <el-radio :label="2">{{$t('warehouse.Scrap')}}</el-radio>
                 <el-radio :label="3">{{$t('warehouse.return')}}</el-radio>
                 <el-radio :label="4">{{$t('warehouse.Internaluse')}}</el-radio>
+                <el-radio :label="5">{{$t('warehouse.specialSale')}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('warehouse.stockmsg')">
@@ -886,6 +887,7 @@ export default {
         {value:'1',label: this.$t('warehouse.Orderdelivery2')},
         {value:'2',label: this.$t('warehouse.Scrap')},
         {value:'3',label: this.$t('warehouse.return')},
+        {value:'5',label: this.$t('warehouse.specialSale')}
         ],
       goodsviewfrom:{
         key: '',

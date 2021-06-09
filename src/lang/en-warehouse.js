@@ -186,7 +186,8 @@ export default{
   chooseDate: 'Select date',
   exportData2: 'Export Delivery Note',
   exportData3: 'Export',
-  Internaluse: 'Internal use'
+  Internaluse: 'Internal use',
+  specialSale: 'Special sale'
 
 }
 
