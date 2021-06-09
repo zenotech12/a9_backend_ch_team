@@ -194,5 +194,9 @@ export default {
   localGoodsCount: 'Local',
   overseaGoodsCount: 'Overseas',
   localGoodsPrice: 'Local',
-  overseaGoodsPrice: 'Overseas'
+  overseaGoodsPrice: 'Overseas',
+  addNote: 'Add Notes',
+  payStatus: 'Payment Status',
+  optUser: 'Operator',
+  optTime: 'Operating Time'
 }

@@ -167,5 +167,9 @@ export default {
   localGoodsCount: 'ចំនួនផលិតផលក្នុងស្រុក',
   overseaGoodsCount: 'ចំនួនផលិតផលក្រៅប្រទេស',
   localGoodsPrice: 'ចំនួនទំនិញក្នុងស្រុក',
-  overseaGoodsPrice: 'បរិមាណផលិតផលក្រៅប្រទេស'
+  overseaGoodsPrice: 'បរិមាណផលិតផលក្រៅប្រទេស',
+  addNote: 'បន្ថែមកំណត់ចំណាំ',
+  payStatus: 'ស្ថានភាពទូទាត់',
+  optUser: 'ប្រតិបត្តិករ',
+  optTime: 'ពេលវេលាប្រតិបត្តិការ'
 }

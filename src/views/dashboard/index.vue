@@ -102,21 +102,21 @@
         <el-row>
           <el-col :span="8">
             <el-card shadow="always" class="stat-item">
-              <div class="sp cp">
+              <div class="sp cp" @click="gotoUrl('orderList', { status: 0, bt: searchForm.bt, et: searchForm.et})">
                 <p>{{$t('order.orderNumber')}}：<span>{{dataInfo.order_count}}</span></p>
               </div>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="always" class="stat-item">
-              <div class="sp cp" @click="gotoUrl('orderList', { order_status: 2})">
+              <div class="sp cp" @click="gotoUrl('orderList', { order_status: 2, bt: searchForm.bt, et: searchForm.et})">
                 <p>{{$t('lang.orderStat1')}}：<span>{{dataInfo.need_pay}}</span></p>
               </div>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="always">
-              <div class="sp cp">
+              <div class="sp cp" @click="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et})">
                 <p>{{$t('order.orderamount')}}：<span>{{dataInfo.sales | price}}</span></p>
                 <div class="little_title">
                   <span style="margin-right: 10px">{{$t('order.localGoodsPrice')}}：{{dataInfo.local_goods_payprice | price}}</span>
@@ -127,7 +127,7 @@
           </el-col>
           <el-col :span="8">
             <el-card shadow="always" class="stat-item liuliang">
-              <div class="sp cp">
+              <div class="sp cp" @click="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et})">
                 <p>{{$t('order.goodsCount')}}：<span>{{dataInfo.allGoodsCount}}</span></p>
                 <div class="little_title">
                   <span style="margin-right: 10px">{{$t('order.localGoodsCount')}}：{{dataInfo.local_goods_count}}</span>
@@ -159,14 +159,14 @@
           </el-col>
           <el-col :span="8">
             <el-card shadow="always" class="stat-item liuliang">
-              <div class="sp cp" @click="gotoUrl('/order/orderReturn')">
+              <div class="sp cp" @click="gotoUrl('orderReturn',  { bt: searchForm.bt, et: searchForm.et})">
                 <p>{{$t('order.Return')}}：<span>{{dataInfo.refund}}</span></p>
               </div>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="always" class="liuliang">
-              <div class="sp cp" @click="gotoUrl('/order/orderExchange')">
+              <div class="sp cp" @click="gotoUrl('orderExchange',  { bt: searchForm.bt, et: searchForm.et})">
                 <p>{{$t('order.Exchange')}}：<span>{{dataInfo.exchange_count}}</span></p>
               </div>
             </el-card>

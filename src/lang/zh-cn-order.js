@@ -197,5 +197,9 @@ export default {
   localGoodsCount: '本地商品数量',
   overseaGoodsCount: '海外商品数量',
   localGoodsPrice: '本地商品金额',
-  overseaGoodsPrice: '海外商品金额'
+  overseaGoodsPrice: '海外商品金额',
+  addNote: '添加备注',
+  payStatus: '支付状态',
+  optUser: '操作人',
+  optTime: '操作时间'
 }

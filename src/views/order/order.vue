@@ -11,6 +11,13 @@
           </el-col>
           <el-col :span ="24">
             <el-form :inline="true" :model="searchForm">
+              <el-form-item :label="$t('order.payStatus')" v-if="tab_order_status === '0'">
+                <el-switch
+                  v-model="paySearchStatus"
+                  :active-text="$t('finance.txStatus2')"
+                  :inactive-text="$t('warehouse.all')">
+                </el-switch>
+              </el-form-item>
             <el-form-item :label="$t('order.ownerShipStatusSelect')">
               <el-select v-model="searchForm.ownership_status" clearable>
                 <el-option
@@ -55,7 +62,7 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100vh - 225px)">
+            <div style="height: calc(100vh - 290px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)" @selection-change="handleSelectionChange">
                 <el-table-column
                   type="selection"
@@ -266,6 +273,9 @@
                       </el-button>
                       <el-button  v-if="scope.row.status === 2 || scope.row.status === 5 ||  scope.row.status === 4" type="text" @click="cancelOrder(scope.row)" size="small" style="margin-left: 0">
                        {{$t('order.opt7')}}
+                      </el-button>
+                      <el-button type="text" @click="addNoteFunc(scope.row)" size="small" style="margin-left: 0">
+                        {{$t('order.note')}}
                       </el-button>
                     </template>
                     <template v-if="permissionCheck('opt', '8_1')">
@@ -673,6 +683,34 @@
             <el-button size="small" type="primary" @click="DeliveryMsgDialog = false">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
+        <!-- 添加备注 -->
+        <el-dialog
+          width="60%"
+          :title="$t('order.note')"
+          :visible.sync="noteDialog"
+          append-to-body>
+          <el-table :data="merchantCommets" border style="width: 100%" height="calc(100vh - 500px)">
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + 1}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="operator_name" :label="$t('order.optUser')" width="200px"></el-table-column>
+              <el-table-column prop="comment" :label="$t('sys.content')" ></el-table-column>
+              <el-table-column prop="gen_time" :label="$t('order.optTime')" width="200px"></el-table-column>
+            </el-table>
+          <el-form label-width="100px" style="margin-top: 20px">
+            <el-form-item :label="$t('order.note')">
+              <el-input type="textarea" :rows="2"  v-model="setNoteForm.merchant_comment" clearable :placeholder="$t('warehouse.Pleasenote')"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button size="small" type="primary" @click="addUpsertNote">{{$t('order.addNote')}}</el-button>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="primary" @click="noteDialog = false">{{$t('tools.close')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -680,7 +718,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, warehouseGroupInven, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods} from '@/api/order'
+  import { ordersList, warehouseGroupInven, orderMerchantComment, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods} from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
   import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
@@ -693,6 +731,9 @@
     data() {
       const pz = 10
       return {
+        noteDialog: false,
+        merchantCommets: [],
+        paySearchStatus: false,
         searchParamKey: 'orderList',
         doWatch: true,
         showTab: false,
@@ -844,13 +885,17 @@
         addressdataarr: [],
         showKunNumberDialog: false,
         restFrom: '',
-        restFromid: ''
+        restFromid: '',
+        setNoteForm: {
+          merchant_comment: ''
+        },
+        merchantCommentId: ''
       }
     },
     computed: {
       ...mapGetters([
         'userInfo', 'searchParam'
-      ]),
+      ])
     },
     watch: {
       tab_order_status(val) {
@@ -894,6 +939,25 @@
       }
     },
     methods: {
+      addNoteFunc(data) {
+        this.merchantCommets = data.merchant_comments
+        this.merchantCommentId = data.id
+        this.setNoteForm.merchant_comment = ''
+        this.noteDialog = true
+      },
+      addUpsertNote() {
+        if (this.setNoteForm.merchant_comment === '') {
+          this.$message.error(this.$t('warehouse.Pleasenote'))
+          return
+        }
+        orderMerchantComment(this.merchantCommentId, this.setNoteForm).then(res => {
+          if (res.meta === 0) {
+            this.noteDialog = false
+            this.getDataListFun()
+            this.getOrderCount()
+          }
+        })
+      },
       jumpCaiGou() {
         this.$router.push({
           path: '/warehouse/purchases'
@@ -1411,11 +1475,11 @@
       }
     },
     mounted() {
-     this.searchForm.no = sessionStorage.getItem("orderid");
-     this. getDataListFun()
-     setTimeout(() => {
-       sessionStorage.clear()
-     }, 1000);
+      this.searchForm.no = sessionStorage.getItem("orderid");
+      this.getDataListFun()
+      setTimeout(() => {
+        sessionStorage.clear()
+      }, 1000)
       // if(this.$route.query.data.length != 0){
       //   this.searchForm.no = this.$route.query.data.substring(1, this.$route.query.data.length - 1)
       //   this. getDataListFun()
@@ -1463,6 +1527,12 @@
       this.tab_order_status = this.searchForm.order_status + ''
       if (this.$route.params.bt || this.$route.params.et) {
         this.orderTimes = [this.$route.params.bt, this.$route.params.et]
+      }
+      if (this.$route.params.status) {
+        this.searchForm.skip = 0
+        this.currentPage = 1
+        this.searchForm.order_status = this.$route.params.status
+        this.paySearchStatus = true
       }
       // console.log('optionsAddress', this.optionsAddress)
       // this.searchForm.order_status = this.$route.params.order_status ? this.$route.params.order_status : 0
