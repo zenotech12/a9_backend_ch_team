@@ -188,7 +188,7 @@
         var searchBox = new google.maps.places.SearchBox(input)
         this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input)
         var markers = []
-        // console.log('searchBox', searchBox)
+        // console.log('searchBox', searchBox.addListener('places_changed'))
         searchBox.addListener('places_changed', function() {
           console.log('marker2', that.marker)
           console.log('event', event)
