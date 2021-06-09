@@ -2,7 +2,18 @@
   <div class="sys-body">
     <div class="sys-neiBody">
       <!-- 搜索 -->
-        <el-row>
+          <el-row>
+            <el-col>
+              <el-form :inline="true" :model="searchForm" @submit.native.prevent>
+                <el-form-item :label="$t('order.searchKey')">
+                  <el-input v-model="searchForm.key" style="width: 250px" @keyup.native.enter="search" clearable></el-input>
+                </el-form-item>
+                <el-form-item class="searchBtn">
+                    <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
           <el-col :span="24" >
             <div style="">
             <el-table stripe border v-loading="tableData.loading" :data="tableData.body" style="width: 100%;" height="calc(100vh - 175px)" >
