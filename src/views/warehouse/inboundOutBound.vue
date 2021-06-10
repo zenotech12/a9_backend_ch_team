@@ -222,10 +222,12 @@
               </el-table-column>
               <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="150px"></el-table-column>
               <el-table-column prop="adder_name" :label="$t('warehouse.Operator')" width="180px"></el-table-column>
+              <el-table-column prop="receiver_name" :label="$t('order.tiHuoRen')" width="180px"></el-table-column>
               <el-table-column :label="$t('tools.opt')" width="150px" fixed = "right" v-show="permissionCheck('opt', '8_1') || permissionCheck('opt', '8_3') || permissionCheck('opt', '8_5')">
                 <template slot-scope="scope">
-                  <el-button type="text" @click="shengheFuncChuku(scope.row.id, 2)" v-if="(scope.row.status === 1 || scope.row.status === 0) && permissionCheck('opt', '8_3')" size="small">{{$t('warehouse.caigoushenghe')}}</el-button>
-                  <el-button type="text" @click="shengheFuncChuku(scope.row.id, 3)" v-if="scope.row.status === 2  && permissionCheck('opt', '8_1')" size="small">{{$t('warehouse.invConfirm')}}</el-button>
+                  <el-button type="text" @click="shengheFuncChuku(scope.row.id, 2, '')" v-if="(scope.row.status === 1 || scope.row.status === 0) && permissionCheck('opt', '8_3')" size="small">{{$t('warehouse.caigoushenghe')}}</el-button>
+                  <!--<el-button type="text" @click="shengheFuncChuku(scope.row.id, 3)" v-if="scope.row.status === 2  && permissionCheck('opt', '8_1')" size="small">{{$t('warehouse.invConfirm')}}</el-button>-->
+                  <el-button type="text" @click="shengheFunc(scope.row)" v-if="scope.row.status === 2  && permissionCheck('opt', '8_1')" size="small">{{$t('warehouse.invConfirm')}}</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -244,6 +246,20 @@
                 </div>
               </el-col>
             </el-row>
+            <el-dialog
+              width="500px"
+              :title="$t('order.setTiHuoRen') + '-' + titleStr"
+              :visible.sync="visibleShengHe"
+              append-to-body>
+              <el-form label-width="120px">
+                <el-form-item :label="$t('order.tiHuoRen')">
+                  <el-input v-model="receiver_name" clearable :placeholder="$t('order.pleaseEnterTiHuoren')"></el-input>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button size="small" type="primary" @click="submitBtn">{{$t('tools.confirm')}}</el-button>
+              </div>
+            </el-dialog>
           </div>
         </el-col>
       </el-row>
@@ -264,6 +280,7 @@ export default {
   data() {
     const pz = 10
     return {
+      visibleShengHe: false,
       rukuData: [],
       currentPageruku: 1,
       pageSizeruku: pz,
@@ -328,7 +345,14 @@ export default {
       ],
       chukuGoodsNumber: 0,
       rukuIdsExport: [],
-      chukuIdsExport: []
+      chukuIdsExport: [],
+      formCang: {
+        status: '',
+        receiver_name: ''
+      },
+      receiverId: '',
+      receiver_name: '',
+      titleStr: ''
     }
   },
   watch: {
@@ -369,6 +393,20 @@ export default {
           this.rukuIdsExport.push(item.id)
         })
       }
+    },
+    submitBtn() {
+      if (this.receiver_name === '') {
+        this.$message.error(this.$t('order.pleaseEnterTiHuoren'))
+        return
+      }
+      this.shengheFuncChuku(this.receiverId, 3, this.receiver_name)
+      this.visibleShengHe = false
+    },
+    shengheFunc(data) {
+      this.receiverId = data.id
+      this.titleStr = data.no
+      this.receiver_name = ''
+      this.visibleShengHe = true
     },
     // 入库单列表导出
     exportRuKu() {
@@ -427,8 +465,11 @@ export default {
         document.body.removeChild(link)
       })
     },
-    shengheFuncChuku(id, number) {
-      warehouseOutboundReview(id, { status: number }).then(res => {
+    shengheFuncChuku(id, number, name) {
+      this.formCang.status = number
+      this.formCang.receiver_name = name
+      // console.log('this.formCang', this.formCang, id)
+      warehouseOutboundReview(id, this.formCang).then(res => {
         this.getChuKuData()
       })
     },

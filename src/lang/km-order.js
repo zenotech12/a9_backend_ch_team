@@ -171,5 +171,8 @@ export default {
   addNote: 'បន្ថែមកំណត់ចំណាំ',
   payStatus: 'ស្ថានភាពទូទាត់',
   optUser: 'ប្រតិបត្តិករ',
-  optTime: 'ពេលវេលាប្រតិបត្តិការ'
+  optTime: 'ពេលវេលាប្រតិបត្តិការ',
+  setTiHuoRen: 'រៀបចំអ្នកដឹកជញ្ជូន',
+  tiHuoRen: 'អ្នក​ដឹកជញ្ជូន',
+  pleaseEnterTiHuoren: 'សូមបញ្ចូលអ្នកចែកចាយ'
 }

@@ -201,5 +201,8 @@ export default {
   addNote: '添加备注',
   payStatus: '支付状态',
   optUser: '操作人',
-  optTime: '操作时间'
+  optTime: '操作时间',
+  setTiHuoRen: '设置提货人',
+  tiHuoRen: '提货人',
+  pleaseEnterTiHuoren: '请输入提货人'
 }

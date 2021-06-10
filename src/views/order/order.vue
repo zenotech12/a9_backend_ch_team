@@ -9,9 +9,9 @@
               <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatusTab" :key="k" v-if="item" :label="item.label" :name="item.value"></el-tab-pane>
             </el-tabs>
           </el-col>
-          <el-col :span ="24">
+          <el-col :span ="24" class="searchRow">
             <el-form :inline="true" :model="searchForm">
-              <el-form-item :label="$t('order.payStatus')" v-if="tab_order_status === '0'">
+              <el-form-item v-if="tab_order_status === '0'">
                 <el-switch
                   v-model="paySearchStatus"
                   :active-text="$t('finance.txStatus2')"
@@ -19,7 +19,7 @@
                 </el-switch>
               </el-form-item>
             <el-form-item :label="$t('order.ownerShipStatusSelect')">
-              <el-select v-model="searchForm.ownership_status" clearable>
+              <el-select v-model="searchForm.ownership_status" clearable style="width: 120px">
                 <el-option
                   v-for="(item, k) in ownerShipStatuses"
                   :key="k"
@@ -28,14 +28,21 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item :label="$t('order.payMethod')">
+              <el-radio-group v-model="searchForm.pay_way" size="mini" @change="search">
+                <el-radio-button :label="0">{{$t('warehouse.all')}}</el-radio-button>
+                <el-radio-button :label="1">{{$t('order.onlinePay')}}</el-radio-button>
+                <el-radio-button :label="2">{{$t('order.cashOnDelivery')}}</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item :label="$t('order.searchKey')">
-              <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 250px" clearable></el-input>
+              <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 200px" clearable></el-input>
             </el-form-item>
             <el-form-item :label="$t('order.no')">
-              <el-input v-model="searchForm.no" style="width: 250px" clearable></el-input>
+              <el-input v-model="searchForm.no" style="width: 200px" clearable></el-input>
             </el-form-item>
-            <el-form-item :label="$t('order.orderTime')">
-              <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
+            <el-form-item :label="$t('order.orderTime')" class="searchTimeBox">
+              <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable style="width: 260px;"
                               v-model="orderTimes"
                               type="daterange"
                               align="right"
@@ -46,14 +53,14 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+              <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
               <template v-if="permissionCheck('opt')">
-                <el-button type="primary" @click="exportFunc([], false)" size="small" icon="el-icon-download"></el-button>
+                <el-button type="primary" @click="exportFunc([], false)" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>
                 <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
                            :action= "importUrl"
                            :show-file-list="false"
                            :on-success="importSuccess" :on-error="importError">
-                  <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
+                  <el-button type="primary" size="mini" icon="el-icon-upload2"></el-button>
                 </el-upload>
               </template>
             </el-form-item>
@@ -755,6 +762,7 @@
           bt: '',
           et: '',
           ownership_status: '',
+          pay_way: 0, // 支付方式  0 所有 1 在线支付 2 货到付款
           invoice: true
         },
         allprice: 0,
@@ -1568,6 +1576,13 @@
 </script>
 
 <style lang="scss" scoped>
+  .searchTimeBox {
+    /deep/ {
+      .el-date-editor .el-range-input {
+        width: 60%;
+      }
+    }
+  }
 .f12{
   font-size: 12px;
 }
@@ -1686,5 +1701,12 @@
   .imagecss{
     width: 100px !important;
     object-fit: cover;
+  }
+  .searchRow {
+    /deep/ {
+      .el-input--suffix .el-input__inner {
+        padding-right: 8px;
+      }
+    }
   }
 </style>

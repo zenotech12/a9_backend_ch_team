@@ -198,5 +198,8 @@ export default {
   addNote: 'Add Notes',
   payStatus: 'Payment Status',
   optUser: 'Operator',
-  optTime: 'Operating Time'
+  optTime: 'Operating Time',
+  setTiHuoRen: 'Set up delivery person',
+  tiHuoRen: 'Delivery person',
+  pleaseEnterTiHuoren: 'Please enter the delivery person'
 }
