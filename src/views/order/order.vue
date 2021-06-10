@@ -733,7 +733,7 @@
       return {
         noteDialog: false,
         merchantCommets: [],
-        paySearchStatus: false,
+        paySearchStatus: true,
         searchParamKey: 'orderList',
         doWatch: true,
         showTab: false,
@@ -748,7 +748,7 @@
         searchForm: {
           key: '',
           user_id: '',
-          order_status: 0,
+          order_status: 16,
           no: '',
           skip: 0,
           limit: pz,
@@ -903,14 +903,27 @@
           return
         }
         if (this.searchForm.skip !== 0 || this.searchForm.order_status !== parseInt(val)) {
-          // console.log(this.searchForm, 'gg', val)
-          // console.log(this.searchForm.skip, this.searchForm.skip !== 0, 'gg', this.searchForm.order_status !== parseInt(val))
+          if (val === '0') {
+            if (this.paySearchStatus === true) {
+              this.searchForm.order_status = 16
+            } else {
+              this.searchForm.order_status = parseInt(val)
+            }
+          } else {
+            this.searchForm.order_status = parseInt(val)
+          }
           this.searchForm.skip = 0
           this.searchForm.limit = this.pageSize
           this.currentPage = 1
-          this.searchForm.order_status = parseInt(val)
           this.getDataListFun()
           // console.log(111)
+        }
+      },
+      paySearchStatus(val) {
+        if (val === true) {
+          this.searchForm.order_status = 16
+        } else {
+          this.searchForm.order_status = 0
         }
       },
       currentPage(val) {
@@ -1524,7 +1537,11 @@
         this.searchForm.order_status = 0
         this.searchForm.ownership_status = this.$route.params.ownership_status
       }
-      this.tab_order_status = this.searchForm.order_status + ''
+      if (this.searchForm.order_status !== 16) {
+        this.tab_order_status = this.searchForm.order_status + ''
+      } else {
+        this.tab_order_status = '0'
+      }
       if (this.$route.params.bt || this.$route.params.et) {
         this.orderTimes = [this.$route.params.bt, this.$route.params.et]
       }
