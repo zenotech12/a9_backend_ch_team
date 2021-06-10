@@ -18,6 +18,13 @@
                   :inactive-text="$t('warehouse.all')">
                 </el-switch>
               </el-form-item>
+              <el-form-item>
+                <el-radio-group v-model="searchForm.pay_way" size="mini" @change="search">
+                  <el-radio-button :label="0">{{$t('warehouse.all')}}</el-radio-button>
+                  <el-radio-button :label="1">{{$t('order.onlinePay')}}</el-radio-button>
+                  <el-radio-button :label="2">{{$t('order.cashOnDelivery')}}</el-radio-button>
+                </el-radio-group>
+              </el-form-item>
             <el-form-item :label="$t('order.ownerShipStatusSelect')">
               <el-select v-model="searchForm.ownership_status" clearable style="width: 120px">
                 <el-option
@@ -27,13 +34,6 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('order.payMethod')">
-              <el-radio-group v-model="searchForm.pay_way" size="mini" @change="search">
-                <el-radio-button :label="0">{{$t('warehouse.all')}}</el-radio-button>
-                <el-radio-button :label="1">{{$t('order.onlinePay')}}</el-radio-button>
-                <el-radio-button :label="2">{{$t('order.cashOnDelivery')}}</el-radio-button>
-              </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('order.searchKey')">
               <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 200px" clearable></el-input>
