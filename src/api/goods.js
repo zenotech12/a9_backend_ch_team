@@ -208,3 +208,12 @@ export function draftsDel(data) {
     params: data
   })
 }
+
+// 商品规格.查.规格.导出
+export function spusSkusExport(id) {
+  return request({
+    url: 'spus/' + id + '/skus-export',
+    method: 'get',
+    responseType: 'blob'
+  })
+}
