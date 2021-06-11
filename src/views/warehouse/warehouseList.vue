@@ -483,6 +483,21 @@
                     {{scope.$index + chuKuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
+                <el-table-column fixed = "left" :label="$t('warehouse.number')" width="150px">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.no}}</span>
+                    <el-popover v-if="scope.row.comment !== ''"
+                      placement="top-start"
+                      width="600"
+                      trigger="hover"
+                      >
+                      <div style="padding: 10px;">
+                        {{scope.row.comment}}
+                      </div>
+                      <i slot="reference" class="el-icon-tickets"></i>
+                    </el-popover>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="90px">
                   <template slot-scope="scope">
