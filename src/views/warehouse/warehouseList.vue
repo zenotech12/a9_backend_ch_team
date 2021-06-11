@@ -617,6 +617,9 @@
                 <el-radio :label="5">{{$t('warehouse.specialSale')}}</el-radio>
               </el-radio-group>
             </el-form-item>
+            <el-form-item :label="$t('order.note')">
+              <el-input type="textarea" :rows="2"  v-model="chukuForm.comment" clearable :placeholder="$t('warehouse.Pleasenote')"></el-input>
+            </el-form-item>
             <el-form-item :label="$t('warehouse.stockmsg')">
               <el-table :data="chukuArrayData" style="width: 100%" class="inputNumber">
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
@@ -863,7 +866,8 @@ export default {
       chukuForm: {
         warehouse_id: '',
         tp: 2, // 2报废 3退回
-        skus: ''
+        skus: '',
+        comment: ''
       },
       chukuDlalog: false,
       areastar: '',
@@ -1028,6 +1032,7 @@ export default {
       this.chukuDlalog = true
       this.chukuForm.tp = 2
       this.chukuForm.skus = ''
+      this.chukuForm.comment = ''
       this.stockId = '1'
       this.chukuArrayData = []
     },
