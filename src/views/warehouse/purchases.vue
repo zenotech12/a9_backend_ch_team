@@ -1233,7 +1233,7 @@
       batchPrice(val) {
         this.goodsInventoryTable.forEach(item => {
           this.$set(item, 'unit_price', val)
-          this.$set(item, 'total_price', item.count * item.unit_price)
+          // this.$set(item, 'total_price', item.count * item.unit_price)
         })
       },
       batchTotalPrice(val) {
@@ -1301,9 +1301,9 @@
       skusArray: {
         handler(val) {
           if (val.length > 0) {
-            val.forEach(item => {
-              this.$set(item, 'total_price', item.count * item.unit_price)
-            })
+            // val.forEach(item => {
+              // this.$set(item, 'total_price', item.count * item.unit_price)
+            // })
           }
         },
         deep: true
@@ -1704,7 +1704,7 @@
       saveDataFunc() {
         this.submitDisabled = true
         this.form.skus = JSON.stringify(this.skusArray)
-        // console.log(this.form)
+        console.log(this.form)
         if (this.form.id !== '') {
           purchaseModify(this.form.id, this.form).then(res => {
             this.getDataListFun()
