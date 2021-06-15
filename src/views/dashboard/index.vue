@@ -1212,37 +1212,8 @@
       }
     },
     created() {
-      // const data = new Date()
-      // const year = data.getFullYear()
-      // let mouth = data.getMonth() + 1
-      // let day = data.getDate()
-      // if (mouth < 10) {
-      //   mouth = '0' + mouth
-      // }
-      // if (day < 10) {
-      //   day = '0' + day
-      // }
-      // // this.searchForm.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
-      // // this.searchForm.et = year + '-' + mouth + '-' + day + ' 23:59:59'
-      // this.searchList.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
-      // this.searchList.et = year + '-' + mouth + '-' + day + ' 23:59:59'
-      // this.searchVisit.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
-      // this.searchVisit.et = year + '-' + mouth + '-' + day + ' 23:59:59'
-      // this.searchPaid.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
-      // this.searchPaid.et = year + '-' + mouth + '-' + day + ' 23:59:59'
-      // this.searchAddCart.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
-      // this.searchAddCart.et = year + '-' + mouth + '-' + day + ' 23:59:59'
-      // this.searchStar.bt = year + '-' + mouth + '-' + day + ' 00:00:00'
-      // this.searchStar.et = year + '-' + mouth + '-' + day + ' 23:59:59'
     },
     mounted() {
-      // this.getListData()
-      // this.getListDataVisit()
-      // this.getListDataPaid()
-      // this.getListDataAddCart()
-      // this.getListDataStar()
-      // this.getListDataSales()
-      // this.getListDataPurchase()
       this.getStatInfo()
     }
   }
