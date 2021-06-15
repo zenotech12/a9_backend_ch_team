@@ -588,8 +588,6 @@
               </el-collapse-item>
             </el-collapse>
           </el-col>
-
-
         </el-row>
       </el-col>
     </el-row>
@@ -1325,6 +1323,9 @@
     .el-collapse-item__header {
       padding-left: 10px;
       font-size: 16px;
+    }
+    .el-radio-button--medium .el-radio-button__inner {
+      padding: 10px;
     }
   }
 </style>
