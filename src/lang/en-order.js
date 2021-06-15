@@ -201,5 +201,10 @@ export default {
   optTime: 'Operating Time',
   setTiHuoRen: 'Set up delivery person',
   tiHuoRen: 'Delivery person',
-  pleaseEnterTiHuoren: 'Please enter the delivery person'
+  pleaseEnterTiHuoren: 'Please enter the delivery person',
+  otherLeaderboard: 'Other leaderboards',
+  salesRank: 'Sales ranking',
+  sales: 'Sales',
+  purchaseRank: 'Purchase quantity ranking',
+  Purchasenum: 'Purchase order quantity'
 }

@@ -204,5 +204,10 @@ export default {
   optTime: '操作时间',
   setTiHuoRen: '设置提货人',
   tiHuoRen: '提货人',
-  pleaseEnterTiHuoren: '请输入提货人'
+  pleaseEnterTiHuoren: '请输入提货人',
+  otherLeaderboard: '其他排行榜',
+  salesRank: '销量排行榜',
+  sales: '销量',
+  purchaseRank: '采购数量排行榜',
+  Purchasenum: '采购数量'
 }

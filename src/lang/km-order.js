@@ -174,5 +174,10 @@ export default {
   optTime: 'ពេលវេលាប្រតិបត្តិការ',
   setTiHuoRen: 'រៀបចំអ្នកដឹកជញ្ជូន',
   tiHuoRen: 'អ្នក​ដឹកជញ្ជូន',
-  pleaseEnterTiHuoren: 'សូមបញ្ចូលអ្នកចែកចាយ'
+  pleaseEnterTiHuoren: 'សូមបញ្ចូលអ្នកចែកចាយ',
+  otherLeaderboard: 'តារាងពិន្ទុផ្សេងទៀត',
+  salesRank: 'ចំណាត់ថ្នាក់នៃការលក់',
+  sales: 'ការលក់',
+  purchaseRank: 'ទិញចំណាត់ថ្នាក់បរិមាណ',
+  Purchasenum: 'បរិមាណបញ្ជាទិញ'
 }
