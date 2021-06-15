@@ -1,5 +1,5 @@
 <template>
-  <el-input :placeholder="placeHolder" :precision="2" v-model="floatPrice" :disabled="disabled" :clearable="canClear" @change="changeFunc" :controls="false">
+  <el-input :placeholder="placeHolder" :precision="2" @blur="inputBlurFunc" v-model="floatPrice" :disabled="disabled" :clearable="canClear" @change="changeFunc" :controls="false">
     <template slot="prepend"><slot name="prepend">$</slot></template>
     <template slot="append"><slot name="append"></slot></template>
   </el-input>
@@ -57,6 +57,9 @@
           this.$message.error(this.$t('tools.priceTip'))
         }
         this.$emit('floatPriceChange', p)
+      },
+      inputBlurFunc() {
+        this.$emit('inputBlurFunc')
       }
     },
     mounted() {
