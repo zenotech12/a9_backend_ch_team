@@ -177,7 +177,7 @@
     </el-row>
 
     <!--排行榜-->
-    <el-row class="newStyleBox" v-if="shopInfo.user_info.owner">
+    <el-row class="newStyleBox">
       <el-col :span="24" class="new_style_title">
         {{$t('order.Leaderboard')}}
       </el-col>
