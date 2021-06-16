@@ -206,5 +206,10 @@ export default {
   salesRank: 'Sales ranking',
   sales: 'Sales',
   purchaseRank: 'Purchase quantity ranking',
-  Purchasenum: 'Purchase order quantity'
+  Purchasenum: 'Purchase order quantity',
+  newUserCanvas: 'New user line chart',
+  date: 'Date',
+  userNumber: 'User Number',
+  sevenDay: '7 days',
+  day30: '30 days'
 }

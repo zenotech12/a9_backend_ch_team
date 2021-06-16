@@ -82,5 +82,8 @@ export default {
   Basicdata: 'ការបែងចែកទិន្នន័យមូលដ្ឋាន',
   coding: 'ការសរសេរកូដ',
   BasicdataSet: 'ការកំណត់ទិន្នន័យមូលដ្ឋាន',
-  pleasechoose: 'សូម​ជ្រើសរើស'
+  pleasechoose: 'សូម​ជ្រើសរើស',
+  position: 'ទីតាំង',
+  isNoAllowLogin: 'ថាតើត្រូវអនុញ្ញាតឱ្យចូល',
+  setTimeDuan: 'កំណត់ពេលវេលា'
 }

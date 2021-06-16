@@ -175,7 +175,37 @@
 
       </el-col>
     </el-row>
-
+    <!--新用户折线图-->
+    <el-row class="newStyleBox">
+      <el-col :span="24" class="new_style_title">
+        {{$t('order.newUserCanvas')}}
+      </el-col>
+      <el-col :span="24" class="timeBoxRow">
+        {{$t('order.time')}}：
+        <el-radio-group v-model="lineDayValue" size="medium" style="margin-right: 5px">
+          <el-radio-button :label="1">{{$t('order.sevenDay')}}</el-radio-button>
+          <el-radio-button :label="2">{{$t('order.day30')}}</el-radio-button>
+        </el-radio-group>
+        <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable @change="getNewUser"
+                        v-model="lineValueTime"
+                        type="daterange"
+                        align="right"
+                        unlink-panels
+                        :range-separator="$t('tools.to')"
+                        :start-placeholder="$t('tools.startDate')"
+                        :end-placeholder="$t('tools.endDate')">
+        </el-date-picker>
+      </el-col>
+      <el-col :span="24">
+        <el-row>
+          <div class="echart">
+            <el-col class="xx">
+              <IEcharts :option="optionNewUser" :notMerge="true"></IEcharts>
+            </el-col>
+          </div>
+        </el-row>
+      </el-col>
+    </el-row>
     <!--排行榜-->
     <el-row class="newStyleBox">
       <el-col :span="24" class="new_style_title">
@@ -597,14 +627,25 @@
 <script>
   import { mapGetters } from 'vuex'
   import { shopStat } from '@/api/operation'
-  import { statisticsCountV2, rankingList, statisticsCountExport } from '@/api/homePage'
+  import { statisticsCountV2, rankingList, statisticsCountExport, daylinenewuser } from '@/api/homePage'
   import { imgGetUrl } from '@/utils/serverConfig'
+  import IEcharts from 'vue-echarts-v3'
 
   export default {
     name: 'dashboard',
+    components: {
+      IEcharts: IEcharts
+    },
     data() {
       const pz = 100
       return {
+        optionNewUser: {},
+        lineDaySearch: {
+          bt: '',
+          et: ''
+        },
+        lineValueTime: [],
+        lineDayValue: 2,
         name: '',
         statInfo: {},
         dataInfo: {},
@@ -809,6 +850,15 @@
           this.searchPurchase.et = ''
         }
       },
+      lineValueTime(val) {
+        if (val && val.length === 2) {
+          this.lineDaySearch.bt = val[0]
+          this.lineDaySearch.et = val[1]
+        } else {
+          this.lineDaySearch.bt = ''
+          this.lineDaySearch.et = ''
+        }
+      },
       currentPage(val) {
         this.searchList.skip = (val - 1) * this.pageSize
         this.searchList.limit = this.pageSize
@@ -843,6 +893,27 @@
         this.searchPurchase.skip = (val - 1) * this.pageSizePurchase
         this.searchPurchase.limit = this.pageSizePurchase
         this.getListDataPurchase()
+      },
+      lineDayValue: {
+        handler(val) {
+          if (val === 1) {
+            this.lineDaySearch.bt = this.$moment().subtract(6, 'days').format('YYYY-MM-DD') + ' 00:00:00'
+            this.lineDaySearch.et = this.$moment().format('YYYY-MM-DD') + ' 23:59:59'
+            this.lineValueTime = [this.lineDaySearch.bt, this.lineDaySearch.et]
+            this.getNewUser()
+          } else if (val === 2) {
+            this.lineDaySearch.bt = this.$moment().subtract(29, 'days').format('YYYY-MM-DD') + ' 00:00:00'
+            this.lineDaySearch.et = this.$moment().format('YYYY-MM-DD') + ' 23:59:59'
+            this.lineValueTime = [this.lineDaySearch.bt, this.lineDaySearch.et]
+            this.getNewUser()
+            // console.log('taimd', this.$moment().subtract(6, 'days').format('YYYY-MM-DD'))
+          } else {
+            this.lineDaySearch.bt = ''
+            this.lineDaySearch.et = ''
+            this.lineValueTime = ['', '']
+          }
+        },
+        immediate: true
       },
       timeValue: {
         handler(val) {
@@ -1046,6 +1117,55 @@
       }
     },
     methods: {
+      getNewUser() {
+        // console.log('data', this.searchData)
+        daylinenewuser(this.lineDaySearch).then(res => {
+          // const arrIn = []
+          const arrCount = []
+          const xAxle = []
+          res.items.forEach((item, index) => {
+            xAxle.push(item.date)
+            arrCount.push(item.val)
+            // arrOut.push(item.out)
+          })
+          this.optionNewUser = {
+            color: ['#9AC338'],
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            grid: {
+              left: '5%',
+              right: '15%',
+              bottom: '3%',
+              containLabel: true
+            },
+            // legend: {
+            //   data: ['迁入', '迁出']
+            // },
+            xAxis: {
+              name: this.$t('order.date'),
+              type: 'category',
+              data: xAxle
+            },
+            yAxis: [
+              {
+                name: this.$t('order.number'),
+                type: 'value'
+              }
+            ],
+            series: [
+              {
+                name: this.$t('order.userNumber'),
+                type: 'line',
+                data: arrCount
+              }
+            ]
+          }
+        })
+      },
       exportCurrentData() {
         statisticsCountExport(this.searchForm).then(res => {
           var link = document.createElement('a')
@@ -1212,6 +1332,7 @@
     created() {
     },
     mounted() {
+      // this.getNewUser()
       this.getStatInfo()
     }
   }
@@ -1327,5 +1448,12 @@
     .el-radio-button--medium .el-radio-button__inner {
       padding: 10px;
     }
+  }
+  .echart{
+    height: 500px;
+    /*background-color: #99a9bf;*/
+  }
+  .xx{
+    height: calc(100% - 38px);
   }
 </style>

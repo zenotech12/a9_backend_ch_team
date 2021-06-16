@@ -209,5 +209,10 @@ export default {
   salesRank: '销量排行榜',
   sales: '销量',
   purchaseRank: '采购数量排行榜',
-  Purchasenum: '采购数量'
+  Purchasenum: '采购数量',
+  newUserCanvas: '新用户折线图',
+  date: '日期',
+  userNumber: '用户数',
+  sevenDay: '7天',
+  day30: '30天'
 }

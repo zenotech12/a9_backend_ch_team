@@ -82,5 +82,8 @@ export default {
   Basicdata: 'Basic data classification',
   coding: 'coding',
   BasicdataSet: 'Basic data settings',
-  pleasechoose: 'please choose'
+  pleasechoose: 'please choose',
+  position: 'Position',
+  isNoAllowLogin: 'Whether to allow login',
+  setTimeDuan: 'Set time period'
 }

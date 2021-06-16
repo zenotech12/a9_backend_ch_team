@@ -53,3 +53,11 @@ export function statisticsCountExport(data) {
     responseType: 'blob'
   })
 }
+// 统计.新用户折线图
+export function daylinenewuser(data) {
+  return request({
+    url: 'statistics/dayline/new-user',
+    method: 'get',
+    params: data
+  })
+}

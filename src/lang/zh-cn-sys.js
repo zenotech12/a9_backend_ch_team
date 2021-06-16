@@ -92,5 +92,8 @@ export default {
   Basicdata: '基础数据分类',
   coding: '编码',
   BasicdataSet: '基础数据设置',
-  pleasechoose: '请选择'
+  pleasechoose: '请选择',
+  position: '职位',
+  isNoAllowLogin: '是否允许登录',
+  setTimeDuan: '设置时间段'
 }

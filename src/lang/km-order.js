@@ -179,5 +179,10 @@ export default {
   salesRank: 'ចំណាត់ថ្នាក់នៃការលក់',
   sales: 'ការលក់',
   purchaseRank: 'ទិញចំណាត់ថ្នាក់បរិមាណ',
-  Purchasenum: 'បរិមាណបញ្ជាទិញ'
+  Purchasenum: 'បរិមាណបញ្ជាទិញ',
+  newUserCanvas: 'តារាងអ្នកប្រើប្រាស់ថ្មី',
+  date: 'កាលបរិច្ឆេទ',
+  userNumber: 'ចំនួនអ្នកប្រើប្រាស់',
+  sevenDay: '7 ថ្ងៃ',
+  day30: '៣០ ថ្ងៃ'
 }
