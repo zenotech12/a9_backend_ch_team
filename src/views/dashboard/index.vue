@@ -1152,7 +1152,7 @@
             },
             yAxis: [
               {
-                name: this.$t('order.number'),
+                name: this.$t('order.dailyNewMember'),
                 type: 'value'
               }
             ],

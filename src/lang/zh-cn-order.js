@@ -214,5 +214,6 @@ export default {
   date: '日期',
   userNumber: '用户数',
   sevenDay: '7天',
-  day30: '30天'
+  day30: '30天',
+  dailyNewMember: '每日新会员'
 }

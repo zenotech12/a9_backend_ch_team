@@ -184,5 +184,6 @@ export default {
   date: 'កាលបរិច្ឆេទ',
   userNumber: 'ចំនួនអ្នកប្រើប្រាស់',
   sevenDay: '7 ថ្ងៃ',
-  day30: '៣០ ថ្ងៃ'
+  day30: '៣០ ថ្ងៃ',
+  dailyNewMember: 'សមាជិកថ្មីប្រចាំថ្ងៃ'
 }
