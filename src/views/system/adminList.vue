@@ -69,6 +69,9 @@
             <el-form-item :label="$t('sys.position')">
               <el-input style="width: 200px" v-model="form.title" auto-complete="off" clearable></el-input>
             </el-form-item>
+            <el-form-item :label="$t('global.password')">
+              <el-input style="width: 200px" type="password" v-model="form.password" auto-complete="off" clearable></el-input>
+            </el-form-item>
             <el-form-item :label="$t('sys.isService')"  prop="status">
               <el-checkbox v-model="form.customer_servicer">{{$t('tools.yes')}}</el-checkbox>
               <el-tooltip class="item" effect="dark" :content="$t('sys.serviceTip')" placement="top">
@@ -135,7 +138,8 @@
           nick_name: '',
           customer_servicer: true,
           title: '',
-          merchant_allow_login: ''
+          merchant_allow_login: '',
+          password: ''
         },
         merchant_allow_login: {
           start_t: '',
@@ -338,6 +342,7 @@
         this.form.nick_name = ''
         this.form.customer_servicer = true
         this.form.title = ''
+        this.form.password = ''
         this.merchant_allow_login.allow = true
         this.form.merchant_allow_login = ''
         this.setTimeLine = false
@@ -364,7 +369,7 @@
           this.setTimeLine = false
           this.lineTimeData = ['00:00', '00:00']
         }
-        this.form = { id: data.id, mobile: data.user_login_name, nick_name: data.user_nick_name,
+        this.form = { id: data.id, password: '', mobile: data.user_login_name, nick_name: data.user_nick_name,
           customer_servicer: data.customer_servicer, title: data.title, merchant_allow_login: data.merchant_allow_login }
       },
       getTableData() {

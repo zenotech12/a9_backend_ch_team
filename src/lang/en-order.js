@@ -209,7 +209,7 @@ export default {
   Purchasenum: 'Purchase order quantity',
   newUserCanvas: 'New user line chart',
   date: 'Date',
-  userNumber: 'User Number',
+  userNumber: 'New Mememer',
   sevenDay: '7 days',
   day30: '30 days'
 }
