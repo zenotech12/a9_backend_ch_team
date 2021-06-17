@@ -1542,7 +1542,7 @@
       if (this.$route.params.ownership_status) {
         this.searchForm.skip = 0
         this.currentPage = 1
-        this.searchForm.order_status = 0
+        this.searchForm.order_status = 16
         this.searchForm.ownership_status = this.$route.params.ownership_status
       }
       if (this.searchForm.order_status !== 16) {
