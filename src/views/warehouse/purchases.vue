@@ -240,7 +240,7 @@
                 </el-table-column>
                 <el-table-column prop="unit_price" :label="$t('warehouse.pricetype')" width="250">
                   <template slot-scope="scope">
-                    <price-input v-model="scope.row.unit_price"><span slot="append">/ {{scope.row.shouJia | price}}</span></price-input>
+                    <price-input v-model="scope.row.unit_price" @inputBlurFunc="currentIputCount(scope.$index)"><span slot="append">/ {{scope.row.shouJia | price}}</span></price-input>
                   </template>
                 </el-table-column>
                 <!--<el-table-column prop="count" label="库存">-->
@@ -252,7 +252,7 @@
 
                 <el-table-column prop="count" :label="$t('warehouse.Purchasenum')" width="150">
                   <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.count"></el-input>
+                    <el-input v-model.number="scope.row.count" @blur="currentIputCount(scope.$index)"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column prop="total_price" :label="$t('warehouse.allprice')" width="150">
@@ -1231,12 +1231,14 @@
         })
       },
       batchPrice(val) {
+        console.log('dd')
         this.goodsInventoryTable.forEach(item => {
           this.$set(item, 'unit_price', val)
-          this.$set(item, 'total_price', item.count * item.unit_price)
+          // this.$set(item, 'total_price', item.count * item.unit_price)
         })
       },
       batchTotalPrice(val) {
+        console.log('333')
         this.goodsInventoryTable.forEach(item => {
           this.$set(item, 'total_price', val)
         })
@@ -1288,26 +1290,6 @@
         },
         deep: true
       },
-      goodsInventoryTable: {
-        handler(val) {
-          if (val.length > 0) {
-            val.forEach(item => {
-              this.$set(item, 'total_price', item.count * item.unit_price)
-            })
-          }
-        },
-        deep: true
-      },
-      skusArray: {
-        handler(val) {
-          if (val.length > 0) {
-            val.forEach(item => {
-              this.$set(item, 'total_price', item.count * item.unit_price)
-            })
-          }
-        },
-        deep: true
-      },
       orderId(val) {
         if (val !== '') {
           ordersInfo(val).then(res => {
@@ -1325,8 +1307,10 @@
       }
     },
     methods: {
-      chooseData(data) {
-        console.log('data', data)
+      currentIputCount(index) {
+        // console.log('index', index)
+        this.$set(this.skusArray[index], 'total_price', this.skusArray[index].count * this.skusArray[index].unit_price)
+        // console.log('this.skusArray[index]', this.skusArray[index])
       },
       exportChangeChoose(val) {
         if (val.length > 0) {
@@ -1705,6 +1689,7 @@
         this.submitDisabled = true
         this.form.skus = JSON.stringify(this.skusArray)
         // console.log(this.form)
+        // console.log('this.skusArray', this.skusArray)
         if (this.form.id !== '') {
           purchaseModify(this.form.id, this.form).then(res => {
             this.getDataListFun()

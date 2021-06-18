@@ -36,6 +36,17 @@
                   </el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item :label="$t('order.DateTime')">
+                <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
+                                v-model="orderTimes"
+                                type="daterange"
+                                align="right"
+                                unlink-panels
+                                :range-separator="$t('tools.to')"
+                                :start-placeholder="$t('tools.startDate')"
+                                :end-placeholder="$t('tools.endDate')">
+                </el-date-picker>
+              </el-form-item>
               <el-form-item class="searchBtn">
                 <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
               </el-form-item>
@@ -244,8 +255,10 @@
           status: 0,
           skip: 0,
           limit: pz,
+          bt: '',
+          et: ''
         },
-        Sdate:[],
+        Sdate: [],
         tab_status: '0',
         tableData: [],
         currentPage: 1,
@@ -265,7 +278,8 @@
         tabList: [],
         showTab: false,
         searchParamKey: '',
-        doWatch: true
+        doWatch: true,
+        orderTimes: []
       }
     },
     computed: {
@@ -292,6 +306,16 @@
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getDataListFun()
+      },
+      // 按时间段查询订单
+      orderTimes(val) {
+        if (val && val.length === 2) {
+          this.searchForm.bt = val[0]
+          this.searchForm.et = val[1]
+        } else {
+          this.searchForm.bt = ''
+          this.searchForm.et = ''
+        }
       },
       '$route.path': {
         handler(newVal) {
@@ -406,6 +430,9 @@
       // this.searchForm.order_no = this.$route.params.order_no ? this.$route.params.order_no : ''
       // this.getDataListFun()
       // this.getAfterSalesCount()
+      if (this.$route.params.bt || this.$route.params.et) {
+        this.orderTimes = [this.$route.params.bt, this.$route.params.et]
+      }
       this.getAddressListFunc()
       // console.log(1111)
     },

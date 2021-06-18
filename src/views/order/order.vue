@@ -9,10 +9,24 @@
               <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatusTab" :key="k" v-if="item" :label="item.label" :name="item.value"></el-tab-pane>
             </el-tabs>
           </el-col>
-          <el-col :span ="24">
+          <el-col :span ="24" class="searchRow">
             <el-form :inline="true" :model="searchForm">
+              <el-form-item v-if="tab_order_status === '0'">
+                <el-switch
+                  v-model="paySearchStatus"
+                  :active-text="$t('finance.txStatus2')"
+                  :inactive-text="$t('warehouse.all')">
+                </el-switch>
+              </el-form-item>
+              <el-form-item>
+                <el-radio-group v-model="searchForm.pay_way" size="mini" @change="search">
+                  <el-radio-button :label="0">{{$t('warehouse.all')}}</el-radio-button>
+                  <el-radio-button :label="1">{{$t('order.onlinePay')}}</el-radio-button>
+                  <el-radio-button :label="2">{{$t('order.cashOnDelivery')}}</el-radio-button>
+                </el-radio-group>
+              </el-form-item>
             <el-form-item :label="$t('order.ownerShipStatusSelect')">
-              <el-select v-model="searchForm.ownership_status" clearable>
+              <el-select v-model="searchForm.ownership_status" clearable style="width: 120px">
                 <el-option
                   v-for="(item, k) in ownerShipStatuses"
                   :key="k"
@@ -22,13 +36,13 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('order.searchKey')">
-              <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 250px" clearable></el-input>
+              <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 200px" clearable></el-input>
             </el-form-item>
             <el-form-item :label="$t('order.no')">
-              <el-input v-model="searchForm.no" style="width: 250px" clearable></el-input>
+              <el-input v-model="searchForm.no" style="width: 200px" clearable></el-input>
             </el-form-item>
-            <el-form-item :label="$t('order.orderTime')">
-              <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
+            <el-form-item :label="$t('order.orderTime')" class="searchTimeBox">
+              <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable style="width: 260px;"
                               v-model="orderTimes"
                               type="daterange"
                               align="right"
@@ -39,14 +53,14 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+              <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
               <template v-if="permissionCheck('opt')">
-                <el-button type="primary" @click="exportFunc([], false)" size="small" icon="el-icon-download"></el-button>
+                <el-button type="primary" @click="exportFunc([], false)" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>
                 <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
                            :action= "importUrl"
                            :show-file-list="false"
                            :on-success="importSuccess" :on-error="importError">
-                  <el-button type="primary" size="small" icon="el-icon-upload2"></el-button>
+                  <el-button type="primary" size="mini" icon="el-icon-upload2"></el-button>
                 </el-upload>
               </template>
             </el-form-item>
@@ -55,7 +69,7 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height: calc(100vh - 225px)">
+            <div style="height: calc(100vh - 290px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)" @selection-change="handleSelectionChange">
                 <el-table-column
                   type="selection"
@@ -266,6 +280,9 @@
                       </el-button>
                       <el-button  v-if="scope.row.status === 2 || scope.row.status === 5 ||  scope.row.status === 4" type="text" @click="cancelOrder(scope.row)" size="small" style="margin-left: 0">
                        {{$t('order.opt7')}}
+                      </el-button>
+                      <el-button type="text" @click="addNoteFunc(scope.row)" size="small" style="margin-left: 0">
+                        {{$t('order.note')}}
                       </el-button>
                     </template>
                     <template v-if="permissionCheck('opt', '8_1')">
@@ -673,6 +690,34 @@
             <el-button size="small" type="primary" @click="DeliveryMsgDialog = false">{{$t('tools.confirm')}}</el-button>
           </div>
         </el-dialog>
+        <!-- 添加备注 -->
+        <el-dialog
+          width="60%"
+          :title="$t('order.note')"
+          :visible.sync="noteDialog"
+          append-to-body>
+          <el-table :data="merchantCommets" border style="width: 100%" height="calc(100vh - 500px)">
+              <el-table-column label="#" width="60px">
+                <template slot-scope="scope">
+                  {{scope.$index + 1}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="operator_name" :label="$t('order.optUser')" width="200px"></el-table-column>
+              <el-table-column prop="comment" :label="$t('sys.content')" ></el-table-column>
+              <el-table-column prop="gen_time" :label="$t('order.optTime')" width="200px"></el-table-column>
+            </el-table>
+          <el-form label-width="100px" style="margin-top: 20px">
+            <el-form-item :label="$t('order.note')">
+              <el-input type="textarea" :rows="2"  v-model="setNoteForm.merchant_comment" clearable :placeholder="$t('warehouse.Pleasenote')"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button size="small" type="primary" @click="addUpsertNote">{{$t('order.addNote')}}</el-button>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="primary" @click="noteDialog = false">{{$t('tools.close')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -680,7 +725,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, warehouseGroupInven, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods} from '@/api/order'
+  import { ordersList, warehouseGroupInven, orderMerchantComment, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods} from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
   import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
@@ -693,6 +738,9 @@
     data() {
       const pz = 10
       return {
+        noteDialog: false,
+        merchantCommets: [],
+        paySearchStatus: true,
         searchParamKey: 'orderList',
         doWatch: true,
         showTab: false,
@@ -707,13 +755,14 @@
         searchForm: {
           key: '',
           user_id: '',
-          order_status: 0,
+          order_status: 16,
           no: '',
           skip: 0,
           limit: pz,
           bt: '',
           et: '',
           ownership_status: '',
+          pay_way: 0, // 支付方式  0 所有 1 在线支付 2 货到付款
           invoice: true
         },
         allprice: 0,
@@ -844,13 +893,17 @@
         addressdataarr: [],
         showKunNumberDialog: false,
         restFrom: '',
-        restFromid: ''
+        restFromid: '',
+        setNoteForm: {
+          merchant_comment: ''
+        },
+        merchantCommentId: ''
       }
     },
     computed: {
       ...mapGetters([
         'userInfo', 'searchParam'
-      ]),
+      ])
     },
     watch: {
       tab_order_status(val) {
@@ -858,14 +911,27 @@
           return
         }
         if (this.searchForm.skip !== 0 || this.searchForm.order_status !== parseInt(val)) {
-          // console.log(this.searchForm, 'gg', val)
-          // console.log(this.searchForm.skip, this.searchForm.skip !== 0, 'gg', this.searchForm.order_status !== parseInt(val))
+          if (val === '0') {
+            if (this.paySearchStatus === true) {
+              this.searchForm.order_status = 16
+            } else {
+              this.searchForm.order_status = parseInt(val)
+            }
+          } else {
+            this.searchForm.order_status = parseInt(val)
+          }
           this.searchForm.skip = 0
           this.searchForm.limit = this.pageSize
           this.currentPage = 1
-          this.searchForm.order_status = parseInt(val)
           this.getDataListFun()
           // console.log(111)
+        }
+      },
+      paySearchStatus(val) {
+        if (val === true) {
+          this.searchForm.order_status = 16
+        } else {
+          this.searchForm.order_status = 0
         }
       },
       currentPage(val) {
@@ -894,6 +960,25 @@
       }
     },
     methods: {
+      addNoteFunc(data) {
+        this.merchantCommets = data.merchant_comments
+        this.merchantCommentId = data.id
+        this.setNoteForm.merchant_comment = ''
+        this.noteDialog = true
+      },
+      addUpsertNote() {
+        if (this.setNoteForm.merchant_comment === '') {
+          this.$message.error(this.$t('warehouse.Pleasenote'))
+          return
+        }
+        orderMerchantComment(this.merchantCommentId, this.setNoteForm).then(res => {
+          if (res.meta === 0) {
+            this.noteDialog = false
+            this.getDataListFun()
+            this.getOrderCount()
+          }
+        })
+      },
       jumpCaiGou() {
         this.$router.push({
           path: '/warehouse/purchases'
@@ -1411,11 +1496,11 @@
       }
     },
     mounted() {
-     this.searchForm.no = sessionStorage.getItem("orderid");
-     this. getDataListFun()
-     setTimeout(() => {
-       sessionStorage.clear()
-     }, 1000);
+      this.searchForm.no = sessionStorage.getItem("orderid");
+      this.getDataListFun()
+      setTimeout(() => {
+        sessionStorage.clear()
+      }, 1000)
       // if(this.$route.query.data.length != 0){
       //   this.searchForm.no = this.$route.query.data.substring(1, this.$route.query.data.length - 1)
       //   this. getDataListFun()
@@ -1457,12 +1542,22 @@
       if (this.$route.params.ownership_status) {
         this.searchForm.skip = 0
         this.currentPage = 1
-        this.searchForm.order_status = 0
+        this.searchForm.order_status = 16
         this.searchForm.ownership_status = this.$route.params.ownership_status
       }
-      this.tab_order_status = this.searchForm.order_status + ''
+      if (this.searchForm.order_status !== 16) {
+        this.tab_order_status = this.searchForm.order_status + ''
+      } else {
+        this.tab_order_status = '0'
+      }
       if (this.$route.params.bt || this.$route.params.et) {
         this.orderTimes = [this.$route.params.bt, this.$route.params.et]
+      }
+      if (this.$route.params.status) {
+        this.searchForm.skip = 0
+        this.currentPage = 1
+        this.searchForm.order_status = this.$route.params.status
+        this.paySearchStatus = true
       }
       // console.log('optionsAddress', this.optionsAddress)
       // this.searchForm.order_status = this.$route.params.order_status ? this.$route.params.order_status : 0
@@ -1481,6 +1576,13 @@
 </script>
 
 <style lang="scss" scoped>
+  .searchTimeBox {
+    /deep/ {
+      .el-date-editor .el-range-input {
+        width: 60%;
+      }
+    }
+  }
 .f12{
   font-size: 12px;
 }
@@ -1599,5 +1701,12 @@
   .imagecss{
     width: 100px !important;
     object-fit: cover;
+  }
+  .searchRow {
+    /deep/ {
+      .el-input--suffix .el-input__inner {
+        padding-right: 8px;
+      }
+    }
   }
 </style>

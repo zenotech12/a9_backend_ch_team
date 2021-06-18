@@ -219,3 +219,12 @@ export function cancelGoods(id) {
     method: 'post',
   })
 }
+
+// 订单.设置商家备注
+export function orderMerchantComment(id, data) {
+  return request({
+    url: 'orders/' + id + '/merchant-comment',
+    method: 'put',
+    data: data
+  })
+}

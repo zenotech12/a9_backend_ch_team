@@ -79,7 +79,10 @@
                 </div>
                 <a @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
               </el-form-item>
-              <el-form-item :label="$t('goods.price')" required>
+              <el-form-item required>
+                <template slot="label">
+                  {{$t('goods.price')}} <i class="el-icon-download" style="cursor: pointer" v-if="currentId !== '' && currentId !== undefined" @click="downloadExport"></i>
+                </template>
                 <el-table :data="goodsInventoryTable"  style="width: 100%" :span-method="inventoryTableSpanMethod">
                   <el-table-column :label="$t('goods.sp')">
                     <template  slot-scope="scope">
@@ -375,7 +378,7 @@
 </template>
 
 <script>
-  import { spusAdd, spusInfo, spusModify, spuTypesList, spusSkusList, draftsAdd, draftsInfo, draftsDel } from '@/api/goods'
+  import { spusAdd, spusInfo, spusSkusExport, spusModify, spuTypesList, spusSkusList, draftsAdd, draftsInfo, draftsDel } from '@/api/goods'
   import { shippingAddressesList, postagesList } from '@/api/system'
   import getPathById from '@/utils/getPathById'
   import store from '@/store'
@@ -533,7 +536,8 @@
         propeditingTagOld: '',
         propeditingIndex: 0,
         propeditingTagIndex: 0,
-        showSuccessTip: false
+        showSuccessTip: false,
+        currentId: ''
       }
     },
     created() {
@@ -545,6 +549,7 @@
       // this.loading = false
       // return
       const id = this.$route.query.id
+      this.currentId = id
       if (!id) {
         this.getDraftsInfo()
         const timer = setInterval(() => {
@@ -664,6 +669,18 @@
       }
     },
     methods: {
+      downloadExport() {
+        spusSkusExport(this.currentId).then(res => {
+          var link = document.createElement('a')
+          const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+          link.style.display = 'none'
+          link.href = URL.createObjectURL(blod)
+          link.download = 'specification.xlsx'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        })
+      },
       getDraftsInfo() {
         draftsInfo({ classify: 'spu' }).then(res => {
           if (res.meta === 0) {

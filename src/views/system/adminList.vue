@@ -55,7 +55,7 @@
             </template>
           </el-col>
         </el-row>
-        <el-dialog :title="editTitle" @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="600px" style="margin-top: 0vh">
+        <el-dialog :title="editTitle" @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="700px" style="margin-top: 0vh">
           <el-form :model="form" :rules="formRule" ref="form" label-width="120px">
             <el-form-item :label="$t('sys.loginMobile')" prop="login_name">
               <el-input style="width: 200px" :disabled="form.id !== ''" v-model="form.mobile" auto-complete="off" clearable></el-input>
@@ -66,14 +66,33 @@
             <el-form-item :label="$t('sys.user')">
               <el-input style="width: 200px" v-model="form.nick_name" auto-complete="off" clearable></el-input>
             </el-form-item>
-            <el-form-item label="职位">
+            <el-form-item :label="$t('sys.position')">
               <el-input style="width: 200px" v-model="form.title" auto-complete="off" clearable></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('global.password')">
+              <el-input style="width: 200px" type="password" v-model="form.password" auto-complete="off" clearable></el-input>
             </el-form-item>
             <el-form-item :label="$t('sys.isService')"  prop="status">
               <el-checkbox v-model="form.customer_servicer">{{$t('tools.yes')}}</el-checkbox>
               <el-tooltip class="item" effect="dark" :content="$t('sys.serviceTip')" placement="top">
                 <i class="el-icon-info"></i>
               </el-tooltip>
+            </el-form-item>
+            <el-form-item :label="$t('sys.isNoAllowLogin')"  prop="status">
+              <el-checkbox v-model="merchant_allow_login.allow">{{$t('tools.yes')}}</el-checkbox>
+              <div v-if="merchant_allow_login.allow === true">
+                <el-checkbox v-model="setTimeLine">{{$t('sys.setTimeDuan')}}</el-checkbox>
+                <el-time-picker v-if="setTimeLine === true"
+                                is-range
+                                format="HH:mm" value-format="HH:mm"
+                                v-model="lineTimeData"
+                                :range-separator="$t('tools.to')"
+                                :start-placeholder="$t('lang.startTime')"
+                                :end-placeholder="$t('lang.endTime')"
+                                >
+                </el-time-picker>
+              </div>
+
             </el-form-item>
             <el-form-item :label="$t('sys.permission')"  prop="status" v-if="!isOwner">
               <div v-for="(v, k) in permissionList" :key="k">
@@ -118,8 +137,18 @@
           mobile: '',
           nick_name: '',
           customer_servicer: true,
-          title: ''
+          title: '',
+          merchant_allow_login: '',
+          password: ''
         },
+        merchant_allow_login: {
+          start_t: '',
+          end_t: '', // 允许登录时间段
+          allow: true // 是否允许登录
+        },
+        setTimeLine: false,
+        // lineTimeData: [new Date(2021, 9, 10, 0, 0), new Date(2021, 9, 10, 0, 0)],
+        lineTimeData: ['00:00', '00:00'],
         formRule: {
           mobile: [
             // { validator: checkMobile, trigger: 'blur' },
@@ -148,6 +177,16 @@
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getTableData()
+      },
+      lineTimeData(val) {
+        if (val && val.length === 2) {
+          console.log('vvv', val)
+          this.merchant_allow_login.start_t = val[0]
+          this.merchant_allow_login.end_t = val[1]
+        } else {
+          this.merchant_allow_login.start_t = ''
+          this.merchant_allow_login.end_t = ''
+        }
       },
       permissionSelect: {
         handler(val) {
@@ -270,6 +309,7 @@
         }
       },
       upsertAdmin(form) {
+        console.log('merchant_allow_login', this.merchant_allow_login)
         this.dialogFormVisible = false
         this.passwordCheck()
         this.$refs[form].validate((valid) => {
@@ -302,6 +342,10 @@
         this.form.nick_name = ''
         this.form.customer_servicer = true
         this.form.title = ''
+        this.form.password = ''
+        this.merchant_allow_login.allow = true
+        this.form.merchant_allow_login = ''
+        this.setTimeLine = false
         this.type = 'add'
         this.editTitle = this.$t('lang.addAdmin')
       },
@@ -317,7 +361,16 @@
         this.permissionSelect = data.permissions ? JSON.parse(JSON.stringify(data.permissions)) : {}
         this.dialogFormVisible = true
         this.isOwner = data.default
-        this.form = { id: data.id, mobile: data.user_login_name, nick_name: data.user_nick_name, customer_servicer: data.customer_servicer, title: data.title }
+        this.merchant_allow_login = data.merchant_allow_login
+        if (data.merchant_allow_login.start_t !== '') {
+          this.setTimeLine = true
+          this.lineTimeData = [data.merchant_allow_login.start_t, data.merchant_allow_login.end_t]
+        } else {
+          this.setTimeLine = false
+          this.lineTimeData = ['00:00', '00:00']
+        }
+        this.form = { id: data.id, password: '', mobile: data.user_login_name, nick_name: data.user_nick_name,
+          customer_servicer: data.customer_servicer, title: data.title, merchant_allow_login: data.merchant_allow_login }
       },
       getTableData() {
         customerServicesList(this.searchForm).then(response => {
@@ -345,6 +398,11 @@
           return
         }
         this.form.permissions = JSON.stringify(this.permissionSelect)
+        if (this.merchant_allow_login.allow === true && this.setTimeLine === false) {
+          this.merchant_allow_login.start_t = ''
+          this.merchant_allow_login.end_t = ''
+        }
+        this.form.merchant_allow_login = JSON.stringify(this.merchant_allow_login)
         if (!this.form.id) {
           customerServicesAdd(this.form).then(response => {
             if (response.meta === 0) {

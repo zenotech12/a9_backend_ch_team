@@ -483,6 +483,21 @@
                     {{scope.$index + chuKuSearchForm.skip + 1}}
                   </template>
                 </el-table-column>
+                <el-table-column fixed = "left" :label="$t('warehouse.number')" width="150px">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.no}}</span>
+                    <el-popover v-if="scope.row.comment !== ''"
+                      placement="top-start"
+                      width="600"
+                      trigger="hover"
+                      >
+                      <div style="padding: 10px;">
+                        {{scope.row.comment}}
+                      </div>
+                      <i slot="reference" class="el-icon-tickets"></i>
+                    </el-popover>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
                 <el-table-column :label="$t('warehouse.type')" width="90px">
                   <template slot-scope="scope">
@@ -614,7 +629,11 @@
                 <el-radio :label="2">{{$t('warehouse.Scrap')}}</el-radio>
                 <el-radio :label="3">{{$t('warehouse.return')}}</el-radio>
                 <el-radio :label="4">{{$t('warehouse.Internaluse')}}</el-radio>
+                <el-radio :label="5">{{$t('warehouse.specialSale')}}</el-radio>
               </el-radio-group>
+            </el-form-item>
+            <el-form-item :label="$t('order.note')">
+              <el-input type="textarea" :rows="2"  v-model="chukuForm.comment" clearable :placeholder="$t('warehouse.Pleasenote')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('warehouse.stockmsg')">
               <el-table :data="chukuArrayData" style="width: 100%" class="inputNumber">
@@ -862,7 +881,8 @@ export default {
       chukuForm: {
         warehouse_id: '',
         tp: 2, // 2报废 3退回
-        skus: ''
+        skus: '',
+        comment: ''
       },
       chukuDlalog: false,
       areastar: '',
@@ -886,6 +906,7 @@ export default {
         {value:'1',label: this.$t('warehouse.Orderdelivery2')},
         {value:'2',label: this.$t('warehouse.Scrap')},
         {value:'3',label: this.$t('warehouse.return')},
+        {value:'5',label: this.$t('warehouse.specialSale')}
         ],
       goodsviewfrom:{
         key: '',
@@ -1026,6 +1047,7 @@ export default {
       this.chukuDlalog = true
       this.chukuForm.tp = 2
       this.chukuForm.skus = ''
+      this.chukuForm.comment = ''
       this.stockId = '1'
       this.chukuArrayData = []
     },

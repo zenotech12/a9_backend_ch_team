@@ -4,7 +4,7 @@ export default {
   pleaseEnterAccount: 'Please enter phone number',
   passwordCheck: 'Please enter the password correctly',
   accountCheck: 'Please enter the correct phone number',
-  title: 'Login to A9 wangpu',
+  title: 'Login to A9 Backend',
   passwordCannotLess: 'Password cannot be less than 6 digits',
   welcome: 'Welcome',
   login: 'Login',

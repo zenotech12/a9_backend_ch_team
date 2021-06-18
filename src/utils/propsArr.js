@@ -23,7 +23,8 @@ export default {
     '适用年龄',
     '功效',
     '品类',
-    '时间'
+    '时间',
+    '其他'
   ],
   en: [
     'Dimension',
@@ -49,7 +50,8 @@ export default {
     'Applicable Age',
     'Effects',
     'Category',
-    'Time'
+    'Time',
+    'Promotion'
   ],
   km: [
     'ទំហំ',
@@ -75,6 +77,7 @@ export default {
     'អាយុសមស្រប',
     'ប្រសិទ្ធភាព',
     'ប្រភេទ',
-    'ពេលវេលា'
+    'ពេលវេលា',
+    'ប្រូមូ៉សិន'
   ]
 }
