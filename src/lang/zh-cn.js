@@ -68,5 +68,6 @@ export default {
   baseData: '基础数据',
   ProcurementManagement: '采购管理',
   procurementWarehouse: '仓库/采购',
-  procurementPrice: '采购单价格'
+  procurementPrice: '采购单价格',
+  combinebuys: '组合购'
 }

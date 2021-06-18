@@ -45,6 +45,11 @@ const order = [{
     name: 'liveBroadcast',
     meta: { title: 'liveBroadcast', icon: 'list', code: '4_8' },
     component: () => import('@/views/operation/liveBroadcast')
-  }]
+  },{
+    path: 'combinebuys',
+    name: 'combinebuys',
+    meta: { title: 'combinebuys', icon: 'list', code: '4_8' },
+    component: () => import('@/views/operation/combinebuys')
+  },]
 }]
 export default order

@@ -389,3 +389,30 @@ export function sendedSetCoupons(id) {
     method: 'get'
   })
 }
+
+// 组合购.添加
+export function combineBuys(data) {
+  return request({
+    url: 'combine-buys',
+    method: 'post',
+    data: data
+  })
+}
+
+// 组合购.列表
+export function combineBuyslist(data) {
+  return request({
+    url: 'combine-buys',
+    method: 'get',
+    params: data
+  })
+}
+
+// 组合购.修改
+export function modifycombineBuys(data,id) {
+  return request({
+    url: 'combine-buys' + id,
+    method: 'put',
+    data: data
+  })
+}
