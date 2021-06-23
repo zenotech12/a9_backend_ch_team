@@ -54,6 +54,11 @@ const system = [{
     path: 'baseData',
     meta: { title: 'baseData', icon: 'permission', code: '6_9' },
     component: () => import('@/views/system/baseData')
+  },  {
+    name: 'AbnormalLogin',
+    path: 'AbnormalLogin',
+    meta: { title: 'AbnormalLogin', icon: 'permission', code: '6_9' },
+    component: () => import('@/views/system/AbnormalLogin')
   }]
 }]
 export default system

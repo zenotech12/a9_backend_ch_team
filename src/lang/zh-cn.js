@@ -69,5 +69,7 @@ export default {
   ProcurementManagement: '采购管理',
   procurementWarehouse: '仓库/采购',
   procurementPrice: '采购单价格',
-  combinebuys: '组合购'
+  combinebuys: '组合购',
+  memorandum: '备忘录',
+  AbnormalLogin: '异常登录'
 }

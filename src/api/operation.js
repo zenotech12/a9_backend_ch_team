@@ -411,7 +411,50 @@ export function combineBuyslist(data) {
 // 组合购.修改
 export function modifycombineBuys(data,id) {
   return request({
-    url: 'combine-buys' + id,
+    url: 'combine-buys/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+// 组合购.删除
+export function DelcombineBuys(id) {
+  return request({
+    url: 'combine-buys/' + id,
+    method: 'delete',
+  })
+}
+
+// 备忘录.添加
+export function memorandumsadd(data) {
+  return request({
+    url: 'memorandums',
+    method: 'post',
+    data: data
+  })
+}
+
+// 备忘录.获取
+export function getmemorandums(data) {
+  return request({
+    url: 'memorandums',
+    method: 'get',
+    params: data
+  })
+}
+
+// 备忘录.删除
+export function Delmemorandums(id) {
+  return request({
+    url: 'memorandums/' + id,
+    method: 'delete',
+  })
+}
+
+// 备忘录.修改
+export function modifymemorandums(data,id) {
+  return request({
+    url: 'memorandums/' + id,
     method: 'put',
     data: data
   })

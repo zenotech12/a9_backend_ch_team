@@ -327,10 +327,20 @@ export function dataSelectsGet(param) {
     params: param
   })
 }
+
 // 数据选项.删除
 export function dataSelectsDel(id) {
   return request({
     url: 'data-selects/' + id,
     method: 'delete'
+  })
+}
+
+// 异常登录
+export function AbnormalLogin(param) {
+  return request({
+    url: 'log-logins',
+    method: 'get',
+    params: param
   })
 }
