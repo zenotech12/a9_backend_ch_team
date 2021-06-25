@@ -25,6 +25,12 @@
                   <el-radio-button :label="2">{{$t('order.cashOnDelivery')}}</el-radio-button>
                 </el-radio-group>
               </el-form-item>
+              <el-form-item>
+                <el-radio-group v-model="searchForm.type" size="mini" @change="search">
+                  <el-radio-button :label="0">{{$t('warehouse.all')}}</el-radio-button>
+                  <el-radio-button :label="5">{{$t('order.purchas')}}</el-radio-button>
+                </el-radio-group>
+              </el-form-item>
             <el-form-item :label="$t('order.ownerShipStatusSelect')">
               <el-select v-model="searchForm.ownership_status" clearable style="width: 120px">
                 <el-option
@@ -55,7 +61,8 @@
             <el-form-item>
               <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
               <template v-if="permissionCheck('opt')">
-                <el-button type="primary" @click="exportFunc([], false)" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>
+                <!--<el-button type="primary" @click="exportFunc([], false)" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>-->
+                <el-button type="primary" @click="batchExportFunc" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>
                 <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
                            :action= "importUrl"
                            :show-file-list="false"
@@ -314,7 +321,7 @@
               <el-row style="margin-top: 10px">
                 <el-col :span="6">
                   <!-- 导出按钮 -->
-                  <el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>
+                  <!--<el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>-->
                   <!-- 导出明细按钮 -->
                   <el-button size="mini" @click="batchDetailExportFunc">{{$t('tools.exportDetails')}}</el-button>
                 <span class="allprice">{{$t('order.Totalprice')}} : <span>{{allprice | price}}</span></span>
@@ -763,7 +770,8 @@
           et: '',
           ownership_status: '',
           pay_way: 0, // 支付方式  0 所有 1 在线支付 2 货到付款
-          invoice: true
+          invoice: true,
+          type: 0 // 0 所有 5代购
         },
         allprice: 0,
         tab_order_status: '0',
