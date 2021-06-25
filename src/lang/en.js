@@ -69,5 +69,9 @@ export default {
   baseData: 'Basic data',
   ProcurementManagement: 'Purchasing Management',
   procurementWarehouse: 'Purchasing / Warehouse',
-  procurementPrice: 'Purchase order price'
+  procurementPrice: 'Purchase order price',
+  combinebuys: 'Combination Purchase',
+  memorandum: 'memorandum',
+  AbnormalLogin: 'Abnormal Login',
+  loginaddrs: '登录地址'
 }

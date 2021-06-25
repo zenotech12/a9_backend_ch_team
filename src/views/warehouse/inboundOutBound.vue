@@ -80,7 +80,6 @@
                       <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{item.total_price | price}}</el-col>
                     </el-row>
                   </div>
-
                 </template>
               </el-table-column>
               <el-table-column prop="gen_time" :label="$t('warehouse.time')" width="160px"></el-table-column>

@@ -95,5 +95,6 @@ export default {
   pleasechoose: '请选择',
   position: '职位',
   isNoAllowLogin: '是否允许登录',
-  setTimeDuan: '设置时间段'
+  setTimeDuan: '设置时间段',
+  loginaddrs: '登录地址'
 }

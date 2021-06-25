@@ -1884,6 +1884,7 @@
           this.goodsTypeData = []
           if (response.items !== null) {
           this.goodsTypeData = response.items
+          console.log(this.goodsTypeData,'55555556666666');
           }
         }
         })
