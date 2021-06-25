@@ -12,47 +12,46 @@
           </el-col>
         </el-row>
         <el-table :data="tableData" style="width: 100%" border stripe>
-          <el-table-column label="时间范围">
+          <el-table-column :label="$t('goods.cobuysec')">
             <template slot-scope="scope">
               <span>{{scope.row.bt}} - {{scope.row.et}}</span>
             </template>
           </el-table-column>
-           <el-table-column prop="content" label="内容"></el-table-column>
-           <el-table-column label="操作">
+           <el-table-column prop="content" :label="$t('lang.content')"></el-table-column>
+           <el-table-column :label="$t('tools.opt')">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="modifybtn(scope.row)">编辑</el-button>
+              <el-button type="text" size="small" @click="modifybtn(scope.row)">{{$t('tools.edit')}}</el-button>
               <span class="xiexian">/</span>
               <delete-button @delData="deleteDataFunc(scope.row)"></delete-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-dialog title="提示" :visible.sync="dialogVisible" width="40%">
+        <el-dialog :title="$t('operation.Addmemorandum')" :visible.sync="dialogVisible" width="40%">
           <el-form ref="form" :model="dataForm" label-width="80px">
-            <el-form-item label="时间范围">
+            <el-form-item :label="$t('goods.cobuysec')">
               <div class="block">
                 <el-date-picker
                   v-model="timeArr"
                   type="datetimerange"
-                  range-separator="至"
+                  range-separator="-"
                   format = 'yyyy-MM-dd HH:mm'
                   value-format="yyyy-MM-dd HH:mm"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期">
+                  :start-placeholder="$t('lang.startDate')"
+                  :end-placeholder="$t('lang.endDate')">
                 </el-date-picker>
               </div>
             </el-form-item>
-            <el-form-item label="内容">
+            <el-form-item :label="$t('lang.content')">
               <el-input
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 4}"
-                placeholder="请输入内容"
                 v-model="dataForm.content">
               </el-input>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-            <el-button type="primary" @click="comformBtn" size="small">确 定</el-button>
+            <el-button @click="dialogVisible = false" size="small">{{$t('tools.cancel')}}</el-button>
+            <el-button type="primary" @click="comformBtn" size="small">{{$t('tools.confirm')}}</el-button>
           </span>
         </el-dialog>
       </div>

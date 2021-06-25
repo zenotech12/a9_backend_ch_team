@@ -69,5 +69,8 @@ export default {
   baseData: 'ទិន្នន័យមូលដ្ឋាន',
   ProcurementManagement: 'ការគ្រប់គ្រងលទ្ធកម្ម',
   procurementWarehouse: 'ឃ្លាំងនិងការទិញ',
-  procurementPrice: 'តម្លៃបញ្ជាទិញ'
+  procurementPrice: 'តម្លៃបញ្ជាទិញ',
+  combinebuys: 'ការទិញបញ្ចូលគ្នា',
+  memorandum: 'អនុស្សរណៈ',
+  AbnormalLogin: 'ការចូលមិនធម្មតា'
 }

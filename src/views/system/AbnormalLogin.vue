@@ -2,15 +2,15 @@
   <div class="sys-body">
     <div class="sys-neiBody">
       <el-table :data="tableData" style="width: 100%" border stripe>
-        <el-table-column prop="name" label="名称"></el-table-column>
-        <el-table-column prop="name" label="登录地址">
+        <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
+        <el-table-column prop="name" :label="$t('sys.loginaddrs')">
           <template slot-scope="scope">
             {{scope.row.login_addr.country_long}} -
             {{scope.row.login_addr.region}} -
             {{scope.row.login_addr.city}}
           </template>
         </el-table-column>
-        <el-table-column prop="gen_time" label="登录时间"></el-table-column>
+        <el-table-column prop="gen_time" :label="$t('lang.loginTime')"></el-table-column>
       </el-table>
       <div style="text-align: right;margin-top: 10px">
         <el-pagination

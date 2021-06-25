@@ -154,4 +154,6 @@ export default {
   goodsOffShelfSuccess: '商品下架成功',
   goodsOffshelf: '商品下架',
   chooseGoods: '选择商品',
+  Addcombopurchase: '添加组合购',
+  Addmemorandum: '添加备忘录'
 }

@@ -408,6 +408,14 @@ export function combineBuyslist(data) {
   })
 }
 
+// 组合购.查个
+export function itemcombineBuys(id) {
+  return request({
+    url: 'combine-buys' + id,
+    method: 'get',
+  })
+}
+
 // 组合购.修改
 export function modifycombineBuys(data,id) {
   return request({

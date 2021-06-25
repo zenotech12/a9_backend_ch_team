@@ -85,5 +85,6 @@ export default {
   pleasechoose: 'សូម​ជ្រើសរើស',
   position: 'ទីតាំង',
   isNoAllowLogin: 'ថាតើត្រូវអនុញ្ញាតឱ្យចូល',
-  setTimeDuan: 'កំណត់ពេលវេលា'
+  setTimeDuan: 'កំណត់ពេលវេលា',
+  loginaddrs: '登录地址'
 }
