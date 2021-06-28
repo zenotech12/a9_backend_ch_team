@@ -88,16 +88,15 @@
               </el-table-column>
             </el-table> -->
 
-            <el-tabs v-model="editableTabsValue" type="card" editable @edit="selectgoods">
+            <el-tabs type="card" v-model="types" editable @tab-add="selectgoods(1)">
               <el-tab-pane
-                v-model="types"
                 :key="index"
                 v-for="(item, index) in group_spus"
-                :label="item.off"
-                :name="item.off"
+                :label="String(item.off)"
+                :name="String(item.off)"
               >
               </el-tab-pane>
-              <el-table :data="group_spus" style="width: 100%">
+              <el-table :data="goodsinfo" style="width: 100%">
                 <el-table-column prop="off">
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
@@ -115,13 +114,16 @@
                           <!-- <span>{{item}}</span> -->
                         </el-col>
                         <el-col :span="8" style="text-align: center">
-                          <span class="goodsInfo" @click="delid(scope.row,k)">删除</span>
+                          <span class="goodsInfo" @click="delid(scope.row,k,scope.row.off)">删除</span>
                         </el-col>
                       </el-row>
                     </div>
                   </template>
                 </el-table-column>
               </el-table>
+              <div class="newgoods" @click="selectgoods(2)">
+                新建
+              </div>
             </el-tabs>
           </div>
           <span slot="footer" class="dialog-footer">
@@ -132,7 +134,7 @@
         <el-dialog :title="$t('goods.goodslist')" :visible.sync="selectgoodsdialog" width="70%">
           <el-form ref="form" :model="Dataform" label-width="80px">
             <el-form-item  :label="$t('sys.zhekou')">
-              <el-input v-model="goodsitem.off" style="width: 200px"></el-input>
+              <el-input v-model="goodsitem.off" style="width: 200px" :disabled = disabl></el-input>
             </el-form-item>
           </el-form>
           <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" border stripe style="width: 100%" @selection-change="handleSelectionChange" height="calc(500px)">
@@ -183,9 +185,10 @@ export default {
   components: {},
   data() {
     return {
+      disabl: false,
+      addtype: '',
       types: '',
       editableTabs: [],
-      editableTabsValue: '0',
       timeArr: [],
       type: '',
       buysid:'',
@@ -225,8 +228,8 @@ export default {
       orderarr: [],
       ids: [],
       objdata: {},
-      changeoff: ''
-      
+      goodsinfo: [],
+      modifyarr: []
     };
   },
   computed: {},
@@ -237,14 +240,35 @@ export default {
       this.getgoodslist()
     },
     types(val){
-      console.log(val);
+      this.group_spus.forEach(item => {
+        if(item.off == val){
+          if(item.off == val){
+            if(this.goodsinfo.length ==0){
+              this.goodsinfo.push(item)
+            }else{
+              this.goodsinfo.splice(0,1,item)
+            }
+          }
+        }
+      });
     }
   },
   mounted() {
     this.GetcombineBuyslist()
   },
   methods: {
-    selectgoods() {
+    selectgoods(num) {
+      if(num == 1){
+        this.disabl = false
+      }else if(num == 2){
+        this.disabl = true
+        this.goodsitem.off = this.types
+      }
+      if(num == 2 && this.types == 0){
+        this.$message('请先添加组合购')
+        return
+      }
+      this.addtype = num
       this.goodsitem.spu_ids = []
       this.goodsitem.off = ''
       this.selectgoodsdialog = true;
@@ -271,9 +295,24 @@ export default {
     },
     // 商品列表确定按钮
     confirmBtn(){
-      this.objdata['off'] = this.goodsitem.off
-      this.group_spus.push(this.objdata)
-      console.log(this.group_spus);
+      if(this.addtype == 1){
+        this.objdata['off'] = this.goodsitem.off
+        this.types = this.goodsitem.off
+        this.group_spus.push(this.objdata)
+        console.log(this.group_spus);
+      }else if(this.addtype == 2){
+        this.group_spus.forEach(item => {
+          if(this.types == item.off){
+            console.log(this.objdata.goods,'this.objdata.goods',item.goods);
+            this.objdata.goods.forEach(val => {
+              item.goods.push(val)
+            });
+             this.objdata.spu_ids.forEach(val => {
+              item.spu_ids.push(val)
+            });
+          }
+        });
+      }
       this.selectgoodsdialog = false;
     },
     // 确定 添加/编辑 组合购
@@ -303,6 +342,7 @@ export default {
     },
     // 添加按钮
     addData(num){
+      this.goodsinfo = []
       this.timeArr = []
       this.type = num
       this.Dataform.title = ''
@@ -319,28 +359,34 @@ export default {
     },
     // 编辑组合购
     modifybtn(data,num){
-      let arr = []
-      this.orderarr = []
+      this.group_spus = []
       this.buysid = data.id
       this.type = num
       this.dialogVisible = true
       this.Dataform.title = data.title
       this.Dataform.banner = data.banner
-      data.group_spus.forEach((item,k) => {
-        this.orderarr.push({
-          off :item.off,
-          spu_ids:[]
-        })
-        item.item_combine_spus.forEach(val => {
-          arr.push(val)
+      data.group_spus.forEach(item => {
+        let obj = {}
+        obj.off = item.off
+        let objd = {}
+        objd.off = item.off
+        objd.goods = item.item_combine_spus
+        this.group_spus.push(obj)
+        this.modifyarr.push(objd)
+      });
+      this.group_spus.forEach(item => {
+        this.modifyarr.forEach(val => {
+          if(item.off == val.off){
+            item.goods = []
+            item.goods = val.goods
+            item.spu_ids = []
+            val.goods.forEach(val => {
+              console.log(item.spu_ids.push(val.id));
+            });
+          }
         });
       });
-      arr.forEach((item,k) => {
-        console.log(item);
-        // this.orderarr[k].spu_ids.push(item.id)
-        // console.log(item.id,'6666',this.orderarr[k]);
-      });
-      this.Dataform.group_spus = this.orderarr
+      console.log(this.group_spus,'44444444444');
     },
     // 删除组合购
     deleteDataFunc(data){
@@ -349,12 +395,14 @@ export default {
       })
     },
     // 删除组合购商品
-    delid(data,index){
-      console.log(index);
+    delid(data,index,off){
+      console.log(off);
       if(this.group_spus.length !=0 ){
         this.group_spus.forEach(item => {
-          item.spu_ids.splice(index,1)
-          item.goods.splice(index,1)
+          if(item.off == off){
+            item.spu_ids.splice(index,1)
+            item.goods.splice(index,1)
+          }
         });
       }
     },
@@ -377,5 +425,15 @@ export default {
 .odd2{
   display: flex;
   align-items: center;
+}
+.newgoods{
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  line-height: 40px;
+  background-color: #f3f3f3;
+  &:hover{
+    color: rgb(58, 124, 211);
+  }
 }
 </style>
