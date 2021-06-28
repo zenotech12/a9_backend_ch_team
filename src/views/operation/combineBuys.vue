@@ -91,7 +91,6 @@
             <el-tabs type="card" v-model="types" addable @tab-remove='delgoosd(types)' @tab-add="selectgoods(1)">
               <el-tab-pane
                 :key="index"
-                v-model="typenum"
                 v-for="(item, index) in group_spus"
                 :label="String(item.off + '%')"
                 :name="String(item.off)"
