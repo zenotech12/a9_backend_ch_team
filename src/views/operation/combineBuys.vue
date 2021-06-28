@@ -88,9 +88,10 @@
               </el-table-column>
             </el-table> -->
 
-            <el-tabs type="card" v-model="types" editable @tab-remove='delgoosd' @tab-add="selectgoods(1)">
+            <el-tabs type="card" v-model="types" addable @tab-remove='delgoosd(types)' @tab-add="selectgoods(1)">
               <el-tab-pane
                 :key="index"
+                v-model="typenum"
                 v-for="(item, index) in group_spus"
                 :label="String(item.off + '%')"
                 :name="String(item.off)"
@@ -419,8 +420,8 @@ export default {
          this.GetcombineBuyslist()
       })
     },
-    delgoosd(){
-      console.log(55555);
+    delgoosd(data){
+      console.log(data);
     },
     // 删除组合购商品
     delid(data,index,off){
