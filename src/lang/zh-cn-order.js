@@ -215,5 +215,6 @@ export default {
   userNumber: '用户数',
   sevenDay: '7天',
   day30: '30天',
-  dailyNewMember: '每日新会员'
+  dailyNewMember: '每日新会员',
+  purchas: '代购'
 }

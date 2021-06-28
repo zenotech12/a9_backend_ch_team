@@ -212,5 +212,6 @@ export default {
   userNumber: 'New Mememer',
   sevenDay: '7 days',
   day30: '30 days',
-  dailyNewMember: 'Daily New Member'
+  dailyNewMember: 'Daily New Member',
+  purchas: 'Purchasing'
 }
