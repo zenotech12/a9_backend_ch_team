@@ -152,5 +152,11 @@ export default {
   couponSendSuccess: 'ចេញប័ណ្ណបញ្ចុះតម្លៃដោយជោគជ័យ',
   goodsOffShelfSuccess: 'ទំនិញត្រូវបានយកចុះពីធ្នើដោយជោគជ័យ',
   goodsOffshelf: 'ទំនិញចុះពីធ្នើ',
-  chooseGoods: 'ជ្រើសរើសទំនិញ'
+  chooseGoods: 'ជ្រើសរើសទំនិញ',
+  Addcombopurchase: 'បន្ថែមការទិញបន្សំ',
+  Addmemorandum: 'បន្ថែមអនុស្សរណៈ',
+  pleasemsg: 'សូមបន្ថែមការទិញបញ្ចូលគ្នាជាមុន',
+  Repeatdiscount: 'បញ្ចុះតំលៃម្តងទៀត',
+  local: 'ក្នុងស្រុក',
+  Totalusers: 'អ្នកប្រើប្រាស់សរុប'
 }

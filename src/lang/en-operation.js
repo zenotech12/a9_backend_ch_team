@@ -152,5 +152,11 @@ export default {
   couponSendSuccess: 'Coupon issued successfully',
   goodsOffShelfSuccess: 'Products removed off-shelf successfully',
   goodsOffshelf: 'Product off the shelf',
-  chooseGoods: 'Select product'
+  chooseGoods: 'Select product',
+  Addcombopurchase: 'Add combo purchase',
+  Addmemorandum: 'Add memo',
+  pleasemsg: 'Please add the combination purchase first',
+  Repeatdiscount: 'Repeat discount',
+  local: 'local',
+  Totalusers: 'Total users'
 }

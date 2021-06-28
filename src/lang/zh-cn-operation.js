@@ -155,5 +155,9 @@ export default {
   goodsOffshelf: '商品下架',
   chooseGoods: '选择商品',
   Addcombopurchase: '添加组合购',
-  Addmemorandum: '添加备忘录'
+  Addmemorandum: '添加备忘录',
+  pleasemsg: '请先添加组合购',
+  Repeatdiscount: '重复折扣',
+  local: '本地',
+  Totalusers: '总用户'
 }

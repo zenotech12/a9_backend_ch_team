@@ -18,7 +18,7 @@
                <img class="image imagecss" :src="getImageUrl(scope.row.banner, 100)">
             </template>
           </el-table-column>
-          <el-table-column prop="title" :label="$t('operation.goods')">
+          <!-- <el-table-column prop="title" :label="$t('operation.goods')">
               <template slot="header" slot-scope="scope">
                   <el-row style="width: 100%">
                     <el-col :span="12">{{$t('operation.goods')}}</el-col>
@@ -35,7 +35,7 @@
                     </el-row>
                   </div>
                 </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
             <template slot-scope="scope">
               <el-button type="text" @click="modifybtn(scope.row,1)" size="small">{{$t('tools.edit')}}</el-button>
@@ -88,11 +88,11 @@
               </el-table-column>
             </el-table> -->
 
-            <el-tabs type="card" v-model="types" editable @tab-add="selectgoods(1)">
+            <el-tabs type="card" v-model="types" editable @tab-remove='delgoosd' @tab-add="selectgoods(1)">
               <el-tab-pane
                 :key="index"
                 v-for="(item, index) in group_spus"
-                :label="String(item.off)"
+                :label="String(item.off + '%')"
                 :name="String(item.off)"
               >
               </el-tab-pane>
@@ -100,9 +100,9 @@
                 <el-table-column prop="off">
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
-                      <el-col :span="8" style="text-align: center">名称</el-col>
-                      <el-col :span="8" style="text-align: center">图片</el-col>
-                      <el-col :span="8" style="text-align: center">操作</el-col>
+                      <el-col :span="8" style="text-align: center">{{$t('goods.name')}}</el-col>
+                      <el-col :span="8" style="text-align: center">{{$t('lang.picture')}}</el-col>
+                      <el-col :span="8" style="text-align: center">{{$t('tools.opt')}}</el-col>
                     </el-row>
                   </template>
                   <template slot-scope="scope">
@@ -114,7 +114,7 @@
                           <!-- <span>{{item}}</span> -->
                         </el-col>
                         <el-col :span="8" style="text-align: center">
-                          <span class="goodsInfo" @click="delid(scope.row,k,scope.row.off)">删除</span>
+                          <span class="goodsInfo" @click="delid(scope.row,k,scope.row.off)">{{$t('tools.delete')}}</span>
                         </el-col>
                       </el-row>
                     </div>
@@ -122,7 +122,7 @@
                 </el-table-column>
               </el-table>
               <div class="newgoods" @click="selectgoods(2)">
-                新建
+                {{$t('tools.add')}}
               </div>
             </el-tabs>
           </div>
@@ -251,7 +251,7 @@ export default {
           }
         }
       });
-    }
+    },
   },
   mounted() {
     this.GetcombineBuyslist()
@@ -265,7 +265,7 @@ export default {
         this.goodsitem.off = this.types
       }
       if(num == 2 && this.types == 0){
-        this.$message('请先添加组合购')
+        this.$message(this.$t('operation.pleasemsg'))
         return
       }
       this.addtype = num
@@ -281,6 +281,7 @@ export default {
         this.itemCount = res.total
       });
     },
+    // 商品勾选
     handleSelectionChange(val) {
       let obj = {}
       this.ids = []
@@ -296,36 +297,56 @@ export default {
     // 商品列表确定按钮
     confirmBtn(){
       if(this.addtype == 1){
-        this.objdata['off'] = this.goodsitem.off
-        this.types = this.goodsitem.off
-        this.group_spus.push(this.objdata)
-        console.log(this.group_spus);
+        let atype = this.group_spus.some(item =>{
+          console.log();
+         return item.off == this.goodsitem.off
+        })
+        if(!atype){
+          this.objdata['off'] = this.goodsitem.off
+          this.types = this.goodsitem.off
+          this.group_spus.push(this.objdata)
+        }else{
+          this.$message(this.$t('operation.Repeatdiscount'))
+          return
+        }
       }else if(this.addtype == 2){
+        let num = 0
         this.group_spus.forEach(item => {
           if(this.types == item.off){
-            console.log(this.objdata.goods,'this.objdata.goods',item.goods);
+            num = item.off
             this.objdata.goods.forEach(val => {
               item.goods.push(val)
+              this.types = '0'
+              setTimeout(() => {
+                this.types = String(num)
+              }, 10);
             });
-             this.objdata.spu_ids.forEach(val => {
+            this.objdata.spu_ids.forEach(val => {
               item.spu_ids.push(val)
             });
           }
+          
         });
       }
       this.selectgoodsdialog = false;
     },
     // 确定 添加/编辑 组合购
     AddcombineBuys(){
+      this.Dataform.bt = this.timeArr[0]
+      this.Dataform.et = this.timeArr[1]
       if(this.group_spus.length !=0){
+        let arr2 = []
         this.group_spus.forEach(item => {
           delete item.goods
           item.off = Number(item.off)
-          this.Dataform.group_spus.push(item)
+          this.Dataform.group_spus = []
+          arr2.push(item)
         });
+        this.Dataform.group_spus = arr2
       }
       if(this.Dataform.group_spus.length != 0){
         let item =  JSON.stringify(this.Dataform.group_spus)
+        this.Dataform.group_spus = []
         this.Dataform.group_spus = item
       }
       if(this.type == 2){
@@ -359,6 +380,10 @@ export default {
     },
     // 编辑组合购
     modifybtn(data,num){
+      this.timeArr[0] = data.bt
+      this.timeArr[1] = data.et
+      this.Dataform.bt = data.bt
+      this.Dataform.et = data.et
       this.group_spus = []
       this.buysid = data.id
       this.type = num
@@ -368,6 +393,7 @@ export default {
       data.group_spus.forEach(item => {
         let obj = {}
         obj.off = item.off
+        this.types = String(obj.off)
         let objd = {}
         objd.off = item.off
         objd.goods = item.item_combine_spus
@@ -381,12 +407,11 @@ export default {
             item.goods = val.goods
             item.spu_ids = []
             val.goods.forEach(val => {
-              console.log(item.spu_ids.push(val.id));
+              item.spu_ids.push(val.id)
             });
           }
         });
       });
-      console.log(this.group_spus,'44444444444');
     },
     // 删除组合购
     deleteDataFunc(data){
@@ -394,20 +419,23 @@ export default {
          this.GetcombineBuyslist()
       })
     },
+    delgoosd(){
+      console.log(55555);
+    },
     // 删除组合购商品
     delid(data,index,off){
-      console.log(off);
       if(this.group_spus.length !=0 ){
         this.group_spus.forEach(item => {
           if(item.off == off){
             item.spu_ids.splice(index,1)
-            item.goods.splice(index,1)
+            item.goods.splice(index,1) 
           }
-        });
+        })
+        this.types = '0'
+        setTimeout(() => {
+          this.types = String(off)
+        }, 10);
       }
-    },
-    Infogoods(data){
-      console.log(data);
     },
   },
 };
