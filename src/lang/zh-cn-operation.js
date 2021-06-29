@@ -159,5 +159,11 @@ export default {
   pleasemsg: '请先添加组合购',
   Repeatdiscount: '重复折扣',
   local: '本地',
-  Totalusers: '总用户'
+  Totalusers: '总用户',
+  notstarted: '未开始',
+  expired: '已过期',
+  loginaddrs: '登录地址',
+  Lastaddress: '上次登录地址',
+  Lastip: '上次登录ip',
+  Thisip: '本次登录ip'
 }

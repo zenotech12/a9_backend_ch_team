@@ -3,7 +3,15 @@
     <div class="sys-neiBody">
       <!-- 搜索 -->
       <div class="rightbox">
-        <el-row>
+        <el-row class="container">
+          <el-col :span="10">
+          <el-radio-group v-model="tabPosition" size="small">
+            <el-radio-button label="0">{{$t('operation.all')}}</el-radio-button>
+            <el-radio-button label="1">{{$t('operation.notstarted')}}</el-radio-button>
+            <el-radio-button label="2">{{$t('operation.pbDoing')}}</el-radio-button>
+            <el-radio-button label="3">{{$t('operation.expired')}}</el-radio-button>
+          </el-radio-group>
+          </el-col>
           <el-col :span="10" class="funcList">
             <div class="boxFuncBtn" v-if="permissionCheck('opt')" @click="addData">
               <img src="../../assets/images/icon/icon_add.png" alt class="icon_add" />
@@ -11,6 +19,7 @@
             </div>
           </el-col>
         </el-row>
+       
         <el-table :data="tableData" style="width: 100%" border stripe>
           <el-table-column :label="$t('goods.cobuysec')">
             <template slot-scope="scope">
@@ -26,6 +35,14 @@
             </template>
           </el-table-column>
         </el-table>
+        <div style="text-align: right;margin-top: 10px">
+          <el-pagination
+            :current-page.sync="currentPage"
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="itemCount"
+          ></el-pagination>
+        </div>
         <el-dialog :title="$t('operation.Addmemorandum')" :visible.sync="dialogVisible" width="40%">
           <el-form ref="form" :model="dataForm" label-width="80px">
             <el-form-item :label="$t('goods.cobuysec')">
@@ -65,6 +82,7 @@ export default {
   components: {},
   data() {
     return {
+      tabPosition: 0,
       type: '',
       dataid: '',
       tableData: [],
@@ -79,11 +97,24 @@ export default {
         status: 0,
         skip: 0,
         limit: 10,
-      }
+      },
+      currentPage: 1,
+      pageSize: 10,
+      itemCount: 0,
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+    tabPosition(val){
+      this.serachform.status = val
+      this.Getmemorandumslist()
+    },
+     currentPage(val) {
+      this.serachform.skip = (val - 1) * this.pageSize
+      this.serachform.limit = this.pageSize
+      this.Getmemorandumslist()
+    },
+  },
   mounted() {
     this.Getmemorandumslist()
   },
@@ -124,6 +155,7 @@ export default {
     Getmemorandumslist(){
       getmemorandums(this.serachform).then(res=>{
         this.tableData = res.items
+        this.itemCount = res.total
       })
     },
     deleteDataFunc(data){
@@ -139,5 +171,9 @@ export default {
 .funcList {
   width: 100%;
   text-align: right;
+}
+.container{
+  display: flex;
+  align-items: center;
 }
 </style>

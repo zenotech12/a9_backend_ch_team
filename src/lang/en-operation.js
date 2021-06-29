@@ -158,5 +158,11 @@ export default {
   pleasemsg: 'Please add the combination purchase first',
   Repeatdiscount: 'Repeat discount',
   local: 'local',
-  Totalusers: 'Total users'
+  Totalusers: 'Total users',
+  notstarted: 'has not started',
+  expired: 'Expired',
+  loginaddrs: 'Login address',
+  Lastaddress: 'Last login address',
+  Lastip: 'Last login ip',
+  Thisip: 'This login ip'
 }

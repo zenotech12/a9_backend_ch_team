@@ -182,5 +182,6 @@ export default{
   exportData2: 'នាំចេញ លិខិតដឹកជញ្ជូន',
   exportData3: 'នាំចេញ',
   Internaluse: 'ការប្រើប្រាស់ផ្ទៃក្នុង',
-  specialSale: 'លក់ពិសេស'
+  specialSale: 'លក់ពិសេស',
+  exportData4: 'នាំចេញកំណត់សំគាល់ប្រេស',
 }

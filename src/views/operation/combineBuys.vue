@@ -44,6 +44,14 @@
             </template>
           </el-table-column>
         </el-table>
+         <div style="text-align: right;margin-top: 10px">
+            <el-pagination
+              :current-page.sync="CobuycurrentPage"
+              :page-size="CobuypageSize"
+              layout="total, prev, pager, next, jumper"
+              :total="CobuyitemCount"
+            ></el-pagination>
+          </div>
         <el-dialog :title="$t('operation.Addcombopurchase')" :visible.sync="dialogVisible" width="50%">
           <el-form ref="form" :model="Dataform" label-width="80px">
             <el-form-item :label="$t('sys.title')">
@@ -87,8 +95,7 @@
                 </template>
               </el-table-column>
             </el-table> -->
-
-            <el-tabs type="card" v-model="types" addable @tab-remove='delgoosd(types)' @tab-add="selectgoods(1)">
+            <el-tabs type="card" v-model="types" addable @tab-add="selectgoods(1)">
               <el-tab-pane
                 :key="index"
                 v-for="(item, index) in group_spus"
@@ -96,7 +103,7 @@
                 :name="String(item.off)"
               >
               </el-tab-pane>
-              <el-table :data="goodsinfo" style="width: 100%">
+              <el-table :data="goodsinfo" style="width: 100%" height="calc(250px)">
                 <el-table-column prop="off">
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
@@ -181,6 +188,7 @@
 <script>
 import { combineBuys, combineBuyslist, modifycombineBuys, DelcombineBuys } from "@/api/operation";
 import { spusList } from "@/api/goods";
+import { InputNumber } from 'element-ui';
 export default {
   components: {},
   data() {
@@ -221,6 +229,9 @@ export default {
       currentPage: 1,
       pageSize: 10,
       itemCount: 0,
+      CobuycurrentPage: 1,
+      CobuypageSize: 10,
+      CobuyitemCount: 0,
       combineBuyspage:{
         skip: 0,
         limit: 10
@@ -234,6 +245,11 @@ export default {
   },
   computed: {},
   watch: {
+    CobuycurrentPage(val) {
+      this.combineBuyspage.skip = (val - 1) * this.CobuypageSize
+      this.combineBuyspage.limit = this.CobuypageSize
+      this.GetcombineBuyslist()
+    },
     currentPage(val) {
       this.searchForm.skip = (val - 1) * this.pageSize
       this.searchForm.limit = this.pageSize
@@ -257,6 +273,7 @@ export default {
     this.GetcombineBuyslist()
   },
   methods: {
+    // 添加组合购商品
     selectgoods(num) {
       if(num == 1){
         this.disabl = false
@@ -293,6 +310,10 @@ export default {
       });
       obj.goods = val
       this.objdata = obj
+    },
+    // 数组去重
+    unique (arr) {
+      return Array.from(new Set(arr))
     },
     // 商品列表确定按钮
     confirmBtn(){
@@ -337,6 +358,7 @@ export default {
       if(this.group_spus.length !=0){
         let arr2 = []
         this.group_spus.forEach(item => {
+          item.spu_ids = this.unique(item.spu_ids)
           delete item.goods
           item.off = Number(item.off)
           this.Dataform.group_spus = []
@@ -376,30 +398,33 @@ export default {
     GetcombineBuyslist(){
       combineBuyslist(this.combineBuyspage).then(res=>{
         this.ListData = res.items
+        this.CobuyitemCount = res.total
       })
     },
     // 编辑组合购
     modifybtn(data,num){
-      this.timeArr[0] = data.bt
-      this.timeArr[1] = data.et
+      this.timeArr = []
       this.Dataform.bt = data.bt
       this.Dataform.et = data.et
+      this.timeArr.push(data.bt,data.et)
       this.group_spus = []
       this.buysid = data.id
       this.type = num
       this.dialogVisible = true
       this.Dataform.title = data.title
       this.Dataform.banner = data.banner
+      let numarr = []
       data.group_spus.forEach(item => {
         let obj = {}
         obj.off = item.off
-        this.types = String(obj.off)
+        numarr.push(obj.off)
         let objd = {}
         objd.off = item.off
         objd.goods = item.item_combine_spus
         this.group_spus.push(obj)
         this.modifyarr.push(objd)
-      });
+      }); 
+      let num2 = numarr[0]
       this.group_spus.forEach(item => {
         this.modifyarr.forEach(val => {
           if(item.off == val.off){
@@ -412,15 +437,16 @@ export default {
           }
         });
       });
+      this.types = '0'
+      setTimeout(() => {
+         this.types = String(num2)
+      }, 50);
     },
     // 删除组合购
     deleteDataFunc(data){
       DelcombineBuys(data.id).then(res=>{
          this.GetcombineBuyslist()
       })
-    },
-    delgoosd(data){
-      console.log(data);
     },
     // 删除组合购商品
     delid(data,index,off){
@@ -430,6 +456,13 @@ export default {
             item.spu_ids.splice(index,1)
             item.goods.splice(index,1) 
           }
+          if(item.goods.length == 0){
+          this.group_spus.forEach(val => {
+            if(val.off == off){
+               val = null
+            }
+          });
+        }
         })
         this.types = '0'
         setTimeout(() => {

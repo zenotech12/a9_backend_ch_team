@@ -95,7 +95,7 @@
             </div>
           </div>
           <div v-show="activeChuRuKu === '2'">
-            <el-row>
+            <el-row class="container">
               <el-col :span="18">
                 <el-form :inline="true" :model="chuKuSearchForm">
                   <el-form-item>
@@ -138,8 +138,9 @@
                 </el-form>
               </el-col>
               <el-col :span="6" align="right" v-if="permissionCheck('opt')">
-                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu_deliverynote">{{$t('warehouse.exportData2')}}</el-button>
-                <el-button type="primary" size="small" style="margin-right: 20px" @click="exportChuKu">{{$t('warehouse.exportData')}}</el-button>
+                <el-button type="primary" size="small" style="margin-left: -35px; margin-right: 5px; width: 135px; font-size: 12px" @click="exportChuKu_ExpressNote">{{$t('warehouse.exportData4')}}</el-button>
+                <el-button type="primary" size="small" style="margin-right: 5px; width: 135px; font-size: 12px" @click="exportChuKu_deliverynote">{{$t('warehouse.exportData2')}}</el-button>
+                <el-button type="primary" size="small" style="margin-right: 5px; width: 135px; font-size: 12px" @click="exportChuKu">{{$t('warehouse.exportData')}}</el-button>
               </el-col>
 
             </el-row>
@@ -273,7 +274,8 @@ import {
   warehouseReceiptsExport,
   warehouseOutboundsExport,
   warehouseOutbounds,
-  warehouseDeliveryNoteExport
+  warehouseDeliveryNoteExport,
+  warehouseExpressNote
 } from '@/api/warehouse'
 export default {
   data() {
@@ -464,6 +466,22 @@ export default {
         document.body.removeChild(link)
       })
     },
+    exportChuKu_ExpressNote(){
+       if (this.chukuIdsExport.length === 0) {
+        this.$message.error(this.$t('warehouse.needCheckDataExoprt'))
+        return
+      }
+      warehouseExpressNote({ ids: JSON.stringify(this.chukuIdsExport) }).then(res => {
+        var link = document.createElement('a')
+        const blod = new Blob([res], { type: 'application/vnd.ms-excel' })
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blod)
+        link.download = 'ExpressNote.xlsx'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+    },
     shengheFuncChuku(id, number, name) {
       this.formCang.status = number
       this.formCang.receiver_name = name
@@ -574,5 +592,9 @@ export default {
 }
 .textcolor{
   color: #409eff;
+}
+.container{
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -187,7 +187,8 @@ export default{
   exportData2: 'Export Delivery Note',
   exportData3: 'Export',
   Internaluse: 'Internal use',
-  specialSale: 'Special sale'
+  specialSale: 'Special sale',
+  exportData4: 'Export Express Note',
 
 }
 
