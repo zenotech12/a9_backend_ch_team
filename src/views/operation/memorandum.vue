@@ -20,13 +20,13 @@
           </el-col>
         </el-row>
         <el-table :data="tableData" style="width: 100%" border stripe>
-          <el-table-column :label="$t('sys.title')" prop="title"> </el-table-column>
+          <el-table-column :label="$t('sys.title')" prop="title" width="150px"></el-table-column>
+          <el-table-column prop="content" :label="$t('lang.content')"></el-table-column>
           <el-table-column :label="$t('goods.cobuysec')">
             <template slot-scope="scope">
               <span>{{scope.row.bt}} - {{scope.row.et}}</span>
             </template>
           </el-table-column>
-           <el-table-column prop="content" :label="$t('lang.content')"></el-table-column>
            <el-table-column :label="$t('tools.opt')">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="modifybtn(scope.row)">{{$t('tools.edit')}}</el-button>
@@ -136,6 +136,7 @@ export default {
       this.timeArr[0] = data.bt
       this.timeArr[1] = data.et
       this.dataForm.content = data.content
+      this.dataForm.title = data.title
       // console.log(data);
       this.dataid = data.id
       this.type = '2'
