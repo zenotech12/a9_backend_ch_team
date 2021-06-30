@@ -50,11 +50,6 @@ const order = [{
     name: 'combinebuys',
     meta: { title: 'combinebuys', icon: 'list', code: '4_8' },
     component: () => import('@/views/operation/combinebuys')
-  },{
-    path: 'memorandum',
-    name: 'memorandum',
-    meta: { title: 'memorandum', icon: 'list', code: '4_8' },
-    component: () => import('@/views/operation/memorandum')
   },]
 }]
 export default order

@@ -71,7 +71,6 @@ export default {
   procurementWarehouse: 'Purchasing / Warehouse',
   procurementPrice: 'Purchase order price',
   combinebuys: 'Combination Purchase',
-  memorandum: 'memorandum',
+  memorandum: 'Reminder',
   AbnormalLogin: 'Abnormal Login',
-  loginaddrs: '登录地址'
 }

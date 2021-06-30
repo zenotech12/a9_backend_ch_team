@@ -19,8 +19,8 @@
             </div>
           </el-col>
         </el-row>
-       
         <el-table :data="tableData" style="width: 100%" border stripe>
+          <el-table-column :label="$t('sys.title')" prop="title"> </el-table-column>
           <el-table-column :label="$t('goods.cobuysec')">
             <template slot-scope="scope">
               <span>{{scope.row.bt}} - {{scope.row.et}}</span>
@@ -45,6 +45,9 @@
         </div>
         <el-dialog :title="$t('operation.Addmemorandum')" :visible.sync="dialogVisible" width="40%">
           <el-form ref="form" :model="dataForm" label-width="80px">
+            <el-form-item :label="$t('sys.title')">
+              <el-input v-model="dataForm.title" style="width: 250px"></el-input>
+            </el-form-item>
             <el-form-item :label="$t('goods.cobuysec')">
               <div class="block">
                 <el-date-picker
@@ -91,7 +94,8 @@ export default {
       dataForm:{
         bt: '',
         et: '',
-        content: ''
+        content: '',
+        title: ''
       },
       serachform:{
         status: 0,

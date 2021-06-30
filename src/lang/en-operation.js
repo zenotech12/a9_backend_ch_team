@@ -154,7 +154,7 @@ export default {
   goodsOffshelf: 'Product off the shelf',
   chooseGoods: 'Select product',
   Addcombopurchase: 'Add combo purchase',
-  Addmemorandum: 'Add memo',
+  Addmemorandum: 'Add Reminder',
   pleasemsg: 'Please add the combination purchase first',
   Repeatdiscount: 'Repeat discount',
   local: 'local',

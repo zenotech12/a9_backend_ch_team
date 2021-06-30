@@ -194,12 +194,12 @@
               </el-table-column>
               <el-table-column prop="shipping_address" :label="$t('warehouse.Address')" width="200px">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.shipping_address != null">
-                      {{scope.row.shipping_address.address.province}}-
-                      {{scope.row.shipping_address.address.city}}-
-                      {{scope.row.shipping_address.address.district}}-
-                      {{scope.row.shipping_address.address.addr}}
-                      </span>
+                  <span v-if="scope.row.shipping_address != null">
+                    {{scope.row.shipping_address.address.province}}-
+                    {{scope.row.shipping_address.address.city}}-
+                    {{scope.row.shipping_address.address.district}}-
+                    {{scope.row.shipping_address.address.addr}}
+                  </span>
                   <span v-if="scope.row.shipping_address == null">{{$t('warehouse.noinformation')}}</span>
                 </template>
               </el-table-column>
@@ -207,9 +207,9 @@
                 <template slot-scope="scope">
                   <span v-if="scope.row.express == null">{{$t('warehouse.noinformation')}}</span>
                   <span v-if="scope.row.express != null">
-                      <div>{{$t('warehouse.corporateName')}}: {{scope.row.express.company}}</div>
-                      <div>{{$t('warehouse.Singlenumber')}}: {{scope.row.express.novar}}</div>
-                    </span>
+                    <div>{{$t('warehouse.corporateName')}}: {{scope.row.express.company}}</div>
+                    <div>{{$t('warehouse.Singlenumber')}}: {{scope.row.express.novar}}</div>
+                  </span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('order.status')" width="180px">
@@ -466,7 +466,7 @@ export default {
       })
     },
     exportChuKu_ExpressNote(){
-       if (this.chukuIdsExport.length === 0) {
+      if(this.chukuIdsExport.length === 0) {
         this.$message.error(this.$t('warehouse.needCheckDataExoprt'))
         return
       }
