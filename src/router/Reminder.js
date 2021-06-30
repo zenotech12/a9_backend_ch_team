@@ -4,12 +4,12 @@ const warehouse = [{
   component: Layout,
   name: 'Reminder',
   redirect: '/Reminder/List',
-  meta: { title: 'procurementWarehouse', icon: 'inventory', code: '4' },
+  meta: { title: 'ReminderSet', icon: 'inventory', code: '10' },
   children: [
     {
         path: 'list',
         name: 'list',
-        meta: { title: 'memorandum', icon: 'list', code: '4_8' },
+        meta: { title: 'memorandum', icon: 'list', code: '10_1' },
         component: () => import('@/views/operation/memorandum')
       },
   ]

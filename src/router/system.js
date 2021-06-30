@@ -57,7 +57,7 @@ const system = [{
   },  {
     name: 'AbnormalLogin',
     path: 'AbnormalLogin',
-    meta: { title: 'AbnormalLogin', icon: 'permission', code: '6_9' },
+    meta: { title: 'AbnormalLogin', icon: 'permission', code: '6_10' },
     component: () => import('@/views/system/AbnormalLogin')
   }]
 }]

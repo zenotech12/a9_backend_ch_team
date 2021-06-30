@@ -71,5 +71,6 @@ export default {
   procurementPrice: '采购单价格',
   combinebuys: '组合购',
   memorandum: '备忘录',
-  AbnormalLogin: '异常登录'
+  AbnormalLogin: '异常登录',
+  ReminderSet:'备忘管理'
 }

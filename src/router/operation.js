@@ -48,7 +48,7 @@ const order = [{
   },{
     path: 'combinebuys',
     name: 'combinebuys',
-    meta: { title: 'combinebuys', icon: 'list', code: '4_8' },
+    meta: { title: 'combinebuys', icon: 'list', code: '4_9' },
     component: () => import('@/views/operation/combinebuys')
   },]
 }]
