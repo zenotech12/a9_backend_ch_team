@@ -10,7 +10,7 @@ const warehouse = [{
         path: 'list',
         name: 'list',
         meta: { title: 'memorandum', icon: 'list', code: '10_1' },
-        component: () => import('@/views/operation/memorandum')
+        component: () => import('@/views/reminder/memorandum')
       },
   ]
 }]

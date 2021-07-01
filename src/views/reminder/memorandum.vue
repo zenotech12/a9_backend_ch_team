@@ -64,7 +64,7 @@
             <el-form-item :label="$t('lang.content')">
               <el-input
                 type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4}"
+                :autosize="{ minRows: 4, maxRows: 10}"
                 v-model="dataForm.content">
               </el-input>
             </el-form-item>
@@ -78,7 +78,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { memorandumsadd, getmemorandums, Delmemorandums, modifymemorandums } from "@/api/operation";
 export default {
