@@ -213,5 +213,6 @@ export default {
   sevenDay: '7 days',
   day30: '30 days',
   dailyNewMember: 'Daily New Member',
-  purchas: 'Purchasing'
+  purchas: 'Purchasing',
+  confirmCancelOrderTip: 'Confirm to cancel the current order？'
 }

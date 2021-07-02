@@ -186,5 +186,6 @@ export default {
   sevenDay: '7 ថ្ងៃ',
   day30: '៣០ ថ្ងៃ',
   dailyNewMember: 'សមាជិកថ្មីប្រចាំថ្ងៃ',
-  purchas: 'ការទិញ'
+  purchas: 'ការទិញ',
+  confirmCancelOrderTip: 'បញ្ជាក់លុបចោលការបញ្ជាទិញបច្ចុប្បន្ន'
 }

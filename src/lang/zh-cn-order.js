@@ -216,5 +216,6 @@ export default {
   sevenDay: '7天',
   day30: '30天',
   dailyNewMember: '每日新会员',
-  purchas: '代购'
+  purchas: '代购',
+  confirmCancelOrderTip: '确定取消当前订单？'
 }

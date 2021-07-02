@@ -1475,12 +1475,23 @@
         })
       },
       // 取消订单
-      cancelOrder(data){
-        cancelGoods(data.id).then(res=>{
-          if(res.meta == 0){
-            this.getDataListFun()
-            this.getOrderCount()
-          }
+      cancelOrder(data) {
+        this.$confirm(this.$t('order.confirmCancelOrderTip'), this.$t('tools.prompt'), {
+          confirmButtonText: this.$t('tools.confirm'),
+          cancelButtonText: this.$t('tools.cancel'),
+          type: 'error '
+        }).then(() => {
+          cancelGoods(data.id).then(res => {
+            if (res.meta === 0) {
+              this.getDataListFun()
+              this.getOrderCount()
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: this.$t('order.status7')
+          })
         })
       },
       search() {
