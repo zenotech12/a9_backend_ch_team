@@ -411,13 +411,13 @@ export function combineBuyslist(data) {
 // 组合购.查个
 export function itemcombineBuys(id) {
   return request({
-    url: 'combine-buys' + id,
+    url: 'combine-buys/' + id,
     method: 'get',
   })
 }
 
 // 组合购.修改
-export function modifycombineBuys(data,id) {
+export function modifycombineBuys(data, id) {
   return request({
     url: 'combine-buys/' + id,
     method: 'put',
@@ -460,7 +460,7 @@ export function Delmemorandums(id) {
 }
 
 // 备忘录.修改
-export function modifymemorandums(data,id) {
+export function modifymemorandums(data, id) {
   return request({
     url: 'memorandums/' + id,
     method: 'put',

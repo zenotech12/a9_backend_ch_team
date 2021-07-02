@@ -29,6 +29,7 @@
                 <el-radio-group v-model="searchForm.type" size="mini" @change="search">
                   <el-radio-button :label="0">{{$t('warehouse.all')}}</el-radio-button>
                   <el-radio-button :label="5">{{$t('order.purchas')}}</el-radio-button>
+                  <el-radio-button :label="101">{{$t("operation.local")}}</el-radio-button>
                 </el-radio-group>
               </el-form-item>
             <el-form-item :label="$t('order.ownerShipStatusSelect')">

@@ -189,5 +189,6 @@ export default {
   exportData2: '导出 Delivery Note',
   exportData3: '导出',
   Internaluse: '内部领用',
-  specialSale: '特销'
+  specialSale: '特销',
+  exportData4: '导出 Express Note',
 }

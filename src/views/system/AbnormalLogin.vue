@@ -3,13 +3,34 @@
     <div class="sys-neiBody">
       <el-table :data="tableData" style="width: 100%" border stripe>
         <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
-        <el-table-column prop="name" :label="$t('sys.loginaddrs')">
+        <el-table-column prop="name" :label="$t('operation.loginaddrs')">
           <template slot-scope="scope">
-            {{scope.row.login_addr.country_long}} -
-            {{scope.row.login_addr.region}} -
-            {{scope.row.login_addr.city}}
+           <div>
+              {{scope.row.login_addr.country_long}} -
+              {{scope.row.login_addr.region}} -
+              {{scope.row.login_addr.city}}
+            </div>
+            <div>
+              {{scope.row.login_addr.lat}} - 
+              {{scope.row.login_addr.lng}} 
+            </div>
           </template>
         </el-table-column>
+        <el-table-column prop="name" :label="$t('operation.Lastaddress')">
+          <template slot-scope="scope">
+            <div>
+              {{scope.row.old_addr.country_long}} -
+              {{scope.row.old_addr.region}} -
+              {{scope.row.old_addr.city}}
+            </div>
+             <div>
+              {{scope.row.old_addr.lat}} - 
+              {{scope.row.old_addr.lng}} 
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="old_ip" :label="$t('operation.Lastip')"></el-table-column>
+        <el-table-column prop="new_ip" :label="$t('operation.Thisip')"></el-table-column>
         <el-table-column prop="gen_time" :label="$t('lang.loginTime')"></el-table-column>
       </el-table>
       <div style="text-align: right;margin-top: 10px">

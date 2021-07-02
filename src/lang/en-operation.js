@@ -152,5 +152,17 @@ export default {
   couponSendSuccess: 'Coupon issued successfully',
   goodsOffShelfSuccess: 'Products removed off-shelf successfully',
   goodsOffshelf: 'Product off the shelf',
-  chooseGoods: 'Select product'
+  chooseGoods: 'Select product',
+  Addcombopurchase: 'Add combo purchase',
+  Addmemorandum: 'Add Reminder',
+  pleasemsg: 'Please add the combination purchase first',
+  Repeatdiscount: 'Repeat discount',
+  local: 'local',
+  Totalusers: 'Total users',
+  notstarted: 'has not started',
+  expired: 'Expired',
+  loginaddrs: 'Login address',
+  Lastaddress: 'Last login address',
+  Lastip: 'Last login ip',
+  Thisip: 'This login ip'
 }

@@ -195,6 +195,7 @@
                         :start-placeholder="$t('tools.startDate')"
                         :end-placeholder="$t('tools.endDate')">
         </el-date-picker>
+        <span style="margin-left: 22%; font-size:20px">{{$t('operation.Totalusers')}}：{{totaluser}}</span>
       </el-col>
       <el-col :span="24">
         <el-row>
@@ -639,6 +640,7 @@
     data() {
       const pz = 100
       return {
+        totaluser: 0,
         optionNewUser: {},
         lineDaySearch: {
           bt: '',
@@ -1121,6 +1123,7 @@
         // console.log('data', this.searchData)
         daylinenewuser(this.lineDaySearch).then(res => {
           // const arrIn = []
+          this.totaluser = res.user_count
           const arrCount = []
           const xAxle = []
           res.items.forEach((item, index) => {

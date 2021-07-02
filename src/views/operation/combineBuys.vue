@@ -18,7 +18,7 @@
                <img class="image imagecss" :src="getImageUrl(scope.row.banner, 100)">
             </template>
           </el-table-column>
-          <el-table-column prop="title" :label="$t('operation.goods')">
+          <!-- <el-table-column prop="title" :label="$t('operation.goods')">
               <template slot="header" slot-scope="scope">
                   <el-row style="width: 100%">
                     <el-col :span="12">{{$t('operation.goods')}}</el-col>
@@ -35,7 +35,7 @@
                     </el-row>
                   </div>
                 </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
             <template slot-scope="scope">
               <el-button type="text" @click="modifybtn(scope.row,1)" size="small">{{$t('tools.edit')}}</el-button>
@@ -44,6 +44,14 @@
             </template>
           </el-table-column>
         </el-table>
+         <div style="text-align: right;margin-top: 10px">
+            <el-pagination
+              :current-page.sync="CobuycurrentPage"
+              :page-size="CobuypageSize"
+              layout="total, prev, pager, next, jumper"
+              :total="CobuyitemCount"
+            ></el-pagination>
+          </div>
         <el-dialog :title="$t('operation.Addcombopurchase')" :visible.sync="dialogVisible" width="50%">
           <el-form ref="form" :model="Dataform" label-width="80px">
             <el-form-item :label="$t('sys.title')">
@@ -87,23 +95,21 @@
                 </template>
               </el-table-column>
             </el-table> -->
-
-            <el-tabs v-model="editableTabsValue" type="card" editable @edit="selectgoods">
+            <el-tabs type="card" v-model="types" addable @tab-add="selectgoods(1)">
               <el-tab-pane
-                v-model="types"
                 :key="index"
                 v-for="(item, index) in group_spus"
-                :label="item.off"
-                :name="item.off"
+                :label="String(item.off + '%')"
+                :name="String(item.off)"
               >
               </el-tab-pane>
-              <el-table :data="group_spus" style="width: 100%">
+              <el-table :data="goodsinfo" style="width: 100%" height="calc(250px)">
                 <el-table-column prop="off">
                   <template slot="header" slot-scope="scope">
                     <el-row style="width: 100%">
-                      <el-col :span="8" style="text-align: center">名称</el-col>
-                      <el-col :span="8" style="text-align: center">图片</el-col>
-                      <el-col :span="8" style="text-align: center">操作</el-col>
+                      <el-col :span="8" style="text-align: center">{{$t('goods.name')}}</el-col>
+                      <el-col :span="8" style="text-align: center">{{$t('lang.picture')}}</el-col>
+                      <el-col :span="8" style="text-align: center">{{$t('tools.opt')}}</el-col>
                     </el-row>
                   </template>
                   <template slot-scope="scope">
@@ -115,13 +121,16 @@
                           <!-- <span>{{item}}</span> -->
                         </el-col>
                         <el-col :span="8" style="text-align: center">
-                          <span class="goodsInfo" @click="delid(scope.row,k)">删除</span>
+                          <span class="goodsInfo" @click="delid(scope.row,k,scope.row.off)">{{$t('tools.delete')}}</span>
                         </el-col>
                       </el-row>
                     </div>
                   </template>
                 </el-table-column>
               </el-table>
+              <div class="newgoods" @click="selectgoods(2)">
+                {{$t('tools.add')}}
+              </div>
             </el-tabs>
           </div>
           <span slot="footer" class="dialog-footer">
@@ -132,7 +141,7 @@
         <el-dialog :title="$t('goods.goodslist')" :visible.sync="selectgoodsdialog" width="70%">
           <el-form ref="form" :model="Dataform" label-width="80px">
             <el-form-item  :label="$t('sys.zhekou')">
-              <el-input v-model="goodsitem.off" style="width: 200px"></el-input>
+              <el-input v-model="goodsitem.off" style="width: 200px" :disabled = disabl></el-input>
             </el-form-item>
           </el-form>
           <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" border stripe style="width: 100%" @selection-change="handleSelectionChange" height="calc(500px)">
@@ -179,13 +188,15 @@
 <script>
 import { combineBuys, combineBuyslist, modifycombineBuys, DelcombineBuys } from "@/api/operation";
 import { spusList } from "@/api/goods";
+import { InputNumber } from 'element-ui';
 export default {
   components: {},
   data() {
     return {
+      disabl: false,
+      addtype: '',
       types: '',
       editableTabs: [],
-      editableTabsValue: '0',
       timeArr: [],
       type: '',
       buysid:'',
@@ -218,6 +229,9 @@ export default {
       currentPage: 1,
       pageSize: 10,
       itemCount: 0,
+      CobuycurrentPage: 1,
+      CobuypageSize: 10,
+      CobuyitemCount: 0,
       combineBuyspage:{
         skip: 0,
         limit: 10
@@ -225,26 +239,53 @@ export default {
       orderarr: [],
       ids: [],
       objdata: {},
-      changeoff: ''
-      
+      goodsinfo: [],
+      modifyarr: []
     };
   },
   computed: {},
   watch: {
+    CobuycurrentPage(val) {
+      this.combineBuyspage.skip = (val - 1) * this.CobuypageSize
+      this.combineBuyspage.limit = this.CobuypageSize
+      this.GetcombineBuyslist()
+    },
     currentPage(val) {
       this.searchForm.skip = (val - 1) * this.pageSize
       this.searchForm.limit = this.pageSize
       this.getgoodslist()
     },
     types(val){
-      console.log(val);
-    }
+      this.group_spus.forEach(item => {
+        if(item.off == val){
+          if(item.off == val){
+            if(this.goodsinfo.length ==0){
+              this.goodsinfo.push(item)
+            }else{
+              this.goodsinfo.splice(0,1,item)
+            }
+          }
+        }
+      });
+    },
   },
   mounted() {
     this.GetcombineBuyslist()
   },
   methods: {
-    selectgoods() {
+    // 添加组合购商品
+    selectgoods(num) {
+      if(num == 1){
+        this.disabl = false
+      }else if(num == 2){
+        this.disabl = true
+        this.goodsitem.off = this.types
+      }
+      if(num == 2 && this.types == 0){
+        this.$message(this.$t('operation.pleasemsg'))
+        return
+      }
+      this.addtype = num
       this.goodsitem.spu_ids = []
       this.goodsitem.off = ''
       this.selectgoodsdialog = true;
@@ -257,6 +298,7 @@ export default {
         this.itemCount = res.total
       });
     },
+    // 商品勾选
     handleSelectionChange(val) {
       let obj = {}
       this.ids = []
@@ -269,24 +311,64 @@ export default {
       obj.goods = val
       this.objdata = obj
     },
+    // 数组去重
+    unique (arr) {
+      return Array.from(new Set(arr))
+    },
     // 商品列表确定按钮
     confirmBtn(){
-      this.objdata['off'] = this.goodsitem.off
-      this.group_spus.push(this.objdata)
-      console.log(this.group_spus);
+      if(this.addtype == 1){
+        let atype = this.group_spus.some(item =>{
+          console.log();
+         return item.off == this.goodsitem.off
+        })
+        if(!atype){
+          this.objdata['off'] = this.goodsitem.off
+          this.types = this.goodsitem.off
+          this.group_spus.push(this.objdata)
+        }else{
+          this.$message(this.$t('operation.Repeatdiscount'))
+          return
+        }
+      }else if(this.addtype == 2){
+        let num = 0
+        this.group_spus.forEach(item => {
+          if(this.types == item.off){
+            num = item.off
+            this.objdata.goods.forEach(val => {
+              item.goods.push(val)
+              this.types = '0'
+              setTimeout(() => {
+                this.types = String(num)
+              }, 10);
+            });
+            this.objdata.spu_ids.forEach(val => {
+              item.spu_ids.push(val)
+            });
+          }
+          
+        });
+      }
       this.selectgoodsdialog = false;
     },
     // 确定 添加/编辑 组合购
     AddcombineBuys(){
+      this.Dataform.bt = this.timeArr[0]
+      this.Dataform.et = this.timeArr[1]
       if(this.group_spus.length !=0){
+        let arr2 = []
         this.group_spus.forEach(item => {
+          item.spu_ids = this.unique(item.spu_ids)
           delete item.goods
           item.off = Number(item.off)
-          this.Dataform.group_spus.push(item)
+          this.Dataform.group_spus = []
+          arr2.push(item)
         });
+        this.Dataform.group_spus = arr2
       }
       if(this.Dataform.group_spus.length != 0){
         let item =  JSON.stringify(this.Dataform.group_spus)
+        this.Dataform.group_spus = []
         this.Dataform.group_spus = item
       }
       if(this.type == 2){
@@ -303,6 +385,7 @@ export default {
     },
     // 添加按钮
     addData(num){
+      this.goodsinfo = []
       this.timeArr = []
       this.type = num
       this.Dataform.title = ''
@@ -315,32 +398,49 @@ export default {
     GetcombineBuyslist(){
       combineBuyslist(this.combineBuyspage).then(res=>{
         this.ListData = res.items
+        this.CobuyitemCount = res.total
       })
     },
     // 编辑组合购
     modifybtn(data,num){
-      let arr = []
-      this.orderarr = []
+      this.timeArr = []
+      this.Dataform.bt = data.bt
+      this.Dataform.et = data.et
+      this.timeArr.push(data.bt,data.et)
+      this.group_spus = []
       this.buysid = data.id
       this.type = num
       this.dialogVisible = true
       this.Dataform.title = data.title
       this.Dataform.banner = data.banner
-      data.group_spus.forEach((item,k) => {
-        this.orderarr.push({
-          off :item.off,
-          spu_ids:[]
-        })
-        item.item_combine_spus.forEach(val => {
-          arr.push(val)
+      let numarr = []
+      data.group_spus.forEach(item => {
+        let obj = {}
+        obj.off = item.off
+        numarr.push(obj.off)
+        let objd = {}
+        objd.off = item.off
+        objd.goods = item.item_combine_spus
+        this.group_spus.push(obj)
+        this.modifyarr.push(objd)
+      }); 
+      let num2 = numarr[0]
+      this.group_spus.forEach(item => {
+        this.modifyarr.forEach(val => {
+          if(item.off == val.off){
+            item.goods = []
+            item.goods = val.goods
+            item.spu_ids = []
+            val.goods.forEach(val => {
+              item.spu_ids.push(val.id)
+            });
+          }
         });
       });
-      arr.forEach((item,k) => {
-        console.log(item);
-        // this.orderarr[k].spu_ids.push(item.id)
-        // console.log(item.id,'6666',this.orderarr[k]);
-      });
-      this.Dataform.group_spus = this.orderarr
+      this.types = '0'
+      setTimeout(() => {
+         this.types = String(num2)
+      }, 50);
     },
     // 删除组合购
     deleteDataFunc(data){
@@ -349,17 +449,26 @@ export default {
       })
     },
     // 删除组合购商品
-    delid(data,index){
-      console.log(index);
+    delid(data,index,off){
       if(this.group_spus.length !=0 ){
         this.group_spus.forEach(item => {
-          item.spu_ids.splice(index,1)
-          item.goods.splice(index,1)
-        });
+          if(item.off == off){
+            item.spu_ids.splice(index,1)
+            item.goods.splice(index,1) 
+          }
+          if(item.goods.length == 0){
+          this.group_spus.forEach(val => {
+            if(val.off == off){
+               val = null
+            }
+          });
+        }
+        })
+        this.types = '0'
+        setTimeout(() => {
+          this.types = String(off)
+        }, 10);
       }
-    },
-    Infogoods(data){
-      console.log(data);
     },
   },
 };
@@ -377,5 +486,15 @@ export default {
 .odd2{
   display: flex;
   align-items: center;
+}
+.newgoods{
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  line-height: 40px;
+  background-color: #f3f3f3;
+  &:hover{
+    color: rgb(58, 124, 211);
+  }
 }
 </style>

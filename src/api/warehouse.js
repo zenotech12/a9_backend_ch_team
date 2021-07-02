@@ -359,6 +359,17 @@ export function warehouseDeliveryNoteExport(data) {
   })
 }
 
+// 出库单.导出Express Note
+export function warehouseExpressNote(data) {
+  return request({
+    url: 'warehouse-outbounds-export-expressnote',
+    method: 'get',
+    params: data,
+    responseType: 'blob'
+  })
+}
+
+
 // 采购单.导出
 export function warehousePurchasesExport(data) {
   return request({

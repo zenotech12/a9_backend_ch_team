@@ -18,7 +18,8 @@ export default [
     { 'name': '团购', 'lk': 'cobuy', 'code': '4_5', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '砍价免费领', 'lk': 'cutGoods', 'code': '4_6', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '店铺信息', 'lk': 'shopInfo', 'code': '4_7', 'permissions': ['view', 'opt'], 'urls': [] },
-    { 'name': '直播管理', 'lk': 'liveBroadcast', 'code': '4_8', 'permissions': ['view', 'opt'], 'urls': [] }
+    { 'name': '直播管理', 'lk': 'liveBroadcast', 'code': '4_8', 'permissions': ['view', 'opt'], 'urls': [] },
+    { 'name': '组合购', 'lk': 'combinebuys', 'code': '4_9', 'permissions': ['view', 'opt'], 'urls': [] }
   ] },
   { 'name': '财务管理', 'lk': 'financeMgr', 'code': '5', 'permissions': [], 'urls': [], 'son': [
     { 'name': '账户明细', 'lk': 'financeList', 'code': '5_1', 'permissions': ['view', 'opt'], 'urls': [] },
@@ -33,7 +34,8 @@ export default [
     { 'name': '地址管理', 'lk': 'address', 'code': '6_4', 'permissions': ['view', 'opt'], 'urls': [] },
     // { 'name': '聊天机器人', 'lk': 'chatRobot', 'code': '6_5', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '操作日志', 'lk': 'optLog', 'code': '6_6', 'permissions': ['view'], 'urls': [] },
-    { 'name': '基础数据', 'lk': 'baseData', 'code': '6_9', 'permissions': ['view', 'opt'], 'urls': [] }
+    { 'name': '基础数据', 'lk': 'baseData', 'code': '6_9', 'permissions': ['view', 'opt'], 'urls': [] },
+    { 'name': '异常登录', 'lk': 'AbnormalLogin', 'code': '6_10', 'permissions': ['view', 'opt'], 'urls': [] }
   ] },
   { 'name': '仓库管理', 'lk': 'warehouseMgr', 'code': '8', 'permissions': [], 'urls': [], 'son': [
     { 'name': '总库存', 'lk': 'totalinventory', 'code': '8_4', 'permissions': ['view'], 'urls': [] },
@@ -46,5 +48,8 @@ export default [
     { 'name': '财务审批', 'lk': 'financialApproval', 'code': '9_1', 'permissions': ['opt'], 'urls': [] },
     { 'name': '领导审批', 'lk': 'leadershipApproval', 'code': '9_2', 'permissions': ['opt'], 'urls': [] },
     { 'name': '采购单价格', 'lk': 'procurementPrice', 'code': '9_3', 'permissions': ['opt'], 'urls': [] }
+  ] },
+  { 'name': '备忘管理', 'lk': 'ReminderSet', 'code': '10', 'permissions': [], 'urls': [], 'son': [
+    { 'name': '备忘录', 'lk': 'memorandum', 'code': '10_1', 'permissions': ['view', 'opt'], 'urls': [] },
   ] }
 ]

@@ -72,5 +72,6 @@ export default {
   procurementPrice: 'តម្លៃបញ្ជាទិញ',
   combinebuys: 'ការទិញបញ្ចូលគ្នា',
   memorandum: 'អនុស្សរណៈ',
-  AbnormalLogin: 'ការចូលមិនធម្មតា'
+  AbnormalLogin: 'ការចូលមិនធម្មតា',
+  ReminderSet:'ការគ្រប់គ្រងអនុសរណៈ'
 }
