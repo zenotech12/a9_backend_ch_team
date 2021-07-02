@@ -1273,12 +1273,40 @@
         if (this.goodsInvList && this.goodsInvList.length > 0) {
           this.goodsInvList.forEach(item => {
             // debugger
-            if (skuid === item.sku_uid && spe === item.specification && warehouse_id === item.warehouse_id) {
-              count = item.count
+            if (skuid === item.sku_uid && warehouse_id === item.warehouse_id) {
+              if (spe === item.specification) {
+                count = item.count
+              } else {
+                const currentObj = JSON.parse(item.specification)
+                const obj1 = JSON.parse(JSON.stringify(data.specifications))
+                console.log('currentObj', currentObj)
+                console.log('data.specifications', obj1)
+                console.log('dssd', this.isObjectValueEqual(obj1, currentObj))
+                if (this.isObjectValueEqual(obj1, currentObj)) {
+                  count = item.count
+                }
+              }
             }
           })
         }
         return count
+      },
+      isObjectValueEqual(a, b) {
+        // 取对象a和b的属性名
+        var aProps = Object.getOwnPropertyNames(a)
+        var bProps = Object.getOwnPropertyNames(b)
+        // 判断属性名的length是否一致
+        if (aProps.length != bProps.length) {
+          return false
+        }
+        // 循环取出属性名，再判断属性值是否一致
+        for (var i = 0; i < aProps.length; i++) {
+          var propName = aProps[i]
+          if (a[propName] !== b[propName]) {
+            return false
+          }
+        }
+        return true
       },
       showModifyBz(data, ot) {
         this.expressOrder = data
