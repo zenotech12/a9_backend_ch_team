@@ -325,21 +325,21 @@
                       </el-table-column>
                       <el-table-column prop="barcode"  :label="$t('goods.barcode')"></el-table-column>
                       <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                      <!--<el-table-column :label="$t('goods.inventory')">-->
-                        <!--<template slot="header" slot-scope="scope">-->
-                          <!--{{$t('goods.inventory')}}-->
-                          <!--<el-popover placement="bottom"-->
-                                      <!--width="200"-->
-                                      <!--trigger="click">-->
-                            <!--<el-input v-model.number="batchInventory">-->
-                            <!--</el-input>-->
-                            <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
-                          <!--</el-popover>-->
-                        <!--</template>-->
-                        <!--<template  slot-scope="scope">-->
-                          <!--<el-input v-model.number="scope.row.inventory"></el-input>-->
-                        <!--</template>-->
-                      <!--</el-table-column>-->
+                      <el-table-column :label="$t('goods.inventory')" v-if="!shopInfo.erp_internal">
+                        <template slot="header" slot-scope="scope">
+                          {{$t('goods.inventory')}}
+                          <el-popover placement="bottom"
+                                      width="200"
+                                      trigger="click">
+                            <el-input v-model.number="batchInventory">
+                            </el-input>
+                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                          </el-popover>
+                        </template>
+                        <template  slot-scope="scope">
+                          <el-input v-model.number="scope.row.inventory"></el-input>
+                        </template>
+                      </el-table-column>
                       <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
                         <template slot="header" slot-scope="scope">
                           {{$t('goods.price')}}
@@ -418,7 +418,7 @@
                           <img v-else @click="editorProppImageFunc(scope.$index)" :src="getImageUrl(scope.row.images[0], 20,20)"/>
                         </template>
                       </el-table-column>
-                      <el-table-column :label="$t('warehouse.stockmsg')">
+                      <el-table-column :label="$t('warehouse.stockmsg')" v-if="shopInfo.erp_internal">
                         <template  slot-scope="scope">
                           <el-button type="text" @click="showKuCunInfo(scope.row)" size="small">{{$t('warehouse.Seemsg')}}</el-button>
                         </template>
@@ -688,13 +688,14 @@
         this.currentPage = parseInt((this.searchForm.skip / this.pageSize) + 1)
         this.tab_shelf_status = this.searchForm.shelf_status + ''
       }
-      console.log('search', this.$store.state.app.searchParam.goodsList)
+      // console.log('search', this.$store.state.app.searchParam.goodsList)
       this.getTableData()
       this.getTypeList()
       this.getSysType()
       this.funcTreeWidth = $('.funcTree').width()
       this.funcBoxWidth = $('.funcBox').width()
       // this.getPartner()
+      console.log('shopInfo', this.shopInfo)
     },
     watch: {
       tab_shelf_status(val) {
