@@ -394,7 +394,11 @@ export default {
           this.submitDisabled = false
           this.mergeDialog = false
           this.gettotaldata()
+        } else {
+          this.submitDisabled = false
         }
+      }).catch(() => {
+        this.submitDisabled = false
       })
     },
     inventoryMerge(data) {
