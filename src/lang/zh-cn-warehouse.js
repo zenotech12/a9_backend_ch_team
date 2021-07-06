@@ -191,4 +191,7 @@ export default {
   Internaluse: '内部领用',
   specialSale: '特销',
   exportData4: '导出 Express Note',
+  merge: '合并',
+  mergeInv: '合并库存',
+  pleaseChooseInv: '请选择库存'
 }

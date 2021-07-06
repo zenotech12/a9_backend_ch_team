@@ -189,6 +189,9 @@ export default{
   Internaluse: 'Internal use',
   specialSale: 'Special sale',
   exportData4: 'Export Express Note',
+  merge: 'Merge',
+  mergeInv: 'Consolidated inventory',
+  pleaseChooseInv: 'lease select inventory'
 
 }
 

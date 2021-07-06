@@ -184,4 +184,7 @@ export default{
   Internaluse: 'ការប្រើប្រាស់ផ្ទៃក្នុង',
   specialSale: 'លក់ពិសេស',
   exportData4: 'នាំចេញកំណត់សំគាល់ប្រេស',
+  merge: 'បញ្ចូលគ្នា',
+  mergeInv: 'សារពើភ័ណ្ឌរួម',
+  pleaseChooseInv: 'សូមជ្រើសរើសស្តុក'
 }

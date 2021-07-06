@@ -379,3 +379,12 @@ export function warehousePurchasesExport(data) {
     responseType: 'blob'
   })
 }
+
+// 库存.合并
+export function warehouseInventMerge(data) {
+  return request({
+    url: 'warehouse-inventories/merge',
+    method: 'post',
+    data: data
+  })
+}

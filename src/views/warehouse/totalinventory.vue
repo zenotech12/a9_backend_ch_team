@@ -80,6 +80,11 @@
                     </template>
                   </el-table-column>
                   <el-table-column prop="origin" width="200" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+                  <el-table-column :label="$t('tools.opt')"  v-if="permissionCheck('opt', '8_4')">
+                    <template slot-scope="scope">
+                      <el-button type="text" @click="inventoryMerge(scope.row)" size="small">{{$t('warehouse.merge')}}</el-button>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </div>
             </div>
@@ -99,7 +104,6 @@
                 </div>
               </el-col>
             </el-row>
-
             <total-data :restFrom="restFrom" :restFromid="restFromid" :istype="dialogVisible" @dalogtype="dalogtype"></total-data>
             <el-dialog :title="$t('warehouse.setUp')" width="80%" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
               <el-form label-width="100px" :model="form">
@@ -197,6 +201,66 @@
                 <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
               </div>
             </el-dialog>
+            <!--合并库存-->
+            <el-dialog :title="$t('warehouse.mergeInv')" width="80%" @close="mergeDialog=false" :visible.sync="mergeDialog" :close-on-click-modal="false" center >
+              <el-row>
+                <el-col :span="24" style="padding-left: 20px">
+                  <el-form :inline="true" :model="mergeSearchForm">
+                    <el-form-item>
+                      <el-input v-model="mergeSearchForm.key" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item class="searchBtn">
+                      <el-button type="primary" @click="searchMerge" size="small" icon="el-icon-search"></el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+              <el-table :data="mergeTable"
+                        @row-click="chooseCurrent"
+                        highlight-current-row
+                        border stripe height="calc(100vh - 400px)" style="width: 100%">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + mergeSearchForm.skip + 1}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+                <el-table-column prop="date" width="200" :label="$t('warehouse.SpecificationsMsg')">
+                  <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
+                </el-table-column>
+                <el-table-column prop="barcode" width="140" :label="$t('warehouse.barCode')"></el-table-column>
+                <el-table-column prop="count" width="100">
+                  <template slot="header" slot-scope="scope">
+                    <div class="cellBoxTitle">
+                      {{$t('warehouse.num')}}
+                      <span class="sortBox">
+                         <i class="el-icon-caret-top jiantouC" @click="sortFunc('count')" :class="{jiantouBlue: totalgoodshForm.sort === 'count'}"></i>
+                         <i class="el-icon-caret-bottom jiantouC" @click="sortFunc('-count')"  :class="{jiantouBlue: totalgoodshForm.sort === '-count'}"></i>
+                        </span>
+                    </div>
+                  </template>
+                  <template slot-scope="scope">
+                    <span class="numcss" @click="numinfo(scope.row)">{{scope.row.count}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="origin" width="200" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
+              </el-table>
+              <el-row>
+                <el-col :span="24">
+                  <div style="text-align: right;margin-top: 10px">
+                    <el-pagination
+                      :current-page.sync="currentPage_merge"
+                      :page-size="pageSize_merge"
+                      layout="total, prev, pager, next, jumper"
+                      :total="itemCount_merge"
+                    ></el-pagination>
+                  </div>
+                </el-col>
+              </el-row>
+              <div slot="footer" class="dialog-footer">
+                <confirm-button @confirmButton="submitMerge" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+              </div>
+            </el-dialog>
           </div>
         </el-col>
       </el-row>
@@ -205,7 +269,7 @@
 </template>
 
 <script>
-import { warehousegroup, purchaseAdd, suppliersList } from "@/api/warehouse";
+import { warehousegroup, purchaseAdd, suppliersList, warehouseInventMerge } from "@/api/warehouse";
 import { spuTypesList } from '@/api/goods'
 
 export default {
@@ -279,7 +343,26 @@ export default {
         payment_term: '',
         delivery_method: ''
       },
-      inventory: 0
+      inventory: 0,
+      mergeForm: {
+        self_skuuid: '',
+        merge_skuuid: ''
+      },
+      mergeDialog: false,
+      mergeTable: [],
+      mergeTotal: 0,
+      currentPage_merge: 1,
+      pageSize_merge: 15,
+      itemCount_merge: 0,
+      mergeSearchForm: {
+        key: "",
+        warehouse_id: "",
+        skip: 0,
+        limit: 15,
+        zero_inventory: false,
+        sort: 'count' // count 库存升序 -count库存降序
+      },
+      submitDisabledMerge: false
     }
   },
   watch: {
@@ -287,9 +370,44 @@ export default {
       this.totalgoodshForm.skip = (val - 1) * this.pageSize_to;
       this.totalgoodshForm.limit = this.pageSize_to;
       this.gettotaldata()
+    },
+    currentPage_merge(val) {
+      this.mergeSearchForm.skip = (val - 1) * this.pageSize_merge
+      this.mergeSearchForm.limit = this.pageSize_merge
+      this.getShowTable()
     }
   },
   methods: {
+    chooseCurrent(data) {
+      console.log('data', data)
+      this.mergeForm.merge_skuuid = data.specification
+    },
+    submitMerge() {
+      if (this.mergeForm.merge_skuuid === '') {
+        this.$message.error(this.$t('warehouse.pleaseChooseInv'))
+        return
+      }
+      this.submitDisabled = true
+      warehouseInventMerge(this.mergeForm).then(res => {
+        if (res.meta === 0) {
+          this.submitDisabled = false
+          this.mergeDialog = false
+          this.gettotaldata()
+        }
+      })
+    },
+    inventoryMerge(data) {
+      this.mergeForm.self_skuuid = data.specification
+      this.mergeDialog = true
+      this.mergeSearchForm.key = data.name
+      this.getShowTable()
+    },
+    getShowTable() {
+      warehousegroup(this.mergeSearchForm).then((res) => {
+        this.mergeTable = res.items
+        this.itemCount_merge = res.total
+      })
+    },
     getSupplierList() {
       suppliersList().then(res => {
         if (res.meta === 0) {
@@ -389,7 +507,14 @@ export default {
       });
     },
     Searchlist() {
-      this.gettotaldata();
+      this.totalgoodshForm.skip = 0
+      this.currentPage_to = 1
+      this.gettotaldata()
+    },
+    searchMerge() {
+      this.mergeSearchForm.skip = 0
+      this.currentPage_merge = 1
+      this.getShowTable()
     },
     numinfo(data) {
       this.dialogVisible = true;
@@ -398,8 +523,7 @@ export default {
     },
     dalogtype() {
       this.dialogVisible = false;
-    },
-
+    }
   },
   mounted() {
     if (this.$route.params.zero_inventory) {
