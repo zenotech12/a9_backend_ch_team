@@ -202,7 +202,7 @@
               </div>
             </el-dialog>
             <!--合并库存-->
-            <el-dialog :title="$t('warehouse.mergeInv')" width="80%" @close="mergeDialog=false" :visible.sync="mergeDialog" :close-on-click-modal="false" center >
+            <el-dialog :title="titleDialog" width="80%" @close="mergeDialog=false" :visible.sync="mergeDialog" :close-on-click-modal="false" center >
               <el-row>
                 <el-col :span="24" style="padding-left: 20px">
                   <el-form :inline="true" :model="mergeSearchForm">
@@ -362,7 +362,8 @@ export default {
         zero_inventory: false,
         sort: 'count' // count 库存升序 -count库存降序
       },
-      submitDisabledMerge: false
+      submitDisabledMerge: false,
+      titleDialog: ''
     }
   },
   watch: {
@@ -399,6 +400,7 @@ export default {
     inventoryMerge(data) {
       this.mergeForm.self_skuuid = data.sku_uid
       this.mergeDialog = true
+      this.titleDialog = this.$t('warehouse.mergeInv') + '--' + this.textFilter(data.specification)
       this.mergeSearchForm.key = data.name
       this.getShowTable()
     },
