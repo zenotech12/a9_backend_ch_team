@@ -379,7 +379,7 @@ export default {
   },
   methods: {
     chooseCurrent(data) {
-      console.log('data', data)
+      // console.log('data', data)
       this.mergeForm.merge_skuuid = data.specification
     },
     submitMerge() {
