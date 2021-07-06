@@ -380,7 +380,7 @@ export default {
   methods: {
     chooseCurrent(data) {
       // console.log('data', data)
-      this.mergeForm.merge_skuuid = data.specification
+      this.mergeForm.merge_skuuid = data.sku_uid
     },
     submitMerge() {
       if (this.mergeForm.merge_skuuid === '') {
@@ -397,7 +397,7 @@ export default {
       })
     },
     inventoryMerge(data) {
-      this.mergeForm.self_skuuid = data.specification
+      this.mergeForm.self_skuuid = data.sku_uid
       this.mergeDialog = true
       this.mergeSearchForm.key = data.name
       this.getShowTable()
