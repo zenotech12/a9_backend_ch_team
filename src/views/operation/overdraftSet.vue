@@ -331,7 +331,7 @@
           body: []
         },
         overdrawForm: {
-          on: false,
+          on: true,
           period: 0, // 周期 单位天
           max_money: 0 // 最大透支金额 单位分
         },
@@ -499,7 +499,7 @@
       },
       addMobile() {
         this.overdrawDialog = true
-        this.overdrawForm.on = false
+        this.overdrawForm.on = true
         this.overdrawForm.period = 0
         this.overdrawForm.max_money = 0
         this.mobile = ''
