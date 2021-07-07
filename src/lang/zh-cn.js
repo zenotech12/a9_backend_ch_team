@@ -72,5 +72,6 @@ export default {
   combinebuys: '组合购',
   memorandum: '备忘录',
   AbnormalLogin: '异常登录',
-  ReminderSet:'备忘管理'
+  ReminderSet: '备忘管理',
+  overdraftSet: '透支设置'
 }

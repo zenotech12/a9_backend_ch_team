@@ -73,5 +73,6 @@ export default {
   combinebuys: 'Combination Purchase',
   memorandum: 'Reminder',
   AbnormalLogin: 'Abnormal Login',
-  ReminderSet:'Memo management'
+  ReminderSet: 'Memo management',
+  overdraftSet: 'Overdraft Settings'
 }

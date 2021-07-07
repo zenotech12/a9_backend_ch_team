@@ -73,5 +73,6 @@ export default {
   combinebuys: 'ការទិញបញ្ចូលគ្នា',
   memorandum: 'អនុស្សរណៈ',
   AbnormalLogin: 'ការចូលមិនធម្មតា',
-  ReminderSet:'ការគ្រប់គ្រងអនុសរណៈ'
+  ReminderSet: 'ការគ្រប់គ្រងអនុសរណៈ',
+  overdraftSet: 'ការកំណត់ឥណទានលើស'
 }

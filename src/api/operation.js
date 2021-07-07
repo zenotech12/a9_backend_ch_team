@@ -455,7 +455,7 @@ export function getmemorandums(data) {
 export function Delmemorandums(id) {
   return request({
     url: 'memorandums/' + id,
-    method: 'delete',
+    method: 'delete'
   })
 }
 
@@ -463,6 +463,24 @@ export function Delmemorandums(id) {
 export function modifymemorandums(data, id) {
   return request({
     url: 'memorandums/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+// 用户.列表
+export function usersList(data) {
+  return request({
+    url: 'users',
+    method: 'get',
+    params: data
+  })
+}
+
+// 用户.设置透支
+export function overdrawSet(id, data) {
+  return request({
+    url: 'users/' + id + '/overdraw',
     method: 'put',
     data: data
   })
