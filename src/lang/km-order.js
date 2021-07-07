@@ -187,5 +187,6 @@ export default {
   day30: '៣០ ថ្ងៃ',
   dailyNewMember: 'សមាជិកថ្មីប្រចាំថ្ងៃ',
   purchas: 'ការទិញ',
-  confirmCancelOrderTip: 'បញ្ជាក់លុបចោលការបញ្ជាទិញបច្ចុប្បន្ន'
+  confirmCancelOrderTip: 'បញ្ជាក់លុបចោលការបញ្ជាទិញបច្ចុប្បន្ន',
+  overdraft: 'ឥណទានរូបារូប'
 }

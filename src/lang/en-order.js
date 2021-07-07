@@ -214,5 +214,6 @@ export default {
   day30: '30 days',
   dailyNewMember: 'Daily New Member',
   purchas: 'Purchasing',
-  confirmCancelOrderTip: 'Confirm to cancel the current order？'
+  confirmCancelOrderTip: 'Confirm to cancel the current order？',
+  overdraft: 'Overdraft'
 }

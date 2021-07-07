@@ -23,6 +23,7 @@
                   <el-radio-button :label="0">{{$t('warehouse.all')}}</el-radio-button>
                   <el-radio-button :label="1">{{$t('order.onlinePay')}}</el-radio-button>
                   <el-radio-button :label="2">{{$t('order.cashOnDelivery')}}</el-radio-button>
+                  <el-radio-button :label="3">{{$t('order.overdraft')}}</el-radio-button>
                 </el-radio-group>
               </el-form-item>
               <el-form-item>
@@ -752,7 +753,7 @@
         searchParamKey: 'orderList',
         doWatch: true,
         showTab: false,
-        servicerOptArr: { 1:this.$t('order.servicerOpt1'), 2 : this.$t('order.servicerOpt2'), 3: this.$t('order.cancelClaim') },
+        servicerOptArr: { 1: this.$t('order.servicerOpt1'), 2 : this.$t('order.servicerOpt2'), 3: this.$t('order.cancelClaim') },
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
           this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
@@ -874,7 +875,7 @@
           }
         ],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
-        payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery')],
+        payMethod: [this.$t('order.onlinePay'), this.$t('order.cashOnDelivery'), this.$t('order.overdraft')],
         shengheShow: false,
         shengheForm: {
           cancel: false, // 是否取消订单true
@@ -1091,7 +1092,7 @@
             if(data.sku_url == ''){
               window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')
             }else{
-               window.open(data.sku_url)
+              window.open(data.sku_url)
             }
           } else{
             window.open('https://www.a9kh.com/goods/' + data.spu_id + '.html')

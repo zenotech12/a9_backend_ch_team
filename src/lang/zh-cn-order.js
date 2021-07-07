@@ -217,5 +217,6 @@ export default {
   day30: '30天',
   dailyNewMember: '每日新会员',
   purchas: '代购',
-  confirmCancelOrderTip: '确定取消当前订单？'
+  confirmCancelOrderTip: '确定取消当前订单？',
+  overdraft: '透支'
 }
