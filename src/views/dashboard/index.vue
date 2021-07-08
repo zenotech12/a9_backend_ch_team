@@ -119,8 +119,8 @@
               <div class="sp cp" @click="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et})">
                 <p>{{$t('order.orderamount')}}：<span>{{dataInfo.sales | price}}</span></p>
                 <div class="little_title">
-                  <span style="margin-right: 10px">{{$t('order.localGoodsPrice')}}：{{dataInfo.local_goods_payprice | price}}</span>
-                  <span>{{$t('order.overseaGoodsPrice')}}：{{dataInfo.oversea_goods_payprice | price}}</span>
+                  <span style="margin-right: 10px" @click.stop="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et, type: 101})">{{$t('order.localGoodsPrice')}}：{{dataInfo.local_goods_payprice | price}}</span>
+                  <span @click.stop="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et, type: 5})">{{$t('order.overseaGoodsPrice')}}：{{dataInfo.oversea_goods_payprice | price}}</span>
                 </div>
               </div>
             </el-card>
@@ -130,8 +130,8 @@
               <div class="sp cp" @click="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et})">
                 <p>{{$t('order.goodsCount')}}：<span>{{dataInfo.allGoodsCount}}</span></p>
                 <div class="little_title">
-                  <span style="margin-right: 10px">{{$t('order.localGoodsCount')}}：{{dataInfo.local_goods_count}}</span>
-                  <span>{{$t('order.overseaGoodsCount')}}：{{dataInfo.oversea_goods_count}}</span>
+                  <span style="margin-right: 10px" @click.stop="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et, type: 101})">{{$t('order.localGoodsCount')}}：{{dataInfo.local_goods_count}}</span>
+                  <span @click.stop="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et, type: 5})">{{$t('order.overseaGoodsCount')}}：{{dataInfo.oversea_goods_count}}</span>
                 </div>
               </div>
             </el-card>

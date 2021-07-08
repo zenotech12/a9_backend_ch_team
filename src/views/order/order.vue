@@ -1608,6 +1608,9 @@
         this.searchForm.order_status = this.$route.params.status
         this.paySearchStatus = true
       }
+      if (this.$route.params.type) {
+        this.searchForm.type = this.$route.params.type
+      }
       // console.log('optionsAddress', this.optionsAddress)
       // this.searchForm.order_status = this.$route.params.order_status ? this.$route.params.order_status : 0
       // this.tab_order_status = this.searchForm.order_status + ''
