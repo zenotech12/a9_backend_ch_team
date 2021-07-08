@@ -95,21 +95,21 @@
                     </template>
                   </el-table-column>
                   <el-table-column v-if="goodsData.id" prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                  <!--<el-table-column :label="$t('goods.inventory')">-->
-                    <!--<template slot="header" slot-scope="scope">-->
-                      <!--{{$t('goods.inventory')}}-->
-                      <!--<el-popover placement="bottom"-->
-                                  <!--width="200"-->
-                                  <!--trigger="click">-->
-                        <!--<el-input v-model.number="batchInventory">-->
-                        <!--</el-input>-->
-                        <!--<i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>-->
-                      <!--</el-popover>-->
-                    <!--</template>-->
-                    <!--<template  slot-scope="scope">-->
-                      <!--<el-input v-model.number="scope.row.inventory"></el-input>-->
-                    <!--</template>-->
-                  <!--</el-table-column>-->
+                  <el-table-column :label="$t('goods.inventory')" v-if="!shopInfo.erp_internal">
+                    <template slot="header" slot-scope="scope">
+                      {{$t('goods.inventory')}}
+                      <el-popover placement="bottom"
+                                  width="200"
+                                  trigger="click">
+                        <el-input v-model.number="batchInventory">
+                        </el-input>
+                        <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                      </el-popover>
+                    </template>
+                    <template  slot-scope="scope">
+                      <el-input v-model.number="scope.row.inventory"></el-input>
+                    </template>
+                  </el-table-column>
                   <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.salePrice')">
                     <template slot="header" slot-scope="scope">
                       {{$t('goods.salePrice')}}
