@@ -190,6 +190,7 @@ export default {
   touzhiUser: 'Overdraft users',
   touzhiInfo: 'Overdraft information',
   useDate: 'Use date',
-  usedAmount: 'Amount used'
+  usedAmount: 'Amount used',
+  userInfo: 'User Info'
 
 }

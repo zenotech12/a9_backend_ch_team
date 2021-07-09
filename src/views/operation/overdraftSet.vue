@@ -23,24 +23,30 @@
         <el-row>
           <el-col :span="24" style="height: calc(100vh - 235px)">
             <el-table stripe border v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 46px)" style="width: 100%">
-              <el-table-column prop="login_name" label="用户信息">
+              <el-table-column :label="$t('operation.userInfo')" width="350">
                 <template slot-scope="scope">
-                  <div>{{$t('operation.loginName')}}：{{scope.row.login_name}}</div>
-                  <div>
-                    {{$t('operation.img')}}：
-                    <el-popover v-if="scope.row.avatar" class="pointer"
-                                   placement="right"
-                                   title=""
-                                   trigger="click">
-                    <img :src="imgUrl + scope.row.avatar" height="480"/>
-                    <img slot="reference" :src="imgUrl + scope.row.avatar" style="margin-right:8px;max-height: 60px;max-width: 120px">
-                  </el-popover></div>
-                  <div>{{$t('operation.nationCode')}}：{{scope.row.nation_code}}</div>
-                  <div>{{$t('operation.email')}}：{{scope.row.mail}}</div>
-                  <div>{{$t('operation.gender')}}：
-                    <el-tag v-if="scope.row.sex === 0" type="danger">{{$t('operation.unknown')}}</el-tag>
-                    <el-tag v-if="scope.row.sex === 1" type="success">{{$t('operation.male')}}</el-tag>
-                    <el-tag v-if="scope.row.sex === 2" type="info">{{$t('operation.female')}}</el-tag>
+                  <div style="display: flex">
+                    <div style="width: 140px;overflow: hidden">
+                      <el-popover v-if="scope.row.avatar" class="pointer"
+                                  placement="right"
+                                  title=""
+                                  trigger="click">
+                        <img :src="imgUrl + scope.row.avatar" height="480"/>
+                        <img slot="reference" :src="imgUrl + scope.row.avatar" style="margin-right:8px;max-height: 60px;max-width: 120px">
+                      </el-popover></div>
+                    <div>
+                      <div>
+                        ({{scope.row.nation_code}}){{scope.row.login_name}}
+                      </div>
+                      <div>
+                        {{scope.row.mail}}
+                      </div>
+                      <div>
+                        <el-tag v-if="scope.row.sex === 0" type="danger">{{$t('operation.unknown')}}</el-tag>
+                        <el-tag v-if="scope.row.sex === 1" type="success">{{$t('operation.male')}}</el-tag>
+                        <el-tag v-if="scope.row.sex === 2" type="info">{{$t('operation.female')}}</el-tag>
+                      </div>
+                    </div>
                   </div>
                 </template>
               </el-table-column>

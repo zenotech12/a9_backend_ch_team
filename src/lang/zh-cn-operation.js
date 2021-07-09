@@ -192,5 +192,6 @@ export default {
   touzhiInfo: '透支信息',
   useDate: '使用日期',
   usedAmount: '已用金额',
+  userInfo: '用户信息'
 
 }
