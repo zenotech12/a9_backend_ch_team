@@ -185,19 +185,24 @@
                 <!-- 商品 -->
                 <el-table-column  :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
-                    <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
-                      <img class="image imagecss" :src="getImageUrl(gInfo.goods_info.sku_img, 100)">
-
+                    <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
+                      <img class="image imagecss" @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" :src="getImageUrl(gInfo.goods_info.sku_img, 100)">
                       <div class="g-info">
-                        <p style="display: flex;align-items: center">{{gInfo.goods_info.spu_name}}
+                        <p @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" style="display: flex;align-items: center;line-height: 15px">{{gInfo.goods_info.spu_name}}
                           <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5 && gInfo.goods_info.site_id" alt="">
                           <el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
                           <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.stop="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
                         </p>
-                        <p>
+                        <p style="line-height: 15px;" @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)">
                           <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <p><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
+                        <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)"><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</div>
+                        <div v-if="scope.row.type === 5 && gInfo.goods_info.site_id">
+                          <div v-if="goodsOid !== gInfo.goods_info.oid" style="color: #1E88E5">{{gInfo.goods_info.comment}} <span v-if="gInfo.goods_info.comment !== ''"> --- {{gInfo.goods_info.comment_time}}</span>
+                            <i class="el-icon-edit" style="color: #1E88E5" v-if="goodsOid !== gInfo.goods_info.oid" @click.stop="showCommentGoods(gInfo.goods_info, scope.row.id)"></i>
+                          </div>
+                          <el-input v-if="goodsOid === gInfo.goods_info.oid" v-model="gInfo.goods_info.comment" @blur="commentChange(gInfo.goods_info.comment)"></el-input>
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -734,7 +739,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, warehouseGroupInven, orderMerchantComment, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods} from '@/api/order'
+  import { ordersList, warehouseGroupInven, orderMerchantComment, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods, orderGoodsComment } from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
   import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
@@ -773,7 +778,7 @@
           ownership_status: '',
           pay_way: 0, // 支付方式  0 所有 1 在线支付 2 货到付款
           invoice: true,
-          type: 0 // 0 所有 5代购
+          type: 5 // 0 所有 5代购
         },
         allprice: 0,
         tab_order_status: '0',
@@ -907,7 +912,14 @@
         setNoteForm: {
           merchant_comment: ''
         },
-        merchantCommentId: ''
+        merchantCommentId: '',
+        goodsCommentForm: {
+          id: '',
+          oid: '',
+          comment: ''
+        },
+        // showBi: true,
+        goodsOid: ''
       }
     },
     computed: {
@@ -970,6 +982,22 @@
       }
     },
     methods: {
+      showCommentGoods(goods, id) {
+        this.goodsOid = goods.oid
+        this.goodsCommentForm.oid = goods.oid
+        this.goodsCommentForm.id = id
+      },
+      commentChange(e) {
+        this.goodsCommentForm.comment = e
+        this.goodsOid = ''
+        orderGoodsComment(this.goodsCommentForm.id, this.goodsCommentForm).then(res => {
+          if (res.meta === 0) {
+            this.getDataListFun()
+          }
+        })
+        // console.log('data', e)
+        // console.log('ssss', this.goodsCommentForm)
+      },
       addNoteFunc(data) {
         this.merchantCommets = data.merchant_comments
         this.merchantCommentId = data.id
@@ -1499,9 +1527,8 @@
         ordersList(this.searchForm).then(res => {
           this.allprice = res.total_money
           this.doWatch = true
-          this.tableData = res.items
+          this.tableData = res.items ? res.items : []
           this.itemCount = res.total
-          // console.log(this.tableData);
         })
       },
       // 取消订单
@@ -1541,7 +1568,7 @@
       idsearch(data){
         this.DeliveryMsgDialog = false
         this.searchForm.no = data
-        this. getDataListFun()
+        this.getDataListFun()
       }
     },
     mounted() {

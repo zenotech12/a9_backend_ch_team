@@ -228,3 +228,12 @@ export function orderMerchantComment(id, data) {
     data: data
   })
 }
+
+// 订单.海淘商品备注
+export function orderGoodsComment(id, data) {
+  return request({
+    url: 'orders/' + id + '/goods-comment',
+    method: 'put',
+    data: data
+  })
+}
