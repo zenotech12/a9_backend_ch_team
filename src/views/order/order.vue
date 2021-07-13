@@ -778,7 +778,7 @@
           ownership_status: '',
           pay_way: 0, // 支付方式  0 所有 1 在线支付 2 货到付款
           invoice: true,
-          type: 5 // 0 所有 5代购
+          type: 0 // 0 所有 5代购
         },
         allprice: 0,
         tab_order_status: '0',
