@@ -61,6 +61,7 @@
 
 <script>
   import { quillEditor } from 'vue-quill-editor'
+  import { Quill } from 'vue-quill-editor'
   // import service from '@/utils/request'
   import store from '@/store'
   // import serverConfig from '@/utils/serverConfig'
@@ -70,6 +71,9 @@
   import 'quill/dist/quill.bubble.css'
   import goodsSelector from '@/components/goodsSelector'
   import draggable from 'vuedraggable'
+
+  import Video from '../../utils/video'
+  Quill.register(Video, true)
   export default {
     name: 'LLEditor',
     components: {
