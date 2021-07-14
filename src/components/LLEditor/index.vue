@@ -195,9 +195,12 @@
         }
       },
       editerVideoFunc(state) {
+        const quill = this.$refs['myeditor'].quill
         if (state) {
           const fileInput = document.getElementById('editorVideoUploadBtn')
           fileInput.click() // 加一个触发事件
+        } else {
+          quill.format('video', false)
         }
       },
       editerImgFunc(state) {

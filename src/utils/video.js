@@ -11,6 +11,7 @@ class Video extends BlockEmbed {
     // 添加video标签所需的属性
     node.setAttribute('controls', 'controls')
     node.setAttribute('type', 'video/mp4')
+    node.setAttribute('style', 'max-width: 100%;min-height: 100px')
     node.setAttribute('src', this.sanitize(value))
     return node
   }
