@@ -20,7 +20,8 @@ export default [
     { 'name': '店铺信息', 'lk': 'shopInfo', 'code': '4_7', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '直播管理', 'lk': 'liveBroadcast', 'code': '4_8', 'permissions': ['view', 'opt'], 'urls': [] },
     { 'name': '组合购', 'lk': 'combinebuys', 'code': '4_9', 'permissions': ['view', 'opt'], 'urls': [] },
-    { 'name': '透支设置', 'lk': 'overdraftSet', 'code': '6_10', 'permissions': ['view', 'opt'], 'urls': [] }
+    { 'name': '透支设置', 'lk': 'overdraftSet', 'code': '4_10', 'permissions': ['view', 'opt'], 'urls': [] },
+    { 'name': '自提点设置', 'lk': 'selfPickStation', 'code': '4_11', 'permissions': ['view', 'opt'], 'urls': [] }
   ] },
   { 'name': '财务管理', 'lk': 'financeMgr', 'code': '5', 'permissions': [], 'urls': [], 'son': [
     { 'name': '账户明细', 'lk': 'financeList', 'code': '5_1', 'permissions': ['view', 'opt'], 'urls': [] },

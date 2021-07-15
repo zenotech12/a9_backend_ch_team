@@ -485,3 +485,47 @@ export function overdrawSet(id, data) {
     data: data
   })
 }
+
+// 自提点.添加
+export function selfPickStations(data) {
+  return request({
+    url: 'self-pick-stations',
+    method: 'post',
+    data: data
+  })
+}
+
+// 自提点.修改
+export function selfPickStationsModify(id, data) {
+  return request({
+    url: 'self-pick-stations/' + id,
+    method: 'put',
+    data: data
+  })
+}
+
+// 自提点.列表
+export function selfPickStationsList(data) {
+  return request({
+    url: 'self-pick-stations',
+    method: 'get',
+    params: data
+  })
+}
+
+// 自提点.详情
+export function selfPickStationsInfo(id) {
+  return request({
+    url: 'self-pick-stations/' + id,
+    method: 'get'
+  })
+}
+
+// 自提点.删除
+export function selfPickStationsDel(id) {
+  return request({
+    url: 'self-pick-stations/' + id,
+    method: 'delete'
+  })
+}
+

@@ -119,20 +119,20 @@
           return
         }
         this.dialogFormVisible = true
-        if (!document.getElementById('allmap')) {
-          this.$nextTick(res => {
-            // this.setiInit()
-            this.map = this.mapFunc()
-            var latlng = new google.maps.LatLng(this.lattxt, this.lngtxt)
-            this.marker = new google.maps.Marker({
-              position: latlng,
-              map: this.map
-            })
-            this.markersArray.push(this.marker)
-            this.attachSecretMessage(this.marker, latlng, this.addresstxt)
-            this.initAutocomplete()
+        // if (!document.getElementById('allmap')) {
+        this.$nextTick(res => {
+          // this.setiInit()
+          this.map = this.mapFunc()
+          var latlng = new google.maps.LatLng(this.lattxt, this.lngtxt)
+          this.marker = new google.maps.Marker({
+            position: latlng,
+            map: this.map
           })
-        }
+          this.markersArray.push(this.marker)
+          this.attachSecretMessage(this.marker, latlng, this.addresstxt)
+          this.initAutocomplete()
+        })
+        // }
       },
       initAutocomplete() {
         // 监听点击地图事件

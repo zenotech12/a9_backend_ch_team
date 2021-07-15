@@ -74,5 +74,6 @@ export default {
   memorandum: 'អនុស្សរណៈ',
   AbnormalLogin: 'ការចូលមិនធម្មតា',
   ReminderSet: 'ការគ្រប់គ្រងអនុសរណៈ',
-  overdraftSet: 'ការកំណត់ឥណទានលើស'
+  overdraftSet: 'ការកំណត់ឥណទានលើស',
+  selfPickStation: 'ចំណុចជ្រើសរើសដោយខ្លួនឯង'
 }
