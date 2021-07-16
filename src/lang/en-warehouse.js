@@ -120,6 +120,8 @@ export default{
   Currency: 'Currency type',
   payment_term: 'Payment term',
   delivery_method: 'Mode of transport',
+  estimate_arrival_time: 'Estimate arrive date',
+  estimate_remain_days: 'Estimate remain days',
   Inventoryinfo: 'Information export',
   save: 'Next step',
   Info: 'Details',

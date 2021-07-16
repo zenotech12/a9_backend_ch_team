@@ -122,6 +122,8 @@ export default {
   Currency: '币种',
   payment_term: '支付账期',
   delivery_method: '运输方式',
+  estimate_arrival_time: '预期到达时间',
+  estimate_remain_days: '预期剩余天数',
   Inventoryinfo: '信息导出',
   save: '下一步',
   Info: '详情',

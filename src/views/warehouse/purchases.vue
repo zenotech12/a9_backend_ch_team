@@ -146,6 +146,8 @@
                     {{scope.row.money | price}}
                   </template>
                 </el-table-column>
+                <el-table-column prop="estimate_remain_days" :label="$t('warehouse.estimate_remain_days')" width="85"></el-table-column>
+                <el-table-column prop="estimate_arrival_time" :label="$t('warehouse.estimate_arrival_time')" width="160"></el-table-column>
                 <el-table-column prop="gen_time" :label="$t('warehouse.OrderTime')" width="160"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "160" v-if="permissionCheck('opt', '8_3') || permissionCheck('opt', '8_1') || permissionCheck('opt', '9_1') || permissionCheck('opt', '9_2')" fixed="right">
                   <template slot-scope="scope">
@@ -210,6 +212,7 @@
                   <base-data-select v-model="form.currency" treeCode="008" :placeString="$t('warehouse.Currency')"></base-data-select>
                   <base-data-select v-model="form.payment_term" treeCode="009" :placeString="$t('warehouse.payment_term')"></base-data-select>
                   <base-data-select v-model="form.delivery_method" treeCode="010" :placeString="$t('warehouse.delivery_method')"></base-data-select>
+                  <el-date-picker v-model="form.estimate_arrival_time" treeCode="011" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :placeholder="$t('warehouse.estimate_arrival_time')"></el-date-picker>
               </el-form-item>
             <el-form-item :label="$t('goods.note')">
               <el-input
