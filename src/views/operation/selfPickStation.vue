@@ -109,12 +109,6 @@
       ])
     },
     watch: {
-      grantTime(val) {
-        if (val.length > 0) {
-          this.form.bt = val[0]
-          this.form.et = val[1]
-        }
-      },
       currentPage(val) {
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
