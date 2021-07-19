@@ -233,7 +233,7 @@
                     </div>
                     <div class="ui">
                       <span>{{$t('order.deliveryMethod')}}：</span>
-                      {{deliveryMethod[scope.row.post_way - 1]}} <span v-if="scope.row.post_way === 2">({{scope.row.check_code}})</span>
+                      {{deliveryMethod[scope.row.post_way - 1]}} <span v-if="scope.row.post_way === 2">({{scope.row.check_code}})&nbsp;&nbsp;{{scope.row.self_pickup_station.name}}</span>
                     </div>
                     <div class="ui" v-if="scope.row.express.novar">
                       <span>{{$t('order.expressNo')}}：</span>
