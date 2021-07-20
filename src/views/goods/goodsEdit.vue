@@ -326,7 +326,7 @@
                   <div  v-for="(v,k) in langInfo[currentLang].spectification_options" :key="k" class="prop-item">
                     <prop-selector :clang="currentLang" v-model="langInfo[currentLang].spectification_options[k].name" ></prop-selector>：
                     <!--<el-input size="small" v-model="langInfo[currentLang].spectification_options[k].name" class="prop-name" :placeholder="$t('goods.prop')"></el-input>-->
-                    <el-input :key="tag" v-for="(tag,i) in langInfo[currentLang].spectification_options[k].items" v-model="langInfo[currentLang].spectification_options[k].items[i]"  class="input-new-tag" ></el-input>
+                    <el-input :key="i" v-for="(tag,i) in langInfo[currentLang].spectification_options[k].items" v-model="langInfo[currentLang].spectification_options[k].items[i]"   class="input-new-tag" ></el-input>
                   </div>
                 </el-form-item>
                 <el-form-item :label="$t('goods.goodsPic')" required>
