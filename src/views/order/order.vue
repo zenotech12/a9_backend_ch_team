@@ -331,6 +331,7 @@
                   <!--<el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>-->
                   <!-- 导出明细按钮 -->
                   <el-button size="mini" @click="batchDetailExportFunc">{{$t('tools.exportDetails')}}</el-button>
+                  <el-button size="mini" @click="exportFuncSale">{{$t('order.exportSaleReport')}}</el-button>
                 <span class="allprice">{{$t('order.Totalprice')}} : <span>{{allprice | price}}</span></span>
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
@@ -1271,13 +1272,12 @@
         this.exportFunc(this.multipleSelection, false)
       },
       // 导出明细按钮
-      batchDetailExportFunc(){
-        if(this.multipleSelection.length > 20){
-           this.$message.error(this.$t('order.batchDetailExportFunc'))
-        }else if(this.multipleSelection.length < 1){
-           this.$message.error(this.$t('order.batchExportTip'))
-        }
-        else{
+      batchDetailExportFunc() {
+        if (this.multipleSelection.length > 20) {
+          this.$message.error(this.$t('order.batchDetailExportFunc'))
+        } else if (this.multipleSelection.length < 1) {
+          this.$message.error(this.$t('order.batchExportTip'))
+        } else {
           this.exportFunc(this.multipleSelection, true)
         }
       },
@@ -1286,11 +1286,27 @@
         const sf = JSON.parse(JSON.stringify(this.searchForm))
         sf.skip = 0
         sf.limit = 20
-        sf.invoice=invoice
+        sf.invoice = invoice
         sf.ids = JSON.stringify(ids)
         exportOrder(sf).then(res => {
           window.location = res.url
         })
+      },
+      exportFuncSale() {
+        if (this.multipleSelection.length > 20) {
+          this.$message.error(this.$t('order.batchDetailExportFunc'))
+        } else if (this.multipleSelection.length < 1) {
+          this.$message.error(this.$t('order.batchExportTip'))
+        } else {
+          const sf = JSON.parse(JSON.stringify(this.searchForm))
+          sf.skip = 0
+          sf.limit = 20
+          sf.sales_report = true
+          sf.ids = JSON.stringify(this.multipleSelection)
+          exportOrder(sf).then(res => {
+            window.location = res.url
+          })
+        }
       },
       getKuaidi100Url(com, nu) {
         if (com === 'rider') {

@@ -188,5 +188,6 @@ export default {
   dailyNewMember: 'សមាជិកថ្មីប្រចាំថ្ងៃ',
   purchas: 'ការទិញ',
   confirmCancelOrderTip: 'បញ្ជាក់លុបចោលការបញ្ជាទិញបច្ចុប្បន្ន',
-  overdraft: 'ឥណទានរូបារូប'
+  overdraft: 'ឥណទានរូបារូប',
+  exportSaleReport: 'របាយការណ៍លក់នាំចេញ'
 }

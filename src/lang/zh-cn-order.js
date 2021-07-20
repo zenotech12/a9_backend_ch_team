@@ -218,5 +218,6 @@ export default {
   dailyNewMember: '每日新会员',
   purchas: '代购',
   confirmCancelOrderTip: '确定取消当前订单？',
-  overdraft: '透支'
+  overdraft: '透支',
+  exportSaleReport: '导出销售报告'
 }

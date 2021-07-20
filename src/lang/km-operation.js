@@ -193,5 +193,8 @@ export default {
   usedAmount: 'ចំនួនទឹកប្រាក់ដែលបានប្រើ',
   userInfo: 'ព័ត៌មានអ្នកប្រើប្រាស់',
   tel: 'លេខទូរសព្',
-  selfPickStationSet: 'ការកំណត់ចំណុចជ្រើសរើសដោយខ្លួនឯង'
+  selfPickStationSet: 'ការកំណត់ចំណុចជ្រើសរើសដោយខ្លួនឯង',
+  orderQuantity: 'បរិមាណបញ្ជាទិញ',
+  finishOrderQuantity: 'បរិមាណបញ្ជាទិញបានបញ្ចប់',
+  orderStock: 'បញ្ជាទិញស្តុក'
 }

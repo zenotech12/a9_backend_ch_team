@@ -215,5 +215,6 @@ export default {
   dailyNewMember: 'Daily New Member',
   purchas: 'Purchasing',
   confirmCancelOrderTip: 'Confirm to cancel the current order？',
-  overdraft: 'Overdraft'
+  overdraft: 'Overdraft',
+  exportSaleReport: 'Export sales report'
 }

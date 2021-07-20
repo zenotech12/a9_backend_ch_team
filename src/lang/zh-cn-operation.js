@@ -194,6 +194,9 @@ export default {
   usedAmount: '已用金额',
   userInfo: '用户信息',
   tel: '手机号',
-  selfPickStationSet: '自提点设置'
+  selfPickStationSet: '自提点设置',
+  orderQuantity: '订单量',
+  finishOrderQuantity: '已完成订单量',
+  orderStock: '订单存量'
 
 }

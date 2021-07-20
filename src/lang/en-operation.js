@@ -193,6 +193,9 @@ export default {
   usedAmount: 'Amount used',
   userInfo: 'User Info',
   tel: 'Phone Number',
-  selfPickStationSet: 'Pickup point setting'
+  selfPickStationSet: 'Pickup point setting',
+  orderQuantity: 'Order volume',
+  finishOrderQuantity: 'Completed order volume',
+  orderStock: 'Order stock'
 
 }
