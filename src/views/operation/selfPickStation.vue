@@ -21,13 +21,23 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="name" :label="$t('operation.name')"></el-table-column>
-                <el-table-column prop="tel" :label="$t('operation.tel')"></el-table-column>
+                <el-table-column prop="tel" width="150" :label="$t('operation.tel')"></el-table-column>
                 <el-table-column :label="$t('operation.address')">
                   <template slot-scope="scope">
                     {{scope.row.addr.province + scope.row.addr.city + scope.row.addr.district + scope.row.addr.addr + '(' + scope.row.addr.coord.join(',') +  ')' }}
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" :label="$t('sys.addTime')"></el-table-column>
+                <el-table-column label="已完成订单量" width="150">
+                  <template slot-scope="scope">
+                    <el-button type="text">{{scope.row.order_complete_count}}</el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column label="订单存量" width="150">
+                  <template slot-scope="scope">
+                    <el-button type="text">{{scope.row.order_store_count}}</el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="gen_time" :label="$t('sys.addTime')" width="200"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
@@ -62,6 +72,12 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+          </div>
+        </el-dialog>
+        <el-dialog title="订单量" width="700px" @close="orderDialog=false" :visible.sync="orderDialog" :close-on-click-modal="false" center >
+
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" @click="orderDialog = false">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
       </div>
@@ -100,7 +116,8 @@
         placeShow: false,
         placeChecked: false,
         formEditDialog: false,
-        submitDisabled: false
+        submitDisabled: false,
+        orderDialog: false
       }
     },
     computed: {
