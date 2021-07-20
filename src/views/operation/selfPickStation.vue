@@ -504,7 +504,7 @@
           city: this.formAddress.city,
           district: this.formAddress.area,
           addr: this.formAddress.address,
-          coord: [this.formAddress.lon, this.formAddress.lat]
+          coord: [parseFloat(this.formAddress.lon), parseFloat(this.formAddress.lat)]
         }
         this.form.addr = JSON.stringify(addrForm)
         this.placeCheck()

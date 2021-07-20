@@ -27,11 +27,11 @@
               </el-col>
               <el-col :span="8">
                 <span class="xinhao">{{$t('sys.lng')}}：</span>
-                <el-input v-model="form.lon" :placeholder="$t('sys.lng')" clearable></el-input>
+                <el-input v-model="form.lon" :placeholder="$t('sys.lng')" type="number" clearable></el-input>
               </el-col>
               <el-col :span="8">
                 <span class="xinhao">{{$t('sys.lat')}}：</span>
-                <el-input v-model="form.lat" :placeholder="$t('sys.lat')" clearable></el-input>
+                <el-input v-model="form.lat" type="number" :placeholder="$t('sys.lat')" clearable></el-input>
               </el-col>
             </el-row>
         </el-col>
@@ -55,8 +55,8 @@
           city: '',
           area: '',
           address: '',
-          lon: '',
-          lat: ''
+          lon: 0,
+          lat: 0
         },
         allAddress: '',
         placeShow: false,
@@ -107,8 +107,8 @@
         this.form.city = ''
         this.form.area = ''
         this.form.address = ''
-        this.form.lon = ''
-        this.form.lat = ''
+        this.form.lon = 0
+        this.form.lat = 0
       },
       showMap() {
         const currentLang = this.$store.state.app.lang
