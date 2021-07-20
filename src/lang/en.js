@@ -74,5 +74,6 @@ export default {
   memorandum: 'Reminder',
   AbnormalLogin: 'Abnormal Login',
   ReminderSet: 'Memo management',
-  overdraftSet: 'Overdraft Settings'
+  overdraftSet: 'Overdraft Settings',
+  selfPickStation: 'Self-pickup point'
 }

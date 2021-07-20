@@ -863,6 +863,10 @@
           {
             value: 'yue',
             label: this.$t('lang.balance')
+          },
+          {
+            value: 'aba',
+            label: 'aba'
           }
         ],
         ownerShipStatuses:[

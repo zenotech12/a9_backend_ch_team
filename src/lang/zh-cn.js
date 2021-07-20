@@ -73,5 +73,6 @@ export default {
   memorandum: '备忘录',
   AbnormalLogin: '异常登录',
   ReminderSet: '备忘管理',
-  overdraftSet: '透支设置'
+  overdraftSet: '透支设置',
+  selfPickStation: '自提点设置'
 }

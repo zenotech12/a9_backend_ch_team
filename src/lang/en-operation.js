@@ -191,6 +191,8 @@ export default {
   touzhiInfo: 'Overdraft information',
   useDate: 'Use date',
   usedAmount: 'Amount used',
-  userInfo: 'User Info'
+  userInfo: 'User Info',
+  tel: 'Phone Number',
+  selfPickStationSet: 'Pickup point setting'
 
 }

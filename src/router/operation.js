@@ -55,6 +55,11 @@ const order = [{
     name: 'overdraftSet',
     meta: { title: 'overdraftSet', icon: 'list', code: '4_10' },
     component: () => import('@/views/operation/overdraftSet')
+  }, {
+    path: 'selfPickStation',
+    name: 'selfPickStation',
+    meta: { title: 'selfPickStation', icon: 'list', code: '4_11' },
+    component: () => import('@/views/operation/selfPickStation')
   }]
 }]
 export default order

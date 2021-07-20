@@ -14,7 +14,7 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :span="4" style="text-align: right;padding: 10px 15px">
+          <el-col :span="4" class="funcList">
             <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
               <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
               <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
