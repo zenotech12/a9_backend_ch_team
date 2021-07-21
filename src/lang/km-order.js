@@ -113,6 +113,7 @@ export default {
   cashOnDelivery: 'ទូទាត់ប្រាក់ពេលដឹកជញ្ជូន',
   confirmTransaction: 'បញ្ជាក់ប្រតិបត្តិការ',
   deliveryMethod: 'វិធី​សា​ស្រ្ត​ដឹកជញ្ជូន',
+  batchDetailExportFunc: 'ចំនួននាំចេញអតិបរមាគឺ ២០',
   payMethod: 'វិធី​សា​ស្រ្ត​ទូទាត់ប្រាក់',
   expressDelivery: 'ដឹកជញ្ជូន​ឆាប់រហ័ស',
   selfMention: 'មកយកខ្លួនឯង',

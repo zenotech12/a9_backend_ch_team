@@ -870,18 +870,18 @@
             label: 'aba'
           }
         ],
-        ownerShipStatuses:[
+        ownerShipStatuses: [
           {
-             value: 0,
-             label: this.$t("order.ownerShipSelectAll")
+            value: 0,
+            label: this.$t("order.ownerShipSelectAll")
           },
           {
-             value: 1,
-             label: this.$t("order.ownerShipSelectSelf")
+            value: 1,
+            label: this.$t("order.ownerShipSelectSelf")
           },
           {
-             value: 2,
-             label: this.$t("order.ownerShipSelectUndo")
+            value: 2,
+            label: this.$t("order.ownerShipSelectUndo")
           }
         ],
         deliveryMethod: [this.$t('order.expressDelivery'), this.$t('order.selfMention'), this.$t('order.rider')],
@@ -1293,20 +1293,21 @@
         })
       },
       exportFuncSale() {
+        const sf = JSON.parse(JSON.stringify(this.searchForm))
         if (this.multipleSelection.length > 20) {
           this.$message.error(this.$t('order.batchDetailExportFunc'))
+          return
         } else if (this.multipleSelection.length < 1) {
-          this.$message.error(this.$t('order.batchExportTip'))
+          sf.ids = ''
         } else {
-          const sf = JSON.parse(JSON.stringify(this.searchForm))
-          sf.skip = 0
-          sf.limit = 20
-          sf.sales_report = true
           sf.ids = JSON.stringify(this.multipleSelection)
-          exportOrder(sf).then(res => {
-            window.location = res.url
-          })
         }
+        sf.skip = 0
+        sf.limit = 20
+        sf.sales_report = true
+        exportOrder(sf).then(res => {
+          window.location = res.url
+        })
       },
       getKuaidi100Url(com, nu) {
         if (com === 'rider') {
