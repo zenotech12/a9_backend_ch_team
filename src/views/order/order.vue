@@ -298,6 +298,9 @@
                       <el-button type="text" @click="addNoteFunc(scope.row)" size="small" style="margin-left: 0">
                         {{$t('order.note')}}
                       </el-button>
+                      <el-button type="text" v-if="scope.row.status !== 2 && scope.row.status !== 17" @click="goodsSaleFunc(scope.row)" size="small">
+                        {{$t('order.afterSale')}}
+                      </el-button>
                     </template>
                     <template v-if="permissionCheck('opt', '8_1')">
                       <span v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.post_way !== 2 || permissionCheck('opt', '8_1') ">
@@ -733,6 +736,56 @@
             <el-button size="small" type="primary" @click="noteDialog = false">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
+        <!--商品售后-->
+        <el-dialog :title="saleAfterText" width="1000px" append-to-body @close="goodsDeliveryDialog = false" :visible.sync="goodsDeliveryDialog" :close-on-click-modal="false" center >
+          <el-form label-width="100px">
+            <el-form-item :label="$t('order.note')">
+              <el-table stripe border :data="refundOnlyGoods" @selection-change="chooseRefundOnlyFunc" height="calc(100vh - 500px)">
+                <el-table-column
+                  type="selection"
+                  width="45">
+                </el-table-column>
+                <el-table-column  :label="$t('order.goods')" min-width="400">
+                  <template  slot-scope="scope">
+                    <div class="goods-item">
+                      <img class="image imagecss" :src="getImageUrl(scope.row.goods_info.sku_img, 100)">
+                      <div class="g-info">
+                        <p style="display: flex;align-items: center;line-height: 15px">{{scope.row.goods_info.spu_name}}
+                          <img :src="otherLogo(scope.row.goods_info.site_id)" class="otherShopLogo" v-if="refundOnlyObj.type === 5 && scope.row.goods_info.site_id" alt="">
+                          <el-tag v-if="scope.row.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
+                          <el-tag v-if="scope.row.after_saled" style="cursor: pointer" type="danger" size="mini">{{$t('order.afterSale')}}</el-tag>
+                        </p>
+                        <p style="line-height: 15px;">
+                          <span v-for="(v,k) in scope.row.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
+                        </p>
+                        <div><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{scope.row.goods_info.price}}</template><template v-else>{{scope.row.goods_info.price | price}}</template></div>
+                      </div>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('order.number')" width="250">
+                  <template slot-scope="scope" >
+                    <span v-if="scope.row.goods_info.count === 1">
+                      {{scope.row.goods_info.count}}
+                    </span>
+                    <span v-else class="inputNumberStyle">
+                      <el-input-number v-model="scope.row.goods_info.count" :min="1" :max="scope.row.goods_info.count"></el-input-number>
+                    </span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-form-item>
+            <el-form-item :label="$t('order.note')">
+              <price-input v-model="goodsRefundOnlyForm.amount"></price-input>
+            </el-form-item>
+            <el-form-item :label="$t('order.note')">
+              <el-input type="textarea" :rows="2"  v-model="goodsRefundOnlyForm.comment" clearable :placeholder="$t('order.note')"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="primary" @click="confirmRefundOnly">{{$t('tools.confirm')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -740,7 +793,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, warehouseGroupInven, orderMerchantComment, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods, orderGoodsComment } from '@/api/order'
+  import { ordersList, warehouseGroupInven, orderMerchantComment, orderRefundOnly, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods, orderGoodsComment } from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
   import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
@@ -924,7 +977,18 @@
           comment: ''
         },
         // showBi: true,
-        goodsOid: ''
+        goodsOid: '',
+        goodsDeliveryDialog: false,
+        goodsRefundOnlyForm: {
+          id: '',
+          skus: '',
+          comment: '',
+          amount: 0
+        },
+        refundOnlyGoods: [],
+        refundOnlyObj: {},
+        saleAfterText: '',
+        chooseTui: []
       }
     },
     computed: {
@@ -984,9 +1048,47 @@
           this.searchForm.bt = ''
           this.searchForm.et = ''
         }
+      },
+      chooseTui(val) {
+        let totalPrice = 0
+        if (val.length > 0) {
+          val.forEach(v => {
+            const number = parseFloat(v.goods_info.price * v.goods_info.count)
+            totalPrice = totalPrice + number
+          })
+        }
+        this.goodsRefundOnlyForm.amount = totalPrice
+      },
+      refundOnlyGoods(val) {
+        let totalPrice = 0
+        const array = this.chooseTui
+        if (array.length > 0) {
+          array.forEach(v => {
+            const number = parseFloat(v.goods_info.price * v.goods_info.count)
+            totalPrice = totalPrice + number
+          })
+        }
+        this.goodsRefundOnlyForm.amount = totalPrice
       }
     },
     methods: {
+      goodsSaleFunc(data) {
+        this.goodsRefundOnlyForm.id = data.id
+        this.refundOnlyGoods = data.merchant_item.goods_items
+        this.refundOnlyObj = data
+        this.saleAfterText = this.$t('order.afterSale') + '(NO:' + data.no + '--' + data.user_nick_name + '--' + data.user_mobile + ')'
+        this.goodsDeliveryDialog = true
+      },
+      chooseRefundOnlyFunc(val) {
+        console.log('val', val)
+        this.chooseTui = val
+      },
+      confirmRefundOnly() {
+        this.goodsDeliveryDialog = false
+      },
+      modifyNumber(data) {
+        console.log('data', data)
+      },
       showCommentGoods(goods, id) {
         this.goodsOid = goods.oid
         this.goodsCommentForm.oid = goods.oid
@@ -1806,6 +1908,14 @@
     /deep/ {
       .el-input--suffix .el-input__inner {
         padding-right: 8px;
+      }
+    }
+  }
+
+  .inputNumberStyle {
+    /deep/ {
+      .el-input-number {
+        line-height: 26px;
       }
     }
   }

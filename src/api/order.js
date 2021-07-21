@@ -237,3 +237,12 @@ export function orderGoodsComment(id, data) {
     data: data
   })
 }
+
+// 订单.商品退款
+export function orderRefundOnly(id, data) {
+  return request({
+    url: 'orders/' + id + '/refund-only',
+    method: 'post',
+    data: data
+  })
+}
