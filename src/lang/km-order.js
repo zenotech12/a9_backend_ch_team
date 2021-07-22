@@ -190,5 +190,6 @@ export default {
   purchas: 'ការទិញ',
   confirmCancelOrderTip: 'បញ្ជាក់លុបចោលការបញ្ជាទិញបច្ចុប្បន្ន',
   overdraft: 'ឥណទានរូបារូប',
-  exportSaleReport: 'របាយការណ៍លក់នាំចេញ'
+  exportSaleReport: 'របាយការណ៍លក់នាំចេញ',
+  pleaseChoooseSaleAfterTip: 'សូមធីកផលិតផលដែលត្រូវការក្រោយពេលលក់'
 }

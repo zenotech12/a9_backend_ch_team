@@ -298,7 +298,7 @@
                       <el-button type="text" @click="addNoteFunc(scope.row)" size="small" style="margin-left: 0">
                         {{$t('order.note')}}
                       </el-button>
-                      <el-button type="text" v-if="scope.row.status !== 2 && scope.row.status !== 17" @click="goodsSaleFunc(scope.row)" size="small">
+                      <el-button type="text" v-if="scope.row.status !== 2 && scope.row.status !== 17 && scope.row.status !== 7" @click="goodsSaleFunc(scope.row)" size="small">
                         {{$t('order.afterSale')}}
                       </el-button>
                     </template>
@@ -765,17 +765,14 @@
                 </el-table-column>
                 <el-table-column :label="$t('order.number')" width="250">
                   <template slot-scope="scope" >
-                    <span v-if="scope.row.goods_info.count === 1">
-                      {{scope.row.goods_info.count}}
-                    </span>
-                    <span v-else class="inputNumberStyle">
-                      <el-input-number v-model="scope.row.goods_info.count" :min="1" :max="scope.row.goods_info.count"></el-input-number>
+                    <span class="inputNumberStyle">
+                      <el-input-number v-model="scope.row.goods_info.count" :step="1" :min="1" :max="copyRefundOnly[scope.$index].goods_info.count"></el-input-number>
                     </span>
                   </template>
                 </el-table-column>
               </el-table>
             </el-form-item>
-            <el-form-item :label="$t('order.note')">
+            <el-form-item :label="$t('order.price')">
               <price-input v-model="goodsRefundOnlyForm.amount"></price-input>
             </el-form-item>
             <el-form-item :label="$t('order.note')">
@@ -824,7 +821,7 @@
           key: '',
           user_id: '',
           order_status: 16,
-          no: '',
+          no: '00083295584156385281',
           skip: 0,
           limit: pz,
           bt: '',
@@ -988,7 +985,8 @@
         refundOnlyGoods: [],
         refundOnlyObj: {},
         saleAfterText: '',
-        chooseTui: []
+        chooseTui: [],
+        copyRefundOnly: []
       }
     },
     computed: {
@@ -1059,35 +1057,70 @@
         }
         this.goodsRefundOnlyForm.amount = totalPrice
       },
-      refundOnlyGoods(val) {
-        let totalPrice = 0
-        const array = this.chooseTui
-        if (array.length > 0) {
-          array.forEach(v => {
-            const number = parseFloat(v.goods_info.price * v.goods_info.count)
-            totalPrice = totalPrice + number
-          })
-        }
-        this.goodsRefundOnlyForm.amount = totalPrice
+      refundOnlyGoods: {
+        handler(val) {
+          console.log(111)
+          if (val.length > 0) {
+            const array = []
+            this.chooseTui.forEach(v => {
+              val.forEach(value => {
+                if (v.goods_info.oid === value.goods_info.oid) {
+                  array.push(value)
+                }
+              })
+            })
+            this.chooseTui = array
+          }
+        },
+        deep: true
       }
     },
     methods: {
       goodsSaleFunc(data) {
         this.goodsRefundOnlyForm.id = data.id
-        this.refundOnlyGoods = data.merchant_item.goods_items
+        const baseData = JSON.parse(JSON.stringify(data.merchant_item.goods_items))
+        const array = []
+        baseData.forEach((value, k) => {
+          value.goods_info.count = value.goods_info.count - value.refunded_count
+          if (value.goods_info.count > 0) {
+            array.push(value)
+          }
+        })
+        // console.log('baseData', array)
+        this.refundOnlyGoods = JSON.parse(JSON.stringify(array))
+        this.copyRefundOnly = JSON.parse(JSON.stringify(array))
         this.refundOnlyObj = data
         this.saleAfterText = this.$t('order.afterSale') + '(NO:' + data.no + '--' + data.user_nick_name + '--' + data.user_mobile + ')'
         this.goodsDeliveryDialog = true
       },
       chooseRefundOnlyFunc(val) {
-        console.log('val', val)
         this.chooseTui = val
       },
       confirmRefundOnly() {
+        if (this.chooseTui.length === 0) {
+          this.$message.error(this.$t('order.pleaseChoooseSaleAfterTip'))
+          return
+        }
+        const array = []
+        this.chooseTui.forEach(value => {
+          const obj = {
+            oid: value.goods_info.oid,
+            count: value.goods_info.count
+          }
+          array.push(obj)
+        })
+        this.goodsRefundOnlyForm.skus = JSON.stringify(array)
+        this.updataRefundOnly()
+        console.log('form', this.goodsRefundOnlyForm)
         this.goodsDeliveryDialog = false
       },
-      modifyNumber(data) {
-        console.log('data', data)
+      updataRefundOnly() {
+        orderRefundOnly(this.goodsRefundOnlyForm.id, this.goodsRefundOnlyForm).then(res => {
+          if (res.meta === 0) {
+            this.getDataListFun()
+            this.getOrderCount()
+          }
+        })
       },
       showCommentGoods(goods, id) {
         this.goodsOid = goods.oid

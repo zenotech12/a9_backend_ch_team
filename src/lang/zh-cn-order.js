@@ -219,5 +219,6 @@ export default {
   purchas: '代购',
   confirmCancelOrderTip: '确定取消当前订单？',
   overdraft: '透支',
-  exportSaleReport: '导出销售报告'
+  exportSaleReport: '导出销售报告',
+  pleaseChoooseSaleAfterTip: '请勾选需要售后的商品'
 }
