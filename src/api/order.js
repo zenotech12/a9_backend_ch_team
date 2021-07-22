@@ -216,7 +216,7 @@ export function warehouseGroupInven(data) {
 export function cancelGoods(id) {
   return request({
     url: 'orders/' + id + '/cancel',
-    method: 'post',
+    method: 'post'
   })
 }
 
@@ -242,6 +242,15 @@ export function orderGoodsComment(id, data) {
 export function orderRefundOnly(id, data) {
   return request({
     url: 'orders/' + id + '/refund-only',
+    method: 'post',
+    data: data
+  })
+}
+
+// 订单.发送消息
+export function orderMessage(id, data) {
+  return request({
+    url: 'orders/' + id + '/message',
     method: 'post',
     data: data
   })

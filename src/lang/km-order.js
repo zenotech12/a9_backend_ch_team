@@ -191,5 +191,8 @@ export default {
   confirmCancelOrderTip: 'បញ្ជាក់លុបចោលការបញ្ជាទិញបច្ចុប្បន្ន',
   overdraft: 'ឥណទានរូបារូប',
   exportSaleReport: 'របាយការណ៍លក់នាំចេញ',
-  pleaseChoooseSaleAfterTip: 'សូមធីកផលិតផលដែលត្រូវការក្រោយពេលលក់'
+  pleaseChoooseSaleAfterTip: 'សូមធីកផលិតផលដែលត្រូវការក្រោយពេលលក់',
+  leaveMessage: 'ទុកសារមួយ',
+  leaveMessageSuccess: 'សារជោគជ័យ',
+  enterLeaveMessage: 'សូមបញ្ចូលសារ'
 }

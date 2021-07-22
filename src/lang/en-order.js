@@ -217,5 +217,8 @@ export default {
   confirmCancelOrderTip: 'Confirm to cancel the current order？',
   overdraft: 'Overdraft',
   exportSaleReport: 'Export sales report',
-  pleaseChoooseSaleAfterTip: 'Please check the products that need after-sales'
+  pleaseChoooseSaleAfterTip: 'Please check the products that need after-sales',
+  leaveMessage: 'leave a message',
+  leaveMessageSuccess: 'Message success',
+  enterLeaveMessage: 'Please enter a message'
 }

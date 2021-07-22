@@ -180,6 +180,25 @@
                   <template slot-scope="scope">
                     <div class="ui">{{scope.row.user_nick_name}}</div>
                     <div class="ui">{{scope.row.user_mobile}}</div>
+                    <div class="ui">
+                      <el-popover
+                        placement="top-start"
+                        width="400"
+                        trigger="click"
+                        >
+                        <div style="padding: 10px;">
+                          <el-form label-width="100px">
+                            <el-form-item :label="$t('order.leaveMessage')">
+                              <el-input v-model="formMessage.content" type="textarea" :row="2"></el-input>
+                            </el-form-item>
+                          </el-form>
+                          <div style="text-align: right">
+                            <el-button type="primary" size="mini" @click="sendMessageFunc(scope.row.id)">{{$t('tools.confirm')}}</el-button>
+                          </div>
+                        </div>
+                        <i class="el-icon-chat-line-square" @click="showMessage" style="font-size: 24px;cursor: pointer" slot="reference"></i>
+                      </el-popover>
+                    </div>
                   </template>
                 </el-table-column>
                 <!-- 商品 -->
@@ -790,7 +809,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { ordersList, warehouseGroupInven, orderMerchantComment, orderRefundOnly, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods, orderGoodsComment } from '@/api/order'
+  import { ordersList, warehouseGroupInven, orderMerchantComment, orderMessage, orderRefundOnly, ordersCount, ordersExpress, ordersPriceModify, exportOrder, changeMerchantComment, changeShippingAddress, getExpressInfo, orderConfirm, orderPurchaseCheck, orderTransRecords, orderOwnerShipGet, orderOwnerShipTrans, cancelGoods, orderGoodsComment } from '@/api/order'
   import { warehouseOutbounds, warehousesList } from '@/api/warehouse'
   import { customerServicesList } from '@/api/system'
   import expressage from '@/utils/expressage'
@@ -986,7 +1005,10 @@
         refundOnlyObj: {},
         saleAfterText: '',
         chooseTui: [],
-        copyRefundOnly: []
+        copyRefundOnly: [],
+        formMessage: {
+          content: ''
+        }
       }
     },
     computed: {
@@ -1076,6 +1098,21 @@
       }
     },
     methods: {
+      sendMessageFunc(id) {
+        if (this.formMessage.content === '') {
+          this.$message.error(this.$t('order.enterLeaveMessage'))
+          return
+        }
+        orderMessage(id, this.formMessage).then(res => {
+          if (res.meta === 0) {
+            this.$message.success(this.$t('order.leaveMessageSuccess'))
+            this.formMessage.content = ''
+          }
+        })
+      },
+      showMessage() {
+        this.formMessage.content = ''
+      },
       goodsSaleFunc(data) {
         this.goodsRefundOnlyForm.id = data.id
         const baseData = JSON.parse(JSON.stringify(data.merchant_item.goods_items))
@@ -1952,4 +1989,5 @@
       }
     }
   }
+
 </style>

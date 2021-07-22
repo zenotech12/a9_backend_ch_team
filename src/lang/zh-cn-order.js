@@ -220,5 +220,8 @@ export default {
   confirmCancelOrderTip: '确定取消当前订单？',
   overdraft: '透支',
   exportSaleReport: '导出销售报告',
-  pleaseChoooseSaleAfterTip: '请勾选需要售后的商品'
+  pleaseChoooseSaleAfterTip: '请勾选需要售后的商品',
+  leaveMessage: '留言',
+  leaveMessageSuccess: '留言成功',
+  enterLeaveMessage: '请输入留言'
 }
