@@ -169,19 +169,20 @@ export function orderConfirm(id) {
 }
 
 // 订单.认领
-export function orderOwnerShipGet(id) {
+export function orderOwnerShipGet(id, data) {
   return request({
-      url: 'orders/' +id +"/get-ownership",
-      method:"post"
-    })
+    url: 'orders/' + id + '/get-ownership',
+    method: 'post',
+    data: data
+  })
 }
 
 // 订单.转让
 export function orderOwnerShipTrans(id, data) {
   return request({
     url: 'orders/' + id + '/trans-ownership',
-    method: "post",
-    data:data
+    method: 'post',
+    data: data
   })
 }
 

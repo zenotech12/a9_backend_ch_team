@@ -33,46 +33,57 @@
                   <el-radio-button :label="101">{{$t("operation.local")}}</el-radio-button>
                 </el-radio-group>
               </el-form-item>
-            <el-form-item :label="$t('order.ownerShipStatusSelect')">
-              <el-select v-model="searchForm.ownership_status" clearable style="width: 120px">
-                <el-option
-                  v-for="(item, k) in ownerShipStatuses"
-                  :key="k"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('order.searchKey')">
-              <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 200px" clearable></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('order.no')">
-              <el-input v-model="searchForm.no" style="width: 200px" clearable></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('order.orderTime')" class="searchTimeBox">
-              <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable style="width: 260px;"
-                              v-model="orderTimes"
-                              type="daterange"
-                              align="right"
-                              unlink-panels
-                              :range-separator="$t('tools.to')"
-                              :start-placeholder="$t('tools.startDate')"
-                              :end-placeholder="$t('tools.endDate')">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
-              <template v-if="permissionCheck('opt')">
-                <!--<el-button type="primary" @click="exportFunc([], false)" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>-->
-                <el-button type="primary" @click="batchExportFunc" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>
-                <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
-                           :action= "importUrl"
-                           :show-file-list="false"
-                           :on-success="importSuccess" :on-error="importError">
-                  <el-button type="primary" size="mini" icon="el-icon-upload2"></el-button>
-                </el-upload>
-              </template>
-            </el-form-item>
+              <el-form-item>
+                <el-dropdown @command="commandFunc">
+                  <span class="el-dropdown-link">
+                    {{roleName}}<i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="Seller">Seller</el-dropdown-item>
+                    <el-dropdown-item command="Finance">Finance</el-dropdown-item>
+                    <el-dropdown-item command="Purchaser">Purchaser</el-dropdown-item>
+                    <el-dropdown-item command="Warehouse">Warehouse</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+                <el-select v-model="roleSearch" clearable style="width: 120px">
+                  <el-option
+                    v-for="(item, k) in ownerShipStatuses"
+                    :key="k"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('order.searchKey')">
+                <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 200px" clearable></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('order.no')">
+                <el-input v-model="searchForm.no" style="width: 200px" clearable></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('order.orderTime')" class="searchTimeBox">
+                <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable style="width: 260px;"
+                                v-model="orderTimes"
+                                type="daterange"
+                                align="right"
+                                unlink-panels
+                                :range-separator="$t('tools.to')"
+                                :start-placeholder="$t('tools.startDate')"
+                                :end-placeholder="$t('tools.endDate')">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
+                <template v-if="permissionCheck('opt')">
+                  <!--<el-button type="primary" @click="exportFunc([], false)" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>-->
+                  <el-button type="primary" @click="batchExportFunc" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>
+                  <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
+                             :action= "importUrl"
+                             :show-file-list="false"
+                             :on-success="importSuccess" :on-error="importError">
+                    <el-button type="primary" size="mini" icon="el-icon-upload2"></el-button>
+                  </el-upload>
+                </template>
+              </el-form-item>
           </el-form>
           </el-col>
         </el-row>
@@ -136,43 +147,160 @@
                   </template>
                 </el-table-column>
                  <!-- 所有者 -->
-                 <el-table-column :label="$t('order.servicer_id')" width="170">
+                 <el-table-column :label="$t('order.servicer_id')" width="300">
                   <template slot-scope="scope" >
-                    <el-popover v-if="scope.row.servicer_operations" placement="left" width="300" trigger="click">
-                      <el-timeline style="margin-top: 10px">
-                        <el-timeline-item
-                          v-for="(record, index) in scope.row.servicer_operations"
-                          :key="index"
-                          :timestamp="record.time">
-                          <div class="ui"><span>{{record.receiver_name}}</span>{{servicerOptArr[record.tp]}}</div>
-                        </el-timeline-item>
-                      </el-timeline>
-                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.servicer_operations ? scope.row.servicer_operations[scope.row.servicer_operations.length-1].receiver_name:''}}</a>
-                    </el-popover>
-                    <div>
-                    <el-button v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'))" size="small">
-                      {{$t('order.ownerShipGet')}}
-                    </el-button>
-                    <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
-                      <el-select v-model="ownerShipSelectUserId">
-                        <el-option
-                          v-for="item in customerMgrList"
-                          :key="item.user_nick_name"
-                          :label="item.user_nick_name"
-                          :value="item.user_id">
-                        </el-option>
-                      </el-select>
-                      <div style="text-align:center;">
-                         <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
-                        {{$t('tools.confirm')}}
+                    <!--销售-->
+                    <div class="singleTypeZr">
+                      <img src="../../assets/images/servicer.png" class="typeImgS" title="Seller" alt="">
+                      <el-popover v-if="scope.row.servicer_operations" placement="left" width="300" trigger="click">
+                        <el-timeline style="margin-top: 10px">
+                          <el-timeline-item
+                            v-for="(record, index) in scope.row.servicer_operations"
+                            :key="index"
+                            :timestamp="record.time">
+                            <div class="ui"><span v-if="record">{{record.receiver_name}}</span>{{servicerOptArr[record.tp]}}</div>
+                          </el-timeline-item>
+                        </el-timeline>
+                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.servicer_operations.length > 0 ? scope.row.servicer_operations[scope.row.servicer_operations.length-1].receiver_name:''}}</a>
+                      </el-popover>
+                      <el-button icon="el-icon-arrow-left" v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'), 'servicer')" size="small">
+                        {{$t('order.ownerShipGet')}}
                       </el-button>
-                        <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
-                          {{$t('order.cancelClaim')}}
+                      <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
+                        <el-select v-model="ownerShipSelectUserId">
+                          <el-option
+                            v-for="item in customerMgrList"
+                            :key="item.user_nick_name"
+                            :label="item.user_nick_name"
+                            :value="item.user_id">
+                          </el-option>
+                        </el-select>
+                        <div style="text-align:center;">
+                           <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
+                          {{$t('tools.confirm')}}
                         </el-button>
-                      </div>
-                      <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
-                    </el-popover>
+                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
+                            {{$t('order.cancelClaim')}}
+                          </el-button>
+                        </div>
+                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                      </el-popover>
                     </div>
+
+                    <!--财务-->
+                    <div class="singleTypeZr">
+                      <img src="../../assets/images/financer.png" class="typeImgS" title="Finance" alt="">
+                      <el-popover v-if="scope.row.financer_operations" placement="left" width="300" trigger="click">
+                        <el-timeline style="margin-top: 10px">
+                          <el-timeline-item
+                            v-for="(record, index) in scope.row.financer_operations"
+                            :key="index"
+                            :timestamp="record.time">
+                            <div class="ui"><span v-if="record">{{record.receiver_name}}</span>{{servicerOptArr[record.tp]}}</div>
+                          </el-timeline-item>
+                        </el-timeline>
+                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.financer_operations.length > 0 ? scope.row.financer_operations[scope.row.financer_operations.length-1].receiver_name:''}}</a>
+                      </el-popover>
+                      <el-button icon="el-icon-arrow-left" v-if="scope.row.financer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'), 'financer')" size="small">
+                        {{$t('order.ownerShipGet')}}
+                      </el-button>
+                      <el-popover v-if="scope.row.financer_status === 3" placement="left" width="200" trigger="click">
+                        <el-select v-model="ownerShipSelectUserId">
+                          <el-option
+                            v-for="item in customerMgrList"
+                            :key="item.user_nick_name"
+                            :label="item.user_nick_name"
+                            :value="item.user_id">
+                          </el-option>
+                        </el-select>
+                        <div style="text-align:center;">
+                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
+                            {{$t('tools.confirm')}}
+                          </el-button>
+                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
+                            {{$t('order.cancelClaim')}}
+                          </el-button>
+                        </div>
+                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                      </el-popover>
+                    </div>
+
+                    <!--采购-->
+                    <div class="singleTypeZr">
+                      <img src="../../assets/images/purchaser.png" class="typeImgS" title="Purchaser" alt="">
+                      <el-popover v-if="scope.row.purchaser_operations" placement="left" width="300" trigger="click">
+                        <el-timeline style="margin-top: 10px">
+                          <el-timeline-item
+                            v-for="(record, index) in scope.row.purchaser_operations"
+                            :key="index"
+                            :timestamp="record.time">
+                            <div class="ui"><span v-if="record">{{record.receiver_name}}</span>{{servicerOptArr[record.tp]}}</div>
+                          </el-timeline-item>
+                        </el-timeline>
+                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.purchaser_operations.length > 0 ? scope.row.purchaser_operations[scope.row.purchaser_operations.length-1].receiver_name:''}}</a>
+                      </el-popover>
+                      <el-button icon="el-icon-arrow-left" v-if="scope.row.purchaser_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'), 'purchaser')" size="small">
+                        {{$t('order.ownerShipGet')}}
+                      </el-button>
+                      <el-popover v-if="scope.row.purchaser_status === 3" placement="left" width="200" trigger="click">
+                        <el-select v-model="ownerShipSelectUserId">
+                          <el-option
+                            v-for="item in customerMgrList"
+                            :key="item.user_nick_name"
+                            :label="item.user_nick_name"
+                            :value="item.user_id">
+                          </el-option>
+                        </el-select>
+                        <div style="text-align:center;">
+                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
+                            {{$t('tools.confirm')}}
+                          </el-button>
+                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
+                            {{$t('order.cancelClaim')}}
+                          </el-button>
+                        </div>
+                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                      </el-popover>
+                    </div>
+
+                    <!--仓库-->
+                    <div class="singleTypeZr">
+                      <img src="../../assets/images/warehouser.png" class="typeImgS" title="Warehouse" alt="">
+                      <el-popover v-if="scope.row.warehouser_operations" placement="left" width="300" trigger="click">
+                        <el-timeline style="margin-top: 10px">
+                          <el-timeline-item
+                            v-for="(record, index) in scope.row.warehouser_operations"
+                            :key="index"
+                            :timestamp="record.time">
+                            <div class="ui"><span v-if="record">{{record.receiver_name}}</span>{{servicerOptArr[record.tp]}}</div>
+                          </el-timeline-item>
+                        </el-timeline>
+                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.warehouser_operations.length > 0 ? scope.row.warehouser_operations[scope.row.warehouser_operations.length-1].receiver_name:''}}</a>
+                      </el-popover>
+                      <el-button icon="el-icon-arrow-left" v-if="scope.row.warehouser_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'), 'warehouser')" size="small">
+                        {{$t('order.ownerShipGet')}}
+                      </el-button>
+                      <el-popover v-if="scope.row.warehouser_status === 3" placement="left" width="200" trigger="click">
+                        <el-select v-model="ownerShipSelectUserId">
+                          <el-option
+                            v-for="item in customerMgrList"
+                            :key="item.user_nick_name"
+                            :label="item.user_nick_name"
+                            :value="item.user_id">
+                          </el-option>
+                        </el-select>
+                        <div style="text-align:center;">
+                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
+                            {{$t('tools.confirm')}}
+                          </el-button>
+                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
+                            {{$t('order.cancelClaim')}}
+                          </el-button>
+                        </div>
+                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                      </el-popover>
+                    </div>
+
                   </template>
                 </el-table-column>
                 <!-- 用户 -->
@@ -845,7 +973,10 @@
           limit: pz,
           bt: '',
           et: '',
-          ownership_status: '',
+          ownership_status: '', // 客服/销售 0所有 1自己的 2未认领的
+          warehouser_ownership_status: '', // 仓库 0所有 1自己的 2未认领的
+          financer_ownership_status: '', // 财务  0所有 1自己的 2未认领的
+          purchaser_ownership_status: '', // 采购  0所有 1自己的 2未认领的
           pay_way: 0, // 支付方式  0 所有 1 在线支付 2 货到付款
           invoice: true,
           type: 0 // 0 所有 5代购
@@ -1008,12 +1139,14 @@
         copyRefundOnly: [],
         formMessage: {
           content: ''
-        }
+        },
+        roleName: '',
+        roleSearch: ''
       }
     },
     computed: {
       ...mapGetters([
-        'userInfo', 'searchParam'
+        'shopInfo', 'searchParam'
       ])
     },
     watch: {
@@ -1098,6 +1231,41 @@
       }
     },
     methods: {
+      commandFunc(data) {
+        if (data === 'Seller') {
+          this.roleName = 'Seller'
+        } else if (data === 'Finance') {
+          this.roleName = 'Finance'
+        } else if (data === 'Purchaser') {
+          this.roleName = 'Purchaser'
+        } else if (data === 'Warehouse') {
+          this.roleName = 'Warehouse'
+        }
+      },
+      roleReturn() {
+        console.log('userInfo', this.userInfo)
+        let title = this.shopInfo.user_info.title
+        if (title !== '') {
+          title = title.toLowerCase()
+          if (title.indexOf('finance') !== -1) {
+            return 'Finance'
+          } else if (title.indexOf('seller') !== -1) {
+            return 'Seller'
+          } else if (title.indexOf('purchaser') !== -1) {
+            return 'Purchaser'
+          } else if (title.indexOf('warehouse') !== -1) {
+            return 'Warehouse'
+          } else {
+            return 'Seller'
+          }
+        }
+      },
+      resetSearchType() {
+        this.searchForm.ownership_status = ''
+        this.searchForm.warehouser_ownership_status = ''
+        this.searchForm.financer_ownership_status = ''
+        this.searchForm.purchaser_ownership_status = ''
+      },
       sendMessageFunc(id) {
         if (this.formMessage.content === '') {
           this.$message.error(this.$t('order.enterLeaveMessage'))
@@ -1319,10 +1487,13 @@
         })
       },
       // 认领订单
-      orderOwnerShipGetFunc(id, check) {
+      orderOwnerShipGetFunc(id, check, type) {
         if (check) {
-          orderOwnerShipGet(id).then(res => {
-            this.$message.success("success")
+          const data = {
+            user_tp: type
+          }
+          orderOwnerShipGet(id, data).then(res => {
+            this.$message.success('success')
             this.getDataListFun()
             this.getOrderCount()
           })
@@ -1337,9 +1508,9 @@
           id_user = ''
         }
         orderOwnerShipTrans(id, { 'user_id': id_user }).then(res => {
-           this.$message.success("success")
-           this.getDataListFun()
-           this.getOrderCount()
+          this.$message.success('success')
+          this.getDataListFun()
+          this.getOrderCount()
         })
       },
       getMgrUerList() {
@@ -1745,6 +1916,20 @@
         })
       },
       search() {
+        if (this.roleSearch !== '') {
+          this.resetSearchType()
+          if (this.roleName === 'Seller') {
+            this.searchForm.ownership_status = this.roleSearch
+          } else if (this.roleName === 'Warehouse') {
+            this.searchForm.warehouser_ownership_status = this.roleSearch
+          } else if (this.roleName === 'Finance') {
+            this.searchForm.financer_ownership_status = this.roleSearch
+          } else if (this.roleName === 'Purchaser') {
+            this.searchForm.purchaser_ownership_status = this.roleSearch
+          }
+        } else {
+          this.resetSearchType()
+        }
         this.searchForm.skip = 0
         this.currentPage = 1
         this.getDataListFun()
@@ -1765,7 +1950,7 @@
       }
     },
     mounted() {
-      this.searchForm.no = sessionStorage.getItem("orderid");
+      this.searchForm.no = sessionStorage.getItem('orderid')
       this.getDataListFun()
       setTimeout(() => {
         sessionStorage.clear()
@@ -1808,11 +1993,27 @@
           this.searchForm.order_status = this.$route.params.order_status
         }
       }
-      if (this.$route.params.ownership_status) {
+      if (this.$route.params.daiStatus) {
+        const text = this.$route.params.daiStatus
         this.searchForm.skip = 0
         this.currentPage = 1
         this.searchForm.order_status = 16
-        this.searchForm.ownership_status = this.$route.params.ownership_status
+        if (text === 'Seller') {
+          this.searchForm.ownership_status = 2
+          this.roleName = 'Seller'
+        } else if (text === 'Purchaser') {
+          this.searchForm.purchaser_ownership_status = 2
+          this.roleName = 'Purchaser'
+        } else if (text === 'Warehouse') {
+          this.searchForm.warehouser_ownership_status = 2
+          this.roleName = 'Warehouse'
+        } else if (text === 'Finance') {
+          this.searchForm.financer_ownership_status = 2
+          this.roleName = 'Finance'
+        }
+        this.roleSearch = 2
+      } else {
+        this.roleName = this.roleReturn()
       }
       if (this.searchForm.order_status !== 16) {
         this.tab_order_status = this.searchForm.order_status + ''
@@ -1989,5 +2190,26 @@
       }
     }
   }
+  .singleTypeZr {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+  }
+  .typeImgS {
+    width: 25px;
+    height: 25px;
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+
+  #app .el-icon-arrow-down:before {
+    color: #409EFF;
+  }
+
 
 </style>

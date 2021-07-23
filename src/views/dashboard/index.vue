@@ -24,10 +24,11 @@
                 <span>{{$t('order.order')}}</span>
               </div>
               <div class="sp cp">
-                <p @click="gotoUrl('orderList', { ownership_status: 2})">{{$t('order.Tobeclaimed')}}：<span>{{statInfo.order_need_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { daiStatus: 'Seller'})">销售待认领：<span>{{statInfo.order_need_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { daiStatus: 'Purchaser'})">采购待认领：<span>{{statInfo.order_purchaser_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { daiStatus: 'Warehouse'})">仓库待认领：<span>{{statInfo.order_warehouser_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { daiStatus: 'Finance'})">财务待认领：<span>{{statInfo.order_financer_claim}}</span></p>
                 <p @click="gotoUrl('orderList', { order_status: 5})">{{$t('order.tobedelivered')}}<span>{{statInfo.need_ship}}</span></p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
               </div>
             </el-card>
           </el-col>
@@ -40,6 +41,7 @@
                 <p @click="gotoUrl('/order/orderReturn')">{{$t('order.Returnpending')}}<span>{{statInfo.refund}}</span></p>
                 <p @click="gotoUrl('/order/orderExchange')">{{$t('order.Replacement')}}<span>{{statInfo.exchange_need_approve}}</span></p>
                 <p @click="gotoUrl('/order/orderExchange')">{{$t('order.Replacement2')}}<span>{{statInfo.exchange_need_ship}}</span></p>
+                <p>&nbsp;</p>
                 <p>&nbsp;</p>
               </div>
             </el-card>
@@ -54,6 +56,7 @@
                 <p @click="gotoUrl('purchases', { status: 3})">{{$t('order.Tobestored')}}<span>{{statInfo.purchase_need_warehouse}}</span></p>
                 <p @click="gotoUrl('inboundOutBound', { status: 2})">{{$t('warehouse.chukuorderMsg')}}：<span>{{statInfo.outbound_warehouser_confirm  }}</span></p>
                 <p>&nbsp;</p>
+                <p>&nbsp;</p>
               </div>
             </el-card>
           </el-col>
@@ -67,6 +70,7 @@
                 <p @click="gotoUrl('purchases', { status: 1})">{{$t('order.Pendingapproval')}}<span>{{statInfo.purchase_finance_approve}}</span></p>
                 <p @click="gotoUrl('purchases', { status: 2})">{{$t('order.Tobeleadership')}}<span>{{statInfo.purchase_leader_approve}}</span></p>
                 <p @click="gotoUrl('inboundOutBound', { status: 1})">{{$t('warehouse.chukuorderMsg2')}}：<span>{{statInfo.outbound_purchaser_approve }}</span></p>
+                <p>&nbsp;</p>
               </div>
             </el-card>
           </el-col>
@@ -121,6 +125,7 @@
                 <div class="little_title">
                   <span style="margin-right: 10px" @click.stop="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et, type: 101})">{{$t('order.localGoodsPrice')}}：{{dataInfo.local_goods_payprice | price}}</span>
                   <span @click.stop="gotoUrl('orderList', { status: 16, bt: searchForm.bt, et: searchForm.et, type: 5})">{{$t('order.overseaGoodsPrice')}}：{{dataInfo.oversea_goods_payprice | price}}</span>
+                  <span>{{$t('order.postage')}}：{{dataInfo.postage  | price}}</span>
                 </div>
               </div>
             </el-card>
@@ -1275,7 +1280,7 @@
       },
       getStatInfo() {
         // const items = ['need_pay', 'need_ship', 'refund', 'need_evaluate', 'shipping_exception', 'today_order', 'today_traffic', 'today_visit', 'yesterday_visit', 'yesterday_traffic', 'today_sales']
-        const items = ['order_need_claim', 'need_ship', 'exchange_need_approve',
+        const items = ['order_need_claim', 'order_purchaser_claim', 'order_warehouser_claim', 'order_financer_claim', 'need_ship', 'exchange_need_approve',
           'exchange_need_ship', 'purchase_need_warehouse', 'need_purchase',
           'purchase_finance_approve', 'purchase_leader_approve', 'refund',
           'outbound_purchaser_approve', 'outbound_warehouser_confirm'
