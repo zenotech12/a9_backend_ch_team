@@ -194,5 +194,9 @@ export default {
   pleaseChoooseSaleAfterTip: 'សូមធីកផលិតផលដែលត្រូវការក្រោយពេលលក់',
   leaveMessage: 'ទុកសារមួយ',
   leaveMessageSuccess: 'សារជោគជ័យ',
-  enterLeaveMessage: 'សូមបញ្ចូលសារ'
+  enterLeaveMessage: 'សូមបញ្ចូលសារ',
+  sellerDrl: 'ការលក់មិនទាន់សម្រេច',
+  purchaseDrl: 'ការទិញមិនទាន់សម្រេច',
+  warehouseDrl: 'ឃ្លាំងកំពុងរង់ចាំ',
+  financeDrl: 'ហិរញ្ញវត្ថុមិនទាន់សម្រេច'
 }

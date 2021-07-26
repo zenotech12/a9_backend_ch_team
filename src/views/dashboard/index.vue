@@ -24,10 +24,10 @@
                 <span>{{$t('order.order')}}</span>
               </div>
               <div class="sp cp">
-                <p @click="gotoUrl('orderList', { daiStatus: 'Seller'})">销售待认领：<span>{{statInfo.order_need_claim}}</span></p>
-                <p @click="gotoUrl('orderList', { daiStatus: 'Purchaser'})">采购待认领：<span>{{statInfo.order_purchaser_claim}}</span></p>
-                <p @click="gotoUrl('orderList', { daiStatus: 'Warehouse'})">仓库待认领：<span>{{statInfo.order_warehouser_claim}}</span></p>
-                <p @click="gotoUrl('orderList', { daiStatus: 'Finance'})">财务待认领：<span>{{statInfo.order_financer_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { daiStatus: 'Seller'})">{{$t('order.sellerDrl')}}：<span>{{statInfo.order_need_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { daiStatus: 'Purchaser'})">{{$t('order.purchaseDrl')}}：<span>{{statInfo.order_purchaser_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { daiStatus: 'Warehouse'})">{{$t('order.warehouseDrl')}}：<span>{{statInfo.order_warehouser_claim}}</span></p>
+                <p @click="gotoUrl('orderList', { daiStatus: 'Finance'})">{{$t('order.financeDrl')}}：<span>{{statInfo.order_financer_claim}}</span></p>
                 <p @click="gotoUrl('orderList', { order_status: 5})">{{$t('order.tobedelivered')}}<span>{{statInfo.need_ship}}</span></p>
               </div>
             </el-card>

@@ -220,5 +220,9 @@ export default {
   pleaseChoooseSaleAfterTip: 'Please check the products that need after-sales',
   leaveMessage: 'leave a message',
   leaveMessageSuccess: 'Message success',
-  enterLeaveMessage: 'Please enter a message'
+  enterLeaveMessage: 'Please enter a message',
+  sellerDrl: 'Sales pending',
+  purchaseDrl: 'Purchase pending',
+  warehouseDrl: 'Warehouse pending',
+  financeDrl: 'Finance pending'
 }

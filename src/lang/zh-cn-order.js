@@ -223,5 +223,9 @@ export default {
   pleaseChoooseSaleAfterTip: '请勾选需要售后的商品',
   leaveMessage: '留言',
   leaveMessageSuccess: '留言成功',
-  enterLeaveMessage: '请输入留言'
+  enterLeaveMessage: '请输入留言',
+  sellerDrl: '销售待认领',
+  purchaseDrl: '采购待认领',
+  warehouseDrl: '仓库待认领',
+  financeDrl: '财务待认领'
 }
