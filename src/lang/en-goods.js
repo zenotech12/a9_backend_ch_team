@@ -89,6 +89,7 @@ export default {
   saveGoods: 'Save product information',
   saveTip1: 'The product information has been saved successfully. Do you want to continue adding it?',
   saveTip2: 'Product information saved successfully!',
+  saveTip3: 'Whether to continue to add?',
   xgLabel: 'Limited purchase of products',
   xgLabel1: 'Unlimited purchase',
   xgLabel2: 'Limited purchase',

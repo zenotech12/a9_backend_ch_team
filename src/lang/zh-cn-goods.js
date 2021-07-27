@@ -89,6 +89,7 @@ export default {
   saveGoods: '保存商品信息',
   saveTip1: '商品信息保存成功,是否继续添加？',
   saveTip2: '商品信息保存成功!',
+  saveTip3: '是否继续添加?',
   xgLabel: '商品限购',
   xgLabel1: '不限购',
   xgLabel2: '限购',

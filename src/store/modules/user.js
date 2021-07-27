@@ -13,6 +13,7 @@ const user = {
       goods: { key: '', code: '', skip: 0, currentPage: 1 }
     },
     shopInfo: {},
+    tipShenhe: '',
     imInfo: {}
   },
 

@@ -48,7 +48,7 @@ export default {
   star2: '服务态度',
   star3: '快递',
   genTime: '下单时间',
-  servicer_id:'所有者',
+  servicer_id: '所有者',
   evaluateTime: '评论时间',
   reply: '回复',
   reply1: '回复内容',
@@ -140,10 +140,10 @@ export default {
   deliveryMethod: '配送方式',
   payMethod: '支付方式',
   expressDelivery: '快递',
-  ownerShipSelectAll:'所有',
-  ownerShipSelectSelf:'自己的',
-  ownerShipSelectUndo:'未认领',
-  ownerShipStatusSelect:'认领状态',
+  ownerShipSelectAll: '所有',
+  ownerShipSelectSelf: '自己的',
+  ownerShipSelectUndo: '未认领',
+  ownerShipStatusSelect: '认领状态',
   selfMention: '自提',
   rider: '骑手',
   onlinePay: '在线支付',
@@ -227,5 +227,6 @@ export default {
   sellerDrl: '销售待认领',
   purchaseDrl: '采购待认领',
   warehouseDrl: '仓库待认领',
-  financeDrl: '财务待认领'
+  financeDrl: '财务待认领',
+  receivingMethod: '收货方式'
 }

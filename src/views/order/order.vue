@@ -54,6 +54,26 @@
                   </el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item :label="$t('order.payMethod')">
+                <el-select v-model="searchForm.payinfo_pay_way" clearable style="width: 120px">
+                  <el-option
+                    v-for="(item, k) in payWayList"
+                    :key="k"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('order.receivingMethod')">
+                <el-select v-model="searchForm.post_way" clearable style="width: 120px">
+                  <el-option
+                    v-for="(item, k) in postWayList"
+                    :key="k"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item :label="$t('order.searchKey')">
                 <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 200px" clearable></el-input>
               </el-form-item>
@@ -968,7 +988,7 @@
           key: '',
           user_id: '',
           order_status: 16,
-          no: '00083295584156385281',
+          no: '',
           skip: 0,
           limit: pz,
           bt: '',
@@ -979,8 +999,46 @@
           purchaser_ownership_status: '', // 采购  0所有 1自己的 2未认领的
           pay_way: 0, // 支付方式  0 所有 1 在线支付 2 货到付款
           invoice: true,
-          type: 0 // 0 所有 5代购
+          type: 0, // 0 所有 5代购
+          payinfo_pay_way: '', // 0所有 5:ipay88 9:aba 2:余额 8:透支
+          post_way: '' // 0所有 1快递 2自提
         },
+        payWayList: [
+          {
+            value: 0,
+            label: this.$t('order.ownerShipSelectAll')
+          },
+          {
+            value: 5,
+            label: 'ipay88'
+          },
+          {
+            value: 9,
+            label: 'aba'
+          },
+          {
+            value: 2,
+            label: this.$t('lang.balance')
+          },
+          {
+            value: 8,
+            label: this.$t('order.overdraft')
+          }
+        ],
+        postWayList: [
+          {
+            value: 0,
+            label: this.$t('order.ownerShipSelectAll')
+          },
+          {
+            value: 1,
+            label: this.$t('order.star3')
+          },
+          {
+            value: 2,
+            label: this.$t('order.selfMention')
+          }
+        ],
         allprice: 0,
         tab_order_status: '0',
         orderTimes: [],
@@ -996,10 +1054,10 @@
         editorTitle: '',
         wareid: '',
         wareForm: {
-        skip: '',
-        limit: pz
+          skip: '',
+          limit: pz
         },
-        wareData2:[],
+        wareData2: [],
         optType: 1,
         dialogTitle: this.$t('order.express'),
         expressOrder: { shipping_address: { address: {}}},
@@ -1024,13 +1082,13 @@
         expressInfo: [],
         pageX: '',
         pageY: '',
-        ownerShipSelectUserId:'',
+        ownerShipSelectUserId: '',
         showOrderStatus: false,
         expressRiderInfo: [],
         addressArray: [],
         optionsAddress: [],
         warehousedata: '',
-        Waredata : [],
+        Waredata: [],
         typeProp: { value: 'name', label: 'name', children: 'children' },
         listV: [
           {

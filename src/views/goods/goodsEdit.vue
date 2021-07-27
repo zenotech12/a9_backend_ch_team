@@ -361,7 +361,7 @@
       <el-dialog :title="$t('goods.successTip')" width="30%" @close="showSuccessTip = false" :visible.sync="showSuccessTip" :close-on-click-modal="false" center>
         <el-row>
           <el-col :span="24" style="text-align: center">
-            <span>{{$t('goods.saveTip2')}}</span>
+            <span>{{$t('goods.saveTip2')}} {{tipTitle}}</span>
           </el-col>
         </el-row>
         <el-row>
@@ -537,7 +537,8 @@
         propeditingIndex: 0,
         propeditingTagIndex: 0,
         showSuccessTip: false,
-        currentId: ''
+        currentId: '',
+        tipTitle: ''
       }
     },
     created() {
@@ -1224,6 +1225,7 @@
           spusModify(this.goodsData.id, goodsItem).then(res => {
             this.goodsData.id = res.error
             this.disabled = false
+            this.tipTitle = res.msg ? res.msg : ''
             // this.$message.success(this.$t('goods.saveTip2'))
             this.showSuccessTip = true
           }).catch(() => {
@@ -1234,8 +1236,9 @@
           spusAdd(goodsItem).then(res => {
             this.goodsData.id = res.error
             this.disabled = false
+            const title = res.msg ? res.msg : ''
             draftsDel({ classify: 'spu' }).then(res => {})
-            this.$confirm(this.$t('goods.saveTip1'), this.$t('tools.prompt'), {
+            this.$confirm(this.$t('goods.saveTip2') + title + this.$t('goods.saveTip3'), this.$t('tools.prompt'), {
               confirmButtonText: this.$t('tools.confirm'),
               cancelButtonText: this.$t('goods.backGoodsList'),
               type: 'success'
