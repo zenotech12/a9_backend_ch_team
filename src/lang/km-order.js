@@ -199,5 +199,6 @@ export default {
   purchaseDrl: 'ការទិញមិនទាន់សម្រេច',
   warehouseDrl: 'ឃ្លាំងកំពុងរង់ចាំ',
   financeDrl: 'ហិរញ្ញវត្ថុមិនទាន់សម្រេច',
-  receivingMethod: 'វិធីសាស្រ្តទទួល'
+  receivingMethod: 'វិធីសាស្រ្តទទួល',
+  exportFuncTip: 'សូមនាំចេញ'
 }

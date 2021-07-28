@@ -225,5 +225,6 @@ export default {
   purchaseDrl: 'Purchase pending',
   warehouseDrl: 'Warehouse pending',
   financeDrl: 'Finance pending',
-  receivingMethod: 'Receiving method'
+  receivingMethod: 'Receiving method',
+  exportFuncTip: 'Exporting, please wait'
 }

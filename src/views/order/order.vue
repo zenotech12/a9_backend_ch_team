@@ -350,7 +350,7 @@
                   </template>
                 </el-table-column>
                 <!-- 商品 -->
-                <el-table-column  :label="$t('order.goods')" min-width="400">
+                <el-table-column :label="$t('order.goods')" min-width="400">
                   <template  slot-scope="scope">
                     <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
                       <img class="image imagecss" @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" :src="getImageUrl(gInfo.goods_info.sku_img, 100)">
@@ -501,7 +501,8 @@
                   <!--<el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>-->
                   <!-- 导出明细按钮 -->
                   <el-button size="mini" @click="batchDetailExportFunc">{{$t('tools.exportDetails')}}</el-button>
-                  <el-button size="mini" @click="exportFuncSale">{{$t('order.exportSaleReport')}}</el-button>
+                  <el-button size="mini" @click="exportFuncSale" v-if="exportDisabled">{{$t('order.exportSaleReport')}}</el-button>
+                  <el-button size="mini" icon="el-icon-loading" v-else>{{$t('order.exportFuncTip')}}</el-button>
                 <span class="allprice">{{$t('order.Totalprice')}} : <span>{{allprice | price}}</span></span>
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
@@ -1199,7 +1200,8 @@
           content: ''
         },
         roleName: '',
-        roleSearch: ''
+        roleSearch: '',
+        exportDisabled: true
       }
     },
     computed: {
@@ -1706,7 +1708,9 @@
         sf.skip = 0
         sf.limit = 20
         sf.sales_report = true
+        this.exportDisabled = false
         exportOrder(sf).then(res => {
+          this.exportDisabled = true
           window.location = res.url
         })
       },
