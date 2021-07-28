@@ -1696,6 +1696,9 @@
         })
       },
       exportFuncSale() {
+        if (!this.exportDisabled) {
+          return
+        }
         const sf = JSON.parse(JSON.stringify(this.searchForm))
         if (this.multipleSelection.length > 20) {
           this.$message.error(this.$t('order.batchDetailExportFunc'))
@@ -1712,6 +1715,8 @@
         exportOrder(sf).then(res => {
           this.exportDisabled = true
           window.location = res.url
+        }).catch(() => {
+          this.exportDisabled = true
         })
       },
       getKuaidi100Url(com, nu) {
