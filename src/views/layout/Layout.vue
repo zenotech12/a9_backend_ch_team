@@ -78,7 +78,7 @@ export default {
           // 创建通知
           _this.notification = new Notification(data.body.title, {
             // dir: 'ltr', // 通知的文字方向
-            // icon : 'icon',
+            icon: 'https://p.a9kh.com/files/a9.png',
             tag: data.body.id + '_' + data.body.type, // 值为字符串，指定通知的唯一标识
             body: data.body.msg
           })
