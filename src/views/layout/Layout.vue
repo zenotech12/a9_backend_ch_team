@@ -94,20 +94,28 @@ export default {
           // 通知被点击
           _this.notification.onclick = function() {
             // alert('通知被点击')
-            let pushUrl = {}
-            if (data.type === 2) { // 订单支付成功
-              pushUrl = { name: 'orderList' }
+            if (this.permissionCheck('view', '3_1') || this.permissionCheck('view', '3_2') || this.permissionCheck('view', '3_4')) {
+              let pushUrl = {}
+              if (this.permissionCheck('view', '3_1')) {
+                if (data.type === 2) { // 订单支付成功
+                  pushUrl = { name: 'orderList' }
+                }
+                if (data.type === 3) { // 订单取消
+                  pushUrl = { name: 'orderList', params: { order_status: 7 }}
+                }
+              }
+              if (this.permissionCheck('view', '3_2')) {
+                if (data.type === 5) { // 退货
+                  pushUrl = { name: 'orderReturn' }
+                }
+              }
+              if (this.permissionCheck('view', '3_4')) {
+                if (data.type === 4) { // 换货
+                  pushUrl = { name: 'orderExchange' }
+                }
+              }
+              _this.$router.push(pushUrl)
             }
-            if (data.type === 3) { // 订单取消
-              pushUrl = { name: 'orderList', params: { order_status: 7 }}
-            }
-            if (data.type === 4) { // 换货
-              pushUrl = { name: 'orderExchange' }
-            }
-            if (data.type === 5) { // 退货
-              pushUrl = { name: 'orderReturn' }
-            }
-            _this.$router.push(pushUrl)
           }
           // onerror 事件
           _this.notification.onerror = function(e) {
