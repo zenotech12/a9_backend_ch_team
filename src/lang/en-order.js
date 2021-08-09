@@ -226,5 +226,6 @@ export default {
   warehouseDrl: 'Warehouse pending',
   financeDrl: 'Finance pending',
   receivingMethod: 'Receiving method',
-  exportFuncTip: 'Exporting, please wait'
+  exportFuncTip: 'Exporting, please wait',
+  notArrived: 'Not arrived'
 }

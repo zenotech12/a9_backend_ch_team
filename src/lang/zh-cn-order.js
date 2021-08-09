@@ -229,5 +229,6 @@ export default {
   warehouseDrl: '仓库待认领',
   financeDrl: '财务待认领',
   receivingMethod: '收货方式',
-  exportFuncTip: '导出中，请稍等'
+  exportFuncTip: '导出中，请稍等',
+  notArrived: '未到货'
 }

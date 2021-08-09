@@ -200,5 +200,6 @@ export default {
   warehouseDrl: 'ឃ្លាំងកំពុងរង់ចាំ',
   financeDrl: 'ហិរញ្ញវត្ថុមិនទាន់សម្រេច',
   receivingMethod: 'វិធីសាស្រ្តទទួល',
-  exportFuncTip: 'សូមនាំចេញ'
+  exportFuncTip: 'សូមនាំចេញ',
+  notArrived: 'មិនទាន់មកដល់'
 }

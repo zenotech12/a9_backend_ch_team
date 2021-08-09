@@ -526,7 +526,7 @@
                 :disabled="item.disabled">
               </el-option>
             </el-select>
-            <el-switch v-model="filterData" active-text="所有" inactive-text="未到货" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            <el-switch v-model="filterData" :active-text="$t('lang.all')" :inactive-text="$t('order.notArrived')" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
             <div v-if="wareId">
               <div class="switchbox">
                 <span>{{$t('warehouse.Tobetested')}}</span>
