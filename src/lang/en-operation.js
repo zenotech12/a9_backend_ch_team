@@ -52,6 +52,7 @@ export default {
   validTime2Tip1: 'After receipt',
   validTime2Tip2: 'days available',
   getTime: 'Issuing period',
+  userRegBt: 'User Register Time',
   totalCount: 'Issuing total',
   perCount: 'Limit per person',
   perUser: '/Users',

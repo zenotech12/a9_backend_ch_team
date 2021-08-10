@@ -52,6 +52,7 @@ export default {
   validTime2Tip1: '至领取后',
   validTime2Tip2: '天可用',
   getTime: '发放时段',
+  userRegBt: '用户注册开始时间',
   totalCount: '发放总数',
   perCount: '每人限领',
   perUser: '/用户',
