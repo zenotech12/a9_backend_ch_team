@@ -79,6 +79,7 @@
                     </template>
                   </template>
                 </el-table-column>
+                <el-table-column prop="user_reg_bt" :label="$t('operation.userRegBt')"></el-table-column>
                 <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
                   <template slot-scope="scope">
                     <el-button type="text" @click="showCouponEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
@@ -163,6 +164,9 @@
                 align="right">
               </el-date-picker>
             </el-form-item>
+            <el-form-item :label="$t('operation.userRegBt')">
+              <el-date-picker type="date" v-model="userRegBt" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
+            </el-form-item>
             <el-form-item :label="$t('operation.perCount')">
               <el-input v-model.number="form.per_quota_count"><template slot="append">{{$t('operation.perUser')}}</template></el-input>
             </el-form-item>
@@ -236,6 +240,7 @@
         pageSize: pz,
         itemCount: 0,
         grantTime: [], // 发放时段
+        userRegBt: '',
         validTime: [], // 可用时段
         validType: false, // 有效期类型、 固定时段 or 动态时段
         form: formData,
@@ -264,6 +269,13 @@
         } else {
           this.form.bt = ''
           this.form.et = ''
+        }
+      },
+      userRegBt(val) {
+        if (val === '--') {
+           this.form.user_reg_bt = ''
+        } else {
+          this.form.user_reg_bt = val
         }
       },
       grantTime(val) {
@@ -321,6 +333,11 @@
       setForm(data) {
         if (data) {
           this.grantTime = [data.grant_bt, data.grant_et]
+          if (data.user_reg_bt !== "--") {
+            this.userRegBt = data.user_reg_bt
+          } else {
+            this.userRegBt = ''
+          }
           const temp = JSON.parse(JSON.stringify(data))
           temp.goods_spu_ids = temp.goods_spu_ids ? JSON.stringify(temp.goods_spu_ids) : ''
           temp.exchange_goods_ids = temp.exchange_goods_ids ? (Array.isArray(temp.exchange_goods_ids) ? JSON.stringify(temp.exchange_goods_ids) : temp.exchange_goods_ids) : ''
@@ -333,6 +350,7 @@
         } else {
           this.grantTime = []
           this.validTime = []
+          this.userRegBt = ''
           return {
             id: '',
             name: '',
