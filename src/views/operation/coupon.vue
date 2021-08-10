@@ -333,10 +333,11 @@
       setForm(data) {
         if (data) {
           this.grantTime = [data.grant_bt, data.grant_et]
-          if (data.user_reg_bt !== "--") {
-            this.userRegBt = data.user_reg_bt
+          if (data.user_reg_bt === '--') {
+              data.user_reg_bt = ''
+              this.userRegBt = ''
           } else {
-            this.userRegBt = ''
+            this.userRegBt = data.user_reg_bt
           }
           const temp = JSON.parse(JSON.stringify(data))
           temp.goods_spu_ids = temp.goods_spu_ids ? JSON.stringify(temp.goods_spu_ids) : ''
