@@ -606,6 +606,9 @@
                       {{scope.row.total_price | price}}
                     </template>
                   </el-table-column>
+                  <div slot="append" v-if="inwarehouseData.length === 0 && !filterData" class="tipMsg">{{$t('warehouse.noGoodsTipLook')}}
+                  <el-button type="text" @click="filterData = true">{{$t('tools.check')}}</el-button>
+                  </div>
               </el-table>
               <div style="margin-top: 10px;">
                 <el-input :placeholder="$t('warehouse.remarks')" type="textarea" :rows="2" v-model="inwarehouseFrom.comment"></el-input>
@@ -1982,6 +1985,12 @@
 </script>
 
 <style lang="scss" scoped>
+  .tipMsg {
+    position: absolute;
+    top: 52%;
+    width: 100%;
+    text-align: center;
+  }
   .totlaInv {
     height: 48px;
     font-size: 20px;

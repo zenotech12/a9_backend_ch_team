@@ -77,7 +77,7 @@ export default{
   location2Add: 'Add cargo space',
   line: 'Row',
   column: 'Column',
-  Delmsg : 'Please select the cargo space to be deleted',
+  Delmsg: 'Please select the cargo space to be deleted',
   parameterMsg: 'Parameter error',
   Purchaselist: 'Purchase list',
   Purchasenum: 'Purchase order quantity',
@@ -193,7 +193,8 @@ export default{
   exportData4: 'Export Express Note',
   merge: 'Merge',
   mergeInv: 'Consolidated inventory',
-  pleaseChooseInv: 'lease select inventory'
+  pleaseChooseInv: 'lease select inventory',
+  noGoodsTipLook: 'There are currently no products with specifications that have not arrived yet, click to view all specifications'
 
 }
 
