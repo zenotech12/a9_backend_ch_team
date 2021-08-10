@@ -540,7 +540,12 @@
             </el-form-item>
             <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
               <!--<div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>-->
-                <el-row class="goods-item" v-for="(gInfo,k) in expressOrder.merchant_item.goods_items" :key="k">
+              <el-switch
+                v-model="showWfh"
+                :active-text="$t('lang.all')"
+                :inactive-text="$t('order.status5')">
+              </el-switch>
+                <el-row class="goods-item" v-for="(gInfo,k) in goods_items"  :key="k">
                   <el-col :span="16">
                     <!--v-if="!allGoodsSend && gInfo.isHaveGoods"-->
                     <div class="chooseCheck" v-if="returnInvNumber(gInfo.goods_info, wareid) > 0 && gInfo.isHaveGoods">
@@ -548,7 +553,7 @@
                     </div>
                     <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)" fit="cover"></el-image>
                     <div class="g-info">
-                      <p>{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
+                      <p class="goodsNameStyle">{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
                       <p>
                         <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
                       </p>
@@ -689,6 +694,7 @@
             <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
+        <!--发货记录-->
         <el-dialog :title="$t('order.deliveryRecord')" width="1300px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
           <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 320px)">
             <el-table-column label="#" width="60px">
@@ -760,6 +766,7 @@
             <el-button size="small" @click="sendGoodsRecord = false">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
+        <!--修改物流信息-->
         <el-dialog
           width="30%"
           :title="$t('order.modifyExpress')"
@@ -1201,7 +1208,11 @@
         },
         roleName: '',
         roleSearch: '',
-        exportDisabled: true
+        exportDisabled: true,
+        goods_items: [],
+        allGoodsItems: [],
+        weifahuoGoods: [],
+        showWfh: false
       }
     },
     computed: {
@@ -1210,6 +1221,13 @@
       ])
     },
     watch: {
+      showWfh(val) {
+        if (!val) {
+          this.goods_items = this.weifahuoGoods
+        } else {
+          this.goods_items = this.allGoodsItems
+        }
+      },
       tab_order_status(val) {
         if (!this.doWatch) {
           return
@@ -1779,8 +1797,10 @@
         this.expressOrder = data
         this.optType = ot
         console.log(data);
+        const array = this.expressOrder.merchant_item.goods_items
         // console.log(ot);
         if (ot === 1) {
+          this.showWfh = false
           this.wareid = ''
           this.wareData2 = []
           warehousesList(this.wareForm).then(res=>{
@@ -1794,7 +1814,7 @@
           })
           const sku_uids = []
           const specifications = []
-          this.expressOrder.merchant_item.goods_items.forEach(goods => {
+          array.forEach(goods => {
             // goods.chooseGoods = true
             if (sendId.indexOf(goods.goods_info.oid) === -1) {
               this.$set(goods, 'chooseGoods', true)
@@ -1807,6 +1827,11 @@
             sku_uids.push(id)
             specifications.push(spe)
           })
+          this.weifahuoGoods = array.filter(v => {
+            return v.isHaveGoods === true
+          })
+          this.allGoodsItems = array
+          this.goods_items = this.weifahuoGoods
           warehouseGroupInven({ 'sku_uids': JSON.stringify(sku_uids), 'specifications': JSON.stringify(specifications), 'order_id': this.expressOrder.id, 'skip': 0, 'limit': 2000 }).then(res => {
             console.log('res', res)
             this.goodsInvList = res.items
@@ -1862,7 +1887,7 @@
         if (this.optType === 1) {
           this.sku_ids = []
           this.sku_specifications = []
-          this.expressOrder.merchant_item.goods_items.forEach(goods => {
+          this.allGoodsItems.forEach(goods => {
             if (!this.allGoodsSend) {
               if (goods.chooseGoods && goods.isHaveGoods === true && this.returnInvNumber(goods.goods_info, this.wareid) > 0) {
                 if (goods.goods_info.sku_url !== '') {
@@ -2169,6 +2194,7 @@
       p{
         margin: 0px;
         padding: 3px 0px;
+        line-height: 20px;
         span{
           color: #8c939d;
           font{
@@ -2182,6 +2208,7 @@
     }
     .kuchunBox {
       font-size: 20px;
+      margin-left: 20px;
     }
   }
   .ui{

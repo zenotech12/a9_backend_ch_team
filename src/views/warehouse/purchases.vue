@@ -526,6 +526,7 @@
                 :disabled="item.disabled">
               </el-option>
             </el-select>
+            <el-switch v-model="filterData" :active-text="$t('lang.all')" :inactive-text="$t('order.notArrived')" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
             <div v-if="wareId">
               <div class="switchbox">
                 <span>{{$t('warehouse.Tobetested')}}</span>
@@ -596,7 +597,7 @@
                       <div class="numclass">
                         <span><el-input v-model="scope.row.count"></el-input></span>
                         <span>{{scope.row.arrive_count}}</span>
-                        <span>{{scope.row.count}}</span>
+                        <span>{{scope.row.purchaseNumber}}</span>
                       </div>
                     </template>
                   </el-table-column>
@@ -1177,7 +1178,11 @@
           status: 2,
           comment: ''
         },
-        purchasesIds: []
+        purchasesIds: [],
+        filterData: false,
+        skusDataArray: [],
+        skusAllData: [],
+        currentWareId: ''
       }
     },
     computed: {
@@ -1189,6 +1194,13 @@
       // Rudalog(val){
 
       // },
+      filterData(val) {
+        if (!val) {
+          this.inwarehouseData = this.skusDataArray
+        } else {
+          this.inwarehouseData = this.skusAllData
+        }
+      },
       currentPagechuku(val) {
         this.chuKuSearchForm.skip = (val - 1) * this.pageSizechuku
         this.chuKuSearchForm.limit = this.pageSizechuku
@@ -1740,26 +1752,64 @@
           console.log(res.items,'5555555');
         })
         this.dialogVisible = true
-        this.inwarehouseData = data.skus
-        console.log('this.inwarehouseData', this.inwarehouseData)
-        // this.inwarehouseData.forEach(item => {
-        //   item.count = 1
-        // });
-        this.inwarehouseData.forEach((item, k) => {
-          this.$set(this.inwarehouseData[k], 'position', '')
+        this.currentWareId = data.id
+        // const array = JSON.parse(JSON.stringify(data.skus))
+        // array.forEach((item, k) => {
+        //   this.$set(item, 'position', '')
+        //   this.$set(item, 'purchaseNumber', item.count)
+        //   if (item.arrive_count >= item.purchaseNumber) {
+        //     item.count = 0
+        //   } else {
+        //     item.count = item.purchaseNumber - item.arrive_count
+        //   }
+        // })
+        // this.skusAllData = array
+        // this.skusDataArray = array.filter((item) => {
+        //   return (item.purchaseNumber - item.arrive_count) > 0
+        // })
+        // this.inwarehouseData = this.skusDataArray
+        // console.log('skusDataArray', this.skusDataArray)
+        // this.inwarehouseData = data.skus
+        // console.log('this.inwarehouseData', this.inwarehouseData)
+        // this.inwarehouseData.forEach((item, k) => {
+        //   this.$set(this.inwarehouseData[k], 'position', '')
+        //   this.$set(this.inwarehouseData[k], 'purchaseNumber', item.count)
+        // })
+      },
+      getstockinfo() {
+        warehouseReceipts(this.stockfrom).then( res => {
+          this.totaldata = res.items
+          this.itemCount_to = res.total
         })
       },
-      getstockinfo(){
-        warehouseReceipts(this.stockfrom).then(res=>{
-        this.totaldata = res.items
-        this.itemCount_to = res.total
-        })
-      },
-      addrukudata(){
+      addrukudata() {
         this.wareId = ''
         this.switchtype = false
         this.inwarehouselog = true
         this.inwarehouseFrom.status = ''
+        this.filterData = false
+        const obj = this.tableData.find(v => {
+          if (v.id === this.currentWareId) {
+            return v
+          }
+        })
+        if (obj !== null) {
+          const array = JSON.parse(JSON.stringify(obj.skus))
+          array.forEach((item, k) => {
+            this.$set(item, 'position', '')
+            this.$set(item, 'purchaseNumber', item.count)
+            if (item.arrive_count >= item.purchaseNumber) {
+              item.count = 0
+            } else {
+              item.count = item.purchaseNumber - item.arrive_count
+            }
+          })
+          this.skusAllData = array
+          this.skusDataArray = array.filter((item) => {
+            return (item.purchaseNumber - item.arrive_count) > 0
+          })
+          this.inwarehouseData = this.skusDataArray
+        }
       },
       onchange(e){
         this.getlocationList()
@@ -1814,6 +1864,7 @@
                   this.inwarehouselog = false
                   this.$message(this.$t('warehouse.addsuccess'))
                   this.getstockinfo()
+                  this.getDataListFun()
                 }
               }).catch(res=>{
                 this.inwarehouseFrom.skus = JSON.parse(this.inwarehouseFrom.skus)
