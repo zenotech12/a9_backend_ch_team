@@ -24,6 +24,7 @@ import showSkuPlist from './showSkuPulist'
 import purchasesList from './purchaseslist'
 import totalData from './totalData'
 import baseDataSelect from './baseDataSelect'
+import priceInputTwo from './priceInputTwo'
 
 // 形成组件库
 const components = [
@@ -49,7 +50,8 @@ const components = [
   showSkuPlist,
   purchasesList,
   totalData,
-  baseDataSelect
+  baseDataSelect,
+  priceInputTwo
 
 ]
 

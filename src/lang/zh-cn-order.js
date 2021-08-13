@@ -230,5 +230,6 @@ export default {
   financeDrl: '财务待认领',
   receivingMethod: '收货方式',
   exportFuncTip: '导出中，请稍等',
-  notArrived: '未到货'
+  notArrived: '未到货',
+  costChengben: '成本'
 }

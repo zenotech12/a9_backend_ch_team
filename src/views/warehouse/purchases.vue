@@ -225,7 +225,7 @@
             </el-form-item>
             <el-form-item :label="$t('warehouse.Purchaselist')">
               <!--<el-button type="primary" @click="addSkus" size="mini">{{$t('warehouse.add2')}}</el-button>-->
-              <el-table :data="skusArray" height="calc(100vh - 440px)" style="width: 100%">
+              <el-table :data="skusArray" height="calc(100vh - 500px)" style="width: 100%">
                 <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
                 <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')">
                   <template slot-scope="scope">
@@ -262,6 +262,11 @@
                 <el-table-column prop="total_price" :label="$t('warehouse.allprice')" width="150">
                   <template slot-scope="scope">
                     <price-input v-model="scope.row.total_price"></price-input>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="other_price" :label="$t('warehouse.otherPrice')" width="150">
+                  <template slot-scope="scope">
+                    <price-input-two v-model="scope.row.other_price"></price-input-two>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('tools.opt')" width="100">
@@ -908,8 +913,10 @@
   import { ordersInfo } from '@/api/order'
   import { spusSkusList, spusInfo, spuTypesList, spuTypesInfo } from '@/api/goods'
   import { fileUploadUrl } from '@/utils/serverConfig'
+  import priceInputNew from '@/components/priceInputNew'
   export default {
     components: {
+      priceInputNew
     },
     data() {
       const formData = this.setForm()
@@ -1271,7 +1278,7 @@
           const skus = this.getTreePath(0)
           skus.forEach(item => {
             console.log('item', item)
-            const tableItem = { id: '', name: val[0].goodsName, inventory: 0, origin: '', sku_uid: '', specification: JSON.stringify(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
+            const tableItem = { id: '', name: val[0].goodsName, inventory: 0, other_price: 0, origin: '', sku_uid: '', specification: JSON.stringify(item), shouJia: 0, unit_price: 0, total_price: 0, count: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -1296,7 +1303,7 @@
                 tableItem.inventory = this.goodsInventoryData[i].inventory
                 tableItem.unit_price = this.goodsInventoryData[i].price
                 tableItem.shouJia = this.goodsInventoryData[i].price
-                tableItem.barcode = this.goodsInventoryData[i].barcode
+                tableItem.other_price = this.goodsInventoryData[i].other_price
                 tableItem.total_price = this.goodsInventoryData[i].inventory * this.goodsInventoryData[i].price
               }
             }
@@ -1532,7 +1539,8 @@
                 shouJia: goodsinfo.unit_pay_price,
                 count: goodsinfo.count,
                 // nowCount: goodsinfo.count,
-                total_price: goodsinfo.pay_price
+                total_price: goodsinfo.pay_price,
+                other_price: goodsinfo.other_price ? goodsinfo.other_price : 0
               }
               const index = this.skusArray.findIndex(z => {
                 if (z.id === obj.id) {
@@ -1571,6 +1579,7 @@
             return
           }
           this.multipleSelection.forEach((item, k) => {
+            item['other_price'] = 0
             const index = this.skusArray.findIndex(v => {
               if (v.id === item.id) {
                 return v

@@ -227,5 +227,6 @@ export default {
   financeDrl: 'Finance pending',
   receivingMethod: 'Receiving method',
   exportFuncTip: 'Exporting, please wait',
-  notArrived: 'Not arrived'
+  notArrived: 'Not arrived',
+  costChengben: 'Cost'
 }

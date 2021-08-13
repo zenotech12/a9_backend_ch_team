@@ -196,5 +196,6 @@ export default {
   merge: '合并',
   mergeInv: '合并库存',
   pleaseChooseInv: '请选择库存',
-  noGoodsTipLook: '暂无有未到货的规格商品，点击查看所有规格商品.'
+  noGoodsTipLook: '暂无有未到货的规格商品，点击查看所有规格商品.',
+  otherPrice: '其他费用'
 }

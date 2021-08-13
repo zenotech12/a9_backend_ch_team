@@ -201,5 +201,6 @@ export default {
   financeDrl: 'ហិរញ្ញវត្ថុមិនទាន់សម្រេច',
   receivingMethod: 'វិធីសាស្រ្តទទួល',
   exportFuncTip: 'សូមនាំចេញ',
-  notArrived: 'មិនទាន់មកដល់'
+  notArrived: 'មិនទាន់មកដល់',
+  costChengben: 'ការចំណាយ'
 }

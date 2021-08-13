@@ -350,7 +350,7 @@
                   </template>
                 </el-table-column>
                 <!-- 商品 -->
-                <el-table-column :label="$t('order.goods')" min-width="400">
+                <el-table-column :label="$t('order.goods')" min-width="440">
                   <template  slot-scope="scope">
                     <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
                       <img class="image imagecss" @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" :src="getImageUrl(gInfo.goods_info.sku_img, 100)">
@@ -363,7 +363,12 @@
                         <p style="line-height: 15px;" @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)">
                           <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
                         </p>
-                        <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)"><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template><template v-else>{{gInfo.goods_info.price | price}}</template>；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</div>
+                        <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)">
+                          <span>{{$t('order.price3')}}：</span>
+                          <template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template>
+                          <template v-else>{{gInfo.goods_info.price | price}}</template>；
+                          <span>{{$t('order.costChengben')}}：{{costFunc(gInfo.goods_info) | price}}；</span>
+                          <span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</div>
                         <div v-if="scope.row.type === 5 && gInfo.goods_info.site_id">
                           <div v-if="goodsOid !== gInfo.goods_info.oid" style="color: #1E88E5">{{gInfo.goods_info.comment}} <span v-if="gInfo.goods_info.comment !== ''"> --- {{gInfo.goods_info.comment_time}}</span>
                             <i class="el-icon-edit" style="color: #1E88E5" v-if="goodsOid !== gInfo.goods_info.oid" @click.stop="showCommentGoods(gInfo.goods_info, scope.row.id)"></i>
@@ -375,7 +380,7 @@
                   </template>
                 </el-table-column>
                 <!-- 金额 -->
-                <el-table-column :label="$t('order.price')" width="130">
+                <el-table-column :label="$t('order.price')" width="150">
                   <template slot-scope="scope" >
                     <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
                     <span>({{$t('order.includePostage')}}：{{scope.row.postage | price}})</span>
@@ -439,7 +444,7 @@
                   </template>
                 </el-table-column>
                 <!-- 状态 -->
-                <el-table-column :label="$t('order.status')" width="90">
+                <el-table-column :label="$t('order.status')" width="140">
                   <template slot-scope="scope">
                     <el-tag v-if="scope.row.status !== 17">{{orderStatus[scope.row.status]}} </el-tag>
                     <el-tag v-else>{{$t('order.purchasPendReview')}}</el-tag>
@@ -447,7 +452,7 @@
                   </template>
                 </el-table-column>
                 <!-- 操作 -->
-                <el-table-column :label="$t('tools.opt')" width="150" fixed="right"  v-if="permissionCheck('opt', '3_1') || permissionCheck('opt', '8_1')">
+                <el-table-column :label="$t('tools.opt')" width="170" fixed="right"  v-if="permissionCheck('opt', '3_1') || permissionCheck('opt', '8_1')">
                   <template slot-scope="scope">
                     <template v-if="permissionCheck('opt', '3_1')">
                       <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">
@@ -1319,6 +1324,11 @@
         } else if (data === 'Warehouse') {
           this.roleName = 'Warehouse'
         }
+      },
+      costFunc(data) {
+        const str = data.purchase_other_price + data.purchase_total_price
+        const number = parseInt(str / data.count)
+        return number
       },
       roleReturn() {
         console.log('userInfo', this.userInfo)
