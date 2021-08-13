@@ -125,5 +125,6 @@ export default {
   noLowMarginGoods: 'មិនមែនទំនិញដែលមានកម្រិតចំណូលតិច',
   introGoods: 'លក្ខណៈពិសេស',
   introDetail: 'ការពិពណ៌នាជាអក្សរ',
-  goodslist: 'បញ្ជី​ទំនិញ'
+  goodslist: 'បញ្ជី​ទំនិញ',
+  wkcgm: 'ទិញដោយគ្មានភាគហ៊ុន'
 }

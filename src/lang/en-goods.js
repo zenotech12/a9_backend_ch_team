@@ -135,5 +135,6 @@ export default {
   noLowMarginGoods: 'Non-low-profit goods',
   introGoods: 'Features',
   introDetail: 'Text description',
-  goodslist: 'Product list'
+  goodslist: 'Product list',
+  wkcgm: 'Purchase without stock'
 }

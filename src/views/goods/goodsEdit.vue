@@ -257,6 +257,13 @@
                   {{$t('goods.limitDays')}}<el-input style="width: 100px; display: inline-block"   size="small" placeholder="" v-model.number="goodsData.buy_limit_day"></el-input>days
                 </template>
               </el-form-item>
+              <el-form-item :label="$t('goods.wkcgm')">
+                <el-switch
+                  v-model="goodsData.no_inventory_buy"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949">
+                </el-switch>
+              </el-form-item>
               <el-form-item :label="$t('goods.putaway')">
                 <el-col :span="4">
                   <el-select v-model="goodsData.shelf_status">
@@ -514,6 +521,7 @@
           images: [],
           desc: '',
           shelf_status: 2,
+          no_inventory_buy: false, // 无库存购买
           shelf_time: '',
           address_id: '',
           postage_setting_id: '',
@@ -746,6 +754,7 @@
           images: data.images,
           desc: data.desc,
           shelf_status: data.shelf_status === 2 ? 2 : 1,
+          no_inventory_buy: data.no_inventory_buy,
           shelf_time: data.shelf_time !== '--' ? data.shelf_time : this.$moment().format('YYYY-MM-DD HH:mm:ss'),
           address_id: data.address_id,
           postage_setting_id: data.postage_setting_id,
@@ -763,7 +772,7 @@
       },
       saveGoodsTime() {
         const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: this.goodsData.merchant_type_ids, name: this.goodsData.name, intro: this.goodsData.intro, intro_detail: this.goodsData.intro_detail,
-          type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: this.goodsData.images,
+          type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, no_inventory_buy: this.goodsData.no_inventory_buy, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: this.goodsData.images,
           buy_limit: this.goodsData.buy_limit, buy_limit_day: this.goodsData.buy_limit_day, desc: this.goodsData.desc }
         goodsItem['postage_setting_id'] = this.goodsData.postage_setting_id
         goodsItem['rider_post_support'] = this.goodsData.rider_post_support
@@ -1067,6 +1076,7 @@
             images: data.images,
             desc: data.desc,
             shelf_status: data.shelf_status === 2 ? 2 : 1,
+            no_inventory_buy: data.no_inventory_buy,
             shelf_time: data.shelf_time !== '--' ? data.shelf_time : this.$moment().format('YYYY-MM-DD HH:mm:ss'),
             address_id: data.address_id,
             postage_setting_id: data.postage_setting_id,
@@ -1108,6 +1118,7 @@
             shelf_status: 2,
             shelf_time: this.$moment().format('YYYY-MM-DD HH:mm:ss'),
             address_id: '',
+            no_inventory_buy: false,
             postage_setting_id: '',
             rider_post_support: false,
             buy_limit: 0,
@@ -1191,7 +1202,7 @@
       },
       updateGoodsFunc() {
         const goodsItem = { default_type_id: this.goodsData.default_type_id, merchant_type_ids: JSON.stringify(this.goodsData.merchant_type_ids), name: this.goodsData.name, intro: this.goodsData.intro, intro_detail: this.goodsData.intro_detail,
-          type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images),
+          type: this.goodsData.type, shelf_status: this.goodsData.shelf_status, no_inventory_buy: this.goodsData.no_inventory_buy, shelf_time: this.goodsData.shelf_time, cobuy_person_count: this.goodsData.cobuy_person_count, cobuy_group_valid_sec: this.goodsData.cobuy_group_valid_sec, images: JSON.stringify(this.goodsData.images),
           buy_limit: this.goodsData.buy_limit, buy_limit_day: this.goodsData.buy_limit_day, desc: this.goodsData.desc }
         goodsItem['postage_setting_id'] = this.goodsData.postage_setting_id
         goodsItem['rider_post_support'] = this.goodsData.rider_post_support
