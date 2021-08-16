@@ -83,6 +83,7 @@
                   <el-table-column :label="$t('tools.opt')"  v-if="permissionCheck('opt', '8_4')">
                     <template slot-scope="scope">
                       <el-button type="text" @click="inventoryMerge(scope.row)" size="small">{{$t('warehouse.merge')}}</el-button>
+                      <el-button type="text" v-if="scope.row.spu_id !== ''" @click="bindFunc(scope.row)" size="small">{{$t('warehouse.bind')}}</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -261,6 +262,44 @@
                 <confirm-button @confirmButton="submitMerge" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
               </div>
             </el-dialog>
+            <!--绑定-->
+            <el-dialog :title="bindTitleDialog" width="80%" @close="bindDialog=false" :visible.sync="bindDialog" :close-on-click-modal="false" center >
+              <el-table :data="guigeData"
+                        @row-click="chooseCurrentBind"
+                        highlight-current-row
+                        border stripe height="calc(100vh - 400px)" style="width: 100%">
+                <el-table-column label="#" width="60px">
+                  <template slot-scope="scope">
+                    {{scope.$index + bindSearchForm.skip + 1}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('warehouse.SpecificationsMsg')">
+                  <template slot-scope="scope">{{textFilter1(scope.row.specifications)}}</template>
+                </el-table-column>
+                <el-table-column :label="$t('goods.originalPrice')">
+                  <template slot-scope="scope">
+                    {{scope.row.original_price | price}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+                <el-table-column prop="inventory" :label="$t('tools.inventory')"></el-table-column>
+              </el-table>
+              <el-row>
+                <el-col :span="24">
+                  <div style="text-align: right;margin-top: 10px">
+                    <el-pagination
+                      :current-page.sync="currentPage_bind"
+                      :page-size="pageSize_bind"
+                      layout="total, prev, pager, next, jumper"
+                      :total="itemCount_bind"
+                    ></el-pagination>
+                  </div>
+                </el-col>
+              </el-row>
+              <div slot="footer" class="dialog-footer">
+                <confirm-button @confirmButton="submitBind" :disabled="submitDisabledBind" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+              </div>
+            </el-dialog>
           </div>
         </el-col>
       </el-row>
@@ -270,7 +309,7 @@
 
 <script>
 import { warehousegroup, purchaseAdd, suppliersList, warehouseInventMerge } from "@/api/warehouse";
-import { spuTypesList } from '@/api/goods'
+import { spuTypesList, spusSkusList } from '@/api/goods'
 
 export default {
   data() {
@@ -363,7 +402,23 @@ export default {
         sort: 'count' // count 库存升序 -count库存降序
       },
       submitDisabledMerge: false,
-      titleDialog: ''
+      titleDialog: '',
+      bindDialog: false,
+      bindTitleDialog: '',
+      bindForm: {
+        self_skuuid: '',
+        merge_skuuid: ''
+      },
+      guigeData: [],
+      currentPage_bind: 1,
+      pageSize_bind: 15,
+      itemCount_bind: 0,
+      bindSearchForm: {
+        skip: 0,
+        limit: 10
+      },
+      bindSpuid: '',
+      submitDisabledBind: false
     }
   },
   watch: {
@@ -376,12 +431,32 @@ export default {
       this.mergeSearchForm.skip = (val - 1) * this.pageSize_merge
       this.mergeSearchForm.limit = this.pageSize_merge
       this.getShowTable()
+    },
+    currentPage_bind(val) {
+      this.bindSearchForm.skip = (val - 1) * this.pageSize_bind
+      this.bindSearchForm.limit = this.pageSize_bind
+      this.getGuigeInfo()
     }
   },
   methods: {
+    textFilter1(data) {
+      try {
+        var obj = data
+        var specArr = []
+        Object.keys(obj).forEach((k) => {
+          specArr.push(k + ':' + obj[k])
+        })
+        return specArr.join(';')
+      } catch (e) {
+        return data
+      }
+    },
     chooseCurrent(data) {
       // console.log('data', data)
       this.mergeForm.merge_skuuid = data.sku_uid
+    },
+    chooseCurrentBind(data) {
+      this.bindForm.merge_skuuid = data.id
     },
     submitMerge() {
       if (this.mergeForm.merge_skuuid === '') {
@@ -412,6 +487,38 @@ export default {
       warehousegroup(this.mergeSearchForm).then((res) => {
         this.mergeTable = res.items
         this.itemCount_merge = res.total
+      })
+    },
+    submitBind() {
+      if (this.bindForm.merge_skuuid === '') {
+        this.$message.error(this.$t('warehouse.Pleaseselect') + this.$t('warehouse.pecifications'))
+        return
+      }
+      this.submitDisabledBind = true
+      console.log('bindForm', this.bindForm)
+      warehouseInventMerge(this.bindForm).then(res => {
+        if (res.meta === 0) {
+          this.submitDisabledBind = false
+          this.bindDialog = false
+          this.gettotaldata()
+        } else {
+          this.submitDisabledBind = false
+        }
+      }).catch(() => {
+        this.submitDisabledBind = false
+      })
+    },
+    bindFunc(data) {
+      this.bindForm.self_skuuid = data.sku_uid
+      this.bindDialog = true
+      this.bindSpuid = data.spu_id
+      this.bindTitleDialog = this.$t('warehouse.bind') + '--' + this.textFilter(data.specification)
+      this.getGuigeInfo()
+    },
+    getGuigeInfo() {
+      spusSkusList(this.bindSpuid, this.bindSearchForm).then((res) => {
+        this.guigeData = res.items
+        this.itemCount_bind = res.total
       })
     },
     getSupplierList() {

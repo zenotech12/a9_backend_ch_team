@@ -228,5 +228,6 @@ export default {
   receivingMethod: 'Receiving method',
   exportFuncTip: 'Exporting, please wait',
   notArrived: 'Not arrived',
-  costChengben: 'Cost'
+  costChengben: 'Cost',
+  yhqdk: 'Coupon deduction'
 }

@@ -195,7 +195,8 @@ export default{
   mergeInv: 'Consolidated inventory',
   pleaseChooseInv: 'lease select inventory',
   noGoodsTipLook: 'There are currently no products with specifications that have not arrived yet, click to view all specifications',
-  otherPrice: 'Other fee'
+  otherPrice: 'Other fee',
+  bind: 'Bind'
 
 }
 

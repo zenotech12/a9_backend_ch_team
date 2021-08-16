@@ -231,5 +231,6 @@ export default {
   receivingMethod: '收货方式',
   exportFuncTip: '导出中，请稍等',
   notArrived: '未到货',
-  costChengben: '成本'
+  costChengben: '成本',
+  yhqdk: '优惠券抵扣'
 }

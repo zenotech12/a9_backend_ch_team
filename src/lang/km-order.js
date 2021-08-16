@@ -202,5 +202,6 @@ export default {
   receivingMethod: 'វិធីសាស្រ្តទទួល',
   exportFuncTip: 'សូមនាំចេញ',
   notArrived: 'មិនទាន់មកដល់',
-  costChengben: 'ការចំណាយ'
+  costChengben: 'ការចំណាយ',
+  yhqdk: 'ការកាត់ប័ណ្'
 }

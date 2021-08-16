@@ -383,7 +383,14 @@
                 <el-table-column :label="$t('order.price')" width="150">
                   <template slot-scope="scope" >
                     <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
-                    <span>({{$t('order.includePostage')}}：{{scope.row.postage | price}})</span>
+                    <div>(
+                      <span v-if="scope.row.discount_coupon > 0">
+                        {{$t('order.yhqdk')}}：{{scope.row.discount_coupon | price}}
+                      </span>
+                      <span>
+                       {{$t('order.includePostage')}}：{{scope.row.postage | price}}
+                      </span>
+                      )</div>
                     <div class="ui">
                       <span>{{$t('order.payMethod')}}：</span>
                       {{payMethod[scope.row.pay_way_top - 1]}}
