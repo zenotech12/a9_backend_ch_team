@@ -229,5 +229,6 @@ export default {
   exportFuncTip: 'Exporting, please wait',
   notArrived: 'Not arrived',
   costChengben: 'Cost',
-  yhqdk: 'Coupon deduction'
+  yhqdk: 'Coupon deduction',
+  actuallyPay: 'The amount actually paid'
 }

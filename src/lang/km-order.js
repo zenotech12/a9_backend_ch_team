@@ -203,5 +203,6 @@ export default {
   exportFuncTip: 'សូមនាំចេញ',
   notArrived: 'មិនទាន់មកដល់',
   costChengben: 'ការចំណាយ',
-  yhqdk: 'ការកាត់ប័ណ្'
+  yhqdk: 'ការកាត់ប័ណ្',
+  actuallyPay: 'ចំនួនទឹកប្រាក់ដែលបានបង់ពិតប្រាកដ'
 }

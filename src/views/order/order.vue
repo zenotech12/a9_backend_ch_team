@@ -380,17 +380,17 @@
                   </template>
                 </el-table-column>
                 <!-- 金额 -->
-                <el-table-column :label="$t('order.price')" width="150">
+                <el-table-column :label="$t('order.price')" width="200">
                   <template slot-scope="scope" >
-                    <span :title="$t('order.price1') + '+' + $t('order.price2')"><template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template> {{scope.row.pay_price | price}}</span><span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
-                    <div>(
-                      <span v-if="scope.row.discount_coupon > 0">
-                        {{$t('order.yhqdk')}}：{{scope.row.discount_coupon | price}}
-                      </span>
-                      <span>
-                       {{$t('order.includePostage')}}：{{scope.row.postage | price}}
-                      </span>
-                      )</div>
+                    <span :title="$t('order.price1') + '+' + $t('order.price2')">
+                      <template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template>
+                      <span>{{$t('order.actuallyPay')}}：</span>{{scope.row.pay_price | price}}
+                    </span>
+                    <span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
+                    <span> ({{$t('order.includePostage')}}：{{scope.row.postage | price}} )</span>
+                    <div class="ui" v-if="scope.row.discount_coupon > 0">
+                      <span>{{$t('order.yhqdk')}}：</span>{{scope.row.discount_coupon | price}}
+                      </div>
                     <div class="ui">
                       <span>{{$t('order.payMethod')}}：</span>
                       {{payMethod[scope.row.pay_way_top - 1]}}
@@ -508,16 +508,16 @@
                 </el-table-column>
               </el-table>
               <el-row style="margin-top: 10px">
-                <el-col :span="6">
+                <el-col :span="10">
                   <!-- 导出按钮 -->
                   <!--<el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>-->
                   <!-- 导出明细按钮 -->
                   <el-button size="mini" @click="batchDetailExportFunc">{{$t('tools.exportDetails')}}</el-button>
                   <el-button size="mini" @click="exportFuncSale" v-if="exportDisabled">{{$t('order.exportSaleReport')}}</el-button>
                   <el-button size="mini" icon="el-icon-loading" v-else>{{$t('order.exportFuncTip')}}</el-button>
-                <span class="allprice">{{$t('order.Totalprice')}} : <span>{{allprice | price}}</span></span>
+                <span class="allprice">{{$t('order.Totalprice')}} : <span>{{allprice | price}}</span>, {{$t('order.yhqdk')}}: <span>{{coupon_money | price}}</span></span>
                 </el-col>
-                <el-col :span="18" style="text-align: right;">
+                <el-col :span="14" style="text-align: right;">
                   <el-pagination v-if="itemCount > 0"
                     :current-page.sync="currentPage"
                     :page-size.sync="pageSize"
@@ -1060,6 +1060,7 @@
           }
         ],
         allprice: 0,
+        coupon_money: 0,
         tab_order_status: '0',
         orderTimes: [],
         tableData: [],
@@ -1999,6 +2000,7 @@
         // console.log('SetSearchParam', this.$store.state.app.searchParam)
         ordersList(this.searchForm).then(res => {
           this.allprice = res.total_money
+          this.coupon_money = res.coupon_money
           this.doWatch = true
           this.tableData = res.items ? res.items : []
           this.itemCount = res.total
