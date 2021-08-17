@@ -1323,7 +1323,7 @@ export default {
       }
     },
     wareLocaladd() {
-      if (this.linestar < this.lineend && this.columnstar < this.columnend) {
+      if (this.linestar <= this.lineend && this.columnstar <= this.columnend) {
         const positions = []
           for (let i = this.linestar; i <= this.lineend; i++) {
             for (let j = this.columnstar; j <= this.columnend; j++) {
