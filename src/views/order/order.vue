@@ -110,7 +110,7 @@
         <el-row>
           <el-col :span="24">
             <div style="height: calc(100vh - 290px)">
-              <el-table stripe border :data="tableData" height="calc(100% - 40px)" @selection-change="handleSelectionChange">
+              <el-table :row-class-name="tableRowClassName" border :data="tableData" height="calc(100% - 40px)" @selection-change="handleSelectionChange">
                 <el-table-column
                   type="selection"
                   width="45">
@@ -453,7 +453,7 @@
                 <!-- 状态 -->
                 <el-table-column :label="$t('order.status')" width="140">
                   <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status !== 17">{{orderStatus[scope.row.status]}} </el-tag>
+                    <el-tag v-if="scope.row.status !== 17">{{$t(orderStatus[scope.row.status])}} </el-tag>
                     <el-tag v-else>{{$t('order.purchasPendReview')}}</el-tag>
                     <span style="font-size: 12px" v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2">({{$t('order.cashOnDelivery')}})</span>
                   </template>
@@ -998,8 +998,8 @@
         showTab: false,
         servicerOptArr: { 1: this.$t('order.servicerOpt1'), 2 : this.$t('order.servicerOpt2'), 3: this.$t('order.cancelClaim') },
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
-        orderStatus: [this.$t('tools.all'), this.$t('order.status1'), this.$t('order.status2'), this.$t('order.status3'), this.$t('order.status4'), this.$t('order.status5'),
-          this.$t('order.status6'), this.$t('order.status7'), this.$t('order.status8'), '', this.$t('order.status10')],
+        orderStatus: ['tools.all', 'order.status1', 'order.status2', 'order.status3', 'order.status4', 'order.status5',
+          'order.status6', 'order.status7', 'order.status8', '', 'order.status10'],
         orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '17', label: this.$t('order.status1') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
           { value: '10', label: this.$t('order.status10') }, { value: '7', label: this.$t('order.status7') }],
         orderStatusTabList: [{ value: '0', label: this.$t('tools.all') }, { value: '17', label: this.$t('order.status1') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
@@ -1322,6 +1322,9 @@
       }
     },
     methods: {
+      tableRowClassName({ row }) {
+        return this.orderStatus[row.status].split('.')[1]
+      },
       commandFunc(data) {
         if (data === 'Seller') {
           this.roleName = 'Seller'
@@ -2158,6 +2161,22 @@
     }
   }
 </script>
+
+<style>
+  .el-table .status7{
+    background: #ff9090;
+  }
+  .el-table .status5{
+    background: #fff59a;
+  }
+  .el-table .status8,
+  .el-table .status4{
+      background: #afffb3;
+  }
+  .el-table .status2{
+    background: #96fffa;
+  }
+</style>
 
 <style lang="scss" scoped>
   .searchTimeBox {
