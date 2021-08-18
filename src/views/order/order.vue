@@ -2163,18 +2163,18 @@
 </script>
 
 <style>
-  .el-table .status7{
+  .el-table .status7 td:nth-child(-n+3){
     background: #ff9090;
   }
-  .el-table .status5{
-    background: #fff59a;
+  .el-table .status5 td:nth-child(-n+3){
+    background: #ffe600;
   }
-  .el-table .status8,
-  .el-table .status4{
-      background: #afffb3;
+  .el-table .status8 td:nth-child(-n+3),
+  .el-table .status4 td:nth-child(-n+3){
+      background: #00da0b;
   }
-  .el-table .status2{
-    background: #96fffa;
+  .el-table .status2 td:nth-child(-n+3){
+    background: #00f0e4;
   }
 </style>
 
