@@ -1,5 +1,5 @@
 import Layout from '../views/layout/Layout'
-const warehouse = [{
+const Reminder = [{
   path: '/Reminder',
   component: Layout,
   name: 'Reminder',
@@ -7,11 +7,11 @@ const warehouse = [{
   meta: { title: 'ReminderSet', icon: 'inventory', code: '10' },
   children: [
     {
-        path: 'list',
-        name: 'list',
-        meta: { title: 'memorandum', icon: 'list', code: '10_1' },
-        component: () => import('@/views/reminder/memorandum')
-      },
+      path: 'list',
+      name: 'list',
+      meta: { title: 'memorandum', icon: 'list', code: '10_1' },
+      component: () => import('@/views/reminder/memorandum')
+    }
   ]
 }]
-export default warehouse
+export default Reminder

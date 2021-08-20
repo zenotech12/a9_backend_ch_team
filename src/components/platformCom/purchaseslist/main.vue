@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-input readonly :placeholder="$t('warehouse.TipsMsg2')">
+    <el-input readonly :placeholder="$t('warehouse.TipsMsg2')" :value="value">
       <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
     </el-input>
     <el-dialog :title="$t('warehouse.pulist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
@@ -81,6 +81,7 @@ export default {
       data: '',
       val: '',
       key: '',
+      value: ''
     };
   },
 
@@ -123,6 +124,7 @@ export default {
       this.$emit("dataid", this.data)
       this.$emit("getvalue", this.val)
       this.$emit("key", this.key)
+      this.value = this.data.no
       this.setCurrent()
     },
     Searchlist(){

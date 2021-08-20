@@ -204,5 +204,9 @@ export default {
   notArrived: 'មិនទាន់មកដល់',
   costChengben: 'ការចំណាយ',
   yhqdk: 'ការកាត់ប័ណ្',
-  actuallyPay: 'ចំនួនទឹកប្រាក់ដែលបានបង់ពិតប្រាកដ'
+  actuallyPay: 'ចំនួនទឹកប្រាក់ដែលបានបង់ពិតប្រាកដ',
+  saleGoodsReportExport: 'នាំចេញរបាយការណ៍លក់',
+  inventroyGoodsExport: 'នាំចេញរបាយការណ៍សារពើភ័ណ្ឌ',
+  purchaseGoodsExport: 'នាំចេញរបាយការណ៍ទំនិញបញ្ជាទិញ',
+  exportDate: 'កាលបរិច្ឆេទនាំចេញ'
 }

@@ -74,5 +74,7 @@ export default {
   AbnormalLogin: '异常登录',
   ReminderSet: '备忘管理',
   overdraftSet: '透支设置',
-  selfPickStation: '自提点设置'
+  selfPickStation: '自提点设置',
+  exportMgr: '导出管理',
+  reportExport: '报告导出'
 }

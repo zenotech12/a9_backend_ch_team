@@ -230,5 +230,9 @@ export default {
   notArrived: 'Not arrived',
   costChengben: 'Cost',
   yhqdk: 'Coupon deduction',
-  actuallyPay: 'The amount actually paid'
+  actuallyPay: 'The amount actually paid',
+  saleGoodsReportExport: 'Export sales report',
+  inventroyGoodsExport: 'Export inventory report',
+  purchaseGoodsExport: 'Export Purchase Order Commodity Report',
+  exportDate: 'Export date'
 }

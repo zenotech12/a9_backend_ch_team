@@ -75,5 +75,7 @@ export default {
   AbnormalLogin: 'Abnormal Login',
   ReminderSet: 'Memo management',
   overdraftSet: 'Overdraft Settings',
-  selfPickStation: 'Self-pickup point'
+  selfPickStation: 'Self-pickup point',
+  xportMgr: 'Export management',
+  reportExport: 'Report export'
 }

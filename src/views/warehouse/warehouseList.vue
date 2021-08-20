@@ -611,7 +611,7 @@
               <el-input v-model="rukuForm.comment" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('warehouse.order')" v-if="rukuForm.tp == '2'">
-              <show-sku-table :resetForm="resetForm" :position="positionList" v-model="rukuForm.skus"></show-sku-table>
+              <show-sku-table :resetForm="resetForm" :position="positionList" @getOrderId="getOrderId" v-model="rukuForm.skus"></show-sku-table>
             </el-form-item>
             <el-form-item :label="$t('warehouse.Purchaseorder')" v-if="rukuForm.tp == '1'">
                <show-sku-plist :warehouseId2="wareId" :resetForm="resetForm1" @pulist='pulist' @getid='getid' v-model="rukuForm.skus"></show-sku-plist>
@@ -802,7 +802,7 @@ export default {
       },
       // 库存信息
       inventoriesSearchForm: {
-        key:'',
+        key: '',
         warehouse_id: '',
         position: '',
         sku_uid: '',
@@ -822,7 +822,8 @@ export default {
         purchase_id: '',
         warehouse_id: '',
         skus: [],
-        comment: ''
+        comment: '',
+        order_id: ''
       },
       purchaseListData: [],
       chuRuKuDialog: false,
@@ -1013,6 +1014,9 @@ export default {
     },
     'rukuForm.tp': function(val) {
       console.log('tpp', val)
+      if (val === '1') {
+        this.rukuForm.order_id = ''
+      }
     }
   },
   methods: {
@@ -1020,6 +1024,13 @@ export default {
       warehouseOutboundReview(id, { status: number }).then(res => {
         this.getChuKuData()
       })
+    },
+    getOrderId(data) {
+      if (this.rukuForm.tp === '2') {
+        this.rukuForm.order_id = data
+      } else {
+        this.rukuForm.order_id = ''
+      }
     },
     test() {
       console.log(this.chukuData)
@@ -1072,24 +1083,25 @@ export default {
       this.rukuDialog = false
     },
     addRuKuForm() {
-          this.flag = this.rukuForm.skus.every(item => {
-            return item.position != ''
-          });
-          console.log(this.flag);
-          if(this.flag == true){
-            this.rukuForm.skus = JSON.stringify(this.rukuForm.skus)
-            warehouseReceiptsAdd(this.rukuForm).then(res => {
-              if (res.meta === 0) {
-                this.rukuDialog = false
-                this.getRuKuData()
-                this.resetOrder()
-              }
-            }).catch(res=>{
-              this.rukuForm.skus = JSON.parse(this.rukuForm.skus)
-            })
-          }else{
-             this.$message(this.$t('warehouse.placeLoc'))
+      // console.log('form', this.rukuForm)
+      this.flag = this.rukuForm.skus.every(item => {
+        return item.position != ''
+      });
+      console.log(this.flag);
+      if(this.flag == true){
+        this.rukuForm.skus = JSON.stringify(this.rukuForm.skus)
+        warehouseReceiptsAdd(this.rukuForm).then(res => {
+          if (res.meta === 0) {
+            this.rukuDialog = false
+            this.getRuKuData()
+            this.resetOrder()
           }
+        }).catch(res=>{
+          this.rukuForm.skus = JSON.parse(this.rukuForm.skus)
+        })
+      } else {
+        this.$message(this.$t('warehouse.placeLoc'))
+      }
     },
     rukuFunc() {
       this.resetForm = false

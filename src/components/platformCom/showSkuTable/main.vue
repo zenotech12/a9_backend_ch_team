@@ -95,6 +95,7 @@
       orderId(val) {
         if (val !== '') {
           this.getOrderInfo(val)
+          this.$emit('getOrderId', val)
         }
       },
       skus: {
