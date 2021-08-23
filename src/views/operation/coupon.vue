@@ -36,7 +36,7 @@
           <el-col :span="24">
             <div style="height: calc(100vh - 235px)">
               <el-table stripe border :data="tableData" height="calc(100% - 40px)">
-                <el-table-column label="#" width="60px" fixed="left">
+                <el-table-column label="#" width="60px" >
                   <template slot-scope="scope">
                     {{scope.$index + searchForm.skip + 1}}
                   </template>
@@ -61,7 +61,7 @@
                 </el-table-column>
                 <el-table-column  :label="$t('operation.totalCount')">
                   <template  slot-scope="scope">
-                    {{scope.row.used_count + '/' + scope.row.total_count}}
+                    <el-button type="text" @click="showCouponGetList(scope.row)">{{scope.row.used_count + '/' + scope.row.total_count}}</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('operation.getTime')" v-if="tabStatus === 'coupon'">
@@ -99,6 +99,7 @@
             </div>
           </el-col>
         </el-row>
+        <!--优惠券添加-->
         <el-dialog :title="$t('operation.couponEdit')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
           <el-form label-width="100px" :model="form">
             <el-form-item :label="$t('operation.name')">
@@ -206,6 +207,65 @@
             <confirm-button @confirmButton="saveAdFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
           </div>
         </el-dialog>
+        <!--优惠券已领取列表-->
+        <el-dialog :title="$t('operation.couponCollectionList')" width="80%" @close="couponGetDialog=false" :visible.sync="couponGetDialog" :close-on-click-modal="false" center >
+          <el-table stripe border :data="couponReceivedList" height="calc(100vh - 450px)">
+            <el-table-column label="#" width="60px">
+              <template slot-scope="scope">
+                {{scope.$index + couponGetedForm.skip + 1}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="name" :label="$t('operation.couponName')"></el-table-column>
+            <el-table-column :label="$t('operation.couponType')">
+              <template  slot-scope="scope">
+                {{couponType[scope.row.type-1].name}}
+                <template v-if="scope.row.type === 1">[{{scope.row.quantity_discount_value | price}}]</template>
+                <template v-else-if="scope.row.type === 2">[{{scope.row.percentage_discount_value}}%]</template>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('operation.couponCond')">
+              <template slot-scope="scope">
+                {{$t('operation.couponCondA')}} {{scope.row.threshold | price}} {{$t('operation.couponCondB')}}
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('operation.rangeType')">
+              <template slot-scope="scope">
+                {{rangeType[scope.row.range_type-1].name}}
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('operation.userInfo')">
+              <template slot-scope="scope">
+                {{scope.row.user_nick_name}} {{scope.row.user_login_name}}
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('operation.isUsed')">
+              <template slot-scope="scope">
+                {{scope.row.used === true ? $t('warehouse.yes') : $t('warehouse.no')}}
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('operation.isOverlay')">
+              <template slot-scope="scope">
+                {{scope.row.overlay === true ? $t('warehouse.yes') : $t('warehouse.no')}}
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('operation.validTime')">
+              <template slot-scope="scope">
+                {{scope.row.bt + $t('operation.to') + scope.row.et}}
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="text-align: right;margin-top: 10px">
+            <el-pagination
+              :current-page.sync="currentPageCoupon"
+              :page-size="pageSizeCoupon"
+              layout="total, prev, pager, next, jumper"
+              :total="itemCountCoupon">
+            </el-pagination>
+          </div>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="primary" @click="couponGetDialog = false">{{$t('tools.close')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -214,7 +274,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import goodsSelector from '@/components/goodsSelector'
-  import { couponAdd, couponModify, couponList, couponDelete } from '@/api/operation'
+  import { couponAdd, couponModify, couponList, couponDelete, couponsList } from '@/api/operation'
   import { spuTypesList } from '@/api/goods'
   export default {
     components: {
@@ -248,7 +308,17 @@
         submitDisabled: false,
         goodsTypeData: [],
         tabStatus: 'coupon',
-        live_template: true
+        live_template: true,
+        couponGetedForm: {
+          setting_coupon_id: '',
+          skip: 0,
+          limit: pz
+        },
+        couponGetDialog: false,
+        couponReceivedList: [],
+        currentPageCoupon: 1,
+        pageSizeCoupon: pz,
+        itemCountCoupon: 0
       }
     },
     computed: {
@@ -273,7 +343,7 @@
       },
       userRegBt(val) {
         if (val === '--') {
-           this.form.user_reg_bt = ''
+          this.form.user_reg_bt = ''
         } else {
           this.form.user_reg_bt = val
         }
@@ -288,6 +358,11 @@
         this.searchForm.skip = (val - 1) * this.pageSize
         this.searchForm.limit = this.pageSize
         this.getCouponListFun()
+      },
+      currentPageCoupon(val) {
+        this.couponGetedForm.skip = (val - 1) * this.pageSizeCoupon
+        this.couponGetedForm.limit = this.pageSizeCoupon
+        this.getCouponsGetList()
       },
       timeValidSwitch(val) {
         this.searchForm.time_valid = val ? 1 : 0
@@ -304,6 +379,19 @@
       }
     },
     methods: {
+      showCouponGetList(data) {
+        this.couponGetedForm.setting_coupon_id = data.id
+        this.getCouponsGetList()
+        this.couponGetDialog = true
+      },
+      getCouponsGetList() {
+        couponsList(this.couponGetedForm).then(res => {
+          if (res.meta === 0) {
+            this.couponReceivedList = res.items
+            this.itemCountCoupon = res.total
+          }
+        })
+      },
       liveChangeTemplate(v) {
         this.searchForm.live_template = !v
         this.searchForm.skip = 0

@@ -197,6 +197,10 @@ export default {
   selfPickStationSet: 'Pickup point setting',
   orderQuantity: 'Order volume',
   finishOrderQuantity: 'Completed order volume',
-  orderStock: 'Order stock'
+  orderStock: 'Order stock',
+  couponCollectionList: 'Coupon collection list',
+  couponName: 'Coupon name',
+  isUsed: 'Whether to use',
+  isOverlay: 'Can be superimposed'
 
 }

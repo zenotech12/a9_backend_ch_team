@@ -529,3 +529,11 @@ export function selfPickStationsDel(id) {
   })
 }
 
+// 优惠券已领取。查。列表
+export function couponsList(data) {
+  return request({
+    url: 'coupons',
+    method: 'get',
+    params: data
+  })
+}
