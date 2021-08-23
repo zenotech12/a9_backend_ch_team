@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="8" :offset="8">
             <el-form>
-              <el-form-item :label="$t('order.exportDate')">
+              <el-form-item :label="$t('order.exportDate')" style="margin-top: 60px">
                 <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable style="width: 260px;"
                                 v-model="saleTime"
                                 type="daterange"
