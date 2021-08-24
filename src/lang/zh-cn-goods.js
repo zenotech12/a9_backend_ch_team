@@ -142,5 +142,6 @@ export default {
   introGoods: '特色',
   introDetail: '文字说明',
   goodslist: '商品列表',
-  wkcgm: '无库存购买'
+  wkcgm: '无库存购买',
+  goodsCode: '商品编码'
 }

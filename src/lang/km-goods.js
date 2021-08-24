@@ -126,5 +126,6 @@ export default {
   introGoods: 'លក្ខណៈពិសេស',
   introDetail: 'ការពិពណ៌នាជាអក្សរ',
   goodslist: 'បញ្ជី​ទំនិញ',
-  wkcgm: 'ទិញដោយគ្មានភាគហ៊ុន'
+  wkcgm: 'ទិញដោយគ្មានភាគហ៊ុន',
+  goodsCode: 'លេខ​កូដ​ទំនិញ'
 }

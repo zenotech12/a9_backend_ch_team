@@ -89,6 +89,21 @@
                       {{scope.row.title}}
                     </template>
                   </el-table-column>
+                  <el-table-column :label="$t('goods.goodsCode')">
+                    <template slot="header" slot-scope="scope">
+                      {{$t('goods.goodsCode')}}
+                      <el-popover placement="bottom"
+                                  width="200"
+                                  trigger="click">
+                        <el-input v-model.number="itemCode">
+                        </el-input>
+                        <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                      </el-popover>
+                    </template>
+                    <template  slot-scope="scope">
+                      <el-input v-model="scope.row.item_code"></el-input>
+                    </template>
+                  </el-table-column>
                   <el-table-column  :label="$t('goods.barcode')">
                     <template  slot-scope="scope">
                       <el-input v-model="scope.row.barcode"></el-input>
@@ -406,6 +421,7 @@
         batchPrice: 0,
         batchRTag: '',
         batchOPrice: 0,
+        itemCode: 0,
         langInfo: {},
         currentLang: 'zh',
         languages: languages,
@@ -586,6 +602,11 @@
           this.$set(item, 'inventory', val)
         })
       },
+      itemCode(val) {
+        this.goodsInventoryTable.forEach(item => {
+          this.$set(item, 'item_code', val)
+        })
+      },
       batchPrice(val) {
         this.goodsInventoryTable.forEach(item => {
           this.$set(item, 'price', val)
@@ -620,7 +641,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { specifications: item, price: 0, original_price: 0, price_recommend_key: '', cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
+            const tableItem = { specifications: item, price: 0, item_code: '', original_price: 0, price_recommend_key: '', cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -642,6 +663,7 @@
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.no = this.goodsInventoryData[i].no
                 tableItem.price = this.goodsInventoryData[i].price
+                tableItem.item_code = this.goodsInventoryData[i].item_code
                 tableItem.original_price = this.goodsInventoryData[i].original_price
                 tableItem.price_recommend_key = this.goodsInventoryData[i].price_recommend_key
                 tableItem.weight = this.goodsInventoryData[i].weight

@@ -136,5 +136,6 @@ export default {
   introGoods: 'Features',
   introDetail: 'Text description',
   goodslist: 'Product list',
-  wkcgm: 'Purchase without stock'
+  wkcgm: 'Purchase without stock',
+  goodsCode: 'Commodity code'
 }
