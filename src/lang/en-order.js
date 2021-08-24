@@ -12,6 +12,7 @@ export default {
   price1: 'Product amount',
   price2: 'Shipping fees',
   price3: 'Unit Price',
+  itemCode: 'Item Code',
   price4: 'Payment amount',
   price4Tip: 'After the price has been modified, users can pay according to the new price',
   price4Tip1: 'Price modified successfully',

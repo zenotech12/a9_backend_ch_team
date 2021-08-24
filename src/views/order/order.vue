@@ -364,6 +364,7 @@
                           <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
                         </p>
                         <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)">
+                          <span>{{$t('order.itemCode')}}：{{gInfo.goods_info.item_code}}</span>
                           <span>{{$t('order.price3')}}：</span>
                           <template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template>
                           <template v-else>{{gInfo.goods_info.price | price}}</template>；
