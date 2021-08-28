@@ -53,7 +53,9 @@ export default {
   no: 'អត់ទេ',
   imgUploadTip1: 'ទាញឯកសារមកដាក់ទីនេះ ឬ',
   imgUploadTip2: 'ចុចដើម្បីអាប់ឡូត',
-  imgUploadTip3: 'មានតែឯកសារ JPG / PNG ប៉ុណ្ណោះដែលអាចអាប់ឡូតបាន ហើយមិនត្រូវលើសពី',
+  imgUploadTip3: 'មានតែឯកសារ JPG / PNG ប៉ុណ្ណោះដែលអាចអាប់ឡូតបាន ហើយមិនត្រូវលើសពី ',
   uploadImgFormat: 'រូបភាពអាប់ឡូតបានតែក្នុងទម្រង់ជា JPG, PNG ប៉ុណ្ណោះ!',
-  uploadImgNoMoreThan: 'ទំហំរូបភាពអាប់ឡូតមិនត្រូវលើសពីការកំណត់'
+  uploadImgNoMoreThan: 'ទំហំរូបភាពអាប់ឡូតមិនត្រូវលើសពីការកំណត់',
+  exportDetails: 'ព័ត៌មានលម្អិតនាំចេញ',
+  selectAll: 'ជ្រើសរើស​ទាំងអស់'
 }

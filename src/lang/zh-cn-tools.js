@@ -64,5 +64,5 @@ export default {
   batchAdd: '批量添加',
   uploadImgFormat: '上传图片只能是 JPG、PNG 格式!',
   uploadImgNoMoreThan: '上传图片大小不能超过',
-  exportDetails: '导出明细'
+  exportDetails: '导出明细',
 }

@@ -9,10 +9,9 @@
             </el-col>
           </el-row>
           <el-row >
-            <el-col :span="24" class="funcBoxTitle2">
-              <template v-if="permissionCheck('opt')">
-                <i class="el-icon-circle-plus-outline" @click="showTypeEditForm"></i>
-                <span @click="showTypeEditForm" >{{$t('goods.addType')}}</span>
+            <el-col :span="24" style="text-align: right; padding: 10px">
+              <template v-if="permissionCheck('opt')" style="padding: 10px 50px">
+                <el-button type="success" size="small" @click="showTypeEditForm" icon="el-icon-plus">{{$t('goods.addType')}}</el-button>
               </template>
             </el-col>
           </el-row>
@@ -32,28 +31,29 @@
               </el-tree>
             </div>
           </div>
-          <el-dialog :title="$t('sys.Basicdata')" :visible.sync="FormVisible" center width="500px" :close-on-click-modal="false">
-            <el-form :model="formType" label-width="80px">
-              <el-form-item :label="$t('goods.name')" prop="name" label-width="80px">
+          <el-dialog :visible.sync="FormVisible" center width="500px" :close-on-click-modal="false">
+            <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('sys.Basicdata')}}</span>
+            <el-form :model="formType" label-width="80px" label-position="left">
+              <el-form-item :label="$t('goods.name')" prop="name" >
                 <el-input v-model="formType.name" auto-complete="off" clearable></el-input>
               </el-form-item>
-              <el-form-item :label="$t('sys.coding')" label-width="80px" style="margin-top: 20px">
+              <el-form-item :label="$t('sys.coding')" style="margin-top: 20px">
                 <el-input v-model="formType.code" auto-complete="off" clearable></el-input>
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
               <confirm-button @confirmButton="editType()"></confirm-button>
-              <el-button @click="FormVisible = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+              <el-button @click="FormVisible = false" size="small" style="margin-right:5px; margin-left:10px;">{{$t('tools.cancel')}}</el-button>
             </div>
           </el-dialog>
         </el-col>
         <el-col :span="20" class="funcBox">
           <div class="rightbox">
             <el-row>
-              <el-col :span="24" class="funcList" style="padding-left: 20px">
+              <el-col :span="24" class="funcList" style="padding: 10px 15px; padding-right: 0">
                 <div class="boxFuncBtn" @click="addData"  v-if="permissionCheck('opt')">
-                  <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-                  <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+                  <!-- <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add"> -->
+                  <el-button type="success" size="small" icon="el-icon-plus">{{$t('tools.add')}}</el-button>
                 </div>
               </el-col>
             </el-row>
@@ -66,10 +66,9 @@
                   <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
                   <el-table-column prop="code" :label="$t('sys.coding')"></el-table-column>
                   <el-table-column prop="gen_time" :label="$t('sys.addTime')"></el-table-column>
-                  <el-table-column :label="$t('warehouse.operation')" width = "140"  v-if="permissionCheck('opt')">
+                  <el-table-column :label="$t('warehouse.operation')" width = "180"  v-if="permissionCheck('opt')" align="center">
                     <template slot-scope="scope">
-                      <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                      <span class="xiexian">/</span>
+                      <el-button @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                       <delete-button @delData="deleteDataFunc(scope.row)"></delete-button>
                     </template>
                   </el-table-column>
@@ -86,10 +85,11 @@
                 </div>
               </el-col>
             </el-row>
-            <el-dialog :title="$t('sys.BasicdataSet')" width="500px" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-              <el-form label-width="100px" :model="form">
+            <el-dialog width="500px" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+              <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('sys.BasicdataSet')}}</span>
+              <el-form label-width="120px" label-position="left" :model="form">
                 <el-form-item :label="$t('goods.parentType')">
-                  <el-select v-model="form.parent_tree_code" :placeholder="$t('sys.pleasechoose')">
+                  <el-select v-model="form.parent_tree_code" :placeholder="$t('sys.pleasechoose')" style="width: 100%">
                     <el-option
                       v-for="item in typeDataList"
                       :key="item.id"
@@ -107,7 +107,7 @@
               </el-form>
               <div slot="footer" class="dialog-footer">
                 <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
-                <el-button @click="formEditDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+                <el-button @click="formEditDialog = false" size="small" style="margin-right: 5px; margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
               </div>
             </el-dialog>
           </div>

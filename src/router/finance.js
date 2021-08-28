@@ -5,16 +5,16 @@ const finance = [{
   component: Layout,
   name: 'finance',
   redirect: '/finance/list',
-  meta: { title: 'financeMgr', icon: 'inventory', code: '5' },
+  meta: { title: 'financeMgr', icon: 'el-icon-s-finance', code: '5' },
   children: [{
     path: 'list',
     name: 'financeList',
-    meta: { title: 'financeList', icon: 'list', code: '5_1' },
+    meta: { title: 'financeList', icon: 'el-icon-s-finance', code: '5_1' },
     component: () => import('@/views/finance/finance')
   }, {
     path: 'tixian',
     name: 'financeTixian',
-    meta: { title: 'financeTixian', icon: 'list', code: '5_2' },
+    meta: { title: 'financeTixian', icon: 'el-icon-s-finance', code: '5_2' },
     component: () => import('@/views/finance/tixian')
   }]
 }]

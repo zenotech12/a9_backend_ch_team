@@ -32,5 +32,6 @@ export default {
   totalTrans: 'ទឹកប្រាក់សរុប',
   distributionDeduction: 'ការកាត់បន្ថយការចែកចាយ',
   cash: 'សាច់ប្រាក់',
-  nonCash: 'មិនមែនសាច់ប្រាក់'
+  nonCash: 'មិនមែនសាច់ប្រាក់',
+  withdraw: 'ដកប្រាក់'
 }

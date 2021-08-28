@@ -1,14 +1,15 @@
-@import './variables.scss';
-@import './mixin.scss';
-@import './transition.scss';
-@import './element-ui.scss';
-@import './sidebar.scss';
+@import "./variables.scss";
+@import "./mixin.scss";
+@import "./transition.scss";
+@import "./element-ui.scss";
+@import "./sidebar.scss";
 
 body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
 }
 
 html {
@@ -21,7 +22,7 @@ html {
   box-sizing: inherit;
 }
 
-div:focus{
+div:focus {
   outline: none;
 }
 
@@ -38,51 +39,59 @@ a:hover {
   text-decoration: none;
 }
 
-.clearfix {
-  &:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
-  }
-}
+// .clearfix {
+//   &:after {
+//     visibility: hidden;
+//     display: block;
+//     font-size: 0;
+//     content: " ";
+//     clear: both;
+//     height: 0;
+//   }
+// }
 
 //main-container全局样式
-.app-main{
-  min-height: 100%
+.app-main {
+  min-height: 100%;
 }
 
 .app-container {
   padding: 20px;
 }
 
-.page-footer{
+.page-footer {
   position: fixed;
   bottom: 0px;
   border-top: 1px solid #e5e5e5;
-  padding: 10px 0px 10px 100px;
+  // padding: 10px 0px 10px 100px;
+  padding: 10px 240px 10px 100px;
   width: 100%;
   background-color: #ffffff;
+  z-index: 10;
+  
+  text-align: right;
 }
 
-.goods-item{
-  .image{
+.goods-item {
+  display: flex;
+  align-items: center;
+  .image {
     float: left !important;
-    margin-right: 5px !important;
+    margin-right: 8px !important;
+    // border: 0.2px solid rgba(0, 0, 0, 0.3);
   }
-  .g-info{
-    padding-left: 65px;
+  .g-info {
+    // padding-left: 65px;
     text-align: left;
-    p{
+    p {
       margin: 0px;
-      padding: 3px 0px;
-      span{
-        color: #8c939d;
-        font{
-          color: #606266;
-        }
+      padding: 0px 0px;
+      span {
+        margin-left: 8px;
+        // color: #8c939d;
+        // font {
+        //   color: #606266;
+        // }
       }
     }
   }

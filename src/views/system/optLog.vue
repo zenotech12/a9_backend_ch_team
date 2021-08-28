@@ -5,11 +5,11 @@
           <el-row>
             <el-col>
               <el-form :inline="true" :model="searchForm" @submit.native.prevent>
-                <el-form-item :label="$t('order.searchKey')">
-                  <el-input v-model="searchForm.key" style="width: 250px" @keyup.native.enter="search" clearable></el-input>
+                <el-form-item>
+                  <el-input v-model="searchForm.key" style="width: 250px" @keyup.native.enter="search" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
                 </el-form-item>
                 <el-form-item class="searchBtn">
-                    <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                    <el-button type="primary" @click="search" icon="el-icon-search" style="padding: 8px 15px">{{$t('sys.search')}}</el-button>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -22,14 +22,14 @@
                   {{scope.$index + searchForm.skip + 1}}
                 </template>
               </el-table-column>
-              <el-table-column prop="user_nick_name"  width="200px" :label="$t('sys.optUser')">
+              <el-table-column prop="user_nick_name"  width="200px" :label="$t('sys.optUser')" show-overflow-tooltip>
                 <template slot-scope="scope">
                   {{scope.row.user_nick_name}}/{{scope.row.user_login_name}}
                 </template>
               </el-table-column>
-              <el-table-column prop="gen_time" width="160px" :label="$t('sys.optTime')"></el-table-column>
-              <el-table-column prop="opt_module" width="200px" :label="$t('sys.optModule')"></el-table-column>
-              <el-table-column prop="opt_content" :label="$t('sys.optContent')"></el-table-column>
+              <el-table-column prop="gen_time" width="180px" :label="$t('sys.optTime')"></el-table-column>
+              <el-table-column prop="opt_module" width="300px" :label="$t('sys.optModule')" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="opt_content" :label="$t('sys.optContent')" show-overflow-tooltip></el-table-column>
             </el-table>
             <template v-if="itemCount !== 0">
               <div style="text-align: right;margin-top: 10px">

@@ -90,6 +90,7 @@ export default {
   pbGoods1: '参与秒杀的商品规格、价格以及数量',
   tgGoods: '团购商品',
   tgGoodsEdit: '团购商品设置',
+  viewIssued: "View issued coupons",
   tgTimes: '团购时段',
   tgPrice: '团购价格设置',
   tgPrice1: '团购价/当前价',
@@ -198,9 +199,6 @@ export default {
   selfPickStationSet: '自提点设置',
   orderQuantity: '订单量',
   finishOrderQuantity: '已完成订单量',
-  orderStock: '订单存量',
-  couponCollectionList: '优惠券领取列表',
-  couponName: '优惠券名称',
-  isUsed: '是否使用',
-  isOverlay: '是否可叠加'
+  orderStock: '订单存量'
+
 }

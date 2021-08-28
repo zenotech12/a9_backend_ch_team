@@ -1,507 +1,504 @@
 <template>
   <div class="sys-body">
-    <div class="sys-neiBody">
-      <!-- 搜索 -->
-      <el-row  style="margin-top: 24px;">
-        <el-col :span="4" class="funcTree" style="margin-left: 0">
+    <!-- 搜索 -->
+    <el-row>
+      <el-col :span="4" class="funcTree" style="margin-left: 0;">
+        <el-row>
+          <el-col :span="24" style="height: 39px; border-bottom: 1px solid #e7e9ed; display: flex; align-items: center; padding-left: 15px; font-weight:bold;">
+            <div >{{$t('goods.type')}}</div>
+          </el-col>
+        </el-row>
+        <el-row >
+          <el-col :span="24" style="text-align: right; padding: 10px">
+            <el-button  v-if="permissionCheck('opt')" size="small" type="success" @click="showTypeEditForm" icon="el-icon-plus" >
+            <span >{{$t('goods.addType')}}</span>
+            </el-button >
+          </el-col>
+        </el-row>
+        <div class="custom-tree-container" style="">
+          <div class="block">
+            <el-tree  style="height: calc(100vh - 200px); background: none; overflow-y: auto;"
+                      :data="goodsTypeData"
+                      node-key="id"
+                      :props="defaultProps"
+                      @node-click="typeChangeFunc"
+                      @node-expand="nodeOpen"
+                      @node-collapse="nodeClose"
+                      :default-expanded-keys="defaultExpanded"
+                      :expand-on-click-node="false"
+                      :render-content="renderContent"
+            >
+            </el-tree>
+          </div>
+        </div>
+        <el-dialog :visible.sync="FormVisible" @close="cancel1" center width="500px" :close-on-click-modal="false">
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('goods.typeEdit')}}</span>
+          <el-form :model="forms" :rules="formRules" ref="forms" label-width="100px" label-position="left">
+            <el-form-item :label="$t('goods.parentType')" v-if="isShowType">
+              <el-cascader :disabled="cascaderDisabled" :options="typeData" :props="typeProps" v-model="parentType" clearable style="width: 100%"></el-cascader>
+            </el-form-item>
+            <el-form-item :label="$t('goods.name')" prop="name">
+              <el-input v-model="forms.name" auto-complete="off" clearable></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('goods.serialNo')">
+              <el-input v-model="forms.serial_no" auto-complete="off" clearable></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('goods.note')">
+              <el-input type="textarea" :rows="2" v-model="forms.desc" auto-complete="off" clearable></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <confirm-button @confirmButton="editType('form')"></confirm-button>
+            <el-button @click="cancel1" size="small" style="margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
+          </div>
+        </el-dialog>
+      </el-col>
+      <el-col :span="20" class="funcBox">
+          <!-- 搜索 -->
+          <el-tabs v-model="tab_shelf_status" >
+                <el-tab-pane v-for="item in shelfStatus" :key="item.value" :label="item.label" :name="item.value + ''" style="height: 0; padding: 0;"></el-tab-pane>
+          </el-tabs>
+        <div class="rightbox">
           <el-row>
-            <el-col :span="24" class="funcBoxTitle">
-              <div class="small_title">{{$t('goods.type')}}</div>
+            <el-col :span="20" style="padding-left: 10px">
+              <el-form :inline="true" :model="searchForm">
+                <el-form-item>
+                  <el-select v-model="searchForm.approve_status" @change="search" :placeholder="$t('goods.checkSelectorHolder')">
+                    <el-option
+                      v-for="item in approveStatus"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-input v-model="searchForm.name" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
+                </el-form-item>
+                <el-form-item class="searchBtn">
+                  <el-button type="primary" @click="search" size="small" icon="el-icon-search">{{$t('sys.search')}}</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <el-col :span="4" style="text-align: right; padding-right: 10px" v-if="permissionCheck('opt')">
+              <div class="boxFuncBtn">
+                <el-button type="success" size="small" icon="el-icon-plus" @click="showGoodsEditor(null, 1)">{{$t('tools.add')}}</el-button>
+              </div>
             </el-col>
           </el-row>
-          <el-row >
-            <el-col :span="24" class="funcBoxTitle2">
-              <template v-if="permissionCheck('opt')">
-              <i class="el-icon-circle-plus-outline" @click="showTypeEditForm"></i>
-              <span @click="showTypeEditForm" >{{$t('goods.addType')}}</span>
+          <el-row>
+            <el-col :span="24" style="height: calc(100vh - 219px)">
+              <el-table stripe v-loading="tableData.loading" border :data="tableData.body" height="calc(100% - 52px)" style="width: 100%;" row-key="id"  @selection-change="handleSelectionChange">
+                <el-table-column
+                  type="selection"
+                  width="55">
+                </el-table-column>
+                <el-table-column label="#" width="60px" fixed="left">
+                  <template slot-scope="scope">
+                    {{scope.$index + searchForm.skip + 1}}
+                  </template>
+                </el-table-column>
+                <el-table-column  :label="$t('goods.name')" min-width="200">
+                <template  slot-scope="scope">
+                  <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
+                    <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
+                    <div class="g-info">
+                      <p>{{scope.row.name}}
+                        <el-tag size="small" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
+                        <el-tag size="small" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                        <!--<a class="el-icon-view"></a>-->
+                      </p>
+                    </div>
+                  </a>
+                </template>
+              </el-table-column>
+                <el-table-column :label="$t('goods.checkStatus')" width="185" align="center" header-align="left">
+                  <template  slot-scope="scope">
+                    <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
+                      {{scope.row.approve_status === 2 ? $t('goods.checkStatusB') : (scope.row.approve_status === 3 ?  $t('goods.checkStatusC') :  $t('goods.checkStatusA') )}}
+                    </el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('goods.putawayG')" width="120" align="center" header-align="left">
+                  <template  slot-scope="scope">
+                    <el-tooltip v-if="scope.row.approve_status === 2" class="item" effect="dark" :content="$t('goods.putawayTip')" placement="top">
+                      <el-tag @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
+                        {{scope.row.shelf_status === 2 ?$t('goods.putawayA') : $t('goods.putawayB')}}
+                      </el-tag>
+                    </el-tooltip>
+                    <template v-else>
+                      --
+                    </template>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('goods.price')" width="75">
+                  <template  slot-scope="scope">
+                    <template v-if="scope.row.type === 3">
+                      <el-tag size="small" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
+                      <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>
+                      <span v-else>{{scope.row.min_price}}</span>
+                    </template>
+                    <template v-else>
+                      <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
+                      <span v-else>{{scope.row.min_price | price}}</span>
+                    </template>
+                  </template>
+                </el-table-column>
+                <!--<el-table-column prop="inventory" width="75"  :label="$t('goods.inventory')">-->
+                <!--</el-table-column>-->
+                <el-table-column prop="sales" width="75"  :label="$t('goods.saled')">
+                </el-table-column>
+                <el-table-column prop="gen_time" width="170"  :label="$t('goods.publishTime')">
+                </el-table-column>
+                <el-table-column :label="$t('tools.opt')" width = "170" fixed="right" v-if="permissionCheck('opt')" align="center" header-align="left">
+                  <template slot-scope="scope">
+                    <template v-if="!scope.row.deleted" style="display: flex; align-items: center;">
+                      <!-- <a :href="'/goods/publish?id=' + scope.row.id" target="_blank" style="color: #1E88E5">{{$t('tools.edit')}}</a> -->
+                      <a :href="'/goods/publish?id=' + scope.row.id" target="_blank" style="width: 100%; margin-right: 10px;"><el-button size="small">{{$t("tools.edit")}}</el-button></a>
+                      <!--<el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>-->
+                      <!-- <span class="xiexian">/</span> -->
+                      <!-- <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">{{$t('goods.price')}}</el-button> -->
+                      <!-- <span class="xiexian">/</span> -->
+                      <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
+                      <!-- <el-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"><i class="el-icon-delete"></i></el-button> -->
+                    </template>
+                    <template v-else>
+                      <el-button type="text" @click="goodsRestoreFun(scope.row)" size="small">{{$t('goods.restore')}}</el-button>
+                    </template>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <template v-if="itemCount !== 0">
+                <el-row style="margin-top: 10px">
+                  <el-col :span="8">
+                    <template v-if="permissionCheck('opt')">
+                      <template v-if="searchForm.deleted">
+                        <el-button size="small" @click="batchRestoreFunc()">{{$t('goods.restore')}}</el-button>
+                      </template>
+                      <template v-else-if="searchForm.shelf_status === 2">
+                        <el-button type="danger" plain size="small" @click="bathShelfFunc(1)">{{$t('tools.shelfOff')}}</el-button>
+                        <el-button size="small" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                      </template>
+                      <template v-else-if="searchForm.shelf_status === 1">
+                        <el-button size="small" @click="bathShelfFunc(2)">{{$t('tools.shelfOn')}}</el-button>
+                        <el-button size="small" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
+                      </template>
+                    </template>
+                    &nbsp;
+                  </el-col>
+                  <el-col :span="16"  style="text-align: right;">
+                    <el-pagination
+                      :current-page.sync="currentPage"
+                      :page-sizes="[10, 30, 50, 100, 500]"
+                      :page-size.sync="pageSize"
+                      layout="total, prev, pager, next, jumper, sizes"
+                      :total="itemCount">
+                    </el-pagination>
+                  </el-col>
+                </el-row>
               </template>
             </el-col>
           </el-row>
-          <div class="custom-tree-container">
-            <div class="block">
-              <el-tree style="height: calc(100vh - 265px); overflow-y: auto;"
-                       :data="goodsTypeData"
-                       node-key="id"
-                       :show-checkbox="false"
-                       :props="defaultProps"
-                       @node-click="typeChangeFunc"
-                       @node-expand="nodeOpen"
-                       @node-collapse="nodeClose"
-                       :default-expanded-keys="defaultExpanded"
-                       :expand-on-click-node="false"
-                       :render-content="renderContent"
-              >
-              </el-tree>
-            </div>
-          </div>
-          <el-dialog :title="$t('goods.typeEdit')" :visible.sync="FormVisible" @close="cancel1" center width="500px" :close-on-click-modal="false">
-            <el-form :model="forms" :rules="formRules" ref="forms" label-width="80px">
-              <el-form-item :label="$t('goods.parentType')" v-if="isShowType"  label-width="80px">
-                <el-cascader :disabled="cascaderDisabled" :options="typeData" :props="typeProps" v-model="parentType" clearable></el-cascader>
-              </el-form-item>
-              <el-form-item :label="$t('goods.name')" prop="name" label-width="80px">
-                <el-input v-model="forms.name" auto-complete="off" clearable></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('goods.serialNo')" label-width="80px">
-                <el-input v-model="forms.serial_no" auto-complete="off" clearable></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('goods.note')" label-width="80px">
-                <el-input type="textarea" :rows="2" v-model="forms.desc" auto-complete="off" clearable></el-input>
-              </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-              <confirm-button @confirmButton="editType('form')"></confirm-button>
-              <el-button @click="cancel1" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
-            </div>
-          </el-dialog>
-        </el-col>
-        <el-col :span="20" class="funcBox">
-          <div class="rightbox">
-            <!-- 搜索 -->
-            <el-row>
-              <el-col :span="24">
-                <el-tabs style="height: 40px; overflow: hidden" v-model="tab_shelf_status">
-                  <el-tab-pane style="height: 44px" v-for="item in shelfStatus" :key="item.value" :label="item.label" :name="item.value + ''"></el-tab-pane>
-                </el-tabs>
-              </el-col>
-              <el-col :span="20" style="padding: 0px 15px ">
-                <el-form :inline="true" :model="searchForm">
-                  <el-form-item>
-                    <el-select v-model="searchForm.approve_status" @change="search" :placeholder="$t('goods.checkSelectorHolder')">
+          <el-dialog :title="$t('goods.edit')" width="90%" @close="cancelGoodsEdit" :visible.sync="goodsEditorShow" :close-on-click-modal="false" center>
+            <el-steps :active="goodsEditStep" style="margin-bottom: 20px; display: none">
+              <el-step :title="$t('goods.step1')" :description="$t('goods.step1Tip')"></el-step>
+              <el-step :title="$t('goods.step2')" :description="$t('goods.step2Tip')"></el-step>
+              <el-step :title="$t('goods.step3')" :description="$t('goods.step3Tip')"></el-step>
+              <el-step :title="$t('goods.step4')" :description="$t('goods.step4Tip')"></el-step>
+            </el-steps>
+            <el-form :model="goodsData" label-width="100px" style="min-height: 350px">
+              <template v-if="goodsEditStep === 1">
+                <el-form-item :label="$t('goods.sysType')">
+                  <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange" filterable></el-cascader>
+                </el-form-item>
+                <el-form-item v-for="(v,k) in goodsSysTypeFields" :key="k" :label="v.name">
+                  <el-input v-if="v.type==='string' || v.type === 'number'" v-model="goodsData.fields[v.code]" auto-complete="off" clearable></el-input>
+                  <el-select v-if="v.type==='mulitselect' || v.type === 'select'" :multiple="v.type==='mulitselect'" v-model="goodsData.fields[v.code]" :placeholder="$t('tools.pleaseSelect')" >
+                    <el-option
+                      v-for="item in v.param"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </template>
+              <template v-else-if="goodsEditStep === 2">
+                <el-form-item :label="$t('goods.name')">
+                  <el-input v-model="goodsData.name" auto-complete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('goods.intro')">
+                  <el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('goods.type')">
+                  <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
+                </el-form-item>
+                <el-form-item :label="$t('goods.putaway')">
+                  <el-col :span="4">
+                    <el-select v-model="goodsData.shelf_status">
                       <el-option
-                        v-for="item in approveStatus"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-input v-model="searchForm.name" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
-                  </el-form-item>
-                  <el-form-item class="searchBtn">
-                    <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
-                  </el-form-item>
-                </el-form>
-              </el-col>
-              <el-col :span="4" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
-                <div class="boxFuncBtn">
-                  <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsEditor(null, 1)">{{$t('tools.add')}}</el-button>
-                </div>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="24" style="height: calc(100vh - 252px)">
-                <el-table stripe v-loading="tableData.loading" :data="tableData.body" height="calc(100% - 52px)" style="width: 100%;" row-key="id"  @selection-change="handleSelectionChange">
-                  <el-table-column
-                    type="selection"
-                    width="55">
-                  </el-table-column>
-                  <el-table-column label="#" width="60px" fixed="left">
-                    <template slot-scope="scope">
-                      {{scope.$index + searchForm.skip + 1}}
-                    </template>
-                  </el-table-column>
-                  <el-table-column  :label="$t('goods.name')" min-width="300">
-                  <template  slot-scope="scope">
-                    <a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">
-                      <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
-                      <div class="g-info">
-                        <p>{{scope.row.name}}
-                          <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
-                          <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                          <!--<a class="el-icon-view"></a>-->
-                        </p>
-                      </div>
-                    </a>
-                  </template>
-                </el-table-column>
-                  <el-table-column :label="$t('goods.checkStatus')" width="110">
-                    <template  slot-scope="scope">
-                      <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
-                        {{scope.row.approve_status === 2 ? $t('goods.checkStatusB') : (scope.row.approve_status === 3 ?  $t('goods.checkStatusC') :  $t('goods.checkStatusA') )}}
-                      </el-tag>
-                    </template>
-                  </el-table-column>
-                  <el-table-column :label="$t('goods.putawayG')" width="90">
-                    <template  slot-scope="scope">
-                      <el-tooltip v-if="scope.row.approve_status === 2" class="item" effect="dark" :content="$t('goods.putawayTip')" placement="top">
-                        <el-tag @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
-                          {{scope.row.shelf_status === 2 ?$t('goods.putawayA') : $t('goods.putawayB')}}
-                        </el-tag>
-                      </el-tooltip>
-                      <template v-else>
-                        --
-                      </template>
-                    </template>
-                  </el-table-column>
-                  <el-table-column :label="$t('goods.price')" width="120">
-                    <template  slot-scope="scope">
-                      <template v-if="scope.row.type === 3">
-                        <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
-                        <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price}}-{{scope.row.max_price}}</span>
-                        <span v-else>{{scope.row.min_price}}</span>
-                      </template>
-                      <template v-else>
-                        <span v-if="scope.row.min_price !== scope.row.max_price">{{scope.row.min_price | price}}-{{scope.row.max_price | price}}</span>
-                        <span v-else>{{scope.row.min_price | price}}</span>
-                      </template>
-                    </template>
-                  </el-table-column>
-                  <!--<el-table-column prop="inventory" width="75"  :label="$t('goods.inventory')">-->
-                  <!--</el-table-column>-->
-                  <el-table-column prop="sales" width="75"  :label="$t('goods.saled')">
-                  </el-table-column>
-                  <el-table-column prop="gen_time" width="150"  :label="$t('goods.publishTime')">
-                  </el-table-column>
-                  <el-table-column :label="$t('tools.opt')" width = "190" fixed="right" v-if="permissionCheck('opt')">
-                    <template slot-scope="scope">
-                      <template v-if="!scope.row.deleted">
-                        <a :href="'/goods/publish?id=' + scope.row.id" target="_blank" style="color: #1E88E5">{{$t('tools.edit')}}</a>
-                        <!--<el-button type="text" @click="showGoodsEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>-->
-                        <span class="xiexian">/</span>
-                        <el-button type="text" @click="showGoodsEditor(scope.row,4)" size="small">{{$t('goods.price')}}</el-button>
-                        <span class="xiexian">/</span>
-                        <delete-button :promptInfor="promptInfor" @delData="deleteResource(scope.row)"></delete-button>
-                      </template>
-                      <template v-else>
-                        <el-button type="text" @click="goodsRestoreFun(scope.row)" size="small">{{$t('goods.restore')}}</el-button>
-                      </template>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <template v-if="itemCount !== 0">
-                  <el-row style="margin-top: 10px">
-                    <el-col :span="8">
-                      <template v-if="permissionCheck('opt')">
-                        <template v-if="searchForm.deleted">
-                          <el-button size="mini" @click="batchRestoreFunc()">{{$t('goods.restore')}}</el-button>
-                        </template>
-                        <template v-else-if="searchForm.shelf_status === 2">
-                          <el-button size="mini" @click="bathShelfFunc(1)">{{$t('tools.shelfOff')}}</el-button>
-                          <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
-                        </template>
-                        <template v-else-if="searchForm.shelf_status === 1">
-                          <el-button size="mini" @click="bathShelfFunc(2)">{{$t('tools.shelfOn')}}</el-button>
-                          <el-button size="mini" type="danger" @click="batchDelFunc()">{{$t('tools.delete')}}</el-button>
-                        </template>
-                      </template>
-                      &nbsp;
-                    </el-col>
-                    <el-col :span="16"  style="text-align: right;">
-                      <el-pagination
-                        :current-page.sync="currentPage"
-                        :page-sizes="[10, 30, 50, 100, 500]"
-                        :page-size.sync="pageSize"
-                        layout="total, prev, pager, next, jumper, sizes"
-                        :total="itemCount">
-                      </el-pagination>
-                    </el-col>
-                  </el-row>
-                </template>
-              </el-col>
-            </el-row>
-            <el-dialog :title="$t('goods.edit')" width="90%" @close="cancelGoodsEdit" :visible.sync="goodsEditorShow" :close-on-click-modal="false" center>
-              <el-steps :active="goodsEditStep" style="margin-bottom: 20px; display: none">
-                <el-step :title="$t('goods.step1')" :description="$t('goods.step1Tip')"></el-step>
-                <el-step :title="$t('goods.step2')" :description="$t('goods.step2Tip')"></el-step>
-                <el-step :title="$t('goods.step3')" :description="$t('goods.step3Tip')"></el-step>
-                <el-step :title="$t('goods.step4')" :description="$t('goods.step4Tip')"></el-step>
-              </el-steps>
-              <el-form :model="goodsData" label-width="100px" style="min-height: 350px">
-                <template v-if="goodsEditStep === 1">
-                  <el-form-item :label="$t('goods.sysType')">
-                    <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange" filterable></el-cascader>
-                  </el-form-item>
-                  <el-form-item v-for="(v,k) in goodsSysTypeFields" :key="k" :label="v.name">
-                    <el-input v-if="v.type==='string' || v.type === 'number'" v-model="goodsData.fields[v.code]" auto-complete="off" clearable></el-input>
-                    <el-select v-if="v.type==='mulitselect' || v.type === 'select'" :multiple="v.type==='mulitselect'" v-model="goodsData.fields[v.code]" :placeholder="$t('tools.pleaseSelect')" >
-                      <el-option
-                        v-for="item in v.param"
+                        v-for="(item,k) in putAwayType"
                         :key="item"
                         :label="item"
-                        :value="item">
+                        :value="k+1">
                       </el-option>
                     </el-select>
-                  </el-form-item>
-                </template>
-                <template v-else-if="goodsEditStep === 2">
-                  <el-form-item :label="$t('goods.name')">
-                    <el-input v-model="goodsData.name" auto-complete="off" clearable></el-input>
-                  </el-form-item>
-                  <el-form-item :label="$t('goods.intro')">
-                    <el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>
-                  </el-form-item>
-                  <el-form-item :label="$t('goods.type')">
-                    <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
-                  </el-form-item>
-                  <el-form-item :label="$t('goods.putaway')">
+                  </el-col>
+                  <template  v-if="goodsData.shelf_status==2">
                     <el-col :span="4">
-                      <el-select v-model="goodsData.shelf_status">
+                      <el-checkbox v-model="isSetShelfTime"></el-checkbox>{{$t('goods.putawayD')}}
+                    </el-col>
+                    <el-col :span="8" v-if="isSetShelfTime">
+                      <el-date-picker
+                        v-model="goodsData.shelf_time"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        type="datetime"
+                        :placeholder="$t('goods.putawayD')">
+                      </el-date-picker>
+                    </el-col>
+                  </template>
+                </el-form-item>
+                <el-form-item :label="$t('goods.goodsType')">
+                  <el-col :span="4">
+                    <el-select v-model="goodsData.type">
+                      <el-option :key="$t('goods.goodsType1')" :label="$t('goods.goodsType1')" :value="1"></el-option>
+                      <el-option v-if="shopInfo.source_type===3" :key="$t('goods.goodsType3')" :label="$t('goods.goodsType3')" :value="3"></el-option>
+                    </el-select>
+                  </el-col>
+                  <template v-if="goodsData.type===2">
+                    <el-col :span="11">
+                      <el-input v-model.number="goodsData.cobuy_person_count">
+                        <template slot="prepend">{{$t('goods.cobuyuser')}}</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="1"></el-col>
+                    <el-col :span="11">
+                      {{$t('goods.cobuysec')}}
+                      <el-select style="width: 100px" v-model="goodsData.cobuy_group_valid_sec">
                         <el-option
-                          v-for="(item,k) in putAwayType"
-                          :key="item"
-                          :label="item"
-                          :value="k+1">
+                          v-for="item in secondArr"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
                         </el-option>
                       </el-select>
+                      {{$t('goods.hour')}}
                     </el-col>
-                    <template  v-if="goodsData.shelf_status==2">
-                      <el-col :span="4">
-                        <el-checkbox v-model="isSetShelfTime"></el-checkbox>{{$t('goods.putawayD')}}
-                      </el-col>
-                      <el-col :span="8" v-if="isSetShelfTime">
-                        <el-date-picker
-                          v-model="goodsData.shelf_time"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          format="yyyy-MM-dd HH:mm:ss"
-                          type="datetime"
-                          :placeholder="$t('goods.putawayD')">
-                        </el-date-picker>
-                      </el-col>
-                    </template>
-                  </el-form-item>
-                  <el-form-item :label="$t('goods.goodsType')">
-                    <el-col :span="4">
-                      <el-select v-model="goodsData.type">
-                        <el-option :key="$t('goods.goodsType1')" :label="$t('goods.goodsType1')" :value="1"></el-option>
-                        <el-option v-if="shopInfo.source_type===3" :key="$t('goods.goodsType3')" :label="$t('goods.goodsType3')" :value="3"></el-option>
-                      </el-select>
-                    </el-col>
-                    <template v-if="goodsData.type===2">
-                      <el-col :span="11">
-                        <el-input v-model.number="goodsData.cobuy_person_count">
-                          <template slot="prepend">{{$t('goods.cobuyuser')}}</template>
-                        </el-input>
-                      </el-col>
-                      <el-col :span="1"></el-col>
-                      <el-col :span="11">
-                        {{$t('goods.cobuysec')}}
-                        <el-select style="width: 100px" v-model="goodsData.cobuy_group_valid_sec">
-                          <el-option
-                            v-for="item in secondArr"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                        {{$t('goods.hour')}}
-                      </el-col>
-                    </template>
-                  </el-form-item>
-                  <el-form-item :label="$t('goods.goodsPic')">
-                    <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
-                      <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
-                        <el-image
-                          style="height: 100px; width: 100px" fit="contain"
-                          :src="getImageUrl(img)"
-                          :preview-src-list="goodsPreviewImages">
-                        </el-image>
-                        <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
-                      </div>
-                    </div>
-                    <image-upload @uploadSuccess="imageUploadSuccess"></image-upload>
-                  </el-form-item>
-                </template>
-                <template v-else-if="goodsEditStep === 3">
-                  <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
-                </template>
-                <template v-else-if="goodsEditStep === 4">
-                  <el-form-item :label="$t('goods.sp')">
-                    <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
-                      <el-input v-model="goodsProps[k].name" disabled class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button style="display: none" size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
-                      <el-tag size="small" :key="tag" v-for="tag in goodsProps[k].items" :disable-transitions="false"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
-                      <!--<el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>-->
-                      <!--<el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>-->
-                    </div>
-                    <a style="display: none;" @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
-                  </el-form-item>
-                  <el-form-item :label="$t('goods.piEdit')">
-                    <el-table :data="goodsInventoryTable"  style="width: 100%" :span-method="inventoryTableSpanMethod">
-                      <el-table-column :label="$t('goods.sp')">
-                        <template  slot-scope="scope">
-                          {{scope.row.title}}
-                        </template>
-                      </el-table-column>
-                      <el-table-column prop="barcode"  :label="$t('goods.barcode')"></el-table-column>
-                      <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
-                      <el-table-column :label="$t('goods.inventory')" v-if="!shopInfo.erp_internal">
-                        <template slot="header" slot-scope="scope">
-                          {{$t('goods.inventory')}}
-                          <el-popover placement="bottom"
-                                      width="200"
-                                      trigger="click">
-                            <el-input v-model.number="batchInventory">
-                            </el-input>
-                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                          </el-popover>
-                        </template>
-                        <template  slot-scope="scope">
-                          <el-input v-model.number="scope.row.inventory"></el-input>
-                        </template>
-                      </el-table-column>
-                      <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
-                        <template slot="header" slot-scope="scope">
-                          {{$t('goods.price')}}
-                          <el-popover placement="bottom"
-                                      width="200"
-                                      trigger="click">
-                            <price-input v-model="batchPrice"></price-input>
-                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                          </el-popover>
-                        </template>
-                        <template  slot-scope="scope">
-                          <price-input v-model="scope.row.price"></price-input>
-                          <!--<el-input v-model.number="scope.row.price"></el-input>-->
-                        </template>
-                      </el-table-column>
-                      <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.originalPrice')">
-                        <template slot="header" slot-scope="scope">
-                          {{$t('goods.originalPrice')}}
-                          <el-popover placement="bottom"
-                                      width="200"
-                                      trigger="click">
-                            <price-input v-model="batchOPrice"></price-input>
-                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                          </el-popover>
-                        </template>
-                        <template  slot-scope="scope">
-                          <price-input v-model="scope.row.original_price"></price-input>
-                          <!--<el-input v-model.number="scope.row.price"></el-input>-->
-                        </template>
-                      </el-table-column>
-                      <el-table-column v-if="goodsData.type === 3" :label="$t('goods.needExp')">
-                        <template  slot-scope="scope">
-                          <el-input v-model.number="scope.row.price"></el-input>
-                        </template>
-                      </el-table-column>
-                      <el-table-column v-if="goodsData.type == 2" :label="$t('goods.cobuyPrice')">
-                        <template  slot-scope="scope">
-                          <price-input v-model="scope.row.cobuy_price"></price-input>
-                          <!--<el-input v-model.number="scope.row.price"></el-input>-->
-                        </template>
-                      </el-table-column>
-                      <el-table-column :label="$t('goods.recommendTag')">
-                        <template slot="header" slot-scope="scope">
-                          {{$t('goods.recommendTag')}}
-                          <el-popover placement="bottom"
-                                      width="200"
-                                      trigger="click">
-                            <el-input v-model="batchRTag">
-                            </el-input>
-                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                          </el-popover>
-                        </template>
-                        <template  slot-scope="scope">
-                          <el-input v-model="scope.row.price_recommend_key"></el-input>
-                        </template>
-                      </el-table-column>
-                      <el-table-column :label="$t('goods.weight')">
-                        <template slot="header" slot-scope="scope">
-                          {{$t('goods.weight')}}
-                          <el-popover placement="bottom"
-                                      width="200"
-                                      trigger="click">
-                            <el-input v-model="batchWeight">
-                              <template slot="append">KG</template>
-                            </el-input>
-                            <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                          </el-popover>
-                        </template>
-                        <template  slot-scope="scope">
-                          <el-input v-model="scope.row.weight"><template slot="append">KG</template></el-input>
-                        </template>
-                      </el-table-column>
-                      <el-table-column :label="$t('goods.goodsPic')">
-                        <template  slot-scope="scope">
-                          <i v-if="scope.row.images.length < 1" style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
-                          <img v-else @click="editorProppImageFunc(scope.$index)" :src="getImageUrl(scope.row.images[0], 20,20)"/>
-                        </template>
-                      </el-table-column>
-                      <el-table-column :label="$t('warehouse.stockmsg')" v-if="shopInfo.erp_internal">
-                        <template  slot-scope="scope">
-                          <el-button type="text" @click="showKuCunInfo(scope.row)" size="small">{{$t('warehouse.Seemsg')}}</el-button>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                  </el-form-item>
-                </template>
-              </el-form>
-              <div slot="footer" class="dialog-footer">
-                <!--<el-button v-if = "goodsEditStep > 1" size="small" type="primary" @click="editNextFunc(-1)" >{{$t('goods.pre')}}</el-button>-->
-                <confirm-button @confirmButton="editNextFunc(1)" :disabled="disabled" :confirmButtonInfor="goodsEditStep === 4 ? this.$t('tools.confirm') : $t('goods.next')"></confirm-button>
-                <!--<el-button v-else size="small" type="primary" @click="editNextFunc(1)" >{{$t('goods.next')}}</el-button>-->
-                <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
-              </div>
-              <el-dialog :title="propsImageEditTitle" width="400px" @close="showPropsImageDialog=false" :visible.sync="showPropsImageDialog" :close-on-click-modal="false" center append-to-body>
-                <template>
-                  <div class="prop-image__preview" v-if="goodsInventoryTable.length > 0">
-                    <div class="pitem"  v-for="(img,imgk) in goodsInventoryTable[propsImageEditIndex].images" :key="imgk">
+                  </template>
+                </el-form-item>
+                <el-form-item :label="$t('goods.goodsPic')">
+                  <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
+                    <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
                       <el-image
-                        style="width: 100px; height: 100px"
+                        style="height: 100px; width: 100px" fit="contain"
                         :src="getImageUrl(img)"
-                        :preview-src-list="propPreviewImages">
+                        :preview-src-list="goodsPreviewImages">
                       </el-image>
-                      <i class="el-icon-delete delbtn" @click="delPropImage(imgk)"></i>
+                      <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
                     </div>
                   </div>
-                </template>
-                <image-upload @uploadSuccess="propImageUploadSuccess"></image-upload>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="showPropsImageDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
+                  <image-upload @uploadSuccess="imageUploadSuccess"></image-upload>
+                </el-form-item>
+              </template>
+              <template v-else-if="goodsEditStep === 3">
+                <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
+              </template>
+              <template v-else-if="goodsEditStep === 4">
+                <el-form-item :label="$t('goods.sp')">
+                  <div v-for="(v,k) in goodsProps" :key="k" class="prop-item">
+                    <el-input v-model="goodsProps[k].name" disabled class="prop-name" :placeholder="$t('goods.prop')"></el-input><el-button style="display: none" size="small" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
+                    <el-tag size="small" :key="tag" v-for="tag in goodsProps[k].items" :disable-transitions="false"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
+                    <!--<el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>-->
+                    <!--<el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>-->
+                  </div>
+                  <a style="display: none;" @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
+                </el-form-item>
+                <el-form-item :label="$t('goods.piEdit')">
+                  <el-table :data="goodsInventoryTable"  style="width: 100%" :span-method="inventoryTableSpanMethod">
+                    <el-table-column :label="$t('goods.sp')">
+                      <template  slot-scope="scope">
+                        {{scope.row.title}}
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="barcode"  :label="$t('goods.barcode')"></el-table-column>
+                    <el-table-column prop="no"  :label="$t('goods.skuNo')"></el-table-column>
+                    <el-table-column :label="$t('goods.inventory')" v-if="!shopInfo.erp_internal">
+                      <template slot="header" slot-scope="scope">
+                        {{$t('goods.inventory')}}
+                        <el-popover placement="bottom"
+                                    width="200"
+                                    trigger="click">
+                          <el-input v-model.number="batchInventory">
+                          </el-input>
+                          <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                        </el-popover>
+                      </template>
+                      <template  slot-scope="scope">
+                        <el-input v-model.number="scope.row.inventory"></el-input>
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.price')">
+                      <template slot="header" slot-scope="scope">
+                        {{$t('goods.price')}}
+                        <el-popover placement="bottom"
+                                    width="200"
+                                    trigger="click">
+                          <price-input v-model="batchPrice"></price-input>
+                          <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                        </el-popover>
+                      </template>
+                      <template  slot-scope="scope">
+                        <price-input v-model="scope.row.price"></price-input>
+                        <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-if="goodsData.type !== 3" :label="$t('goods.originalPrice')">
+                      <template slot="header" slot-scope="scope">
+                        {{$t('goods.originalPrice')}}
+                        <el-popover placement="bottom"
+                                    width="200"
+                                    trigger="click">
+                          <price-input v-model="batchOPrice"></price-input>
+                          <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                        </el-popover>
+                      </template>
+                      <template  slot-scope="scope">
+                        <price-input v-model="scope.row.original_price"></price-input>
+                        <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-if="goodsData.type === 3" :label="$t('goods.needExp')">
+                      <template  slot-scope="scope">
+                        <el-input v-model.number="scope.row.price"></el-input>
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-if="goodsData.type == 2" :label="$t('goods.cobuyPrice')">
+                      <template  slot-scope="scope">
+                        <price-input v-model="scope.row.cobuy_price"></price-input>
+                        <!--<el-input v-model.number="scope.row.price"></el-input>-->
+                      </template>
+                    </el-table-column>
+                    <el-table-column :label="$t('goods.recommendTag')">
+                      <template slot="header" slot-scope="scope">
+                        {{$t('goods.recommendTag')}}
+                        <el-popover placement="bottom"
+                                    width="200"
+                                    trigger="click">
+                          <el-input v-model="batchRTag">
+                          </el-input>
+                          <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                        </el-popover>
+                      </template>
+                      <template  slot-scope="scope">
+                        <el-input v-model="scope.row.price_recommend_key"></el-input>
+                      </template>
+                    </el-table-column>
+                    <el-table-column :label="$t('goods.weight')">
+                      <template slot="header" slot-scope="scope">
+                        {{$t('goods.weight')}}
+                        <el-popover placement="bottom"
+                                    width="200"
+                                    trigger="click">
+                          <el-input v-model="batchWeight">
+                            <template slot="append">KG</template>
+                          </el-input>
+                          <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
+                        </el-popover>
+                      </template>
+                      <template  slot-scope="scope">
+                        <el-input v-model="scope.row.weight"><template slot="append">KG</template></el-input>
+                      </template>
+                    </el-table-column>
+                    <el-table-column :label="$t('goods.goodsPic')">
+                      <template  slot-scope="scope">
+                        <i v-if="scope.row.images.length < 1" style="cursor: pointer" class="el-icon-picture-outline" @click="editorProppImageFunc(scope.$index)"></i>
+                        <img v-else @click="editorProppImageFunc(scope.$index)" :src="getImageUrl(scope.row.images[0], 20,20)"/>
+                      </template>
+                    </el-table-column>
+                    <el-table-column :label="$t('warehouse.stockmsg')" v-if="shopInfo.erp_internal">
+                      <template  slot-scope="scope">
+                        <el-button type="text" @click="showKuCunInfo(scope.row)" size="small">{{$t('warehouse.Seemsg')}}</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-form-item>
+              </template>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <!--<el-button v-if = "goodsEditStep > 1" size="small" type="primary" @click="editNextFunc(-1)" >{{$t('goods.pre')}}</el-button>-->
+              <confirm-button @confirmButton="editNextFunc(1)" :disabled="disabled" :confirmButtonInfor="goodsEditStep === 4 ? this.$t('tools.confirm') : $t('goods.next')"></confirm-button>
+              <!--<el-button v-else size="small" type="primary" @click="editNextFunc(1)" >{{$t('goods.next')}}</el-button>-->
+              <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+            </div>
+            <el-dialog :title="propsImageEditTitle" width="400px" @close="showPropsImageDialog=false" :visible.sync="showPropsImageDialog" :close-on-click-modal="false" center append-to-body>
+              <template>
+                <div class="prop-image__preview" v-if="goodsInventoryTable.length > 0">
+                  <div class="pitem"  v-for="(img,imgk) in goodsInventoryTable[propsImageEditIndex].images" :key="imgk">
+                    <el-image
+                      style="width: 100px; height: 100px"
+                      :src="getImageUrl(img)"
+                      :preview-src-list="propPreviewImages">
+                    </el-image>
+                    <i class="el-icon-delete delbtn" @click="delPropImage(imgk)"></i>
+                  </div>
                 </div>
-              </el-dialog>
-            </el-dialog>
-            <el-dialog :title="$t('goods.commodityPreview')" class="currentDialogGoods" :visible.sync="commodityPreviewShow" center width="375px" height="700px" :close-on-click-modal="false">
-              <iframe height="667px" width="375px" style="border: none;" :src="currentGoods"></iframe>
+              </template>
+              <image-upload @uploadSuccess="propImageUploadSuccess"></image-upload>
               <div slot="footer" class="dialog-footer">
-                <el-button @click="commodityPreviewShow = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+                <el-button @click="showPropsImageDialog = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{this.$t('tools.confirm')}}</el-button>
               </div>
             </el-dialog>
-            <!--库存信息列表-->
-            <el-dialog class="dialog" :title="$t('warehouse.stockmsg')" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
-                       :close-on-click-modal="false" center >
-              <el-table stripe border :data="inventoriesList" height="calc(100vh - 360px)">
-                <el-table-column label="#" width="60px" fixed="left">
-                  <template slot-scope="scope">
-                    {{scope.$index + inventoriesSearchForm.skip + 1}}
-                  </template>
-                </el-table-column>
-                <!-- 仓库名称 -->
-                <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
-                <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
-                <!--<el-table-column prop="origin" label="产地"></el-table-column>-->
-                <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
-                  <template slot-scope="scope">
-                    {{textFilter(scope.row.specification)}}
-                  </template>
-                </el-table-column>
-                <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
-                <el-table-column prop="unit_price" :label="$t('warehouse.price')">
-                  <template slot-scope="scope">{{scope.row.unit_price | price}}</template>
-                </el-table-column>
-                <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
-                <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
-                  <template slot-scope="scope">{{scope.row.total_price | price}}</template>
-                </el-table-column>
-                <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
-              </el-table>
-              <div style="text-align: right;margin-top: 10px">
-                <el-pagination
-                  :current-page.sync="currentPageKuCun"
-                  :page-size="pageSizeKuCun"
-                  layout="total, prev, pager, next, jumper"
-                  :total="itemCountKuCun"
-                ></el-pagination>
-              </div>
-              <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
-              </div>
-            </el-dialog>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+          </el-dialog>
+          <el-dialog :title="$t('goods.commodityPreview')" class="currentDialogGoods" :visible.sync="commodityPreviewShow" center width="375px" height="700px" :close-on-click-modal="false">
+            <iframe height="667px" width="375px" style="border: none;" :src="currentGoods"></iframe>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="commodityPreviewShow = false" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.close')}}</el-button>
+            </div>
+          </el-dialog>
+          <!--库存信息列表-->
+          <el-dialog class="dialog" :title="$t('warehouse.stockmsg')" width="70%" @close="inventoriesDialog=false" :visible.sync="inventoriesDialog"
+                      :close-on-click-modal="false" center >
+            <el-table stripe border :data="inventoriesList" height="calc(100vh - 360px)">
+              <el-table-column label="#" width="60px" fixed="left">
+                <template slot-scope="scope">
+                  {{scope.$index + inventoriesSearchForm.skip + 1}}
+                </template>
+              </el-table-column>
+              <!-- 仓库名称 -->
+              <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
+              <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
+              <!--<el-table-column prop="origin" label="产地"></el-table-column>-->
+              <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
+                <template slot-scope="scope">
+                  {{textFilter(scope.row.specification)}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
+              <el-table-column prop="unit_price" :label="$t('warehouse.price')">
+                <template slot-scope="scope">{{scope.row.unit_price | price}}</template>
+              </el-table-column>
+              <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
+              <el-table-column prop="total_price" :label="$t('warehouse.allprice')">
+                <template slot-scope="scope">{{scope.row.total_price | price}}</template>
+              </el-table-column>
+              <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
+            </el-table>
+            <div style="text-align: right;margin-top: 10px">
+              <el-pagination
+                :current-page.sync="currentPageKuCun"
+                :page-size="pageSizeKuCun"
+                layout="total, prev, pager, next, jumper"
+                :total="itemCountKuCun"
+              ></el-pagination>
+            </div>
+            <div slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="inventoriesDialog=false" size="small">{{$t('tools.close')}}</el-button>
+            </div>
+          </el-dialog>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -1011,27 +1008,11 @@
         if (this.permissionCheck('opt')) {
           return (
             <span class='custom-tree-node'>
-              <span title={node.label}>{node.label}</span>
+              <span class="ctgLabel" title={node.label}>{node.label}</span>
               <span class='showHide' v-show={data.tree_code}>
-                <i class='el-icon-circle-plus-outline treeAddImg' on-click={ () => this.showAddChildFunc(data)}></i>
-                <el-popover
-                  placement='bottom-end'
-                  width='250'
-                  visible-arrow
-                  trigger='hover'>
-                  <div class='labelName'>{node.label}</div>
-                  <div class='funcListBox'>
-                    <div class='funcList' on-click={ () => this.deleteResourcesType(data)}>
-                      <i class='el-icon-delete treeDelEditImg permissionsDel'></i>
-                      <span class='permissionsDel'>{this.$t('tools.delete')}</span>
-                    </div>
-                    <div class='funcList' on-click={ () => this.showEditDataFunc(data)}>
-                      <i class='el-icon-edit treeDelEditImg permissionsEdit'></i>
-                      <span class='permissionsEdit'>{this.$t('tools.edit')}</span>
-                    </div>
-                  </div>
-                  <i class='el-icon-more imgMore' slot='reference'></i>
-                </el-popover>
+                <i class='el-icon-circle-plus-outline treeAddImg treeNodeAction' on-click={ () => this.showAddChildFunc(data)}></i>
+                <i class='el-icon-edit permissionsEdit treeNodeAction treeAddImg' on-click={ () => this.showEditDataFunc(data)}></i>
+                <i class='el-icon-delete permissionsDel treeNodeAction' on-click={ () => this.deleteResourcesType(data)} style="color:red;"></i>
               </span>
             </span>)
         } else {
@@ -1427,10 +1408,24 @@
     .input-new-tag{
       width: 100px;
     }
-    .add-prop-btn {
+    // .add-prop-btn {
 
+    // }
+  }
+  
+  /deep/{
+      .el-tree-node{
+      margin-left: 0;
+    }
+      .treeNodeAction{
+      font-size: 18px;
+      &:hover{
+        opacity: 0.7;
+      }
     }
   }
+
+  
 </style>
 <style lang="scss">
   .currentDialogGoods {
@@ -1442,8 +1437,8 @@
     }
   }
   .custom-tree-node{
-    & > span:first-child{
-      width: 100px;
+    .ctgLabel{
+      width: 150px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -1462,4 +1457,14 @@
       }
     }
   }
+
+  .tool-in-table{
+  font-size: 1.5em;
+  margin-right: 5px;
+  &:hover{
+    opacity: 0.5;
+  }
+  }
+
+  
 </style>

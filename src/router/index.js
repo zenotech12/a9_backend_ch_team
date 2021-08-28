@@ -15,7 +15,6 @@ import finance from '@/router/finance'
 import system from '@/router/system'
 import warehouse from '@/router/warehouse'
 import Reminder from '@/router/Reminder'
-import reportExport from '@/router/reportExport'
 
 // noinspection JSAnnotator
 /**
@@ -56,6 +55,6 @@ export default new Router({
 })
 // export const asyncRouterMap = [
 //   { path: '/404', component: () => import('@/views/404'), hidden: true }]
-export const asyncRouterMap = [...goods, ...order, ...operation, ...finance, ...system, ...warehouse, ...Reminder, ...reportExport]
+export const asyncRouterMap = [...goods, ...order, ...warehouse, ...finance, ...operation, ...system, ...Reminder]
 // export const defaultRouter = [...homePage]
 

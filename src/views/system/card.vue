@@ -5,13 +5,13 @@
       <div class="rightbox">
         <!--添加-->
         <el-row>
-          <el-col :span="24" class="funcList">
+          <el-col :span="24" class="funcList" style="padding: 10px 15px; padding-right: 0">
             <div class="boxFuncBtn" v-if="permissionCheck('opt')" @click="addData">
-              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              <!-- <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add"> -->
+               <el-button type="success" size="small" icon="el-icon-plus">{{$t('tools.add')}}</el-button>
             </div>
-            <div class="boxFuncBtn" v-if="isOwner" @click="setPayPassFunc" style="margin-right: 20px">
-              <el-button type="text" icon="el-icon-bank-card" size="small">{{$t('sys.setPayPass')}}</el-button>
+            <div class="boxFuncBtn" v-if="isOwner" @click="setPayPassFunc" style="margin-right: 10px; text-align: right;">
+              <el-button type="success" icon="el-icon-lock" size="small">{{$t('sys.setPayPass')}}</el-button>
             </div>
           </el-col>
         </el-row>
@@ -30,9 +30,10 @@
               <el-table-column prop="card_bank_name_got"  :label="$t('sys.cardBank')">
               </el-table-column>
               <el-table-column prop="mobile" :label="$t('sys.cardMobile')"></el-table-column>
-              <el-table-column :label="$t('tools.opt')" width="80px"  v-if="permissionCheck('opt')">
+              <el-table-column :label="$t('tools.opt')" width="180px"  v-if="permissionCheck('opt')" align="center">
                 <template slot-scope="scope">
                     <delete-button :promptInfor="promptInfor" @delData="delData(scope.row)"></delete-button>
+      
                 </template>
               </el-table-column>
             </el-table>
@@ -50,28 +51,30 @@
             </template>
           </el-col>
         </el-row>
-        <el-dialog :title="editTitle" @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="400px" style="margin-top: 0vh">
-          <el-form :model="form" :rules="formRule" ref="form" label-width="80px">
+        <el-dialog @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="400px" style="margin-top: 0vh">
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{editTitle}}</span>
+          <el-form :model="form" :rules="formRule" ref="form" label-width="130px" label-position="left">
             <el-form-item :label="$t('sys.cardNo')" prop="no">
-              <el-input style="width: 200px" v-model="form.no" auto-complete="off" clearable></el-input>
+              <el-input style="width: 220px" v-model="form.no" auto-complete="off" clearable></el-input>
             </el-form-item>
             <el-form-item :label="$t('sys.bank')" prop="bank_name">
-              <el-input style="width: 200px" v-model="form.bank_name" auto-complete="off" clearable></el-input>
+              <el-input style="width: 220px" v-model="form.bank_name" auto-complete="off" clearable></el-input>
             </el-form-item>
             <el-form-item :label="$t('sys.cardBank')" prop="card_bank_name_got">
-              <el-input style="width: 200px" v-model="form.card_bank_name_got" auto-complete="off" clearable></el-input>
+              <el-input style="width: 220px" v-model="form.card_bank_name_got" auto-complete="off" clearable></el-input>
             </el-form-item>
             <el-form-item :label="$t('sys.cardMobile')" prop="mobile">
-              <el-input style="width: 200px" v-model="form.mobile" auto-complete="off" clearable></el-input>
+              <el-input style="width: 220px" v-model="form.mobile" auto-complete="off" clearable></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="upsertDataFunc('form')" :disabled="disabled"></confirm-button>
-            <el-button @click="cancel('form')" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
+            <el-button @click="cancel('form')" size="small" style="margin-right: 5px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
-        <el-dialog :title="setPayPassTitle" @close="cancelSet('setForm')" :close-on-click-modal="false" :visible.sync="setPayPassShow" center width="400px" style="margin-top: 0vh">
-          <el-form :model="setForm" :rules="setFormRule" ref="setForm" label-width="120px">
+        <el-dialog @close="cancelSet('setForm')" :close-on-click-modal="false" :visible.sync="setPayPassShow" center width="450px" style="margin-top: 0vh">
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{setPayPassTitle}}</span>
+          <el-form :model="setForm" :rules="setFormRule" ref="setForm" label-width="150px">
             <el-form-item :label="$t('sys.codePhone')" prop="code">
               <el-input v-model="setForm.code" auto-complete="off" clearable>
                 <el-button @click="getVerificationCode" v-if="show" slot="append">获取验证码</el-button>
@@ -84,7 +87,7 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="upsertPayPass('setForm')" :disabled="disabled"></confirm-button>
-            <el-button @click="cancelSet('setForm')" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
+            <el-button @click="cancelSet('setForm')" size="small" style="margin-right: 5px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
       </div>

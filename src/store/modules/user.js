@@ -86,7 +86,10 @@ const user = {
     GetShopInfo({ commit }) {
       return new Promise((resolve, reject) => {
         shopInfo().then(response => {
-          const data = response
+          const data = response;
+
+          console.log("Profile Info", response);
+
           commit('SET_SHOP_INFO', data.item)
           resolve(data.item)
         }).catch(error => {

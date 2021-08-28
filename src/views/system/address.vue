@@ -4,10 +4,10 @@
       <!-- 搜索 -->
       <div class="rightbox">
         <el-row  v-if="permissionCheck('opt')">
-          <el-col :span="24" class="funcList">
+          <el-col :span="24" class="funcList" style="padding: 10px 15px; padding-right: 0">
             <div class="boxFuncBtn" @click="addData">
-              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              <!-- <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add"> -->
+              <el-button type="success" size="small" icon="el-icon-plus">{{$t('tools.add')}}</el-button>
             </div>
           </el-col>
         </el-row>
@@ -26,16 +26,15 @@
                 <el-table-column prop="city" :label="$t('sys.city')"></el-table-column>
                 <el-table-column prop="district" :label="$t('sys.district')"></el-table-column>
                 <el-table-column prop="addr" :label="$t('sys.addr')"></el-table-column>
-                <el-table-column  :label="$t('sys.default')">
+                <el-table-column  :label="$t('sys.default')" align="center">
                   <template  slot-scope="scope">
                     <el-tag v-if="scope.row.default" type="success">{{$t('tools.yes')}}</el-tag>
                     <el-tag v-else type="info">{{$t('tools.no')}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
+                <el-table-column :label="$t('tools.opt')" width = "180"  v-if="permissionCheck('opt')" align="center">
                   <template slot-scope="scope">
-                    <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                    <span class="xiexian">/</span>
+                    <el-button @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <delete-button  @delData="deleteDataFunc(scope.row)"></delete-button>
                   </template>
                 </el-table-column>
@@ -43,8 +42,9 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('sys.addrEdit')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px" :model="form">
+        <el-dialog width="800px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('sys.addrEdit')}}</span>
+          <el-form label-width="180px" label-position="left" :model="form">
             <el-form-item :label="$t('sys.contacterName')">
               <el-input v-model="form.contacter_name"></el-input>
             </el-form-item>
@@ -81,6 +81,7 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <el-button @click="formEditDialog = false" size="small" style="margin-right: 5px;margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
       </div>

@@ -58,7 +58,7 @@ export default {
   spec: '规格名',
   spec1: '+规格',
   prop: '属性名',
-  prop1: '+属性',
+  prop1: '属性',
   shareTip: '您不具有分销权限，如需开通请咨询管理员',
   commissionPercent: '佣金比例（‰）',
   commissionMoney: '佣金（$）',
@@ -142,6 +142,5 @@ export default {
   introGoods: '特色',
   introDetail: '文字说明',
   goodslist: '商品列表',
-  wkcgm: '无库存购买',
-  goodsCode: '商品编码'
+  wkcgm: '无库存购买'
 }

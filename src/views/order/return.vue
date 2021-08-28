@@ -9,10 +9,10 @@
               <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatusTab"  :key="k" v-if="item.label" :label="item.label" :name="k + ''"></el-tab-pane>
             </el-tabs>
           </el-col>
-          <el-col :span ="24">
+          <el-col :span ="24" style="margin-top: 15px">
             <el-form :inline="true" :model="searchForm">
               <el-form-item :label="$t('order.returnOrder')">
-                <el-input v-model="searchForm.order_no" style="width: 250px" clearable></el-input>
+                <el-input v-model="searchForm.order_no" style="width: 250px" clearable @input="handleSearchOrder"></el-input>
               </el-form-item>
               <el-form-item>
                 <!-- <el-date-picker
@@ -62,62 +62,70 @@
                     {{scope.$index + searchForm.skip + 1}}
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.user')" width="110">
+                <el-table-column :label="$t('order.user')" width="150">
                   <template slot-scope="scope">
                     <div class="ui">{{scope.row.user_nick_name}}</div>
                     <div class="ui">{{scope.row.user_mobile}}</div>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.returnType')" width="120">
+                <el-table-column :label="$t('order.returnType')" width="200" align="center">
                   <template slot-scope="scope">
                     <el-tag :type="scope.row.type === 2 ? 'success': ''">{{returnType1[scope.row.type]}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column  :label="$t('order.returnGoods')" min-width="350px">
+                <el-table-column  :label="$t('order.returnGoods')" min-width="550">
                   <template  slot-scope="scope">
-                    <a class="goods-item" target="_blank" v-for="(item, k) in scope.row.goods_items" :key="k" :href="goodsPreview(item)">
-                      <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(item.sku_img,100,100)"  fit="cover"></el-image>
-                      <div class="g-info">
-                        <p><span>{{item.spu_name}}</span></p>
-                        <p>
-                          <span v-for="(v,k) in item.specifications"> {{k}}：<font>{{v}}</font></span>
-                        </p>
-                        <p>{{item.price | price}}X {{item.count}}</p>
+                    <a class="" target="_blank" v-for="(item, k) in scope.row.goods_items" :key="k" :href="goodsPreview(item)">
+                      <div style="padding-bottom: 20px">
+                        <el-row type="flex" class="row-bg" justify="space-between">
+                          <el-col :span="5">                            
+                            <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(item.sku_img,100,100)"  fit="cover"></el-image>
+                          </el-col>
+                          <el-col :span="19">
+                            <div class="g-info">
+                              <p style="margin-bottom: 5px"><span class="bold-text">{{item.spu_name}}</span></p>
+                              <span>
+                                <span v-for="(v,k) in item.specifications" :key="k"> {{k}}：<font class="bold-text">{{v}}</font><br/></span>
+                              </span>
+                              <span class="bold-text">{{item.price | price}} x {{item.count}}</span>
+                            </div>
+                          </el-col>
+                        </el-row>
                       </div>
                       <div class="clear"></div>
                     </a>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.returnPrice')" width="80">
+                <el-table-column :label="$t('order.returnPrice')" width="130" align="center">
                   <template slot-scope="scope">
-                    {{scope.row.amount | price}}
+                    <span class="bold-text">{{scope.row.amount | price}}</span>
                   </template>
-                </el-table-column>0
+                </el-table-column>
                 <el-table-column prop="order_no" :label="$t('order.returnOrder')" width="180">
                 </el-table-column>
-                <el-table-column :label="$t('order.status')" width="100">
+                <el-table-column :label="$t('order.status')" width="150" align="center" header-align="left">
                   <template slot-scope="scope" >
-                    <el-tag>{{orderStatus[scope.row.status]}}</el-tag>
+                    <el-tag :type="orderStatusColor[scope.row.status]">{{orderStatus[scope.row.status]}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="gen_time" :label="$t('order.returnTime')" width="180">
+                <el-table-column prop="gen_time" :label="$t('order.returnTime')" width="200">
                   <template slot-scope="scope" >
-                    <el-popover placement="left" width="300" trigger="click">
+                    <el-popover placement="left" width="350" trigger="click">
                       <el-timeline style="margin-top: 10px">
                         <el-timeline-item
                           v-for="(record, index) in scope.row.operations_records"
                           :key="index"
                           :timestamp="record.time">
-                          <div class="ui"><span>{{record.operator_name}}</span>{{orderStatus[record.status]}}</div>
+                          <div class="ui"><span style="font-weight: bold; color: black; padding-right: 10px">{{record.operator_name}}</span>{{orderStatus[record.status]}}</div>
                         </el-timeline-item>
                       </el-timeline>
                       <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.gen_time}}</a>
                     </el-popover>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "80" fixed="right">
+                <el-table-column :label="$t('tools.opt')" width = "100" fixed="right" align="center">
                   <template slot-scope="scope">
-                    <el-button type="text" @click="showReturnOrderDetail(scope.row)" size="small">{{$t('tools.detail')}}</el-button>
+                    <el-button type="success" @click="showReturnOrderDetail(scope.row)" size="small">{{$t('tools.detail')}}</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -132,82 +140,149 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('order.returnTitle')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
-            <el-form-item :label="$t('order.no')">
-              {{returnOrder.order_no}}
-            </el-form-item>
-            <el-form-item :label="$t('order.user')">
-              {{returnOrder.user_nick_name}}/{{returnOrder.user_mobile}}
-            </el-form-item>
-            <el-form-item :label="$t('order.returnGoods')">
-              <div class="goods-item" v-if="returnOrder.id" v-for="(goods, i) in returnOrder.goods_items" :key="i">
-                <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(goods.sku_img,100,100)"  fit="cover"></el-image>
-                <div class="g-info">
-                  <p><el-tag size="mini" :type="returnOrder.type === 2 ? 'success': ''">{{returnType1[returnOrder.type]}}</el-tag>&nbsp;&nbsp;<span>{{goods.spu_name}}</span></p>
-                  <p>
-                    <span v-for="(v,k) in goods.specifications"> {{k}}：<font>{{v}}</font></span>
-                  </p>
-                  <p><span>{{$t('order.price3')}}：</span>{{goods.price | price}}；<span>{{$t('order.number')}}：</span>{{goods.count}}</p>
-                </div>
-                <div class="clear"></div>
-              </div>
-            </el-form-item>
-            <el-form-item :label="$t('order.returnReason')">
-              {{returnOrder.comment}}
-            </el-form-item>
-            <el-form-item v-if="returnOrder.type===1 || returnOrder.type===3 "  :label="$t('order.returnPrice')" >
-              <price-input v-model="amount" :disabled="true" clearable></price-input>
-            </el-form-item>
-            <el-form-item v-if="returnOrder.type===2 && returnOrder.shipping_address"  :label="$t('order.returnUserAddr')" >
-              {{returnOrder.shipping_address.address.province + returnOrder.shipping_address.address.city + returnOrder.shipping_address.address.district}}&nbsp;{{returnOrder.shipping_address.address.addr}}
-              <br/>
-              {{returnOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{returnOrder.shipping_address.mobile}}
-            </el-form-item>
-            <el-form-item v-if="returnOrder.status === 1 && returnOrder.type !== 3" :label="$t('order.returnAddr')">
-              <el-select v-model="addressId" style="width: 300px" >
-                <el-option
-                  v-for="item in addressList"
-                  :key="item.id"
-                  :label="item.province + item.city + item.district"
-                  :value="item.id">
-                  <div class="address-item">
-                    <p>{{item.province + item.city + item.district + item.addr}}</p>
-                    <p>{{item.contacter_name + item.mobile}}</p>
-                  </div>
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-if="(returnOrder.status === 3 || returnOrder.status === 5 || returnOrder.status === 6) && returnOrder.type !== 3 && returnOrder.merchant_shipping_address" :label="$t('order.returnAddr')">
-              {{returnOrder.merchant_shipping_address.address.province + returnOrder.merchant_shipping_address.address.city + returnOrder.merchant_shipping_address.address.district}}&nbsp;{{returnOrder.merchant_shipping_address.address.addr}}
-              <br/>
-              {{returnOrder.merchant_shipping_address.contacter_name}}&nbsp;&nbsp;{{returnOrder.merchant_shipping_address.mobile}}
-            </el-form-item>
-            <el-form-item v-if="(returnOrder.status === 5 || returnOrder.status === 6|| returnOrder.status === 8) && (returnOrder.type === 1 || returnOrder.type === 2)" :label="$t('order.returnExpress')">
-              <a target="_blank" :href="getKuaidi100Url(returnOrder.express2merchant.company, returnOrder.express2merchant.novar)">{{expressageList[returnOrder.express2merchant.company]}}&nbsp;&nbsp;{{returnOrder.express2merchant.novar}}<i class="el-icon-arrow-right"></i> </a>
-            </el-form-item>
-            <el-form-item :label="$t('order.returnExpress1')" v-if="(returnOrder.status === 5 || returnOrder.status === 8)  && returnOrder.type === 2">
-              <a target="_blank" :href="getKuaidi100Url(returnOrder.express2user.company, returnOrder.express2user.novar)">{{expressageList[returnOrder.express2user.company]}}&nbsp;&nbsp;{{returnOrder.express2user.novar}}<i class="el-icon-arrow-right"></i> </a>
-            </el-form-item>
-            <el-form-item :label="$t('order.returnExpress1')" v-if="returnOrder.status === 6 && returnOrder.type === 2">
-              <el-row :gutter="20">
-                <el-col :span="8">
-                  <express-selector v-model="expressCompany"></express-selector>
-                </el-col>
-                <el-col :span="14">
-                  <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+        <el-dialog width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.returnTitle')}}</span>
+          <el-form>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.no')}}:</el-col>
+                <el-col :span="19">
+                  {{returnOrder.order_no}}
                 </el-col>
               </el-row>
             </el-form-item>
-            <el-form-item :label="$t('sys.payPasswordSet')" v-if="(returnOrder.status === 1 && returnOrder.type === 3) || (returnOrder.type === 1 && returnOrder.status === 6)" prop="pay_pass">
-              <el-input type="password" v-model="pay_pass" auto-complete="new-password" clearable></el-input>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.user')}}:</el-col>
+                <el-col :span="19">
+                  {{returnOrder.user_nick_name}}&nbsp;&nbsp;{{returnOrder.user_mobile}}
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item>
+              <span class="label">{{$t('order.returnGoods')}}:</span>
+              <div class="" v-if="returnOrder.id" v-for="(goods, i) in returnOrder.goods_items" :key="i" style="margin-top: 15px">
+                <el-row type="flex" class="row-bg" justify="space-between">
+                  <el-col :span="6">
+                    <el-image class="image" style="width: 120px; height: 120px" :src="getImageUrl(goods.sku_img,120,120)" fit="cover"></el-image>
+                  </el-col>
+                  <el-col :span="19"> 
+                    <div class="g-info">
+                      <p style="margin-bottom: 7px">
+                        <el-tag :type="returnOrder.type === 2 ? 'success': ''">{{returnType1[returnOrder.type]}}</el-tag>&nbsp;&nbsp;
+                        <span class="bold-text" style="word-break: normal">{{goods.spu_name}}</span>
+                      </p>
+                      <span>
+                        <span v-for="(v,k) in goods.specifications" :key="k"> {{k}}：<font class="bold-text">{{v}}</font><br/></span>
+                      </span>
+                      <span>
+                        <span>{{$t('order.price3')}}：</span>
+                        <span class="bold-text">{{goods.price | price}}</span>；
+                        <span>{{$t('order.number')}}：</span>
+                        <span class="bold-text">{{goods.count}}</span>
+                      </span>
+                    </div>
+                  </el-col>
+                </el-row>
+                <!-- <div class="clear"></div> -->
+              </div>
+            </el-form-item>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="11" class="label">{{$t('order.returnReason')}}:</el-col>
+                <el-col :span="13">
+                  {{returnOrder.comment}}
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item v-if="returnOrder.type===1 || returnOrder.type===3 ">
+              <span class="label">{{$t('order.returnPrice')}}:</span>
+              <price-input v-model="amount" :disabled="true" clearable></price-input>
+            </el-form-item>
+            <el-form-item v-if="returnOrder.type===2 && returnOrder.shipping_address">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.returnUserAddr')}}:</el-col>
+                <el-col :span="19">
+                  {{returnOrder.shipping_address.address.province + returnOrder.shipping_address.address.city + returnOrder.shipping_address.address.district}}&nbsp;{{returnOrder.shipping_address.address.addr}}
+                  <br/>
+                  {{returnOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{returnOrder.shipping_address.mobile}}
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item v-if="returnOrder.status === 1 && returnOrder.type !== 3">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.returnAddr')}}:</el-col>
+                <el-col :span="19">
+                  <el-select v-model="addressId" style="width: 300px" >
+                    <el-option
+                      v-for="item in addressList"
+                      :key="item.id"
+                      :label="item.province + item.city + item.district"
+                      :value="item.id">
+                      <div class="address-item">
+                        <p>{{item.province + item.city + item.district + item.addr}}</p>
+                        <p>{{item.contacter_name + item.mobile}}</p>
+                      </div>
+                    </el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item v-if="(returnOrder.status === 3 || returnOrder.status === 5 || returnOrder.status === 6) && returnOrder.type !== 3 && returnOrder.merchant_shipping_address">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="6" class="label">{{$t('order.returnAddr')}}:</el-col>
+                <el-col :span="18">
+                  {{returnOrder.merchant_shipping_address.address.province + returnOrder.merchant_shipping_address.address.city + returnOrder.merchant_shipping_address.address.district}}&nbsp;{{returnOrder.merchant_shipping_address.address.addr}}
+                  <br/>
+                  {{returnOrder.merchant_shipping_address.contacter_name}}&nbsp;&nbsp;{{returnOrder.merchant_shipping_address.mobile}}
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item v-if="(returnOrder.status === 5 || returnOrder.status === 6|| returnOrder.status === 8) && (returnOrder.type === 1 || returnOrder.type === 2)">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="6" class="label">{{$t('order.returnExpress')}}:</el-col>
+                <el-col :span="18">
+                  <a target="_blank" :href="getKuaidi100Url(returnOrder.express2merchant.company, returnOrder.express2merchant.novar)">{{expressageList[returnOrder.express2merchant.company]}}&nbsp;&nbsp;{{returnOrder.express2merchant.novar}}<i class="el-icon-arrow-right"></i> </a>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item v-if="(returnOrder.status === 5 || returnOrder.status === 8)  && returnOrder.type === 2">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="6" class="label">{{$t('order.returnExpress1')}}:</el-col>
+                <el-col :span="18">
+                  <a target="_blank" :href="getKuaidi100Url(returnOrder.express2user.company, returnOrder.express2user.novar)">{{expressageList[returnOrder.express2user.company]}}&nbsp;&nbsp;{{returnOrder.express2user.novar}}<i class="el-icon-arrow-right"></i> </a>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item v-if="returnOrder.status === 6 && returnOrder.type === 2">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="6" class="label">{{$t('order.returnExpress1')}}:</el-col>
+                <el-col :span="18">
+                  <el-row :gutter="24">
+                    <el-col :span="11">
+                      <express-selector v-model="expressCompany"></express-selector>
+                    </el-col>
+                    <el-col :span="13">
+                      <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+                    </el-col>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item v-if="(returnOrder.status === 1 && returnOrder.type === 3) || (returnOrder.type === 1 && returnOrder.status === 6)" prop="pay_pass">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="6" class="label">{{$t('sys.payPasswordSet')}}:</el-col>
+                <el-col :span="18">
+                  <el-input type="password" v-model="pay_pass" auto-complete="new-password" clearable></el-input>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer" v-if="permissionCheck('opt') && (returnOrder.status === 1 || returnOrder.status === 6)">
             <template v-if="returnOrder.status ===1">
               <confirm-button v-if="returnOrder.type === 3" @confirmButton="saveDataFunc(5)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
               <confirm-button v-else @confirmButton="saveDataFunc(3)" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.agree')"></confirm-button>
-              <confirm-button @confirmButton="saveDataFunc(4)" :confirmButtonInfor="$t('tools.refuse')"></confirm-button>
+              <confirm-button @confirmButton="saveDataFunc(4)" :confirmButtonInfor="$t('tools.refuse')" btnType="danger"></confirm-button>
             </template>
             <template v-else>
               <confirm-button @confirmButton="saveDataFunc(5)" :disabled="submitDisabled" :confirmButtonInfor="returnOrder.type === 1 ? $t('order.returnExpress3') : $t('order.returnExpress2')"></confirm-button>
@@ -247,6 +322,8 @@
         ],
         orderStatus: [this.$t('tools.all'), this.$t('order.returnStatus1'), this.$t('order.returnStatus2'), this.$t('order.returnStatus3'), this.$t('order.returnStatus4'), this.$t('order.returnStatus5'),
           this.$t('order.returnStatus6'), '', this.$t('order.returnStatus8')],
+        orderStatusColor: ['primary', 'warning', 'danger', 'warning', 'danger', 'primary',
+          'primary', '', 'success'],
         orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '1', label: this.$t('order.returnStatus1') }, { value: '2', label: this.$t('order.returnStatus2') }, { value: '3', label: this.$t('order.returnStatus3') }, { value: '4', label: this.$t('order.returnStatus4') },
           { value: '5', label: this.$t('order.returnStatus5') }, { value: '6', label: this.$t('order.returnStatus6') }, { value: '7', label: '' }, { value: '8', label: this.$t('order.returnStatus8') }],
         searchForm: {
@@ -345,6 +422,18 @@
       }
     },
     methods: {
+      handleSearchOrder(value) {
+        var newString = "";
+        for (var i = 0; i < value.length; i++) {
+          if (value.charCodeAt(i) >= 48 && value.charCodeAt(i) <= 57) {
+            newString += value[i];
+          }
+          else {
+            break;
+          }
+        }
+        this.searchForm.order_no = newString;
+      },
       getAfterSalesCount() {
         this.orderStatusTab = JSON.parse(JSON.stringify(this.tabList))
 
@@ -467,10 +556,15 @@
     }
     .g-info{
       text-align: left;
-      padding-left: 110px;
+      margin: 0px;
+      // padding-left: 110px;
       p{
         margin: 0px;
         padding: 3px 0px;
+        span {
+          color: #606266;
+          margin: 0px;
+        }
       }
     }
     .clear{
@@ -498,6 +592,15 @@
       margin: 0px;
       padding: 0px;
     }
+  }
+  .bold-text {
+    color: black !important; 
+    font-weight: bold
+  }
+  .label {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
   }
 
 </style>

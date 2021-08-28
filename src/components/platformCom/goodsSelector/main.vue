@@ -3,11 +3,12 @@
         <el-input readonly :placeholder="$t('goods.placeholder')" clearable v-model="orderInfo.name" @clear="clearInput">
             <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
         </el-input>
-        <el-dialog :title="$t('goods.goodslist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
+        <el-dialog width="80%" :visible.sync="dialogFormVisible" center append-to-body>
+            <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('goods.goodslist')}}</span>
             <v-pageSearch style="padding: 0px;">
               <el-form :inline="true" :model="searchForm">
                 <el-form-item>
-                  <el-select v-model="searchForm.approve_status" @change="search" :placeholder="$t('goods.checkSelectorHolder')">
+                  <el-select v-model="searchForm.approve_status" @change="search" :placeholder="$t('goods.checkSelectorHolder')" style="width: 200px">
                     <el-option
                       v-for="item in approveStatus"
                       :key="item.value"
@@ -17,7 +18,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-input v-model="searchForm.name" :placeholder="$t('tools.searchKeyTip')" clearable></el-input>
+                  <el-input v-model="searchForm.name" :placeholder="$t('tools.searchKeyTip')" clearable style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
@@ -31,7 +32,8 @@
                   <template  slot-scope="scope">
                     <!--<a class="goods-item" :href="goodsPreview(scope.row)" target="_blank" style="cursor: pointer">-->
                     <div class="goods-item">
-                    <el-image class="image" style="width: 60px; height: 60px"  :src="getImageUrl(scope.row.images[0], 100,100)"  fit="cover"></el-image>
+
+                      <el-image class="image" style="width: 60px; height: 60px" :src="getImageUrl(scope.row.images[0], 100,100)" fit="cover"></el-image>
                       <div class="g-info">
                         <p>{{scope.row.name}}
                           <el-tag size="mini" type="danger" v-if="scope.row.type === 2">{{$t("goods.cobuy")}}</el-tag>
@@ -43,21 +45,21 @@
                     <!--</a>-->
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('goods.checkStatus')" width="110">
+                <el-table-column :label="$t('goods.checkStatus')" width="160" align="center">
                   <template  slot-scope="scope">
                     <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
                       {{scope.row.approve_status === 2 ? $t('goods.checkStatusB') : (scope.row.approve_status === 3 ?  $t('goods.checkStatusC') :  $t('goods.checkStatusA') )}}
                     </el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('goods.putawayG')" width="90">
+                <el-table-column :label="$t('goods.putawayG')" width="140" align="center">
                   <template  slot-scope="scope">
                     <el-tag :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
                       {{scope.row.shelf_status === 2 ?$t('goods.putawayA') : $t('goods.putawayB')}}
                     </el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('goods.price')" width="120">
+                <el-table-column :label="$t('goods.price')" width="120" align="center">
                   <template  slot-scope="scope">
                     <template v-if="scope.row.type === 3">
                       <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
@@ -70,11 +72,11 @@
                     </template>
                   </template>
                 </el-table-column>
-                <el-table-column prop="inventory" width="75"  :label="$t('goods.inventory')">
+                <el-table-column prop="inventory" width="100" :label="$t('goods.inventory')" align="center">
                 </el-table-column>
-                <el-table-column prop="sales" width="75"  :label="$t('goods.saled')">
+                <el-table-column prop="sales" width="100" :label="$t('goods.saled')" align="center">
                 </el-table-column>
-                <el-table-column prop="gen_time" width="150"  :label="$t('goods.publishTime')">
+                <el-table-column prop="gen_time" width="150"  :label="$t('goods.publishTime')" align="center">
                 </el-table-column>
               </el-table>
               <el-col>
@@ -93,8 +95,8 @@
             </el-col>
           </el-row>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false" size="mini">{{$t('tools.cancel')}}</el-button>
-                <el-button type="primary" size="mini" @click="submitSelect">{{$t('tools.confirm')}}</el-button>
+                <el-button type="success" size="small" @click="submitSelect">{{$t('tools.confirm')}}</el-button>
+                <el-button @click="dialogFormVisible = false" size="small">{{$t('tools.cancel')}}</el-button>
             </div>
         </el-dialog>
     </div>

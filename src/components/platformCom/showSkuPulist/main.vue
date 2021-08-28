@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row>
+    <el-row style="margin-bottom: 10px">
       <el-col :span="24">
         <purchases-list @dataid="dataid" @getvalue="getvalue" style="width: 400px;"></purchases-list>
       </el-col>
@@ -8,13 +8,13 @@
     <el-row>
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column property="name" :label="$t('warehouse.name2')"></el-table-column>
-        <el-table-column :label="$t('warehouse.PlaceofOrigin')">
+        <el-table-column property="name" :label="$t('warehouse.name2')" width="200px"></el-table-column>
+        <el-table-column :label="$t('warehouse.PlaceofOrigin')" width="200px">
           <template slot-scope="scope">
             <el-input v-model="scope.row.origin"></el-input>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('warehouse.location')">
+        <el-table-column :label="$t('warehouse.location')" width="160px">
           <template slot-scope="scope">
             <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
               <el-option
@@ -26,27 +26,27 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('warehouse.pecifications')">
+        <el-table-column :label="$t('warehouse.pecifications')" width="200px">
           <template slot-scope="scope">
             {{textFilter(scope.row.specification)}}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('warehouse.barCode')">
+        <el-table-column :label="$t('warehouse.barCode')" width="200px">
           <template slot-scope="scope">
             <el-input v-model="scope.row.barcode"></el-input>
           </template>
         </el-table-column>
-        <el-table-column v-if="permissionCheck('opt', '9_3')" property="unit_price" :label="$t('warehouse.price')">
+        <el-table-column v-if="permissionCheck('opt', '9_3')" property="unit_price" :label="$t('warehouse.price')" align="center" width="100px">
            <template slot-scope="scope">
                       {{scope.row.unit_price | price}}
                     </template>
         </el-table-column>
-        <el-table-column :label="$t('warehouse.num')">
+        <el-table-column :label="$t('warehouse.num')" width="150px">
           <template slot-scope="scope">
             <el-input v-model.number="scope.row.count"></el-input>
           </template>
         </el-table-column>
-        <el-table-column v-if="permissionCheck('opt', '9_3')" property="total_price" :label="$t('warehouse.allprice')">
+        <el-table-column v-if="permissionCheck('opt', '9_3')" property="total_price" :label="$t('warehouse.allprice')" align="center" width="100px">
            <template slot-scope="scope">
                       {{scope.row.total_price | price}}
                     </template>

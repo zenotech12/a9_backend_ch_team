@@ -4,10 +4,10 @@
       <!-- 搜索 -->
       <div class="rightbox">
         <el-row>
-          <el-col :span="24" class="funcList">
+          <el-col :span="24" class="funcList" style="padding: 10px 15px; padding-right: 0">
             <div class="boxFuncBtn" @click="addNewsPostage"  v-if="permissionCheck('opt')">
-              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              <!-- <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add"> -->
+              <el-button type="success" size="small" icon="el-icon-plus">{{$t('tools.add')}}</el-button>
             </div>
           </el-col>
         </el-row>
@@ -41,84 +41,96 @@
                       <span v-if="scope.row.quote">{{scope.row.quote.price_step | price}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('tools.opt')"  v-if="permissionCheck('opt')">
+                  <el-table-column :label="$t('tools.opt')"   v-if="permissionCheck('opt')" align="center">
                     <template slot-scope="scope">
-                      <el-button @click="editPostage(scope.row, scope.$index)" type="text">{{$t('tools.edit')}}</el-button>
-                      <span class="xiexian">/</span>
-                      <el-button @click="delPostage(scope.row.id)" type="text">{{$t('tools.delete')}}</el-button>
+                      <el-button size="small" @click="editPostage(scope.row, scope.$index)">{{$t('tools.edit')}}</el-button>
+                      <el-button size="small" @click="delPostage(scope.row.id)" type="danger">{{$t('tools.delete')}}</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
               </div>
           </el-col>
         </el-row>
-        <el-dialog v-if="postageDialog" :title="$t('sys.postageRuleEdit')"  :visible.sync="postageDialog">
-      <el-form label-width="100px">
-        <el-form-item :label="$t('sys.name')">
-          <el-input v-model="postageData.name"></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('sys.default')">
-          <el-checkbox v-model="postageData.default" :true-label="1" :false-label="0"></el-checkbox>
-        </el-form-item>
-        <el-form-item :label="$t('sys.postageRule')">
-          <el-radio-group v-model="hasRadio" class="postpageBox">
-            <el-table :data="postageData.setting">
-              <el-table-column :label="$t('sys.region')">
-                <template slot-scope="scope">
-                  <div style="padding: 20px">
-                    <el-popover
-                      placement="top-start"
-                      width="800"
-                      trigger="click">
-                      <el-row  style="padding: 10px">
-                        <el-col v-for="(i, j) in provinces" :span="6" :key="j">
-                          <el-checkbox v-model="i.checked" :disabled="i.index !== -1 && i.index !== scope.$index" :label="i.name" @change="checkClick(scope.row, i.checked, i.name, scope.$index, i)"></el-checkbox>
-                        </el-col>
-                        <el-col>
-                          <el-checkbox :label="$t('tools.selectAll')" @change="selectAll($event, scope.$index, scope.row)" ></el-checkbox>
-                        </el-col>
-                      </el-row>
-                      <el-input slot="reference"  readonly :value="scope.row.province"></el-input>
-                    </el-popover>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('sys.firstWeight')">
-                <template slot-scope="scope">
-                  <price-input class="input_weight"  style="width: 100px" v-model="scope.row.price_base"></price-input>/
-                  <el-input class="input_weight"  placeholder="" v-model="scope.row.base">
-                    <template slot="append" style="padding: 0px 5px">g</template>
-                  </el-input>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('sys.addWeight')">
-                <template slot-scope="scope">
-                  <price-input class="input_weight" style="width: 100px" v-model="scope.row.price_step"></price-input>/
-                  <el-input class="input_weight" placeholder="" v-model="scope.row.step">
-                    <template slot="append" style="width: 25px">g</template>
-                  </el-input>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('sys.default')" width="50px">
-                <template slot-scope="scope">
-                  <el-radio :label="scope.$index">&nbsp</el-radio>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('tools.opt')" width="80px">
-                <template slot-scope="scope">
-                  <el-button size="mini" @click="del(scope.row)" v-if="scope.$index + 1 !== postageData.setting.length">{{$t('tools.delete')}}</el-button>
-                  <el-button size="mini" @click="addPostage" v-else>{{$t('tools.add')}}</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addPostageField" style="margin-right: 20px">{{$t('tools.confirm')}}</el-button>
-        <el-button @click="postageDialog = false">{{$t('tools.close')}}</el-button>
-      </div>
-    </el-dialog>
+        <el-dialog v-if="postageDialog" :visible.sync="postageDialog" width="1000px">
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('sys.postageRuleEdit')}}</span>
+          <el-form label-width="70px" label-position="left">
+            <el-form-item :label="$t('sys.name')">
+              <el-input v-model="postageData.name"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('sys.default')">
+              <el-checkbox v-model="postageData.default" :true-label="1" :false-label="0"></el-checkbox>
+            </el-form-item>
+            <el-form-item label-width="0">
+              <el-divider content-position="left">
+                <span style="font-weight: bold;">
+                  {{$t("sys.postageRule")}}
+                </span>
+              </el-divider>
+              <el-radio-group v-model="hasRadio" class="postpageBox">
+                <el-table :data="postageData.setting">
+                  <el-table-column :label="$t('sys.region')">
+                    <template slot-scope="scope">
+                      <div style="padding: 20px; padding-left: 0">
+                        <el-popover
+                          placement="top-start"
+                          width="800"
+                          trigger="click">
+                          <el-row  style="padding: 10px">
+                            <el-col v-for="(i, j) in provinces" :span="6" :key="j">
+                              <el-checkbox v-model="i.checked" :disabled="i.index !== -1 && i.index !== scope.$index" :label="i.name" @change="checkClick(scope.row, i.checked, i.name, scope.$index, i)"></el-checkbox>
+                            </el-col>
+                            <el-col>
+                              <el-checkbox :label="$t('tools.selectAll')" @change="selectAll($event, scope.$index, scope.row)" ></el-checkbox>
+                            </el-col>
+                          </el-row>
+                          <el-input slot="reference"  readonly :value="scope.row.province"></el-input>
+                        </el-popover>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('sys.firstWeight')" width="220px">
+                    <template slot-scope="scope">
+                      <price-input class="input_weight"  style="width: 100px" v-model="scope.row.price_base"></price-input>/
+                      <el-input class="input_weight"  placeholder="" v-model="scope.row.base">
+                        <template slot="append" style="padding: 0px 5px">g</template>
+                      </el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('sys.addWeight')" width="220px">
+                    <template slot-scope="scope">
+                      <price-input class="input_weight" style="width: 100px" v-model="scope.row.price_step"></price-input>/
+                      <el-input class="input_weight" placeholder="" v-model="scope.row.step">
+                        <template slot="append" style="width: 25px">g</template>
+                      </el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('sys.default')" width="70px" align="center" header-align="left">
+                    <template slot-scope="scope">
+                      <el-radio :label="scope.$index">&nbsp;</el-radio>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('tools.opt')" width="90px" align="center">
+                    <template slot-scope="scope">
+                      <!-- <el-button size="mini" @click="del(scope.row)" v-if="scope.$index + 1 !== postageData.setting.length">{{$t('tools.delete')}}</el-button> -->
+                      <!-- <el-button size="mini" @click="addPostage" v-else>{{$t('tools.add')}}</el-button> -->
+                      
+                      <el-button type="danger" circle size="mini" @click="del(scope.row)" icon="el-icon-delete" v-if="scope.$index + 1 !== postageData.setting.length"></el-button>
+                      <el-button type="success" circle size="mini" @click="addPostage" icon="el-icon-plus" v-else></el-button>
+                      
+
+                      <!-- <i style="color: green" class="el-icon-delete" @click="del(scope.row)" v-if="scope.$index + 1 !== postageData.setting.length"></i>
+                      <i class="el-icon-circle-plus-outline" @click="addPostage" v-else></i> -->
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button size="small" type="success" @click="addPostageField">{{$t('tools.confirm')}}</el-button>
+            <el-button size="small" @click="postageDialog = false">{{$t('tools.cancel')}}</el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>

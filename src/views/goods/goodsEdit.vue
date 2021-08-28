@@ -12,12 +12,12 @@
       <div class="sys-body">
         <div class="sys-neiBody" style="margin-bottom: 50px">
           <!-- 搜索 -->
-            <el-form :model="goodsData" :rules="formRules" ref="goodsForm" label-width="100px" style="min-height: 350px">
+            <el-form :model="goodsData" :rules="formRules" ref="goodsForm" label-width="200px" label-position="left" style="min-height: 350px; padding-left: 20px;">
+              <el-divider content-position="left" ><span style="font-weight:bold;">{{$t('goods.goodsInfo1')}}</span></el-divider>
               <el-form-item :label="$t('goods.sysType')" required>
                 <el-cascader ref="sysGoodsTypeSelector" :options="sysTypes" v-model="goodsSysTypes" :props="typeProp" @change="sysTypeChange" filterable></el-cascader>
               </el-form-item>
-              <el-divider content-position="left">{{$t('goods.goodsInfo1')}}</el-divider>
-              <el-form-item :label="$t('goods.name')" prop="name">
+              <el-form-item :label="$t('goods.name')" prop="name" required="">
                 <el-input v-model="goodsData.name" style="max-width: 500px" auto-complete="off" clearable></el-input>
               </el-form-item>
               <el-form-item :label="$t('goods.introGoods')" prop="intro">
@@ -39,7 +39,31 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-              <el-divider content-position="left">{{$t('goods.goodsInfo2')}}</el-divider>
+              <el-form-item :label="$t('goods.goodsPic')" required>
+                <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
+                  <draggable v-model="goodsData.images"  :options = "{animation:500}">
+                    <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
+                      <el-image
+                        style="height: 100px; width: 100px; margin-right: 10px;" fit="contain"
+                        :src="getImageUrl(img)"
+                        :preview-src-list="goodsPreviewImages">
+                      </el-image>
+                      <i class="el-icon-close delbtn" @click="delGoodsImage(imgk)"></i>
+                    </div>
+                  </draggable>
+                </div>
+                <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
+              </el-form-item>
+              <el-form-item :label="$t('goods.type')" required>
+                <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
+              </el-form-item>
+              <el-form-item :label="$t('goods.introDetail')">
+                <el-input v-model="goodsData.intro_detail" type="textarea" rows="5" auto-complete="off" clearable></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('goods.picdes')">
+                <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
+              </el-form-item>
+              <el-divider content-position="left"><span style="font-weight:bold;">{{$t('goods.goodsInfo2')}}</span></el-divider>
               <el-form-item style="" :label="$t('goods.goodsType')" v-if="goodsData.type !==2 && shopInfo.points_goods">
                 <el-col :span="4">
                   <el-select v-model="goodsData.type">
@@ -75,33 +99,18 @@
                   <el-button size="mini" @click="deleteProps(k)" type="danger" icon="el-icon-delete" circle></el-button>：
                   <el-tag :key="tag" v-for="(tag,i) in goodsProps[k].items" closable :disable-transitions="false" @click="showPropEdit(k,i,tag)"  @close="handleClose(k,tag)"> {{tag}} </el-tag>
                   <el-input class="input-new-tag"  :placeholder="$t('goods.spec')" v-if="goodsProps[k].isInput"  v-model="goodsProps[k].newTag"   ref="saveTagInput"  size="small"   @keyup.enter.native="handleInputConfirm(k)"  @blur="handleInputConfirm(k)" ></el-input>
-                  <el-button v-else class="button-new-tag" size="small" @click="showInput(k)">{{$t('goods.spec1')}}</el-button>
+                  <el-button v-else class="button-new-tag" size="small" @click="showInput(k)" icon="el-icon-plus">{{$t('goods.spec1')}}</el-button>
                 </div>
-                <a @click="addGoodsProp" class="add-prop-btn">{{$t('goods.prop1')}}</a>
+                <el-button @click="addGoodsProp" class="add-prop-btn" type="success" size="small" icon="el-icon-plus">{{$t('goods.prop1')}}</el-button>
               </el-form-item>
               <el-form-item required>
                 <template slot="label">
                   {{$t('goods.price')}} <i class="el-icon-download" style="cursor: pointer" v-if="currentId !== '' && currentId !== undefined" @click="downloadExport"></i>
                 </template>
-                <el-table :data="goodsInventoryTable"  style="width: 100%" :span-method="inventoryTableSpanMethod">
+                <el-table :data="goodsInventoryTable"  style="width: 100%" :span-method="inventoryTableSpanMethod" border>
                   <el-table-column :label="$t('goods.sp')">
                     <template  slot-scope="scope">
                       {{scope.row.title}}
-                    </template>
-                  </el-table-column>
-                  <el-table-column :label="$t('goods.goodsCode')">
-                    <template slot="header" slot-scope="scope">
-                      {{$t('goods.goodsCode')}}
-                      <el-popover placement="bottom"
-                                  width="200"
-                                  trigger="click">
-                        <el-input v-model.number="itemCode">
-                        </el-input>
-                        <i slot="reference" :title="$t('goods.batchSet')" class="el-icon-setting"></i>
-                      </el-popover>
-                    </template>
-                    <template  slot-scope="scope">
-                      <el-input v-model="scope.row.item_code"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column  :label="$t('goods.barcode')">
@@ -205,37 +214,7 @@
                   </el-table-column>
                 </el-table>
               </el-form-item>
-
-              <el-divider content-position="left">{{$t('goods.goodsInfo3')}}</el-divider>
-              <el-form-item :label="$t('goods.type')" required>
-                <el-cascader :options="typeData" v-model="goodsTypes" :props="typeProp2" @change="goodsTypeChange"></el-cascader>
-              </el-form-item>
-              <!--<el-form-item :label="$t('goods.intro')" style="display: none">-->
-                <!--<el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>-->
-              <!--</el-form-item>-->
-              <el-form-item :label="$t('goods.goodsPic')" required>
-                <div class="prop-image__preview" v-if="goodsData.images && goodsData.images.length > 0">
-                  <draggable v-model="goodsData.images"  :options = "{animation:500}">
-                    <div class="pitem"  v-for="(img,imgk) in goodsData.images" :key="imgk">
-                      <el-image
-                        style="height: 100px; width: 100px" fit="contain"
-                        :src="getImageUrl(img)"
-                        :preview-src-list="goodsPreviewImages">
-                      </el-image>
-                      <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
-                    </div>
-                  </draggable>
-                </div>
-                <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
-              </el-form-item>
-              <el-form-item :label="$t('goods.introDetail')">
-                <el-input v-model="goodsData.intro_detail" type="textarea" rows="2" auto-complete="off" clearable></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('goods.picdes')">
-                <ll-editor :content="goodsData.desc" @contentChange="contentChangeFunc"></ll-editor>
-              </el-form-item>
-
-              <el-divider content-position="left">{{$t('goods.goodsInfo4')}}</el-divider>
+              <el-divider content-position="left"><span style="font-weight:bold;">{{$t('goods.goodsInfo3')}}</span></el-divider>
               <el-form-item :label="$t('goods.riderPost')">
                 <el-checkbox v-model="goodsData.rider_post_support">{{$t('goods.riderPostSupport')}}</el-checkbox>
               </el-form-item>
@@ -263,13 +242,16 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-divider content-position="left">{{$t('goods.goodsInfo5')}}</el-divider>
+              <!--<el-form-item :label="$t('goods.intro')" style="display: none">-->
+                <!--<el-input v-model="goodsData.intro" auto-complete="off" clearable></el-input>-->
+              <!--</el-form-item>-->
+              <el-divider content-position="left"><span style="font-weight:bold;">{{$t('goods.goodsInfo4')}}</span></el-divider>
               <el-form-item :label="$t('goods.xgLabel')" prop="xg">
                 <el-radio v-model="xgType" :label="1">{{$t('goods.xgLabel1')}}</el-radio>
                 <el-radio v-model="xgType" :label="2">{{$t('goods.xgLabel2')}}</el-radio>
                 <template v-if="xgType == 2">
-                  {{$t('goods.limitNo')}}<el-input style="width: 100px; display: inline-block"  size="small" placeholder="" v-model.number="goodsData.buy_limit">  </el-input>
-                  {{$t('goods.limitDays')}}<el-input style="width: 100px; display: inline-block"   size="small" placeholder="" v-model.number="goodsData.buy_limit_day"></el-input>days
+                  <span style="margin-right: 10px;">{{$t('goods.limitNo')}}</span><el-input style="width: 100px; display: inline-block"  size="small" placeholder="" v-model.number="goodsData.buy_limit"></el-input>
+                  <span style="margin-left: 15px; margin-right: 10px;">{{$t('goods.limitDays')}}</span><el-input style="width: 100px; display: inline-block"   size="small" placeholder="" v-model.number="goodsData.buy_limit_day"></el-input> days
                 </template>
               </el-form-item>
               <el-form-item :label="$t('goods.wkcgm')">
@@ -291,10 +273,10 @@
                   </el-select>
                 </el-col>
                 <template  v-if="goodsData.shelf_status==2">
-                  <el-col :span="4">
-                    <el-checkbox v-model="isSetShelfTime"></el-checkbox>{{$t('goods.putawayD')}}
+                  <el-col :span="3">
+                    <el-checkbox v-model="isSetShelfTime"></el-checkbox><span style="margin-left: 10px;">{{$t('goods.putawayD')}}</span>
                   </el-col>
-                  <el-col :span="8" v-if="isSetShelfTime">
+                  <el-col :span="8" v-if="isSetShelfTime" style="padding-left: 10px">
                     <el-date-picker
                       v-model="goodsData.shelf_time"
                       value-format="yyyy-MM-dd HH:mm:ss"
@@ -314,11 +296,11 @@
                 <div class="prop-image__preview" v-if="goodsInventoryTable.length > 0">
                   <div class="pitem"  v-for="(img,imgk) in goodsInventoryTable[propsImageEditIndex].images" :key="imgk">
                     <el-image
-                      style="width: 100px; height: 100px"
+                      style="width: 100px; height: 100px; margin-right: 10px;"
                       :src="getImageUrl(img)"
                       :preview-src-list="propPreviewImages">
                     </el-image>
-                    <i class="el-icon-delete delbtn" @click="delPropImage(imgk)"></i>
+                    <i class="el-icon-close delbtn" @click="delPropImage(imgk)"></i>
                   </div>
                 </div>
               </template>
@@ -355,16 +337,16 @@
                   <div class="prop-image__preview" v-if="langInfo[currentLang].images && langInfo[currentLang].images.length > 0">
                     <div class="pitem"  v-for="(img,imgk) in langInfo[currentLang].images" :key="imgk">
                       <el-image
-                        style="height: 100px; width: 100px" fit="contain"
+                        style="height: 100px; width: 100px; margin-right: 10px;" fit="contain"
                         :src="getImageUrl(img)">
                       </el-image>
-                      <i class="el-icon-delete delbtn" @click="delGoodsImage(imgk)"></i>
+                      <i class="el-icon-close delbtn" @click="delGoodsImage(imgk)"></i>
                     </div>
                   </div>
                   <image-upload  @uploadSuccess="imageUploadSuccess"></image-upload>
                 </el-form-item>
                 <el-form-item :label="$t('goods.introDetail')">
-                  <el-input v-model="langInfo[currentLang].intro_detail" type="textarea" rows="2" auto-complete="off" clearable></el-input>
+                  <el-input v-model="langInfo[currentLang].intro_detail" type="textarea" rows="5" auto-complete="off" clearable></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('goods.picdes')">
                   <ll-editor :content="langInfo[currentLang].desc" @contentChange="contentChangeFunc"></ll-editor>
@@ -378,7 +360,7 @@
       </div>
       <div class="page-footer">
         <confirm-button @confirmButton="saveFunc" :disabled="disabled" :confirmButtonInfor="$t('goods.saveGoods')"></confirm-button>
-        <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px;margin-left: 10px;">{{$t('goods.backGoodsList')}}</el-button>
+        <el-button @click="cancelGoodsEdit" size="small" style="margin-right: 24px; margin-left: 10px;">{{$t('goods.backGoodsList')}}</el-button>
       </div>
       <el-dialog :title="$t('goods.successTip')" width="30%" @close="showSuccessTip = false" :visible.sync="showSuccessTip" :close-on-click-modal="false" center>
         <el-row>
@@ -421,7 +403,6 @@
         batchPrice: 0,
         batchRTag: '',
         batchOPrice: 0,
-        itemCode: 0,
         langInfo: {},
         currentLang: 'zh',
         languages: languages,
@@ -602,11 +583,6 @@
           this.$set(item, 'inventory', val)
         })
       },
-      itemCode(val) {
-        this.goodsInventoryTable.forEach(item => {
-          this.$set(item, 'item_code', val)
-        })
-      },
       batchPrice(val) {
         this.goodsInventoryTable.forEach(item => {
           this.$set(item, 'price', val)
@@ -641,7 +617,7 @@
           this.goodsInventoryTable = []
           const skus = this.getTreePath(0)
           skus.forEach(item => {
-            const tableItem = { specifications: item, price: 0, item_code: '', original_price: 0, price_recommend_key: '', cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
+            const tableItem = { specifications: item, price: 0, original_price: 0, price_recommend_key: '', cobuy_price: 0, inventory: 0, images: [], weight: 0, barcode: '', no: 0 }
             let str = ''
             val.forEach(gi => {
               if (gi.name !== '' && gi.items.length > 0) {
@@ -663,7 +639,6 @@
                 tableItem.barcode = this.goodsInventoryData[i].barcode
                 tableItem.no = this.goodsInventoryData[i].no
                 tableItem.price = this.goodsInventoryData[i].price
-                tableItem.item_code = this.goodsInventoryData[i].item_code
                 tableItem.original_price = this.goodsInventoryData[i].original_price
                 tableItem.price_recommend_key = this.goodsInventoryData[i].price_recommend_key
                 tableItem.weight = this.goodsInventoryData[i].weight
@@ -718,7 +693,7 @@
             if (res.item.need_recover) {
               this.$confirm(this.$t('goods.noSaveGoodsTip'), this.$t('tools.prompt'), {
                 confirmButtonText: this.$t('goods.lijihuifusuju'),
-                cancelButtonText: this.$t('goods.cancelhuifusuju'),
+                cancelButtonText: this.$t('tools.cancel'),
                 type: 'success'
               }).then(() => {
                 const data = JSON.parse(res.item.content)
@@ -1273,7 +1248,7 @@
             draftsDel({ classify: 'spu' }).then(res => {})
             this.$confirm(this.$t('goods.saveTip2') + title + this.$t('goods.saveTip3'), this.$t('tools.prompt'), {
               confirmButtonText: this.$t('tools.confirm'),
-              cancelButtonText: this.$t('goods.backGoodsList'),
+              cancelButtonText: this.$t('tools.cancel'),
               type: 'success'
             }).then(() => {
               this.$router.go(0)
@@ -1341,7 +1316,7 @@
       width: 100px;
     }
     .input-new-tag{
-      width: 100px;
+      width: 150px;
     }
     .add-prop-btn {
 
@@ -1349,14 +1324,6 @@
   }
 </style>
 <style lang="scss">
-  .custom-tree-node{
-    & > span:first-child{
-      width: 100px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-  }
   .prop-image__preview{
     .pitem{
       display: inline-block;
@@ -1365,8 +1332,13 @@
       .delbtn{
         cursor: pointer;
         position: absolute;
-        top: 0px;
-        right: 0px;
+        top: -5px !important;
+        right: 4px !important;
+        font-size: 15px;
+        font-weight: bold;
+        background-color: lightgray;
+        padding: 5px;
+        border-radius: 50%;
       }
     }
   }
@@ -1406,5 +1378,8 @@
         color: #1E88E5;
       }
     }
+  }
+  .el-divider{
+    background-color: black;
   }
 </style>

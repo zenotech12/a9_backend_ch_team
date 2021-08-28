@@ -12,7 +12,6 @@ export default {
   price1: '商品金额',
   price2: '运费',
   price3: '单价',
-  itemCode: '商品编码',
   price4: '支付金额',
   price4Tip: '价格修改后，用户可以按照新的价格进行支付',
   price4Tip1: '价格修改成功',
@@ -234,9 +233,5 @@ export default {
   notArrived: '未到货',
   costChengben: '成本',
   yhqdk: '优惠券抵扣',
-  actuallyPay: '实付金额',
-  saleGoodsReportExport: '导出销售商品报告',
-  inventroyGoodsExport: '导出库存商品报告',
-  purchaseGoodsExport: '导出采购单商品报告',
-  exportDate: '导出日期'
+  actuallyPay: '实付金额'
 }

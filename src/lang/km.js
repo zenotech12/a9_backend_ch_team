@@ -75,7 +75,5 @@ export default {
   AbnormalLogin: 'ការចូលមិនធម្មតា',
   ReminderSet: 'ការគ្រប់គ្រងអនុសរណៈ',
   overdraftSet: 'ការកំណត់ឥណទានលើស',
-  selfPickStation: 'ចំណុចជ្រើសរើសដោយខ្លួនឯង',
-  xportMgr: 'ការគ្រប់គ្រងការនាំចេញ',
-  reportExport: 'រាយការណ៍ពីការនាំចេញ'
+  selfPickStation: 'ចំណុចជ្រើសរើសដោយខ្លួនឯង'
 }

@@ -4,15 +4,20 @@
       <el-button slot="append" icon="el-icon-search" @click="showGoodsTable"></el-button>
     </el-input>
     <div v-else>
+      <!-- In Set Up Distribution Products -->
       <div v-if="showTag">
-        <el-tag :key="goods.id" v-for="(goods, k) in selectedGoods" :closable="disabled" :disable-transitions="false"  @close="deleteSelectedGoods(k)">{{goods.name}}</el-tag>
-        <el-button icon="el-icon-search" :disabled="!disabled" @click="showGoodsTable1" size="mini"></el-button>
+        <el-tag :key="goods.id" v-for="(goods, k) in selectedGoods" :closable="disabled" :disable-transitions="false"  @close="deleteSelectedGoods(k)" style="margin-right: 10px; margin-bottom: 10px">{{goods.name}}</el-tag>
+        <!-- <el-button icon="el-icon-search" :disabled="!disabled" @click="showGoodsTable1" size="mini"></el-button> -->
+        
+        <el-button type="primary" size="small" :disabled="!disabled" icon="el-icon-plus" @click="showGoodsTable1">{{$t('operation.chooseGoods')}}</el-button>
       </div>
+      
       <div v-if="!showTag">
-        <el-button type="primary" size="mini" icon="el-icon-plus" @click="showGoodsTable1">{{$t('operation.chooseGoods')}}</el-button>
+        <el-button type="primary" size="small" icon="el-icon-plus" @click="showGoodsTable1">{{$t('operation.chooseGoods')}}</el-button>
       </div>
     </div>
-    <el-dialog :title="$t('goods.selectorTitle')" v-if="dialogFormVisible" :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
+    <el-dialog v-if="dialogFormVisible" :visible.sync="dialogFormVisible" center append-to-body :close-on-click-modal="false">
+      <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('goods.selectorTitle')}}</span>
       <!-- 搜索 -->
       <el-row>
         <el-col :span="24" style="padding: 3px">
@@ -20,7 +25,7 @@
             <el-form-item>
               <el-cascader :options="typeData" v-model="selectTypes" :props="typeProp" clearable></el-cascader>
             </el-form-item>
-            <el-form-item style="width: 150px">
+            <el-form-item style="width: 180px">
               <el-select v-model="searchForm.approve_status" :disabled="approveDisable" @change="search" placeholder="请选择审批状态">
                 <el-option
                   v-for="item in approveStatus"
@@ -30,7 +35,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item style="width: 150px">
+            <el-form-item style="width: 180px">
               <el-select v-model="searchForm.shelf_status" :disabled="shelfDisable" @change="search" :placeholder="$t('goods.displaySelectorHolder')">
                 <el-option
                   v-for="item in shelfStatus"
@@ -57,25 +62,25 @@
                 <!--<el-checkbox :checked="isSelected(scope.row)" @change="mulitSelectGoodsChange(scope.row)"></el-checkbox>-->
               <!--</template>-->
             </el-table-column>
-            <el-table-column label="#" width="60px">
+            <el-table-column label="#" width="60px" align="center">
               <template slot-scope="scope">
                 {{scope.$index + searchForm.skip + 1}}
               </template>
             </el-table-column>
-            <el-table-column prop="name" width="50">
+            <el-table-column prop="name" width="70">
               <template  slot-scope="scope">
                 <img :src="getImageUrl(scope.row.images[0],200,200)" width="50" height="50"/>
               </template>
             </el-table-column>
             <el-table-column prop="name" :label="$t('goods.name')"></el-table-column>
-            <el-table-column :label="$t('goods.checkStatus')">
+            <el-table-column :label="$t('goods.checkStatus')" align="center" width="200px">
               <template  slot-scope="scope">
                 <el-tag :type="scope.row.approve_status === 2 ? 'success' : (scope.row.approve_status === 3 ? 'danger' : 'info' )">
                   {{scope.row.approve_status === 2 ? $t('goods.checkStatusB') : (scope.row.approve_status === 3 ? $t('goods.checkStatusC') : $t('goods.checkStatusA') )}}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('goods.putaway')">
+            <el-table-column :label="$t('goods.putaway')" align="center" width="220px">
               <template  slot-scope="scope">
                 <el-tag v-if="scope.row.approve_status === 2" @click="goodsShelfModify(scope.row)" :type="scope.row.shelf_status === 2 ? 'success' :  'danger'">
                   {{scope.row.shelf_status === 2 ? $t('goods.hasBeenAddedTo') : $t('goods.removed')}}
@@ -85,7 +90,7 @@
                 </template>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('goods.price')">
+            <el-table-column :label="$t('goods.price')" align="center" width="100px">
               <template  slot-scope="scope">
                 <template v-if="scope.row.type === 3">
                   <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
@@ -115,6 +120,7 @@
       </el-row>
       <div slot="footer" class="dialog-footer" v-if="mulit">
         <confirm-button @confirmButton="saveSelectedFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+        <el-button @click="dialogFormVisible = false" size="small" style="margin-right: 5px; margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
       </div>
     </el-dialog>
   </div>

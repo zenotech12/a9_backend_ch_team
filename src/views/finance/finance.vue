@@ -6,21 +6,32 @@
         <el-row>
           <el-col :span ="24">
             <el-card shadow="always" class="balance-info">
-              <span>{{$t('finance.totalTrans')}}：<font>{{balanceDetail.total_trans | price}}</font></span>
-              <span>{{$t('finance.balance')}}：<font>{{balanceDetail.balance | price}}</font></span>
-              <span>{{$t('finance.balance1')}}：<font>{{balanceDetail.can_withdraw_balance | price}}</font></span>
-              <span>{{$t('finance.totalIncome')}}：<font>{{balanceDetail.accumulated_income | price}}</font></span>
-              <span>{{$t('finance.toBeIncome')}}：<font>{{balanceDetail.to_be_income | price}}</font></span>
-              <span>{{$t('finance.tixianing')}}：<font>{{balanceDetail.withdrawing | price}}</font></span>
-              <span>{{$t('finance.tixianed')}}：<font>{{balanceDetail.withdrawed | price}}</font></span>
-              <span>{{$t('finance.cashIncome')}}：<font>{{balanceDetail.cash | price}}</font></span>
-              <el-button type="primary" v-if="permissionCheck('opt')" size="mini" icon="el-icon-money" @click="addData" class="tx">提现</el-button>
+              <div class="account1">
+              <el-row >
+    	          <el-col :span="5"><div class="grid-content bg-purple"><span>{{$t('finance.totalTrans')}}： &emsp;&nbsp;<font>{{balanceDetail.total_trans | price}}</font></span></div></el-col>
+                <el-col :span="5"><div class="grid-content bg-purple"><span>{{$t('finance.balance1')}}：<font>{{balanceDetail.can_withdraw_balance | price}}</font></span></div></el-col>
+                <el-col :span="5"><div class="grid-content bg-purple"></div> <span>{{$t('finance.toBeIncome')}}：<font>{{balanceDetail.to_be_income | price}}</font></span></el-col>
+                <el-col :span="5"><div class="grid-content bg-purple"></div> <span>{{$t('finance.tixianed')}}：<font>{{balanceDetail.withdrawed | price}}</font></span></el-col>
+              </el-row>
+              </div>
+              <div class="account2">
+              <el-row >
+                <el-col :span="5"><div class="grid-content bg-purple"><span>{{$t('finance.balance')}}：<font>{{balanceDetail.balance | price}}</font></span></div></el-col>
+                <el-col :span="5"><div class="grid-content bg-purple"><span>{{$t('finance.totalIncome')}}：&nbsp;<font>{{balanceDetail.accumulated_income | price}}</font></span></div></el-col>
+                <el-col :span="5"><div class="grid-content bg-purple"><span>{{$t('finance.tixianing')}}: &emsp;&nbsp;&emsp;&nbsp;&nbsp;&nbsp;<font>{{balanceDetail.withdrawing | price}}</font></span></div></el-col>
+                <el-col :span="5"><div class="grid-content bg-purple"><span>{{$t('finance.cashIncome')}}：&emsp;&nbsp;<font>{{balanceDetail.cash | price}}</font></span></div></el-col>
+                <el-button type="success" v-if="permissionCheck('opt')" size="small" icon="el-icon-money" @click="addData" class="tx">{{$t('finance.withdraw')}}</el-button>
+              </el-row>
+              
+              </div>
+              
             </el-card>
           </el-col>
         </el-row>
+        <el-card shadow="always" class="balance-info">
         <el-row>
           <el-col :span="24">
-            <el-form :inline="true" :model="searchForm">
+            <el-form :inline="true" :model="searchForm" style="display:flex; justify-content: space-between">
               <el-form-item :label="$t('finance.timeSpan')">
                 <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable
                                 v-model="searchTimes"
@@ -54,13 +65,13 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="search" size="small" icon="el-icon-search"></el-button>
+                <el-button type="primary" @click="search" size="small" icon="el-icon-search">{{$t('sys.search')}}</el-button>
               </el-form-item>
             </el-form>
           </el-col>
           <el-col :span="24">
-            <div style="height: calc(100vh - 260px)">
-              <el-table stripe border :data="tableData" height="calc(100% - 50px)">
+            <div style="height: calc(77.5vh - 260px)">
+              <el-table stripe border :data="tableData" height="calc(100% - 50px)" class="table">
                 <el-table-column label="#" width="60px">
                   <template slot-scope="scope">
                     {{scope.$index + searchForm.skip + 1}}
@@ -92,15 +103,20 @@
                 <el-pagination
                   :current-page.sync="currentPage"
                   :page-size="pageSize"
-                  layout="total, prev, pager, next, jumper"
+                  layout="total, prev, next, jumper"
                   :total="itemCount">
                 </el-pagination>
               </div>
             </div>
+            
           </el-col>
         </el-row>
-        <el-dialog :title="$t('finance.tixian')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
+        </el-card>
+        <el-dialog width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{
+            $t("finance.tixian")
+          }}</span>
+          <el-form label-width="140px" label-position="left">
             <el-form-item :label="$t('finance.balance1')">
               <span style="color: #f00; font-size: 20px">{{balanceDetail.can_withdraw_balance | price}}</span>
             </el-form-item>
@@ -273,16 +289,26 @@
 
 <style lang="scss" scoped>
   .balance-info{
-    margin-bottom: 10px;
+    margin-top: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
     span{
       display: inline-block;
       margin-right: 10px;
       font{
         color: #ff0000;
+        font-weight: bold;
       }
     }
     .tx{
       float: right !important;
+    }
+    .account1{
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+    .account2{
+      padding-left: 20px;
     }
   }
 </style>
