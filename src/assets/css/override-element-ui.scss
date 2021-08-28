@@ -1,12 +1,12 @@
-$blueBG:#1E88E5;
-.sys-body{
+$blueBG: #1e88e5;
+.sys-body {
   //border-top:6px solid #F2F3F4;
   //border-left:6px solid #F2F3F4;
   //padding-left: 14px;
   //padding-top: 39px;
   min-height: calc(100vh - 85px);
   .el-form-item {
-    margin-bottom: 16px!important;
+    margin-bottom: 16px !important;
   }
   .sys-neiBody {
     min-height: calc(100vh - 105px);
@@ -20,7 +20,7 @@ $blueBG:#1E88E5;
     top: 100%;
     left: 0;
   }
-  .el-icon-circle-plus-outline:before, .el-icon-more:before {
+  .el-icon-more:before {
     font-size: 18px;
   }
 }
@@ -39,25 +39,25 @@ $blueBG:#1E88E5;
   margin: 0 0 24px 20px;
 }
 
-.sys-body{
+.sys-body {
   .el-form-item {
-    margin-bottom: 16px!important;
+    margin-bottom: 16px !important;
   }
 }
 
 .rightbox {
   padding-right: 10px;
   //margin-left: 26px;
-  .funcList{
+  .funcList {
     margin: 10px 0;
     //border-bottom: 1px solid #E7E9ED;
     padding: 0 28px 0px 0px;
-    .boxFuncBtn{
+    .boxFuncBtn {
       float: right;
       display: flex;
       align-items: center;
       .el-button--text {
-        color: #24303E;
+        color: #24303e;
       }
       .icon_add {
         padding-right: 5px;
@@ -70,7 +70,8 @@ $blueBG:#1E88E5;
       }
     }
   }
-  .el-input-number__decrease, .el-input-number__increase {
+  .el-input-number__decrease,
+  .el-input-number__increase {
     height: 30px;
     line-height: 30px;
     top: 4px;
@@ -85,7 +86,7 @@ $blueBG:#1E88E5;
     }
   }
   .footerBtn {
-    .el-button{
+    .el-button {
       width: 100px;
     }
   }
@@ -93,7 +94,7 @@ $blueBG:#1E88E5;
     height: 32px;
   }
   .el-date-editor .el-range__icon {
-    line-height: 27px!important;
+    line-height: 27px !important;
   }
   .el-date-editor .el-range-separator {
     width: 7%;
@@ -110,12 +111,12 @@ $blueBG:#1E88E5;
       padding-top: 3px;
     }
   }
-
 }
 .tableCss {
- td, th.is-leaf {
-   text-align: left!important;
- }
+  td,
+  th.is-leaf {
+    text-align: left !important;
+  }
 }
 
 //.el-table--enable-row-hover .el-table__body tr:hover>td {
@@ -125,23 +126,25 @@ $blueBG:#1E88E5;
 
 /*表格样式*/
 .el-table {
-  td, th.is-leaf {
+  td,
+  th.is-leaf {
     //text-align: left!important;
     //border-bottom: none;
   }
   th.is-leaf {
-    border-bottom: 2px solid rgba(30,136,229,1);
-    text-align: center;
+    border-bottom: 2px solid rgba(30, 136, 229, 1);
+    // text-align: center;
   }
-  th>.cell {
-    font-family:SFUIText-Heavy;
-    color:#24303E;
+  th > .cell {
+    font-family: SFUIText-Heavy;
+    color: #24303e;
     font-size: 14px;
   }
   .cell {
-    .el-button span{
-      color: $blueBG;
-      font-family:PingFangSC-Regular;
+    word-break: break-word;
+    .el-button span {
+      // color: $blueBG;
+      font-family: PingFangSC-Regular;
       font-size: 14px;
     }
     .xiexian {
@@ -149,12 +152,12 @@ $blueBG:#1E88E5;
     }
   }
   td {
-    text-align:center;
+    // text-align: center;
   }
 }
 // 功能分类树部分
 .funcTree {
-  border:1px solid rgba(231,233,237,1);
+  border: 1px solid rgba(231, 233, 237, 1);
   margin-left: 24px;
   .el-dialog__header {
     padding-top: 0;
@@ -163,14 +166,14 @@ $blueBG:#1E88E5;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:rgba(250,250,251,1);
+    background: rgba(250, 250, 251, 1);
     .el-dialog__title {
-      font-size:16px;
-      font-family:PingFangSC-Medium;
-      font-weight:500;
-      color:rgba(36,48,62,1);
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      color: rgba(36, 48, 62, 1);
     }
-    .el-dialog__headerbtn{
+    .el-dialog__headerbtn {
       top: 10px;
     }
   }
@@ -178,12 +181,12 @@ $blueBG:#1E88E5;
     padding-right: 25px;
   }
   .el-dialog__footer {
-    background:rgba(250,250,251,1);
+    background: rgba(250, 250, 251, 1);
     padding: 0;
     height: 60px;
     line-height: 60px;
     text-align: right;
-    .el-button{
+    .el-button {
       width: 100px;
     }
   }
@@ -198,7 +201,7 @@ $blueBG:#1E88E5;
   }
 }
 // 模态框样式
-.el-dialog{
+.el-dialog {
   text-align: left;
   .el-dialog__header {
     padding-top: 0;
@@ -207,14 +210,14 @@ $blueBG:#1E88E5;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:rgba(250,250,251,1);
+    background: rgba(250, 250, 251, 1);
     .el-dialog__title {
-      font-size:16px;
-      font-family:PingFangSC-Medium;
-      font-weight:500;
-      color:rgba(36,48,62,1);
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      color: rgba(36, 48, 62, 1);
     }
-    .el-dialog__headerbtn{
+    .el-dialog__headerbtn {
       top: 10px;
     }
   }
@@ -228,9 +231,10 @@ $blueBG:#1E88E5;
         height: 28px;
       }
     }
-   .el-input .el-input__inner {
-     height: 28px;
-   }
+    .el-input .el-input__inner {
+      height: 28px;
+      padding: 8px;
+    }
     .userChoose {
       .el-input__inner {
         height: 32px;
@@ -247,12 +251,12 @@ $blueBG:#1E88E5;
     }
   }
   .el-dialog__footer {
-    background:rgba(250,250,251,1);
+    background: rgba(250, 250, 251, 1);
     padding: 0;
     height: 60px;
     line-height: 60px;
     text-align: right;
-    .el-button{
+    .el-button {
       //width: 100px;
     }
   }
@@ -269,9 +273,9 @@ $blueBG:#1E88E5;
     margin-top: -6px;
   }
   // 自定义验证必填星号
-  .start>.el-form-item__label:before{
+  .start > .el-form-item__label:before {
     content: "*  ";
-    color: #F56C6C;
+    color: #f56c6c;
   }
   .distpicker_error {
     color: #f56c6c;
@@ -286,35 +290,35 @@ $blueBG:#1E88E5;
 // 多级联动样式
 .distpicker-address-wrapper select {
   height: 28px;
-  padding: 0.1rem .75rem;
+  padding: 0.1rem 0.75rem;
   font-size: 0.6rem;
 }
 
 //按钮样式
 //多级选择框
-.el-popper[x-placement^=bottom] {
+.el-popper[x-placement^="bottom"] {
   margin-top: 6px;
 }
 .funcBoxTitle {
   height: 44px;
-  border-bottom: 1px solid #E7E9ED;
-  .small_title{
+  border-bottom: 1px solid #e7e9ed;
+  .small_title {
     display: inline-block;
-    font-size:14px;
-    font-family:PingFangSC-Regular;
-    font-weight:400;
-    color:rgba(36,48,62,1);
-    line-height:20px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(36, 48, 62, 1);
+    line-height: 20px;
     margin: 12px 0 0 9px;
   }
-  .boxFuncBtn1{
+  .boxFuncBtn1 {
     height: 44px;
     float: right;
     display: flex;
     align-items: center;
     margin-right: 13px;
     .el-button--text {
-      color: #24303E;
+      color: #24303e;
     }
     .icon_add1 {
       padding-right: 5px;
@@ -333,10 +337,10 @@ $blueBG:#1E88E5;
   height: 64px;
   display: flex;
   align-items: center;
-  color:$blueBG;
-  font-size:12px;
-  font-family:PingFangSC-Medium;
-  font-weight:500;
+  color: $blueBG;
+  font-size: 12px;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
   padding-left: 30px;
   //box-shadow:0px 1px 0px 0px rgba(231,233,237,1),0px 1px 0px 0px rgba(231,233,237,1);
   span {
@@ -344,15 +348,15 @@ $blueBG:#1E88E5;
     margin-left: 6px;
     cursor: pointer;
   }
-  img{
+  img {
     cursor: pointer;
   }
 }
 
 .funcBox {
-  border:1px solid rgba(231,233,237,1);
+  border: 1px solid rgba(231, 233, 237, 1);
   border-left: none;
-  background:rgba(250,250,251,1);
+  background: rgba(250, 250, 251, 1);
   //padding-right: 24px;
   .funcTable24 {
     margin: 0 2.2%;
@@ -360,9 +364,9 @@ $blueBG:#1E88E5;
 }
 
 .funcBox2 {
-  border:1px solid rgba(231,233,237,1);
+  border: 1px solid rgba(231, 233, 237, 1);
   border-left: none;
-  background:rgba(250,250,251,1);
+  background: rgba(250, 250, 251, 1);
   .funcTable24 {
     margin: 0 2.2%;
   }
@@ -370,26 +374,26 @@ $blueBG:#1E88E5;
 
 /*功能分类*/
 .el-tree-node {
-  margin-left:15px;
+  margin-left: 15px;
   .el-tree-node__content {
     height: 40px;
-    margin-left: 15px;
+    // margin-left: 15px;
     .treeAddImg {
-      margin-right: 12px;
+      margin-right: 5px;
     }
-
   }
 }
 // 功能分类每行hover效果
-.el-tree-node__content:hover{
-  box-shadow:0px 1px 0px 0px rgba(231,233,237,1),0px -1px 0px 0px rgba(231,233,237,1);
-  background:rgba(250,250,251,1);
+.el-tree-node__content:hover {
+  box-shadow: 0px 1px 0px 0px rgba(231, 233, 237, 1),
+    0px -1px 0px 0px rgba(231, 233, 237, 1);
+  background: rgba(250, 250, 251, 1);
   z-index: 8888;
 }
 
-
 .custom-tree-node {
-  flex: 1;
+  // flex: 1;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -399,27 +403,27 @@ $blueBG:#1E88E5;
 
 .labelName {
   height: 32px;
-  border-bottom: 1px solid #E7E9ED;
+  border-bottom: 1px solid #e7e9ed;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgba(36,48,62,1);
-  font-family:SFUIText-Regular;
-  font-weight:400;
+  color: rgba(36, 48, 62, 1);
+  font-family: SFUIText-Regular;
+  font-weight: 400;
 }
 
 //分类功能更多按钮盒子
-.funcListBox{
+.funcListBox {
   height: 92px;
   .funcList {
     height: 40px;
     display: flex;
     align-items: center;
-    font-size:14px;
+    font-size: 14px;
     cursor: pointer;
-    font-family:PingFangSC-Regular;
-    font-weight:400;
-    color:rgba(119,126,135,1);
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(119, 126, 135, 1);
     .treeDelEditImg {
       margin-left: 32px;
       margin-right: 12px;
@@ -431,8 +435,9 @@ $blueBG:#1E88E5;
   }
 
   .funcList:hover {
-    background:rgba(250,250,251,1);
-    box-shadow:0px 1px 0px 0px rgba(231,233,237,1),0px -1px 0px 0px rgba(231,233,237,1);
+    background: rgba(250, 250, 251, 1);
+    box-shadow: 0px 1px 0px 0px rgba(231, 233, 237, 1),
+      0px -1px 0px 0px rgba(231, 233, 237, 1);
   }
 }
 
@@ -456,29 +461,30 @@ $blueBG:#1E88E5;
   }
   // label样式
   .el-form-item__label {
-    font-family:PingFangSC-Regular;
-    font-weight:400;
-    color:rgba(36,48,62,1);
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(36, 48, 62, 1);
   }
   .editLittleTitle {
-    font-family:PingFangSC-Medium;
-    font-weight:500;
-    color:rgba(36,48,62,1);
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: rgba(36, 48, 62, 1);
     display: flex;
     align-items: center;
     height: 40px;
     margin-bottom: 14px;
-    border-bottom: 1px dashed rgba(231,233,237,1);
+    border-bottom: 1px dashed rgba(231, 233, 237, 1);
     .xian_left {
-      width:2px;
-      height:18px;
-      background:rgba(30,136,229,1);
+      width: 2px;
+      height: 18px;
+      background: rgba(30, 136, 229, 1);
       margin-right: 10px;
     }
   }
 }
 
-.el-table td, .el-table th {
+.el-table td,
+.el-table th {
   padding: 8px 0;
 }
 
@@ -487,7 +493,7 @@ $blueBG:#1E88E5;
 }
 
 .el-message-box {
-  .el-button+.el-button {
+  .el-button + .el-button {
     width: 99px;
   }
   .el-button--small {
@@ -495,19 +501,20 @@ $blueBG:#1E88E5;
   }
 }
 
-.el-menu--horizontal{
+.el-menu--horizontal {
   border: none;
 }
 
 .fanye {
-  .el-pagination .btn-next, .el-pagination .btn-prev {
-    background-color: #FAFAFB;
+  .el-pagination .btn-next,
+  .el-pagination .btn-prev {
+    background-color: #fafafb;
   }
   .el-pagination button.disabled {
-    background-color: #FAFAFB;
+    background-color: #fafafb;
   }
-  .el-pager li{
-    background-color: #FAFAFB;
+  .el-pager li {
+    background-color: #fafafb;
   }
 }
 
@@ -515,11 +522,11 @@ $blueBG:#1E88E5;
   margin-bottom: 6px;
 }
 
-.dialog-footer{
+.dialog-footer {
   padding-right: 20px;
 }
 
-.el-upload-dragger{
+.el-upload-dragger {
   height: auto;
   width: auto;
   padding: 0px 5px;
@@ -527,4 +534,3 @@ $blueBG:#1E88E5;
 .el-tabs__nav-scroll {
   padding-left: 20px !important;
 }
-

@@ -196,9 +196,5 @@ export default {
   selfPickStationSet: 'ការកំណត់ចំណុចជ្រើសរើសដោយខ្លួនឯង',
   orderQuantity: 'បរិមាណបញ្ជាទិញ',
   finishOrderQuantity: 'បរិមាណបញ្ជាទិញបានបញ្ចប់',
-  orderStock: 'បញ្ជាទិញស្តុក',
-  couponCollectionList: 'បញ្ជីប្រមូលប័ណ្ណ',
-  couponName: 'ឈ្មោះប័ណ្ណ',
-  isUsed: 'ថាតើត្រូវប្រើ',
-  isOverlay: 'អាចត្រូវបានដាក់ជាន់លើ'
+  orderStock: 'បញ្ជាទិញស្តុក'
 }

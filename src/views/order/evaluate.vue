@@ -46,10 +46,10 @@
                     {{scope.$index + searchForm.skip + 1}}
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.user')" align="left" width="100" fixed="left">
+                <el-table-column :label="$t('order.user')" align="left" width="200" fixed="left">
                   <template slot-scope="scope">
-                    {{scope.row.user_nick_name}}<br/>
-                    {{scope.row.user_mobile}}<br/>
+                    <span style="word-break: normal">{{$t("order.name")}}: {{scope.row.user_nick_name}}</span><br/>
+                    <span style="word-break: normal">{{$t("order.mobile")}}: {{scope.row.user_mobile}}</span><br/>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('order.comment')" min-width="400">
@@ -61,24 +61,38 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column  :label="$t('order.commentStar')" width="220">
+                <el-table-column  :label="$t('order.commentStar')" width="320">
                   <template  slot-scope="scope">
                     <div><el-tag size="mini" :type="scope.row.comprehensive_lv===3 ? '':(scope.row.comprehensive_lv===2? 'success': 'info')">{{commentLevel1[scope.row.comprehensive_lv]}}</el-tag></div>
-                    <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="scope.row.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
-                    <div class="rate-item"><span>{{$t('order.star2')}}</span><el-rate class="rate" :value="scope.row.service_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
-                    <div class="rate-item"><span>{{$t('order.star3')}}</span><el-rate class="rate" :value="scope.row.express_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
+                    <div class="rate-item">
+                      <span>{{$t('order.star1')}}:</span>
+                      <el-rate class="rate" :value="scope.row.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+                    </div>
+                    <div class="rate-item">
+                      <span>{{$t('order.star2')}}:</span>
+                      <el-rate class="rate" :value="scope.row.service_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+                    </div>
+                    <div class="rate-item">
+                      <span>{{$t('order.star3')}}:</span>
+                      <el-rate class="rate" :value="scope.row.express_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+                    </div>
                   </template>
                 </el-table-column>
-                <el-table-column  :label="$t('order.goods')" min-width="400">
+                <el-table-column  :label="$t('order.goods')" min-width="500">
                   <template  slot-scope="scope">
                     <a class="goods-item" target="_blank" :href="goodsPreview(scope.row.sku_goods_item)">
                       <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(scope.row.sku_goods_item.sku_img)"  fit="cover"></el-image>
                       <div class="g-info">
-                        <p>{{scope.row.sku_goods_item.spu_name}}</p>
+                        <p class="bold-text" style="word-break: normal">{{scope.row.sku_goods_item.spu_name}}</p>
                         <p>
-                          <span v-for="(v,k) in scope.row.sku_goods_item.specifications"> {{k}}：<font>{{v}}</font></span>
+                          <span v-for="(v,k) in scope.row.sku_goods_item.specifications" :key="k"> {{k}}：<font class="bold-text" style="word-break: normal">{{v}}</font><br/></span>
                         </p>
-                        <p><span>{{$t('order.price3')}}：</span>{{scope.row.sku_goods_item.price | price}}；<span>{{$t('order.number')}}：</span>{{scope.row.sku_goods_item.count}}</p>
+                        <p>
+                          <span>{{$t('order.price3')}}:</span>
+                          <span class="bold-text">{{scope.row.sku_goods_item.price | price}}</span>；
+                          <span>{{$t('order.number')}}:</span>
+                          <span class="bold-text">{{scope.row.sku_goods_item.count}}</span>
+                        </p>
                       </div>
                     </a>
                   </template>
@@ -87,17 +101,19 @@
                 </el-table-column>
                 <el-table-column prop="gen_time" :label="$t('order.evaluateTime')" width="160">
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "90" fixed="right">
+                <el-table-column :label="$t('tools.opt')" width="200" fixed="right" align="center">
                   <template slot-scope="scope">
-                    <el-badge :value="scope.row.replies.length" v-if="scope.row.replies" class="item" style="margin: 10px 0px !important;">
-                      <el-button type="text" @click="showReplyEditor(scope.row)" size="small">{{$t('order.replyReviews')}}</el-button>
+                    <el-badge :value="scope.row.replies.length" v-if="scope.row.replies" class="item" style="margin: 10px 0px !important">
+                      <el-button type="success" @click="showReplyEditor(scope.row)" size="small">{{$t('order.replyReviews')}}</el-button>
                     </el-badge>
                   </template>
                 </el-table-column>
               </el-table>
               <el-row style="margin-top: 10px">
                 <el-col :span="6">
-                  <el-button v-if="permissionCheck('opt')" size="mini" @click="showBatchReplyDialog">{{$t('order.reply')}}</el-button>
+                  <el-button v-if="permissionCheck('opt')" size="small" type="success" @click="showBatchReplyDialog" style="padding: 10px 20px">
+                      {{$t('order.reply')}}
+                  </el-button>
                 </el-col>
                 <el-col :span="18" style="text-align: right;">
                   <el-pagination
@@ -112,41 +128,68 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('order.reply')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
-            <el-form-item :label="$t('order.user')">
-              {{replyData.user_nick_name}}&nbsp;{{replyData.user_mobile}}
+        <el-dialog width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.reply')}}</span>
+          <el-form>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="5" class="label">{{$t('order.user')}}:</el-col>
+                <el-col :span="18">{{replyData.user_nick_name}}&nbsp;&nbsp;{{replyData.user_mobile}}</el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.commentLevel')">
-              <el-tag size="mini" :type="replyData.comprehensive_lv===3 ? '':(replyData.comprehensive_lv===2? 'success': 'info')">{{commentLevel1[replyData.comprehensive_lv]}}</el-tag>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="5" class="label">{{$t('order.commentLevel')}}:</el-col>
+                <el-col :span="18">
+                  <el-tag size="mini" :type="replyData.comprehensive_lv===3 ? '':(replyData.comprehensive_lv===2? 'success': 'info')">{{commentLevel1[replyData.comprehensive_lv]}}</el-tag>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.commentStar')">
-              <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="replyData.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
-              <div class="rate-item"><span>{{$t('order.star2')}}</span><el-rate class="rate" :value="replyData.service_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
-              <div class="rate-item"><span>{{$t('order.star3')}}</span><el-rate class="rate" :value="replyData.express_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="5" class="label">{{$t('order.commentStar')}}:</el-col>
+                <el-col :span="18">
+                  <div class="rate-item"><span>{{$t('order.star1')}}</span><el-rate class="rate" :value="replyData.discribe_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
+                  <div class="rate-item"><span>{{$t('order.star2')}}</span><el-rate class="rate" :value="replyData.service_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
+                  <div class="rate-item"><span>{{$t('order.star3')}}</span><el-rate class="rate" :value="replyData.express_lv" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></div>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.comment')">
-              <div>{{replyData.content}}</div>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="5" class="label">{{$t('order.comment')}}:</el-col>
+                <el-col :span="18">
+                  <div>{{replyData.content}}</div>
+                </el-col>
+              </el-row>
               <div>
                 <el-image v-for="(img, k) in replyData.imgs" style="width: 80px; height: 80px" :key="k" fit="contain" :src="getImageUrl(img,50)" :preview-src-list="previewList(replyData.imgs)">
                 </el-image>
               </div>
             </el-form-item>
-            <el-divider content-position="left">{{$t('order.reply1')}}</el-divider>
-            <div class="reply-item" v-for="v in replyData.replies">{{v}}</div>
-            <el-input  v-if="permissionCheck('opt')" style="margin-top: 10px" type="textarea"  :rows="2" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
+            <el-divider content-position="left"><span class="label" style="color: #606266">{{$t('order.reply1')}}</span></el-divider>
+            <div class="reply-item" v-for="v,i in replyData.replies" :key="i">{{v}}</div>
+            <el-input  v-if="permissionCheck('opt')" style="margin-top: 15px" type="textarea"  :rows="4" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
           </el-form>
           <div slot="footer" class="dialog-footer" v-if="permissionCheck('opt')">
             <confirm-button @confirmButton="saveDataFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+             <el-button @click="formEditDialog = false" size="small" style="margin-right:5px; margin-left:10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
-        <el-dialog :title="$t('order.batchReply')" width="500px" @close="batchReplyDialog=false" :visible.sync="batchReplyDialog" :close-on-click-modal="false" center >
+        <el-dialog width="500px" @close="batchReplyDialog=false" :visible.sync="batchReplyDialog" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.batchReply')}}</span>
           <div>
-            <el-divider content-position="left">{{$t('order.reply1')}}</el-divider>
-            <el-input style="margin-top: 10px" type="textarea"  :rows="5" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
+            <!-- <el-divider content-position="left">
+              <span style="font-weight: bold">
+                {{$t('order.reply1')}}
+              </span>
+            </el-divider> -->
+            <span class="label">{{$t('order.reply1')}}:</span>
+            <el-input style="margin-top: 15px" type="textarea"  :rows="4" :placeholder="$t('order.reply2')"  v-model="replyContent">   </el-input>
           </div>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="batchReplyFunc" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <el-button @click="batchReplyDialog = false" size="small" style="margin-right:5px; margin-left:10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
       </div>
@@ -304,11 +347,13 @@
 <style lang="scss" scoped>
   .rate-item{
     span{
+      // font-weight: bold;
       display: inline-block;
-      width: 70px;
+      width: 135px;
       text-align: right;
     }
     .rate{
+      padding-left: 10px;
       display: inline-block !important;
     }
   }
@@ -327,12 +372,24 @@
         margin: 0px;
         padding: 3px 0px;
         span{
-          color: #8c939d;
+          // color: #8c939d;
+          color: #606266;
+          margin: 0;
           font{
-            color: #606266;
+            // color: #606266;
+            color: black;
           }
         }
       }
     }
+  }
+  .bold-text {
+    color: black !important; 
+    font-weight: bold
+  }
+  .label {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: right;
   }
 </style>

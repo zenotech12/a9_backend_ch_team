@@ -4,26 +4,26 @@ const order = [{
   component: Layout,
   name: 'order',
   redirect: '/order/list',
-  meta: { title: 'orderMgr', icon: 'inventory', code: '3' },
+  meta: { title: 'orderMgr', icon: 'el-icon-s-order', code: '3' },
   children: [{
     path: 'list',
     name: 'orderList',
-    meta: { title: 'orderList', icon: 'list', code: '3_1' },
+    meta: { title: 'orderList', icon: 'el-icon-s-order', code: '3_1' },
     component: () => import('@/views/order/order')
   }, {
     path: 'orderReturn',
     name: 'orderReturn',
-    meta: { title: 'returnGoods', icon: 'list', code: '3_2' },
+    meta: { title: 'returnGoods', icon: 'el-icon-s-order', code: '3_2' },
     component: () => import('@/views/order/return')
   }, {
     path: 'orderExchange',
     name: 'orderExchange',
-    meta: { title: 'exchangeGoods', icon: 'list', code: '3_4' },
+    meta: { title: 'exchangeGoods', icon: 'el-icon-s-order', code: '3_4' },
     component: () => import('@/views/order/return')
   }, {
     path: 'evaluate',
     name: 'evaluateMgr',
-    meta: { title: 'evaluateMgr', icon: 'list', code: '3_3' },
+    meta: { title: 'evaluateMgr', icon: 'el-icon-s-order', code: '3_3' },
     component: () => import('@/views/order/evaluate')
   }]
 }]

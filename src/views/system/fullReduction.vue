@@ -3,10 +3,10 @@
     <div class="sys-neiBody">
       <div class="rightbox">
         <el-row  v-if="permissionCheck('opt')">
-          <el-col :span="24" class="funcList">
+          <el-col :span="24" class="funcList" style="padding: 10px 15px; padding-right: 0">
             <div class="boxFuncBtn" @click="addData">
-              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              <!-- <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add"> -->
+              <el-button type="success" size="small" icon="el-icon-plus">{{$t('tools.add')}}</el-button>
             </div>
           </el-col>
         </el-row>
@@ -43,15 +43,14 @@
                     <!--<span v-if="scope.row.cond_type === 2">{{$t('sys.price')}}: {{scope.row.cond_val | price}}</span>-->
                   <!--</template>-->
                 <!--</el-table-column>-->
-                <el-table-column :label="$t('sys.allGoods')">
+                <el-table-column :label="$t('sys.allGoods')" align="center" width="200">
                   <template slot-scope="scope">
                     <el-tag :type="scope.row.all ? 'success': 'danger'">{{scope.row.all ? $t('sys.yes'): $t('sys.no')}}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('tools.opt')" width = "140"  v-if="permissionCheck('opt')">
+                <el-table-column :label="$t('tools.opt')" width = "180"  v-if="permissionCheck('opt')" align="center">
                   <template slot-scope="scope">
-                    <el-button type="text" @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                    <span class="xiexian">/</span>
+                    <el-button @click="showDataEditor(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
                     <delete-button  @delData="deleteDataFunc(scope.row)"></delete-button>
                   </template>
                 </el-table-column>
@@ -71,9 +70,10 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('global.fullReductionSet')" width="80%" @close="formEditDialog = false" :visible.sync="formEditDialog" :close-on-click-modal="false" center style="top: -8vh;">
-          <el-form ref="form" :inline="true" :model="form" label-width="120px">
-            <el-form-item :label="$t('sys.name')">
+        <el-dialog width="80%" @close="formEditDialog = false" :visible.sync="formEditDialog" :close-on-click-modal="false" center style="top: -8vh;">
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('global.fullReductionSet')}}</span>
+          <el-form ref="form" :inline="true" :model="form" label-width="140px">
+            <el-form-item :label="$t('sys.name')" label-width="120px">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('sys.manjianDate')">
@@ -93,14 +93,14 @@
                 <el-radio :label="2">{{$t('sys.price')}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('sys.number')" v-if="form.cond_type === 1">
-              <el-input v-model.number="form.cond_val"></el-input>
+            <el-form-item :label="$t('sys.number')" v-if="form.cond_type === 1" label-width="90px">
+              <el-input v-model.number="form.cond_val" style="width: 150px"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('sys.price')" v-if="form.cond_type === 2">
-              <price-input v-model="form.cond_val"></price-input>
+            <el-form-item :label="$t('sys.price')" v-if="form.cond_type === 2" label-width="100px">
+              <price-input v-model="form.cond_val" style="width: 150px"></price-input>
             </el-form-item>
 
-            <el-form-item :label="$t('sys.youhuiMethod')">
+            <el-form-item :label="$t('sys.youhuiMethod')" label-width="450px">
               <el-radio-group v-model="form.result_type" @change="typeChangeValue">
                 <el-radio :label="2">{{$t('sys.zhekou')}}</el-radio>
                 <el-radio :label="3">{{$t('sys.manjian')}}</el-radio>
@@ -125,9 +125,18 @@
             </el-form-item>
           </el-form>
           <el-row v-if="form.all === false">
-                <el-col :span="24" style="text-align: right;padding: 10px 15px" v-if="permissionCheck('opt')">
+                <el-col :span="24" style="text-align: right;padding: 0 0 20px 0" v-if="permissionCheck('opt')">
                   <div class="boxFuncBtn">
-                    <goods-selector :mulit="true" :trigger="false" :showTag="false" v-model="spu_ids" :notSpuIds="JSON.stringify(notSpuIds)" @selectChanged="addNewGoods" :approve_status="2" :shelf_status="2"></goods-selector>
+                    <goods-selector 
+                      :mulit="true" 
+                      :trigger="false" 
+                      :showTag="false" 
+                      v-model="spu_ids" 
+                      :notSpuIds="JSON.stringify(notSpuIds)" 
+                      @selectChanged="addNewGoods" 
+                      :approve_status="2" 
+                      :shelf_status="2">
+                    </goods-selector>
                   </div>
                 </el-col>
                 <el-col :span="24">
@@ -153,7 +162,7 @@
                           </a>
                         </template>
                       </el-table-column>
-                      <el-table-column :label="$t('goods.price')">
+                      <el-table-column :label="$t('goods.price')" align="center" width="200px">
                         <template  slot-scope="scope">
                           <template v-if="scope.row.type === 3">
                             <el-tag size="mini" v-if="scope.row.type === 3">{{$t("goods.exp")}}</el-tag>
@@ -166,12 +175,12 @@
                           </template>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="inventory" :label="$t('goods.inventory')"></el-table-column>
-                      <el-table-column prop="sales" :label="$t('goods.saled')"></el-table-column>
-                      <el-table-column prop="gen_time"  :label="$t('goods.publishTime')"></el-table-column>
-                      <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')">
+                      <el-table-column prop="inventory" :label="$t('goods.inventory')" align="center" width="200px"></el-table-column>
+                      <el-table-column prop="sales" :label="$t('goods.saled')" align="center" width="200px"></el-table-column>
+                      <el-table-column prop="gen_time"  :label="$t('goods.publishTime')" align="center" width="250px"></el-table-column>
+                      <el-table-column :label="$t('tools.opt')" v-if="permissionCheck('opt')" align="center" width="150px">
                         <template slot-scope="scope">
-                          <i class="el-icon-delete" style="font-size: 18px;cursor: pointer" @click="delCurrentGoods(scope.row.id)"></i>
+                          <i class="el-icon-delete-solid" style="font-size: 18px; cursor: pointer; color: red" @click="delCurrentGoods(scope.row.id)"></i>
                         </template>
                       </el-table-column>
                     </el-table>
@@ -180,6 +189,7 @@
               </el-row>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveAdFunc()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <el-button @click="formEditDialog = false" size="small" style="margin-right: 5px; margin-left: 10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
       </div>

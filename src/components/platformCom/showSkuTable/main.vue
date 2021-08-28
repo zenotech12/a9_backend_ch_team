@@ -8,18 +8,18 @@
       <el-row>
         <el-col :span="24">
           <el-table :data="skusArray" style="width: 100%" class="inputNumber">
-            <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
-            <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
+            <el-table-column prop="name" :label="$t('warehouse.name2')" width="250px"></el-table-column>
+            <el-table-column prop="specification" :label="$t('warehouse.pecifications')" width="200px">
               <template slot-scope="scope">
                 {{textFilter(scope.row.specification)}}
               </template>
             </el-table-column>
-            <el-table-column :label="$t('warehouse.barCode')">
+            <el-table-column :label="$t('warehouse.barCode')" width="200px">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.barcode"></el-input>
               </template>
             </el-table-column>
-            <el-table-column :abel="$t('warehouse.position')">
+            <el-table-column :label="$t('warehouse.position')" width="200px">
               <template slot-scope="scope">
                 <el-select v-model="scope.row.position" :placeholder="$t('warehouse.Pleaseselect')">
                   <el-option
@@ -32,22 +32,22 @@
                 <!--<el-input v-model="scope.row.position"></el-input>-->
               </template>
             </el-table-column>
-            <el-table-column prop="unit_price" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.price')">
+            <el-table-column prop="unit_price" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.price')" align="center" width="100px">
               <template slot-scope="scope">
                 {{scope.row.unit_price | price}}
               </template>
             </el-table-column>
-            <el-table-column prop="count" :label="$t('warehouse.ordernum')">
+            <el-table-column prop="count" :label="$t('warehouse.ordernum')" align="center" width="120px">
               <template slot-scope="scope">
                 {{scope.row.nowCount}}
               </template>
             </el-table-column>
-            <el-table-column prop="count" :label="$t('warehouse.Returnquantity')">
+            <el-table-column prop="count" :label="$t('warehouse.Returnquantity')" width="200px" align="center">
               <template slot-scope="scope">
                 <el-input-number v-model="scope.row.count" :min="1" :max="scope.row.count"></el-input-number>
               </template>
             </el-table-column>
-            <el-table-column prop="total_price" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.allprice')">
+            <el-table-column prop="total_price" v-if="permissionCheck('opt', '9_3')" :label="$t('warehouse.allprice')" align="center" width="100px">
               <template slot-scope="scope">
                 {{scope.row.total_price | price}}
               </template>
@@ -95,7 +95,6 @@
       orderId(val) {
         if (val !== '') {
           this.getOrderInfo(val)
-          this.$emit('getOrderId', val)
         }
       },
       skus: {

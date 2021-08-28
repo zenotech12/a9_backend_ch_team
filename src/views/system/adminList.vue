@@ -5,10 +5,10 @@
       <div class="rightbox">
         <!--添加-->
         <el-row>
-          <el-col :span="24" class="funcList">
+          <el-col :span="24" class="funcList" style="padding: 10px 15px; padding-right: 0">
             <div class="boxFuncBtn" @click="addAdmin" v-if="permissionCheck('opt')">
-              <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add">
-              <el-button type="text" size="small">{{$t('tools.add')}}</el-button>
+              <!-- <img src="../../assets/images/icon/icon_add.png" alt="" class="icon_add"> -->
+              <el-button type="success" size="small" icon="el-icon-plus">{{$t('tools.add')}}</el-button>
             </div>
           </el-col>
         </el-row>
@@ -24,18 +24,19 @@
               <el-table-column prop="user_nick_name" :label="$t('sys.user')">
               </el-table-column>
               <el-table-column prop="user_login_name" :label="$t('sys.mobile')"></el-table-column>
-              <el-table-column :label="$t('sys.isService')">
+              <el-table-column prop="gen_time" :label="$t('sys.genTime')"></el-table-column>
+              <el-table-column :label="$t('sys.isService')" width="200" align="center">
                 <template slot-scope="scope">
-                  <el-tag :type="scope.row.customer_servicer ? 'primary' : 'success'"
+                  <el-tag :type="scope.row.customer_servicer ? 'primary' : 'danger'"
                           close-transition>{{scope.row.customer_servicer?$t('tools.yes'):$t('tools.no')}}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="gen_time" :label="$t('sys.genTime')"></el-table-column>
-              <el-table-column :label="$t('tools.opt')"  v-if="permissionCheck('opt')">
+              <el-table-column :label="$t('tools.opt')" width="180" v-if="permissionCheck('opt')" align="center">
                 <template slot-scope="scope">
-                  <el-button type="text" @click="editAdmin(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
-                  <template v-if="!scope.row.default">
-                  <span class="xiexian">/</span>
+                   <template v-if="!scope.row.default">
+                  <el-button @click="editAdmin(scope.row)" size="small">{{$t('tools.edit')}}</el-button>
+            
+                  <!-- <span class="xiexian">/</span> -->
                   <delete-button :promptInfor="promptInfor" @delData="delAdmin(scope.row)"></delete-button>
                   </template>
                 </template>
@@ -55,8 +56,9 @@
             </template>
           </el-col>
         </el-row>
-        <el-dialog :title="editTitle" @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="700px" style="margin-top: 0vh">
-          <el-form :model="form" :rules="formRule" ref="form" label-width="120px">
+        <el-dialog @close="cancel('form')" :close-on-click-modal="false" :visible.sync="dialogFormVisible" center width="1000px" style="margin-top: 0vh">
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{editTitle}}</span>
+          <el-form :model="form" :rules="formRule" ref="form" label-width="200px" label-position="left">
             <el-form-item :label="$t('sys.loginMobile')" prop="login_name">
               <el-input style="width: 200px" :disabled="form.id !== ''" v-model="form.mobile" auto-complete="off" clearable></el-input>
               <el-tooltip class="item" effect="dark" :content="$t('sys.loginMobileTip')" placement="top">
@@ -96,7 +98,9 @@
             </el-form-item>
             <el-form-item :label="$t('sys.permission')"  prop="status" v-if="!isOwner">
               <div v-for="(v, k) in permissionList" :key="k">
-                <div><el-checkbox :indeterminate="permissionStatus[v.code]['indeterminate']" v-model="permissionStatus[v.code]['all']"  @change="menuChangeFunc($event, v)" >{{$t('global.' + v.lk)}}</el-checkbox></div>
+                <div>
+                  <el-checkbox :indeterminate="permissionStatus[v.code]['indeterminate']" v-model="permissionStatus[v.code]['all']"  @change="menuChangeFunc($event, v)" >{{$t('global.' + v.lk)}}</el-checkbox>
+                </div>
                 <el-row style="padding-left: 40px" v-for="(son, sk) in v.son" :key="sk">
                   <el-col :span="12"><el-checkbox :indeterminate="permissionStatus[son.code]['indeterminate']" v-model="permissionStatus[son.code]['all']" @change="functionChangeFunc($event, son)" >{{$t('global.' + son.lk)}}</el-checkbox></el-col>
                   <el-col :span="6" v-for="(per, i) in son.permissions" :key="i"><el-checkbox  v-model="permissionStatus[son.code][per]" :label="per" :key="per" @change="permissionChangeFunc($event, son.code, per)">{{$t('sys.permission_' + per)}}</el-checkbox></el-col>
@@ -438,3 +442,4 @@
     }
   }
 </style>
+

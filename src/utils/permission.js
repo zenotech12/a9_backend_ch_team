@@ -53,8 +53,5 @@ export default [
   ] },
   { 'name': '备忘管理', 'lk': 'ReminderSet', 'code': '10', 'permissions': [], 'urls': [], 'son': [
     { 'name': '备忘录', 'lk': 'memorandum', 'code': '10_1', 'permissions': ['view', 'opt'], 'urls': [] },
-  ] },
-  { 'name': '导出管理', 'lk': 'exportMgr', 'code': '11', 'permissions': [], 'urls': [], 'son': [
-    { 'name': '报告导出', 'lk': 'reportExport', 'code': '11_1', 'permissions': ['view', 'opt'], 'urls': [] },
   ] }
 ]

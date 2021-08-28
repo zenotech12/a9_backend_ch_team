@@ -3,6 +3,7 @@ import Vue from 'vue'
 
 import PageTitle from './pageTitle'
 import PageToolbar from './pageToolbar'
+import DeleteButtonText from './deleteButtontext'
 import PageSearch from './PageSearch'
 import PageTable from './PageTable'
 import DeleteButton from './DeleteButton'
@@ -32,6 +33,7 @@ const components = [
   PageToolbar,
   PageSearch,
   PageTable,
+  DeleteButtonText,
   DeleteButton,
   ConfirmButton,
   photosList,

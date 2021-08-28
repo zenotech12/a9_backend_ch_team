@@ -6,13 +6,23 @@
         <el-row>
           <el-col :span ="24">
             <el-card shadow="always" class="balance-info">
-              <span>{{$t('finance.balance')}}：<font>{{balanceDetail.balance | price}}</font></span>
-              <span>{{$t('finance.balance1')}}：<font>{{balanceDetail.can_withdraw_balance | price}}</font></span>
-              <span>{{$t('finance.totalIncome')}}：<font>{{balanceDetail.accumulated_income | price}}</font></span>
-              <span>{{$t('finance.toBeIncome')}}：<font>{{balanceDetail.to_be_income | price}}</font></span>
-              <span>{{$t('finance.tixianing')}}：<font>{{balanceDetail.withdrawing | price}}</font></span>
-              <span>{{$t('finance.tixianed')}}：<font>{{balanceDetail.withdrawed | price}}</font></span>
-              <el-button type="primary" size="mini" icon="el-icon-money" @click="addData"  v-if="permissionCheck('opt')" class="tx">提现</el-button>
+            <div class="withdrawal1">
+            <el-row >
+              <el-col :span="8"><div class="grid-content"><span>{{$t('finance.balance')}}：&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;<font>{{balanceDetail.balance | price}}</font></span></div></el-col>
+              <el-col :span="8"><div class="grid-content"><span>{{$t('finance.totalIncome')}}：&emsp;&emsp;&emsp;&emsp;&nbsp;<font>{{balanceDetail.accumulated_income | price}}</font></span></div></el-col>
+              <el-col :span="8"><div class="grid-content"><span>{{$t('finance.tixianing')}}：<font>{{balanceDetail.withdrawing | price}}</font></span></div></el-col>
+            </el-row>
+            </div>
+            <div class="withdrawal2">
+            <el-row>
+              <el-col :span="8"><div class="grid-content"><span>{{$t('finance.balance1')}}：<font>{{balanceDetail.can_withdraw_balance | price}}</font></span></div></el-col>
+              <el-col :span="8"><div class="grid-content"><span>{{$t('finance.toBeIncome')}}：<font>{{balanceDetail.to_be_income | price}}</font></span></div></el-col>
+              <el-col :span="8"><div class="grid-content"><span>{{$t('finance.tixianed')}}：&emsp;&emsp;&emsp;<font>{{balanceDetail.withdrawed | price}}</font></span>  
+              <el-button type="success" size="small" icon="el-icon-money" @click="addData"  v-if="permissionCheck('opt')" class="tx">{{$t('finance.withdraw')}}</el-button></div></el-col>
+             
+            </el-row>
+            </div>
+              
             </el-card>
           </el-col>
         </el-row>
@@ -49,8 +59,11 @@
             </div>
           </el-col>
         </el-row>
-        <el-dialog :title="$t('finance.tixian')" width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
+        <el-dialog width="700px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{
+            $t("finance.tixian")
+          }}</span>
+          <el-form label-width="140px" label-position="left">
             <el-form-item :label="$t('finance.balance1')">
               <span style="color: #f00; font-size: 20px">{{balanceDetail.can_withdraw_balance | price}}</span>
             </el-form-item>
@@ -188,10 +201,20 @@
       margin-right: 10px;
       font{
         color: #ff0000;
+        font-weight: bold;
       }
     }
     .tx{
       float: right !important;
     }
+    .withdrawal1{
+      margin-bottom: 10px;
+      padding-left: 5px;
+    }
+    .withdrawal2{
+      padding-left: 5px;
+    }
+   
   }
+
 </style>

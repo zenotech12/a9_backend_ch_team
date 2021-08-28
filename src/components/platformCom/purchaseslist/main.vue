@@ -1,28 +1,29 @@
 <template>
   <div>
-    <el-input readonly :placeholder="$t('warehouse.TipsMsg2')" :value="value">
+    <el-input readonly :placeholder="$t('warehouse.TipsMsg2')">
       <el-button slot="append" icon="el-icon-edit-outline" @click="showGoodsTable"></el-button>
     </el-input>
-    <el-dialog :title="$t('warehouse.pulist')" width="80%" :visible.sync="dialogFormVisible" center append-to-body>
-       <div style="width:200px" class="searchbtn">
-          <el-input v-model="searchFrom.no" style="margin-right: 10px" clearable></el-input>
+    <el-dialog width="90%" :visible.sync="dialogFormVisible" center append-to-body>
+      <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('warehouse.pulist')}}</span>
+       <div class="searchbtn" style="margin-bottom: 15px">
+          <el-input v-model="searchFrom.no" style="margin-right: 10px; width: 400px" clearable></el-input>
           <el-button type="primary" icon="el-icon-search" size="small" @click="Searchlist"></el-button>
         </div>
       <el-table :data="tableData" border stripe ref="singleTable" highlight-current-row height="calc(100vh - 420px)"  @current-change="handleCurrentChange">
-          <el-table-column label="#" width="60px">
+          <el-table-column label="#" width="60px" align="center">
             <template slot-scope="scope">
               {{scope.$index + searchFrom.skip + 1}}
             </template>
           </el-table-column>
-        <el-table-column prop="no" :label="$t('warehouse.number')" width="150"></el-table-column>
+        <el-table-column prop="no" :label="$t('warehouse.number')" width="150" align="center"></el-table-column>
         <!-- <el-table-column prop="status" :label="$t('warehouse.type')" width="50"></el-table-column> -->
-        <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="100"></el-table-column>
+        <el-table-column prop="supplier_name" :label="$t('warehouse.supplier')" width="200"></el-table-column>
         <el-table-column>
           <template slot="header" slot-scope="scope">
             <el-row style="width: 100%">
-              <el-col :span="10">{{$t('warehouse.name2')}}</el-col>
-              <el-col :span="2" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
-              <el-col :span="3" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
+              <el-col :span="8">{{$t('warehouse.name2')}}</el-col>
+              <el-col :span="3" style="text-align: center">{{$t('warehouse.PlaceofOrigin')}}</el-col>
+              <el-col :span="4" style="text-align: center">{{$t('warehouse.pecifications')}}</el-col>
               <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}}</el-col>
               <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{$t('warehouse.price')}}</el-col>
               <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}}</el-col>
@@ -32,10 +33,10 @@
           </template>
           <template slot-scope="scope">
             <div class="goods">
-              <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%">
-                <el-col :span="10" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
-                <el-col :span="2" style="text-align: center;min-width: 20px">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
-                <el-col :span="3" style="text-align: center">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No'}}</el-col>
+              <el-row v-for="(item, k) in scope.row.skus" :key="k" class="odd" style="width: 100%; padding: 10px 0">
+                <el-col :span="8" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
+                <el-col :span="3" style="text-align: center;">{{item.origin !== '' ? item.origin : 'No' }}</el-col>
+                <el-col :span="4" style="text-align: center">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'No'}}</el-col>
                 <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode : 'No'}}</el-col>
                 <el-col :span="2" v-if="permissionCheck('opt', '9_3')" style="text-align: center">{{item.unit_price | price}}</el-col>
                 <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
@@ -54,8 +55,17 @@
               :total="itemCount">
             </el-pagination>
       </div>
-      <div class="conbtn">
-        <el-button size="small" @click="confgBtn()" type="primary">{{$t('tools.confirm')}}</el-button>
+      <!-- <div class="conbtn">
+        <el-button size="small" @click="confgBtn()" type="success">{{$t('tools.confirm')}}</el-button>
+      </div> -->
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="success" size="small" @click="confgBtn()">{{
+          $t("tools.confirm")
+        }}</el-button>
+        <el-button @click="dialogFormVisible = false" size="small">{{
+          $t("tools.cancel")
+        }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -81,7 +91,6 @@ export default {
       data: '',
       val: '',
       key: '',
-      value: ''
     };
   },
 
@@ -124,7 +133,6 @@ export default {
       this.$emit("dataid", this.data)
       this.$emit("getvalue", this.val)
       this.$emit("key", this.key)
-      this.value = this.data.no
       this.setCurrent()
     },
     Searchlist(){

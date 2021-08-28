@@ -9,13 +9,15 @@
               <el-tab-pane style="height: 44px" v-for="(item, k) in orderStatusTab" :key="k" v-if="item" :label="item.label" :name="item.value"></el-tab-pane>
             </el-tabs>
           </el-col>
-          <el-col :span ="24" class="searchRow">
+          <el-col :span ="24" class="searchRow" style="margin-top: 15px">
             <el-form :inline="true" :model="searchForm">
               <el-form-item v-if="tab_order_status === '0'">
                 <el-switch
                   v-model="paySearchStatus"
+                  active-color="#0E8E00"
                   :active-text="$t('finance.txStatus2')"
-                  :inactive-text="$t('warehouse.all')">
+                  :inactive-text="$t('warehouse.all')"
+                >
                 </el-switch>
               </el-form-item>
               <el-form-item>
@@ -45,7 +47,7 @@
                     <el-dropdown-item command="Warehouse">Warehouse</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
-                <el-select v-model="roleSearch" clearable style="width: 120px">
+                <el-select v-model="roleSearch" clearable style="width: 140px">
                   <el-option
                     v-for="(item, k) in ownerShipStatuses"
                     :key="k"
@@ -55,7 +57,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('order.payMethod')">
-                <el-select v-model="searchForm.payinfo_pay_way" clearable style="width: 120px">
+                <el-select v-model="searchForm.payinfo_pay_way" clearable style="width: 140px">
                   <el-option
                     v-for="(item, k) in payWayList"
                     :key="k"
@@ -65,7 +67,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('order.receivingMethod')">
-                <el-select v-model="searchForm.post_way" clearable style="width: 120px">
+                <el-select v-model="searchForm.post_way" clearable style="width: 150px">
                   <el-option
                     v-for="(item, k) in postWayList"
                     :key="k"
@@ -75,10 +77,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('order.searchKey')">
-                <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 200px" clearable></el-input>
+                <el-input v-model="searchForm.key" :placeholder="$t('order.searchKeyTip')" style="width: 400px" clearable></el-input>
               </el-form-item>
               <el-form-item :label="$t('order.no')">
-                <el-input v-model="searchForm.no" style="width: 200px" clearable></el-input>
+                <el-input v-model="searchForm.no" style="width: 220px" clearable @input="handleSearchOrder"></el-input>
               </el-form-item>
               <el-form-item :label="$t('order.orderTime')" class="searchTimeBox">
                 <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable style="width: 260px;"
@@ -95,12 +97,12 @@
                 <el-button type="primary" @click="search" size="mini" icon="el-icon-search"></el-button>
                 <template v-if="permissionCheck('opt')">
                   <!--<el-button type="primary" @click="exportFunc([], false)" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>-->
-                  <el-button type="primary" @click="batchExportFunc" size="mini" icon="el-icon-download" style="margin-left: 0"></el-button>
+                  <el-button type="success" @click="batchExportFunc" size="mini" icon="el-icon-upload2" style="margin-left: 10px"></el-button>
                   <el-upload style="display: inline-block" name="excel" :headers="fileUploadHeader"
                              :action= "importUrl"
                              :show-file-list="false"
                              :on-success="importSuccess" :on-error="importError">
-                    <el-button type="primary" size="mini" icon="el-icon-upload2"></el-button>
+                    <el-button type="success" size="mini" icon="el-icon-download"></el-button>
                   </el-upload>
                 </template>
               </el-form-item>
@@ -123,35 +125,42 @@
                 <!-- 单号 -->
                 <el-table-column :label="$t('order.no')" width="200px" fixed="left">
                   <template slot-scope="scope">
-                    <el-tag style="display: block; width: 50px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
-                    <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===3" size="mini">{{$t('order.orderType3')}}</el-tag>
-                    <el-tag style="display: block; width: 60px; margin: 0 auto" v-if="scope.row.type===4" size="mini">{{$t('order.orderType4')}}</el-tag>
-                    No:{{scope.row.no}}<br/>
+                    <el-tag style="display: block; width: 110px; margin: 0 auto" v-if="scope.row.type===2" size="mini">{{$t('order.orderType2')}}</el-tag>
+                    <el-tag style="display: block; width: 110px; margin: 0 auto" v-if="scope.row.type===3" size="mini">{{$t('order.orderType3')}}</el-tag>
+                    <el-tag style="display: block; width: 110px; margin: 0 auto" v-if="scope.row.type===4" size="mini">{{$t('order.orderType4')}}</el-tag>
+                    <br v-if="scope.row.type===1 || scope.row.type===0"/>
+                    {{scope.row.no}}<br/>
                     <span class="f12" v-if="scope.row.pay_id">Id:{{scope.row.pay_id}}</span><br/>
-                    <el-popover v-if="scope.row.comment || (scope.row.merchant_comments && scope.row.merchant_comments.length > 0)" placement="right" width="300" trigger="click">
-                      <template v-if="scope.row.comment">
-                        <el-divider content-position="left">{{$t('order.userBz')}}</el-divider>
-                        <div style="padding: 0px 10px; text-align: left">
-                          {{scope.row.comment}}
-                        </div>
-                      </template>
-                      <template v-if="scope.row.merchant_comments && scope.row.merchant_comments.length > 0">
-                        <el-divider content-position="left">{{$t('order.businessBz')}}</el-divider>
-                        <el-timeline style="margin-top: 10px">
-                          <el-timeline-item
-                            v-for="(comments, index) in scope.row.merchant_comments"
-                            :key="index"
-                            :timestamp="comments.gen_time">
-                            <div class="ui"><span>{{comments.operator_name}}</span>{{comments.comment}}</div>
-                          </el-timeline-item>
-                        </el-timeline>
-                      </template>
+                    <el-popover v-if="scope.row.comment || (scope.row.merchant_comments && scope.row.merchant_comments.length > 0)" placement="right" width="350" trigger="click">
+                      <div style="padding: 15px; padding-top: 5px">
+                        <template v-if="scope.row.comment">
+                          <el-divider content-position="left"><span style="font-weight: bold">{{$t('order.userBz')}}</span></el-divider>
+                          <div style="padding: 0px 10px; text-align: left">
+                            {{scope.row.comment}}
+                          </div>
+                        </template>
+                        <template v-if="scope.row.merchant_comments && scope.row.merchant_comments.length > 0">
+                          <el-divider content-position="left"><span style="font-weight: bold">{{$t('order.businessBz')}}</span></el-divider>
+                          <el-timeline style="margin-top: 10px">
+                            <el-timeline-item
+                              v-for="(comments, index) in scope.row.merchant_comments"
+                              :key="index"
+                              :timestamp="comments.gen_time">
+                              <div class="ui">
+                                <span style="font-weight: bold">{{comments.operator_name}}</span>
+                                <br/>
+                                <span style="word-break: normal">{{comments.comment}}</span>
+                              </div>
+                            </el-timeline-item>
+                          </el-timeline>
+                        </template>
+                      </div>
                       <a slot="reference" class="gt">{{$t('order.note')}}<i class="el-icon-arrow-right"></i></a>
                     </el-popover>
                   </template>
                 </el-table-column>
                 <!-- 下单时间 -->
-                 <el-table-column :label="$t('order.genTime')" width="170">
+                <el-table-column :label="$t('order.genTime')" width="170">
                   <template slot-scope="scope" >
                     <el-popover placement="left" width="300" trigger="click">
                       <el-timeline style="margin-top: 10px">
@@ -159,20 +168,32 @@
                           v-for="(record, index) in scope.row.operation_records"
                           :key="index"
                           :timestamp="record.time">
-                          <div class="ui"><span>{{record.operator_name}}</span>{{optArr[record.status]}}</div>
+                          <div class="ui"><span style="font-weight: bold; padding-right: 10px">{{record.operator_name}}</span>{{optArr[record.status]}}</div>
                         </el-timeline-item>
                       </el-timeline>
                       <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{scope.row.gen_time}}</a>
                     </el-popover>
                   </template>
                 </el-table-column>
+                <!-- 状态 -->
+                <el-table-column :label="$t('order.status')" width="140" align="center" header-align="left">
+                  <template slot-scope="scope">
+                    <el-tag :type="orderStatusColor[scope.row.status]" 
+                      v-if="scope.row.status !== 17"
+                    >
+                      {{$t(orderStatus[scope.row.status])}}
+                    </el-tag>
+                    <el-tag v-else>{{$t('order.purchasPendReview')}}</el-tag>
+                    <span style="font-size: 12px" v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2">({{$t('order.cashOnDelivery')}})</span>
+                  </template>
+                </el-table-column>
                  <!-- 所有者 -->
-                 <el-table-column :label="$t('order.servicer_id')" width="300">
+                <el-table-column :label="$t('order.servicer_id')" width="360">
                   <template slot-scope="scope" >
                     <!--销售-->
                     <div class="singleTypeZr">
                       <img src="../../assets/images/servicer.png" class="typeImgS" title="Seller" alt="">
-                      <el-popover v-if="scope.row.servicer_operations" placement="left" width="300" trigger="click">
+                      <el-popover v-if="scope.row.servicer_operations" placement="left" width="340" trigger="click">
                         <el-timeline style="margin-top: 10px">
                           <el-timeline-item
                             v-for="(record, index) in scope.row.servicer_operations"
@@ -186,31 +207,33 @@
                       <el-button icon="el-icon-arrow-left" v-if="scope.row.servicer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'), 'servicer')" size="small">
                         {{$t('order.ownerShipGet')}}
                       </el-button>
-                      <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="200" trigger="click">
-                        <el-select v-model="ownerShipSelectUserId">
-                          <el-option
-                            v-for="item in customerMgrList"
-                            :key="item.user_nick_name"
-                            :label="item.user_nick_name"
-                            :value="item.user_id">
-                          </el-option>
-                        </el-select>
-                        <div style="text-align:center;">
-                           <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
-                          {{$t('tools.confirm')}}
-                        </el-button>
-                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
-                            {{$t('order.cancelClaim')}}
+                      <el-popover v-if="scope.row.servicer_status === 3" placement="left" width="300" trigger="click">
+                        <div style="padding: 20px">
+                          <el-select v-model="ownerShipSelectUserId" style="width: 100%">
+                            <el-option
+                              v-for="item in customerMgrList"
+                              :key="item.user_nick_name"
+                              :label="item.user_nick_name"
+                              :value="item.user_id">
+                            </el-option>
+                          </el-select>
+                          <div style="text-align:center; margin-top: 15px">
+                            <el-button type="success" @click="orderOwnerShipTransFunc(scope.row.id)" size="small">
+                            {{$t('tools.confirm')}}
                           </el-button>
+                            <el-button type="danger" plain @click="orderOwnerShipTransFunc(scope.row.id, '')" size="small">
+                              {{$t('order.cancelClaim')}}
+                            </el-button>
+                          </div>
                         </div>
-                        <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
+                          <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
                       </el-popover>
                     </div>
 
                     <!--财务-->
                     <div class="singleTypeZr">
                       <img src="../../assets/images/financer.png" class="typeImgS" title="Finance" alt="">
-                      <el-popover v-if="scope.row.financer_operations" placement="left" width="300" trigger="click">
+                      <el-popover v-if="scope.row.financer_operations" placement="left" width="340" trigger="click">
                         <el-timeline style="margin-top: 10px">
                           <el-timeline-item
                             v-for="(record, index) in scope.row.financer_operations"
@@ -224,22 +247,24 @@
                       <el-button icon="el-icon-arrow-left" v-if="scope.row.financer_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'), 'financer')" size="small">
                         {{$t('order.ownerShipGet')}}
                       </el-button>
-                      <el-popover v-if="scope.row.financer_status === 3" placement="left" width="200" trigger="click">
-                        <el-select v-model="ownerShipSelectUserId">
-                          <el-option
-                            v-for="item in customerMgrList"
-                            :key="item.user_nick_name"
-                            :label="item.user_nick_name"
-                            :value="item.user_id">
-                          </el-option>
-                        </el-select>
-                        <div style="text-align:center;">
-                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
-                            {{$t('tools.confirm')}}
-                          </el-button>
-                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
-                            {{$t('order.cancelClaim')}}
-                          </el-button>
+                      <el-popover v-if="scope.row.financer_status === 3" placement="left" width="300" trigger="click">
+                        <div style="padding: 20px">
+                          <el-select v-model="ownerShipSelectUserId" style="width: 100%">
+                            <el-option
+                              v-for="item in customerMgrList"
+                              :key="item.user_nick_name"
+                              :label="item.user_nick_name"
+                              :value="item.user_id">
+                            </el-option>
+                          </el-select>
+                          <div style="text-align:center; margin-top: 15px">
+                            <el-button type="success" @click="orderOwnerShipTransFunc(scope.row.id)" size="small">
+                              {{$t('tools.confirm')}}
+                            </el-button>
+                            <el-button type="danger" plain @click="orderOwnerShipTransFunc(scope.row.id, '')" size="small">
+                              {{$t('order.cancelClaim')}}
+                            </el-button>
+                          </div>
                         </div>
                         <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
                       </el-popover>
@@ -248,7 +273,7 @@
                     <!--采购-->
                     <div class="singleTypeZr">
                       <img src="../../assets/images/purchaser.png" class="typeImgS" title="Purchaser" alt="">
-                      <el-popover v-if="scope.row.purchaser_operations" placement="left" width="300" trigger="click">
+                      <el-popover v-if="scope.row.purchaser_operations" placement="left" width="340" trigger="click">
                         <el-timeline style="margin-top: 10px">
                           <el-timeline-item
                             v-for="(record, index) in scope.row.purchaser_operations"
@@ -262,22 +287,24 @@
                       <el-button icon="el-icon-arrow-left" v-if="scope.row.purchaser_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'), 'purchaser')" size="small">
                         {{$t('order.ownerShipGet')}}
                       </el-button>
-                      <el-popover v-if="scope.row.purchaser_status === 3" placement="left" width="200" trigger="click">
-                        <el-select v-model="ownerShipSelectUserId">
-                          <el-option
-                            v-for="item in customerMgrList"
-                            :key="item.user_nick_name"
-                            :label="item.user_nick_name"
-                            :value="item.user_id">
-                          </el-option>
-                        </el-select>
-                        <div style="text-align:center;">
-                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
-                            {{$t('tools.confirm')}}
-                          </el-button>
-                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
-                            {{$t('order.cancelClaim')}}
-                          </el-button>
+                      <el-popover v-if="scope.row.purchaser_status === 3" placement="left" width="300" trigger="click">
+                        <div style="padding: 20px">
+                          <el-select v-model="ownerShipSelectUserId" style="width: 100%">
+                            <el-option
+                              v-for="item in customerMgrList"
+                              :key="item.user_nick_name"
+                              :label="item.user_nick_name"
+                              :value="item.user_id">
+                            </el-option>
+                          </el-select>
+                          <div style="text-align:center; margin-top: 15px">
+                            <el-button type="success" @click="orderOwnerShipTransFunc(scope.row.id)" size="small">
+                              {{$t('tools.confirm')}}
+                            </el-button>
+                            <el-button type="danger" plain @click="orderOwnerShipTransFunc(scope.row.id, '')" size="small">
+                              {{$t('order.cancelClaim')}}
+                            </el-button>
+                          </div>
                         </div>
                         <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
                       </el-popover>
@@ -286,7 +313,7 @@
                     <!--仓库-->
                     <div class="singleTypeZr">
                       <img src="../../assets/images/warehouser.png" class="typeImgS" title="Warehouse" alt="">
-                      <el-popover v-if="scope.row.warehouser_operations" placement="left" width="300" trigger="click">
+                      <el-popover v-if="scope.row.warehouser_operations" placement="left" width="340" trigger="click">
                         <el-timeline style="margin-top: 10px">
                           <el-timeline-item
                             v-for="(record, index) in scope.row.warehouser_operations"
@@ -300,22 +327,24 @@
                       <el-button icon="el-icon-arrow-left" v-if="scope.row.warehouser_status === 1" type="text" @click="orderOwnerShipGetFunc(scope.row.id, permissionCheck('opt', '3_1'), 'warehouser')" size="small">
                         {{$t('order.ownerShipGet')}}
                       </el-button>
-                      <el-popover v-if="scope.row.warehouser_status === 3" placement="left" width="200" trigger="click">
-                        <el-select v-model="ownerShipSelectUserId">
-                          <el-option
-                            v-for="item in customerMgrList"
-                            :key="item.user_nick_name"
-                            :label="item.user_nick_name"
-                            :value="item.user_id">
-                          </el-option>
-                        </el-select>
-                        <div style="text-align:center;">
-                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id)" size="medium">
-                            {{$t('tools.confirm')}}
-                          </el-button>
-                          <el-button type="text" @click="orderOwnerShipTransFunc(scope.row.id, '')" size="medium">
-                            {{$t('order.cancelClaim')}}
-                          </el-button>
+                      <el-popover v-if="scope.row.warehouser_status === 3" placement="left" width="300" trigger="click">
+                        <div style="padding: 20px">                      
+                          <el-select v-model="ownerShipSelectUserId" style="width: 100%">
+                            <el-option
+                              v-for="item in customerMgrList"
+                              :key="item.user_nick_name"
+                              :label="item.user_nick_name"
+                              :value="item.user_id">
+                            </el-option>
+                          </el-select>
+                          <div style="text-align:center; margin-top: 15px">
+                            <el-button type="success" @click="orderOwnerShipTransFunc(scope.row.id)" size="small">
+                              {{$t('tools.confirm')}}
+                            </el-button>
+                            <el-button type="danger" plain @click="orderOwnerShipTransFunc(scope.row.id, '')" size="small">
+                              {{$t('order.cancelClaim')}}
+                            </el-button>
+                          </div>
                         </div>
                         <a slot="reference" class="gt"><i class="el-icon-arrow-left"></i>{{$t('order.transOwnerShip')}}</a>
                       </el-popover>
@@ -324,24 +353,26 @@
                   </template>
                 </el-table-column>
                 <!-- 用户 -->
-                <el-table-column :label="$t('order.user')" width="130">
+                <el-table-column :label="$t('order.user')" width="200">
                   <template slot-scope="scope">
-                    <div class="ui">{{scope.row.user_nick_name}}</div>
-                    <div class="ui">{{scope.row.user_mobile}}</div>
-                    <div class="ui">
+                    <!-- <div class="ui">{{scope.row.user_nick_name}}</div>
+                    <div class="ui">{{scope.row.user_mobile}}</div> -->
+                    {{$t('order.name')}}: {{scope.row.user_nick_name}}<br/>
+                    {{$t('order.mobile')}}: {{scope.row.user_mobile}}
+                    <div >
                       <el-popover
                         placement="top-start"
-                        width="400"
+                        width="500"
                         trigger="click"
                         >
-                        <div style="padding: 10px;">
-                          <el-form label-width="100px">
+                        <div style="padding: 15px;">
+                          <el-form label-width="125px">
                             <el-form-item :label="$t('order.leaveMessage')">
                               <el-input v-model="formMessage.content" type="textarea" :row="2"></el-input>
                             </el-form-item>
                           </el-form>
                           <div style="text-align: right">
-                            <el-button type="primary" size="mini" @click="sendMessageFunc(scope.row.id)">{{$t('tools.confirm')}}</el-button>
+                            <el-button type="success" size="small" @click="sendMessageFunc(scope.row.id)">{{$t('tools.confirm')}}</el-button>
                           </div>
                         </div>
                         <i class="el-icon-chat-line-square" @click="showMessage" style="font-size: 24px;cursor: pointer" slot="reference"></i>
@@ -350,26 +381,34 @@
                   </template>
                 </el-table-column>
                 <!-- 商品 -->
-                <el-table-column :label="$t('order.goods')" min-width="440">
+                <el-table-column :label="$t('order.goods')" min-width="500">
                   <template  slot-scope="scope">
                     <div class="goods-item" v-for="(gInfo,k) in scope.row.merchant_item.goods_items" :key="k">
                       <img class="image imagecss" @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" :src="getImageUrl(gInfo.goods_info.sku_img, 100)">
                       <div class="g-info">
-                        <p @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" style="display: flex;align-items: center;line-height: 15px">{{gInfo.goods_info.spu_name}}
+                        <p @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)" style="display: flex; align-items: center; line-height: 15px">
+                          <span style="word-break: normal; margin-left: 0" class="bold-text">{{gInfo.goods_info.spu_name}}</span>&nbsp;
                           <img :src="otherLogo(gInfo.goods_info.site_id)" class="otherShopLogo" v-if="scope.row.type === 5 && gInfo.goods_info.site_id" alt="">
                           <el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
                           <el-tag v-if="gInfo.after_saled" style="cursor: pointer" type="danger" size="mini" @click.stop="showReturn(scope.row, gInfo)">{{$t('order.afterSale')}}</el-tag>
                         </p>
-                        <p style="line-height: 15px;" @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)">
-                          <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
+                        <p style="line-height: 15px; padding-top: 10px; margin-left: 0" @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)">
+                          <span style="margin-left: 0" v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> 
+                            <span style="color: #606266; margin-left: 0">{{k}}</span>：
+                            <span style="color: black; font-weight: bold; word-break: normal;">{{v}}</span>
+                            <br/>
+                          </span>
                         </p>
                         <div @click="jumpGoodsPage(gInfo.goods_info, scope.row.type)">
-                          <span>{{$t('order.itemCode')}}：{{gInfo.goods_info.item_code}}</span>
                           <span>{{$t('order.price3')}}：</span>
-                          <template v-if="scope.row.type === 3">{{gInfo.goods_info.price}}</template>
-                          <template v-else>{{gInfo.goods_info.price | price}}</template>；
-                          <span>{{$t('order.costChengben')}}：{{costFunc(gInfo.goods_info) | price}}；</span>
-                          <span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</div>
+                          <template v-if="scope.row.type === 3">
+                            <span class="bold-text">{{gInfo.goods_info.price}}</span>
+                          </template>
+                          <template v-else>
+                            <span class="bold-text">{{gInfo.goods_info.price | price}}</span>
+                          </template>；
+                          <span>{{$t('order.costChengben')}}：<span class="bold-text">{{costFunc(gInfo.goods_info) | price}}</span>；</span>
+                          <span>{{$t('order.number')}}：</span><span class="bold-text">{{gInfo.goods_info.count}}</span></div>
                         <div v-if="scope.row.type === 5 && gInfo.goods_info.site_id">
                           <div v-if="goodsOid !== gInfo.goods_info.oid" style="color: #1E88E5">{{gInfo.goods_info.comment}} <span v-if="gInfo.goods_info.comment !== ''"> --- {{gInfo.goods_info.comment_time}}</span>
                             <i class="el-icon-edit" style="color: #1E88E5" v-if="goodsOid !== gInfo.goods_info.oid" @click.stop="showCommentGoods(gInfo.goods_info, scope.row.id)"></i>
@@ -381,42 +420,43 @@
                   </template>
                 </el-table-column>
                 <!-- 金额 -->
-                <el-table-column :label="$t('order.price')" width="200">
+                <el-table-column :label="$t('order.price')" width="320">
                   <template slot-scope="scope" >
                     <span :title="$t('order.price1') + '+' + $t('order.price2')">
                       <template v-if="scope.row.pay_points > 0"> *{{scope.row.pay_points}}+</template>
-                      <span>{{$t('order.actuallyPay')}}：</span>{{scope.row.pay_price | price}}
+                      <span>{{$t('order.actuallyPay')}}：</span>
+                      <span class="bold-text">{{scope.row.pay_price | price}}</span>
                     </span>
                     <span v-if="scope.row.pay_way">({{payWay(scope.row.pay_way)}})</span><br/>
-                    <span> ({{$t('order.includePostage')}}：{{scope.row.postage | price}} )</span>
+                    <span> ({{$t('order.includePostage')}}：<span class="bold-text">{{scope.row.postage | price}}</span> )</span>
                     <div class="ui" v-if="scope.row.discount_coupon > 0">
-                      <span>{{$t('order.yhqdk')}}：</span>{{scope.row.discount_coupon | price}}
-                      </div>
+                      <span>{{$t('order.yhqdk')}}：</span>
+                      <span class="bold-text">{{scope.row.discount_coupon | price}}</span>
+                    </div>
                     <div class="ui">
-                      <span>{{$t('order.payMethod')}}：</span>
-                      {{payMethod[scope.row.pay_way_top - 1]}}
+                      {{$t('order.payMethod')}}: <span class="bold-text">{{payMethod[scope.row.pay_way_top - 1]}}</span>
                     </div>
                   </template>
                 </el-table-column>
                 <!-- 地址 -->
-                <el-table-column :label="$t('order.address')" style="text-align: left" min-width="300">
+                <el-table-column :label="$t('order.address')" style="text-align: left" min-width="350">
                   <template slot-scope="scope" >
-                    <div class="ui">
-                      <span>{{$t('order.expressAddr')}}：</span>
-                      {{scope.row.shipping_address.address.province + scope.row.shipping_address.address.city + scope.row.shipping_address.address.district}}
+                    <div class="ui" style="word">
+                      <span class="bold-text">{{$t('order.expressAddr')}}：</span>
+                      {{scope.row.shipping_address.address.province + " - " + scope.row.shipping_address.address.city + " - " + scope.row.shipping_address.address.district}} - 
                       {{scope.row.shipping_address.address.addr}}
                     </div>
                     <div class="ui">
-                      <span>{{$t('order.expressUser')}}：</span>
+                      <span class="bold-text">{{$t('order.expressUser')}}：</span>
                       {{scope.row.shipping_address.contacter_name}}&nbsp;&nbsp;
                       {{scope.row.shipping_address.mobile}}
                     </div>
                     <div class="ui">
-                      <span>{{$t('order.deliveryMethod')}}：</span>
+                      <span class="bold-text">{{$t('order.deliveryMethod')}}：</span>
                       {{deliveryMethod[scope.row.post_way - 1]}} <span v-if="scope.row.post_way === 2">({{scope.row.check_code}})&nbsp;&nbsp;{{scope.row.self_pickup_station.name}}</span>
                     </div>
                     <div class="ui" v-if="scope.row.express.novar">
-                      <span>{{$t('order.expressNo')}}：</span>
+                      <span class="bold-text">{{$t('order.expressNo')}}：</span>
                       <el-popover placement="left" width="300" trigger="click" v-if="scope.row.express.company === 'zto' || scope.row.express.company === 'rider'">
                         <div v-if="expressInfo && !showOrderStatus">
                           <el-timeline style="margin-top: 10px" v-if="expressInfo.length > 0">
@@ -451,34 +491,26 @@
                     </div>
                   </template>
                 </el-table-column>
-                <!-- 状态 -->
-                <el-table-column :label="$t('order.status')" width="140">
-                  <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status !== 17">{{$t(orderStatus[scope.row.status])}} </el-tag>
-                    <el-tag v-else>{{$t('order.purchasPendReview')}}</el-tag>
-                    <span style="font-size: 12px" v-if="(scope.row.status === 4 || scope.row.status === 5) && scope.row.pay_way_top === 2">({{$t('order.cashOnDelivery')}})</span>
-                  </template>
-                </el-table-column>
                 <!-- 操作 -->
-                <el-table-column :label="$t('tools.opt')" width="170" fixed="right"  v-if="permissionCheck('opt', '3_1') || permissionCheck('opt', '8_1')">
+                <el-table-column :label="$t('tools.opt')" width="180" fixed="right"  v-if="permissionCheck('opt', '3_1') || permissionCheck('opt', '8_1')">
                   <template slot-scope="scope">
                     <template v-if="permissionCheck('opt', '3_1')">
-                      <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small">
+                      <el-button v-if="scope.row.status === 2" type="text" @click="showExpressEditor(scope.row,2)" size="small" style="display: block; align: left">
                         {{$t('order.modifyPrice')}}
                       </el-button>
-                      <el-button v-if="scope.row.status === 2 || scope.row.status === 5"  type="text" @click="showExpressEditor(scope.row,3)" size="small" style="margin-left: 0">
+                      <el-button v-if="scope.row.status === 2 || scope.row.status === 5"  type="text" @click="showExpressEditor(scope.row,3)" size="small" style="margin-left: 0; display: block; align: left">
                         {{$t('order.changeAddress')}}
                       </el-button>
-                      <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0">
+                      <el-button v-if="scope.row.status === 17"  type="text" @click="ordeShengheState(scope.row)" size="small" style="margin-left: 0; display: block; align: left">
                         {{$t('order.purchaseOrderReview')}}
                       </el-button>
-                      <el-button  v-if="scope.row.status === 2 || scope.row.status === 5 ||  scope.row.status === 4" type="text" @click="cancelOrder(scope.row)" size="small" style="margin-left: 0">
+                      <el-button  v-if="scope.row.status === 2 || scope.row.status === 5 ||  scope.row.status === 4" type="text" @click="cancelOrder(scope.row)" size="small" style="margin-left: 0; display: block; align: left">
                        {{$t('order.opt7')}}
                       </el-button>
-                      <el-button type="text" @click="addNoteFunc(scope.row)" size="small" style="margin-left: 0">
+                      <el-button type="text" @click="addNoteFunc(scope.row)" size="small" style="margin-left: 0; display: block; align: left">
                         {{$t('order.note')}}
                       </el-button>
-                      <el-button type="text" v-if="scope.row.status !== 2 && scope.row.status !== 17 && scope.row.status !== 7" @click="goodsSaleFunc(scope.row)" size="small">
+                      <el-button type="text" v-if="scope.row.status !== 2 && scope.row.status !== 17 && scope.row.status !== 7" @click="goodsSaleFunc(scope.row)" size="small" style="margin-left: 0; display: block; align: left">
                         {{$t('order.afterSale')}}
                       </el-button>
                     </template>
@@ -487,21 +519,21 @@
                         <!--<el-button type="text" v-if="scope.row.status === 4" @click="showExpressEditor(scope.row,5)" size="small">-->
                         <!--{{$t('order.modifyExpress')}}-->
                         <!--</el-button>-->
-                        <el-button v-if="permissionCheck('opt', '8_1') && scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small">
+                        <el-button v-if="permissionCheck('opt', '8_1') && scope.row.status === 5" type="text" @click="showExpressEditor(scope.row,1)" size="small" style="margin-left: 0; display: block; align: left">
                         {{$t('order.express')}}
                         </el-button>
                       </span>
-                      <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
+                      <el-button v-if="scope.row.status === 5 && scope.row.pay_way_top === 2 && scope.row.post_way === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small" style="margin-left: 0; display: block; align: left">
                         {{$t('order.confirmTransaction')}}
                       </el-button>
-                      <el-button v-if="scope.row.status === 4 && scope.row.pay_way_top === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small">
+                      <el-button v-if="scope.row.status === 4 && scope.row.pay_way_top === 2" type="text" @click="orderConfirmFunc(scope.row.id)" size="small" style="margin-left: 0; display: block; align: left">
                         {{$t('order.confirmTransaction')}}
                       </el-button>
-                      <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17 && scope.row.expresses && scope.row.expresses.length > 0" type="text" @click="showModifyBz(scope.row, 4)" size="small" style="margin-left: 0">
+                      <el-button v-if="scope.row.status !== 7 && scope.row.status !== 17 && scope.row.expresses && scope.row.expresses.length > 0" type="text" @click="showModifyBz(scope.row, 4)" size="small" style="margin-left: 0; display: block; align: left">
                         {{$t('order.modifyExpress')}}
                       </el-button>
                     </template>
-                     <el-button type="text" @click="deliveryMsg(scope.row)" v-if="scope.row.status === 5 || scope.row.status === 4 || scope.row.status === 8" size="small" style="margin-left: 0">
+                     <el-button type="text" @click="deliveryMsg(scope.row)" v-if="scope.row.status === 5 || scope.row.status === 4 || scope.row.status === 8" size="small" style="margin-left: 0; display: block; align: left">
                       {{$t('order.Delivery')}}
                     </el-button>
 
@@ -509,16 +541,28 @@
                 </el-table-column>
               </el-table>
               <el-row style="margin-top: 10px">
-                <el-col :span="10">
+                <el-col :span="12">
                   <!-- 导出按钮 -->
                   <!--<el-button  v-if="permissionCheck('opt')" size="mini" @click="batchExportFunc">{{$t('tools.export')}}</el-button>-->
                   <!-- 导出明细按钮 -->
-                  <el-button size="mini" @click="batchDetailExportFunc">{{$t('tools.exportDetails')}}</el-button>
-                  <el-button size="mini" @click="exportFuncSale" v-if="exportDisabled">{{$t('order.exportSaleReport')}}</el-button>
-                  <el-button size="mini" icon="el-icon-loading" v-else>{{$t('order.exportFuncTip')}}</el-button>
-                <span class="allprice">{{$t('order.Totalprice')}} : <span>{{allprice | price}}</span>, {{$t('order.yhqdk')}}: <span>{{coupon_money | price}}</span></span>
+                  <el-button size="small" @click="batchDetailExportFunc" style="padding: 10px 15px" type="success">
+                    <i class="el-icon-upload2"></i>
+                    <span>{{$t('tools.exportDetails')}}</span>
+                  </el-button>
+                  <el-button size="small" @click="exportFuncSale" v-if="exportDisabled" style="padding: 10px 15px" type="success">
+                    <i class="el-icon-upload2"></i>
+                    <span>{{$t('order.exportSaleReport')}}</span>
+                  </el-button>
+                  <el-button size="small" icon="el-icon-loading" v-else style="padding: 10px 15px">{{$t('order.exportFuncTip')}}</el-button>
+                  <span class="allprice" style="margin-left: 10px; padding: 7px 15px">
+                    {{$t('order.Totalprice')}} : 
+                    <span>{{allprice | price}}</span>, {{$t('order.yhqdk')}}: 
+                    <span>
+                      {{coupon_money | price}}
+                    </span>
+                  </span>
                 </el-col>
-                <el-col :span="14" style="text-align: right;">
+                <el-col :span="12" style="text-align: right;">
                   <el-pagination v-if="itemCount > 0"
                     :current-page.sync="currentPage"
                     :page-size.sync="pageSize"
@@ -532,75 +576,142 @@
           </el-col>
         </el-row>
         <!-- 修改信息模态框 -->
-        <el-dialog :title="dialogTitle" width="800px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
-            <el-form-item :label="$t('order.no')">
-              {{expressOrder.no}}
+        <el-dialog width="800px" @close="formEditDialog=false" :visible.sync="formEditDialog" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{dialogTitle}}</span>
+          <el-form>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.no')}}:</el-col>
+                <el-col :span="20">              
+                  {{expressOrder.no}}
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.user')">
-              {{expressOrder.user_nick_name}}&nbsp;{{expressOrder.user_mobile}}
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.user')}}:</el-col>
+                <el-col :span="20">     
+                  {{expressOrder.user_nick_name}}&nbsp;{{expressOrder.user_mobile}}
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('warehouse.ware')" v-if="optType === 1">
-              <el-select v-model="wareid" :disabled="expressOrder.rider_post" :placeholder="$t('warehouse.name')">
-                <el-option
-                  v-for="(item, k) in wareData2"
-                  :key="k"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-              <el-button v-if="goodsInvList.length === 0" @click="jumpCaiGou" size="small" type="text">{{$t('order.noGoodsTip')}}</el-button>
+            <el-form-item v-if="optType === 1">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('warehouse.ware')}}:</el-col>
+                <el-col :span="20">
+                  <el-select v-model="wareid" :disabled="expressOrder.rider_post" :placeholder="$t('warehouse.name')" style="width: 100%">
+                    <el-option
+                      v-for="(item, k) in wareData2"
+                      :key="k"
+                      :label="item.name"
+                      :value="item.id">
+                    </el-option>
+                  </el-select>
+                  <el-button v-if="goodsInvList.length === 0" @click="jumpCaiGou" size="small" type="text">{{$t('order.noGoodsTip')}}</el-button>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.goods')"  v-if="expressOrder.merchant_item">
+            <el-form-item v-if="expressOrder.merchant_item">
               <!--<div><el-checkbox v-model="allGoodsSend" v-if="optType === 1">{{$t('order.allGoods')}}</el-checkbox></div>-->
+              <span class="label">{{$t('order.goods')}}:</span>
+              <br/>
               <el-switch
                 v-model="showWfh"
                 :active-text="$t('lang.all')"
-                :inactive-text="$t('order.status5')">
+                :inactive-text="$t('order.status5')"
+                style="margin-top: 10px; margin-left: 20px"
+              >
               </el-switch>
-                <el-row class="goods-item" v-for="(gInfo,k) in goods_items"  :key="k">
-                  <el-col :span="16">
-                    <!--v-if="!allGoodsSend && gInfo.isHaveGoods"-->
-                    <div class="chooseCheck" v-if="returnInvNumber(gInfo.goods_info, wareid) > 0 && gInfo.isHaveGoods">
-                      <el-checkbox v-model="gInfo.chooseGoods" :key="k"></el-checkbox>
-                    </div>
-                    <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)" fit="cover"></el-image>
-                    <div class="g-info">
-                      <p class="goodsNameStyle">{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
-                      <p>
-                        <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
-                      </p>
-                      <p><span>{{$t('order.price3')}}：</span>{{gInfo.goods_info.price | price}}；<span>{{$t('order.number')}}：</span>{{gInfo.goods_info.count}}</p>
-                    </div>
-                    <div class="clear"></div>
-                  </el-col>
-                  <el-col :span="4" class="kuchunBox" v-if="optType === 1">
-                      <el-button type="text" style="font-size: 20px" @click="showInvFunc(returnInvNumber(gInfo.goods_info, wareid), gInfo.goods_info)">{{$t('goods.inventory')}}：{{returnInvNumber(gInfo.goods_info, wareid)}}</el-button>
-                  </el-col>
-                </el-row>
+              <el-row class="goods-item" v-for="(gInfo,k) in goods_items" :key="k" style="padding: 10px 0; margin-left: 20px; margin-top: 20px;">
+                <el-col :span="17">
+                  <!--v-if="!allGoodsSend && gInfo.isHaveGoods"-->
+                  <div class="chooseCheck">
+                    <el-checkbox v-model="gInfo.chooseGoods" :key="k" v-if="returnInvNumber(gInfo.goods_info, wareid) > 0 && gInfo.isHaveGoods"></el-checkbox>
+                    <el-checkbox v-else disabled></el-checkbox>
+                  </div>
+                  <el-image class="image" style="width: 110px; height: 110px"  :src="getImageUrl(gInfo.goods_info.sku_img, 100)" fit="cover"></el-image>
+                  <div class="g-info">
+                    <p class="bold-text" style="padding-bottom: 7px; word-break: normal">{{gInfo.goods_info.spu_name}}<el-tag v-if="gInfo.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag></p>
+                    <p>
+                      <span v-for="(v,k) in gInfo.goods_info.specifications" :key="k"> 
+                        <span style="color: #606266">{{k}}：</span>
+                        <font class="bold-text" style="word-break: normal">{{v}}</font>
+                        <br/>
+                      </span>
+                    </p>
+                    <p>
+                      <span style="color: #606266">{{$t('order.price3')}}：</span>
+                      <span class="bold-text">{{gInfo.goods_info.price | price}}</span>；
+                      <span style="color: #606266">{{$t('order.number')}}：</span>
+                      <span class="bold-text">{{gInfo.goods_info.count}}</span>
+                    </p>
+                  </div>
+                  <div class="clear"></div>
+                </el-col>
+                <el-col :span="4" class="kuchunBox" v-if="optType === 1">
+                    <el-button type="primary" plain size="small" style="font-size: 20px" @click="showInvFunc(returnInvNumber(gInfo.goods_info, wareid), gInfo.goods_info)">{{$t('goods.inventory')}}：{{returnInvNumber(gInfo.goods_info, wareid)}}</el-button>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.price')">
-              {{expressOrder.pay_price | price}}（{{$t('order.price1') + '：' }}{{expressOrder.goods_price | price}}；{{$t('order.price2') + '：'}}{{expressOrder.postage | price}}）
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.price')}}:</el-col>
+                <el-col :span="20">  
+                  <span class="bold-text">{{expressOrder.pay_price | price}}</span>（{{$t('order.price1') + '：' }}
+                  <span class="bold-text">{{expressOrder.goods_price | price}}</span>；{{$t('order.price2') + '：'}}
+                  <span class="bold-text">{{expressOrder.postage | price}}</span>）
+                </el-col>
+              </el-row>  
             </el-form-item>
-            <el-form-item :label="$t('order.address')">
-              {{expressOrder.shipping_address.address.province + expressOrder.shipping_address.address.city + expressOrder.shipping_address.address.district}}&nbsp;{{expressOrder.shipping_address.address.addr}}
-              <br/>
-              {{expressOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{expressOrder.shipping_address.mobile}}
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.address')}}:</el-col>
+                <el-col :span="20"> 
+                  <span style="word-break: normal">{{expressOrder.shipping_address.address.province + " / " + expressOrder.shipping_address.address.city + " / " + expressOrder.shipping_address.address.district}} / {{expressOrder.shipping_address.address.addr}}</span>
+                  <br/>
+                  <span style="word-break: normal">{{expressOrder.shipping_address.contacter_name}}&nbsp;&nbsp;{{expressOrder.shipping_address.mobile}}</span>
+                </el-col>
+              </el-row> 
             </el-form-item>
-            <el-form-item :label="$t('order.deliveryMethod')">
-              {{deliveryMethod[expressOrder.post_way - 1]}}<span v-if="expressOrder.post_way === 2">({{expressOrder.check_code}})</span>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.deliveryMethod')}}:</el-col>
+                <el-col :span="20">
+                  {{deliveryMethod[expressOrder.post_way - 1]}}<span v-if="expressOrder.post_way === 2">({{expressOrder.check_code}})</span>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.payMethod')">
-              {{payMethod[expressOrder.pay_way_top - 1]}}
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.payMethod')}}:</el-col>
+                <el-col :span="20">
+                  {{payMethod[expressOrder.pay_way_top - 1]}}
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.userBz')">
-              {{userComment}}
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.userBz')}}:</el-col>
+                <el-col :span="20">
+                  {{userComment}}
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.deliveryRecord')">
-              <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}}{{expressOrder.expresses && expressOrder.expresses.length}}</el-button>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.deliveryRecord')}}:</el-col>
+                <el-col :span="20" >
+                  <el-badge :value="expressOrder.expresses && expressOrder.expresses.length" class="item" type="success">
+                    <!-- <el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}} {{expressOrder.expresses && expressOrder.expresses.length}}</el-button> -->
+                    <el-button type="primary" plain size="mini" @click="lookSendGoodsRecord" v-if="optType !== 5 && optType !== 4">{{$t('order.lookDeliveryRecord')}}</el-button>
+                  </el-badge>
+              
               <!--<el-button type="primary" size="mini" @click="lookSendGoodsRecord" v-else>{{$t('order.modifyWuLiuInfo')}}</el-button>-->
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.businessBz')" v-if="expressOrder.merchant_comments && expressOrder.merchant_comments.length > 0">
+            <el-form-item v-if="expressOrder.merchant_comments && expressOrder.merchant_comments.length > 0">
+              <span class="label">{{$t('order.businessBz')}}:</span>
               <el-timeline style="margin-top: 10px">
                 <el-timeline-item
                   v-for="(comments, index) in expressOrder.merchant_comments"
@@ -611,50 +722,77 @@
               </el-timeline>
             </el-form-item>
             <template v-if="optType === 1">
-              <el-form-item :label="$t('order.expressInfo')" >
-                <el-row :gutter="20">
-                  <el-col :span="8">
-                    <!--<el-select v-model="expressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">-->
-                      <!--<el-option-->
-                        <!--v-for="(item, k) in expressageList"-->
-                        <!--:key="k"-->
-                        <!--v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "-->
-                        <!--:label="item"-->
-                        <!--:value="k">-->
-                      <!--</el-option>-->
-                    <!--</el-select>-->
-                    <base-data-select v-model="expressCompany" selectType="code" treeCode="011" :placeString="$t('order.expressCompany')"></base-data-select>
-                  </el-col>
-                  <el-col :span="14" v-if="expressCompany !== 'noexpress' && !expressOrder.rider_post">
-                    <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+              <el-form-item>
+                <el-row type="flex" class="row-bg" justify="space-between">
+                  <el-col :span="7" class="label">{{$t('order.expressInfo')}}:</el-col>
+                  <el-col :span="17">
+                    <el-row :gutter="24">
+                      <el-col :span="11">
+                        <!--<el-select v-model="expressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">-->
+                          <!--<el-option-->
+                            <!--v-for="(item, k) in expressageList"-->
+                            <!--:key="k"-->
+                            <!--v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post) "-->
+                            <!--:label="item"-->
+                            <!--:value="k">-->
+                          <!--</el-option>-->
+                        <!--</el-select>-->
+                        <base-data-select v-model="expressCompany" selectType="code" treeCode="011" :placeString="$t('order.expressCompany')"></base-data-select>
+                      </el-col>
+                      <el-col :span="13" v-if="expressCompany !== 'noexpress' && !expressOrder.rider_post">
+                        <el-input v-model="expressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+                      </el-col>
+                    </el-row>
                   </el-col>
                 </el-row>
               </el-form-item>
-              <el-form-item :label="$t('order.note')" >
-                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
+              <el-form-item>
+                <el-row type="flex" class="row-bg" justify="space-between">
+                  <el-col :span="4" class="label">{{$t('order.note')}}:</el-col>
+                  <el-col :span="20">
+                    <el-input  type="textarea"  :rows="3"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>
+                  </el-col>
+                </el-row>
               </el-form-item>
 
               <!--              <el-form-item :label="$t('order.note')" >-->
-<!--                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>-->
-<!--              </el-form-item>-->
+              <!-- <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.note')"></el-input>-->
+              <!-- </el-form-item>-->
             </template>
             <template v-if="optType === 2">
-              <el-form-item :label="$t('order.price4')" >
-                <price-input v-model="payPrice" :placeholder="$t('order.price4')" style="width: 200px"></price-input> <span style="color: #8c939d">{{$t('order.price4Tip')}}</span>
+              <el-form-item>
+                <el-row type="flex" class="row-bg" justify="space-between">
+                  <el-col :span="4" class="label">{{$t('order.price4')}}:</el-col>
+                  <el-col :span="20">
+                    <price-input v-model="payPrice" :placeholder="$t('order.price4')" style="width: 200px"></price-input> 
+                    <br/>
+                    <span style="color: #8c939d">{{$t('order.price4Tip')}}</span>
+                  </el-col>
+                </el-row>
               </el-form-item>
-<!--              <el-form-item :label="$t('order.price4Note')" >-->
-<!--                <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.price4Note')"></el-input>-->
-<!--              </el-form-item>-->
+              <!-- <el-form-item :label="$t('order.price4Note')" >-->
+              <!-- <el-input  type="textarea"  :rows="2"  v-model="comment" clearable :placeholder="$t('order.price4Note')"></el-input>-->
+              <!-- </el-form-item>-->
             </template>
             <template v-if="optType === 3">
-              <p>{{$t('order.userChangeAdd')}}</p>
-<!--              <div style="display: flex">-->
-              <el-form-item :label="$t('order.provinceCityArea')" class="addressChooseBox">
-                <el-cascader
-                  v-model="addressArray"
-                  :options="optionsAddress"
-                  :props="typeProp"
-                  @change="handleChange"></el-cascader>
+              <!-- <p class="label">{{$t('order.userChangeAdd')}}</p> -->
+              <el-divider content-position="left">
+                <span class="label" style="color: #606266;">{{$t('order.userChangeAdd')}}</span>
+              </el-divider>
+              <!--  <div style="display: flex">-->
+              <el-form-item class="addressChooseBox">
+                <el-row type="flex" class="row-bg" justify="space-between">
+                  <el-col :span="5" class="label">{{$t('order.provinceCityArea')}}:</el-col>
+                  <el-col :span="19">
+                    <el-cascader
+                      v-model="addressArray"
+                      :options="optionsAddress"
+                      :props="typeProp"
+                      @change="handleChange"
+                      >
+                      </el-cascader>
+                  </el-col>
+                </el-row>
               </el-form-item>
                 <!--<el-form-item :label="$t('order.province')" style="display: inline-block" >-->
                   <!--<el-input v-model="province" :placeholder="$t('order.province')" style="width: 200px"></el-input>-->
@@ -665,62 +803,94 @@
                 <!--<el-form-item :label="$t('order.area')" style="display: inline-block">-->
                   <!--<el-input v-model="area" :placeholder="$t('order.area')" style="width: 200px"></el-input>-->
                 <!--</el-form-item>-->
-                <el-form-item :label="$t('order.addr')" style="display: inline-block" >
-                  <el-input v-model="addr" :placeholder="$t('order.addr')" style="width: 200px"></el-input>
+                <el-form-item>
+                  <el-row type="flex" class="row-bg" justify="space-between">
+                    <el-col :span="5" class="label">{{$t('order.addr')}}:</el-col>
+                    <el-col :span="19">
+                      <el-input v-model="addr" :placeholder="$t('order.addr')" style="width: 100%"></el-input>
+                    </el-col>
+                  </el-row>
                 </el-form-item>
-                <el-form-item :label="$t('order.userName')" style="display: inline-block" >
-                  <el-input v-model="userName" :placeholder="$t('order.userName')" style="width: 200px"></el-input>
+                <el-form-item>
+                  <el-row type="flex" class="row-bg" justify="space-between">
+                    <el-col :span="5" class="label">{{$t('order.userName')}}:</el-col>
+                    <el-col :span="19">
+                      <el-input v-model="userName" :placeholder="$t('order.userName')" style="width: 100%"></el-input>
+                    </el-col>
+                  </el-row>
                 </el-form-item>
-                <el-form-item :label="$t('order.userPhone')" style="display: inline-block" >
-                  <el-input v-model="userPhone" :placeholder="$t('order.userPhone')" style="width: 200px"></el-input>
+                <el-form-item>
+                  <el-row type="flex" class="row-bg" justify="space-between">
+                    <el-col :span="5" class="label">{{$t('order.userPhone')}}:</el-col>
+                    <el-col :span="19">
+                      <el-input v-model="userPhone" :placeholder="$t('order.userPhone')" style="width: 100%"></el-input>
+                    </el-col>
+                  </el-row>
                 </el-form-item>
 
-<!--              </div>-->
+              <!-- </div>-->
             </template>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveDataFunc()" v-if="optType !== 5 && optType !== 4" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
             <el-button type="primary" v-else size="small" @click="formEditDialog = false"> {{$t('tools.close')}}</el-button>
+            
+            <el-button @click="formEditDialog = false" size="small" v-if="optType !== 5 && optType !== 4">{{
+              $t("tools.cancel")
+            }}</el-button>
           </div>
         </el-dialog>
         <total-data :restFrom="restFrom" :restFromid="restFromid" :istype="showKunNumberDialog" @dalogtype="dalogtype"></total-data>
-        <el-dialog :title="$t('order.purchaseOrderReview')" width="500px" @close="shengheShow = false" :visible.sync="shengheShow" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
-            <el-form-item :label="$t('order.isCancelOrder')">
-              <el-switch
-                v-model="shengheForm.cancel"
-                :active-text="$t('order.yes')"
-                :inactive-text="$t('order.No')">
-              </el-switch>
+        <el-dialog width="500px" @close="shengheShow = false" :visible.sync="shengheShow" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.purchaseOrderReview')}}</span>
+          <el-form>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="12" class="label">{{$t('order.isCancelOrder')}}:</el-col>
+                <el-col :span="14">
+                  <el-switch
+                    v-model="shengheForm.cancel"
+                    :active-text="$t('order.yes')"
+                    :inactive-text="$t('order.No')">
+                  </el-switch>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.goodsPaidPrice')">
-              <price-input v-model="shengheForm.pay_price"></price-input>
+            <el-form-item>
+              <span class="label">{{$t('order.goodsPaidPrice')}}:</span>
+              <price-input v-model="shengheForm.pay_price" style="margin-top: 3px"></price-input>
             </el-form-item>
-            <el-form-item :label="$t('order.postage')">
-              <price-input v-model="shengheForm.postage"></price-input>
+            <el-form-item>
+              <span class="label">{{$t('order.postage')}}:</span>
+              <price-input v-model="shengheForm.postage" style="margin-top: 3px"></price-input>
             </el-form-item>
-            <el-form-item :label="$t('order.note')" >
-              <el-input  type="textarea"  :rows="2"  v-model="shengheForm.comment" clearable :placeholder="$t('order.note')"></el-input>
+            <el-form-item>
+              <span class="label">{{$t('order.note')}}:</span>
+              <el-input type="textarea" :rows="3" v-model="shengheForm.comment" clearable :placeholder="$t('order.note')" style="margin-top: 3px"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <confirm-button @confirmButton="saveShenhe()" :disabled="submitDisabled" :confirmButtonInfor="$t('tools.confirm')"></confirm-button>
+            <el-button @click="shengheShow = false" size="small">{{
+              $t("tools.cancel")
+            }}</el-button>
           </div>
         </el-dialog>
         <!--发货记录-->
-        <el-dialog :title="$t('order.deliveryRecord')" width="1300px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
+        <el-dialog width="1600px" append-to-body @close="sendGoodsRecord = false" :visible.sync="sendGoodsRecord" :close-on-click-modal="false" center >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.deliveryRecord')}}</span>
           <el-table stripe border :data="expressOrder.expresses" height="calc(100vh - 320px)">
             <el-table-column label="#" width="60px">
               <template slot-scope="scope">
                 {{scope.$index + 1}}
               </template>
             </el-table-column>
-            <el-table-column :label="$t('order.goods')" min-width="400">
+            <el-table-column :label="$t('order.goods')" min-width="300">
               <template  slot-scope="scope">
                 <div @click="jumpGoodsPage(gInfo, scope.row.type)" class="goods-item" v-for="(gInfo,k) in scope.row.sku_infos" :key="k">
                   <el-image class="image" style="width: 100px; height: 100px"  :src="getImageUrl(gInfo.sku_img, 100)"  fit="cover"></el-image>
                   <div class="g-info">
-                    <p style="display: flex;align-items: center">{{gInfo.spu_name}}
+                    <p style="display: flex; align-items: center; word-break: normal">{{gInfo.spu_name}}
                       <img :src="otherLogo(gInfo.site_id)" class="otherShopLogo" alt="" v-if="gInfo.site_id">
                     </p>
                   </div>
@@ -728,17 +898,17 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('order.expressCompany')" width="130">
+            <el-table-column :label="$t('order.expressCompany')" width="200">
               <template slot-scope="scope" >
                 {{expressageList[scope.row.company]}}
               </template>
             </el-table-column>
-            <el-table-column :label="$t('order.expressNo')" width="130">
+            <el-table-column :label="$t('order.expressNo')" width="250">
               <template slot-scope="scope" >
                 {{scope.row.novar}}
               </template>
             </el-table-column>
-            <el-table-column :label="$t('order.wuLiuRecord')" width="130">
+            <el-table-column :label="$t('order.wuLiuRecord')" width="200">
               <template slot-scope="scope" >
                 <el-popover placement="left" width="300" trigger="click">
                   <el-timeline style="margin-top: 10px">
@@ -758,17 +928,17 @@
                 </el-popover>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('order.deliveryTime')" prop="time" width="180">
+            <el-table-column :label="$t('order.deliveryTime')" prop="time" width="160">
             </el-table-column>
-            <el-table-column :label="$t('tools.opt')" width="150" fixed="right" v-if="permissionCheck('opt', '8_1') && (optType === 5 || optType === 4)">
+            <el-table-column :label="$t('tools.opt')" width="200" fixed="right" v-if="permissionCheck('opt', '8_1') && (optType === 5 || optType === 4)">
               <template slot-scope="scope">
-                  <el-button slot="reference" v-if="optType === 5" @click="modifyCurrentExpress(scope.row, 'wuliu')" type="text" size="small">
-                    {{$t('order.modifyExpress')}}
-                  </el-button>
-                  <el-button slot="reference" type="text" @click="modifyCurrentExpress(scope.row, 'note')" size="small">
-                    {{$t('order.price4Note')}}
-                  </el-button>
-                <el-button slot="reference" type="text" @click="addWuLiuBtn(scope.row)" size="small">
+                <el-button slot="reference" v-if="optType === 5" @click="modifyCurrentExpress(scope.row, 'wuliu')" type="text" size="small" style="margin-left: 0">
+                  {{$t('order.modifyExpress')}}
+                </el-button>
+                <el-button slot="reference" type="text" @click="modifyCurrentExpress(scope.row, 'note')" size="small" style="margin-left: 0">
+                  {{$t('order.price4Note')}}
+                </el-button>
+                <el-button slot="reference" type="text" @click="addWuLiuBtn(scope.row)" size="small" style="margin-left: 0">
                   {{$t('order.addWuLiuRecord')}}
                 </el-button>
                 <!--</el-popover>-->
@@ -776,67 +946,103 @@
             </el-table-column>
           </el-table>
           <div slot="footer" class="dialog-footer">
-            <el-button size="small" @click="sendGoodsRecord = false">{{$t('tools.cancel')}}</el-button>
+            <el-button size="small" type="primary" @click="sendGoodsRecord = false">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
         <!--修改物流信息-->
         <el-dialog
           width="30%"
-          :title="$t('order.modifyExpress')"
           :visible.sync="innerVisible"
-          append-to-body>
-          <el-form label-width="100px">
-            <el-form-item :label="$t('order.expressCompany')" v-if="optType === 5 && openNoteState === 'wuliu'">
-              <el-select v-model="modifyExpressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')">
-                <el-option
-                  v-for="(item, k) in expressageList"
-                  :key="k"
-                  v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post)"
-                  :label="item"
-                  :value="k">
-                </el-option>
-              </el-select>
+          append-to-body
+        >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.modifyExpress')}}</span>
+          <el-form>
+            <el-form-item v-if="optType === 5 && openNoteState === 'wuliu'">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="9" class="label">{{$t('order.expressCompany')}}:</el-col>
+                <el-col :span="14">
+                  <el-select v-model="modifyExpressCompany" :disabled="expressOrder.rider_post" :placeholder="$t('order.expressCompany')" style="width: 100%">
+                    <el-option
+                      v-for="(item, k) in expressageList"
+                      :key="k"
+                      v-if="k !== 'rider' || (k === 'rider' && expressOrder.rider_post)"
+                      :label="item"
+                      :value="k">
+                    </el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.expressNo')"  v-if="optType === 5 && modifyExpressCompany !== 'noexpress' && !expressOrder.rider_post && openNoteState === 'wuliu'">
-              <el-input v-model="modifyExpressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+            <el-form-item v-if="optType === 5 && modifyExpressCompany !== 'noexpress' && !expressOrder.rider_post && openNoteState === 'wuliu'">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="10" class="label">{{$t('order.expressNo')}}:</el-col>
+                <el-col :span="13">  
+                  <el-input v-model="modifyExpressNo" clearable :placeholder="$t('order.expressNo')"></el-input>
+                </el-col>
+              </el-row>  
             </el-form-item>
-            <el-form-item :label="$t('order.note')" v-if="optType === 4 || openNoteState === 'note'">
-              <el-input type="textarea" :rows="2"  v-model="commentModify" clearable :placeholder="$t('order.note')"></el-input>
+            <el-form-item v-if="optType === 4 || openNoteState === 'note'">
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="3" class="label">{{$t('order.note')}}:</el-col>
+                <el-col :span="20">
+                  <el-input type="textarea" :rows="3"  v-model="commentModify" clearable :placeholder="$t('order.note')"></el-input>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button size="small" type="primary" @click="confirmModifyExpress">{{$t('tools.confirm')}}</el-button>
+            <el-button size="small" type="success" @click="confirmModifyExpress">{{$t('tools.confirm')}}</el-button>
+            <el-button @click="innerVisible = false" size="small">{{
+              $t("tools.cancel")
+            }}</el-button>
           </div>
         </el-dialog>
         <el-dialog
           width="30%"
-          :title="$t('order.addWuLiuRecord')"
           :visible.sync="addWuLiuShow"
-          append-to-body>
-          <el-form label-width="100px">
-            <el-form-item :label="$t('order.DateTime')">
-              <el-date-picker
-                v-model="addWuLiuRecordForm.record_t"
-                format="yyyy-MM-dd HH:mm"
-                value-format="yyyy-MM-dd HH:mm"
-                type="datetime"
-                :placeholder="$t('order.pleaseChooseTime')">
-              </el-date-picker>
+          append-to-body
+        >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.addWuLiuRecord')}}</span>
+          <el-form>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.DateTime')}}:</el-col>
+                <el-col :span="20">
+                  <el-date-picker
+                    v-model="addWuLiuRecordForm.record_t"
+                    format="yyyy-MM-dd HH:mm"
+                    value-format="yyyy-MM-dd HH:mm"
+                    type="datetime"
+                    :placeholder="$t('order.pleaseChooseTime')"
+                    style="width: 100%"
+                  >
+                  </el-date-picker>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.note')">
-              <el-input type="textarea" :rows="2"  v-model="addWuLiuRecordForm.comment" clearable :placeholder="$t('order.note')"></el-input>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="4" class="label">{{$t('order.note')}}:</el-col>
+                <el-col :span="20">
+                  <el-input type="textarea" :rows="3"  v-model="addWuLiuRecordForm.comment" clearable :placeholder="$t('order.note')"></el-input>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button size="small" type="primary" @click="confirmAddWuliuJiLu">{{$t('tools.confirm')}}</el-button>
+            <el-button size="small" type="success" @click="confirmAddWuliuJiLu">{{$t('tools.confirm')}}</el-button>
+            <el-button @click="addWuLiuShow = false" size="small">{{
+              $t("tools.cancel")
+            }}</el-button>
           </div>
         </el-dialog>
         <!-- 出库信息 -->
         <el-dialog
-          width="85%"
-          :title="$t('order.Delivery')"
+          width="95%"
           :visible.sync="DeliveryMsgDialog"
-          append-to-body>
+          append-to-body
+        >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.Delivery')}}</span>
            <div v-if="warehousedata">
              <!-- <div v-for="(item,key) in this.warehousedata" :key="key">
                <div class="wtitle">{{$t('warehouse.name')}} : {{item.warehouse_name}}</div>
@@ -854,12 +1060,12 @@
                   {{scope.$index + 1}}
                 </template>
               </el-table-column>
-              <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="100px"></el-table-column>
+              <el-table-column prop="warehouse_name" :label="$t('warehouse.name')" width="160px"></el-table-column>
               <el-table-column>
-                <template  slot="header" slot-scope="scope">
+                <template slot="header" slot-scope="scope">
                   <el-row style="width: 100%">
                     <el-col :span="5" style="text-align: center">{{$t('order.Relatedorders')}}</el-col>
-                    <el-col :span="6" style="text-align: center">{{$t('warehouse.name2')}}</el-col>
+                    <el-col :span="6">{{$t('warehouse.name2')}}</el-col>
                     <el-col :span="6" style="text-align: center">{{$t('warehouse.SpecificationsMsg')}}</el-col>
                     <el-col :span="3" style="text-align: center">{{$t('warehouse.barCode')}} </el-col>
                     <el-col :span="2" style="text-align: center">{{$t('warehouse.num')}} </el-col>
@@ -875,13 +1081,13 @@
                       </el-col>
                     <el-col :span="6" class="overOmitted"><span :title="item.name">{{item.name}}</span></el-col>
                     <el-col :span="6" style="text-align: center">{{textFilter(item.specification) !== '' ? textFilter(item.specification) : 'NO'}}</el-col>
-                     <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode: 'NO'}}</el-col>
-                     <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
-                     <el-col :span="2" style="text-align: center">{{item.position}}</el-col>
+                    <el-col :span="3" style="text-align: center">{{item.barcode !== '' ? item.barcode: 'NO'}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{item.count}}</el-col>
+                    <el-col :span="2" style="text-align: center">{{item.position}}</el-col>
                   </el-row>
                 </template>
               </el-table-column>
-               <el-table-column :label="$t('warehouse.Address')" width="300px">
+              <el-table-column :label="$t('warehouse.Address')" width="300px">
                  <template slot-scope="scope">
                    <!-- <span v-for="(item,key) in scope.row.shipping_address" :key="key"> -->
                      {{scope.row.shipping_address.address.city}} -
@@ -889,45 +1095,52 @@
                      {{scope.row.shipping_address.address.district}}
                    <!-- </span> -->
                  </template>
-               </el-table-column>
+              </el-table-column>
             </el-table>
            </div>
           <div slot="footer" class="dialog-footer">
-            <el-button size="small" type="primary" @click="DeliveryMsgDialog = false">{{$t('tools.confirm')}}</el-button>
+            <el-button size="small" type="primary" @click="DeliveryMsgDialog = false">{{$t('tools.close')}}</el-button>
           </div>
         </el-dialog>
         <!-- 添加备注 -->
         <el-dialog
           width="60%"
-          :title="$t('order.note')"
           :visible.sync="noteDialog"
-          append-to-body>
+          append-to-body
+        >
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{$t('order.note')}}</span>
           <el-table :data="merchantCommets" border style="width: 100%" height="calc(100vh - 500px)">
-              <el-table-column label="#" width="60px">
-                <template slot-scope="scope">
-                  {{scope.$index + 1}}
-                </template>
-              </el-table-column>
-              <el-table-column prop="operator_name" :label="$t('order.optUser')" width="200px"></el-table-column>
-              <el-table-column prop="comment" :label="$t('sys.content')" ></el-table-column>
-              <el-table-column prop="gen_time" :label="$t('order.optTime')" width="200px"></el-table-column>
-            </el-table>
-          <el-form label-width="100px" style="margin-top: 20px">
-            <el-form-item :label="$t('order.note')">
-              <el-input type="textarea" :rows="2"  v-model="setNoteForm.merchant_comment" clearable :placeholder="$t('warehouse.Pleasenote')"></el-input>
-            </el-form-item>
+            <el-table-column label="#" width="60px">
+              <template slot-scope="scope">
+                {{scope.$index + 1}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="operator_name" :label="$t('order.optUser')" width="200px"></el-table-column>
+            <el-table-column prop="comment" :label="$t('sys.content')" ></el-table-column>
+            <el-table-column prop="gen_time" :label="$t('order.optTime')" width="200px"></el-table-column>
+          </el-table>
+          <el-form style="margin-top: 20px">
             <el-form-item>
-              <el-button size="small" type="primary" @click="addUpsertNote">{{$t('order.addNote')}}</el-button>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="2" style="font-weight: bold">{{$t('order.note')}}:</el-col>
+                <el-col :span="22">
+                  <el-input type="textarea" :rows="4"  v-model="setNoteForm.merchant_comment" clearable :placeholder="$t('warehouse.Pleasenote')"></el-input>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button size="small" type="primary" @click="noteDialog = false">{{$t('tools.close')}}</el-button>
+            <el-button size="small" type="success" @click="addUpsertNote">{{$t('order.addNote')}}</el-button>
+            <el-button @click="noteDialog = false" size="small" style="margin-right:5px; margin-left:10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
         <!--商品售后-->
-        <el-dialog :title="saleAfterText" width="1000px" append-to-body @close="goodsDeliveryDialog = false" :visible.sync="goodsDeliveryDialog" :close-on-click-modal="false" center >
-          <el-form label-width="100px">
-            <el-form-item :label="$t('order.note')">
+        <el-dialog width="1000px" append-to-body @close="goodsDeliveryDialog = false" :visible.sync="goodsDeliveryDialog" :close-on-click-modal="false" center>
+          <span slot="title" style="font-weight: bold; font-size: 15px">{{saleAfterText}}</span>
+          <!-- <el-form label-width="100px"> -->
+            <!-- <el-form-item :label="$t('order.note')"> -->
+          <el-form>
+            <el-form-item>
               <el-table stripe border :data="refundOnlyGoods" @selection-change="chooseRefundOnlyFunc" height="calc(100vh - 500px)">
                 <el-table-column
                   type="selection"
@@ -938,20 +1151,33 @@
                     <div class="goods-item">
                       <img class="image imagecss" :src="getImageUrl(scope.row.goods_info.sku_img, 100)">
                       <div class="g-info">
-                        <p style="display: flex;align-items: center;line-height: 15px">{{scope.row.goods_info.spu_name}}
+                        <p style="display: flex; align-items: center; line-height: 15px; margin-bottom: 7px" class="bold-text">
+                          {{scope.row.goods_info.spu_name}}&nbsp;
                           <img :src="otherLogo(scope.row.goods_info.site_id)" class="otherShopLogo" v-if="refundOnlyObj.type === 5 && scope.row.goods_info.site_id" alt="">
                           <el-tag v-if="scope.row.goods_info.gift" size="mini">{{$t('order.gift')}}</el-tag>
                           <el-tag v-if="scope.row.after_saled" style="cursor: pointer" type="danger" size="mini">{{$t('order.afterSale')}}</el-tag>
                         </p>
                         <p style="line-height: 15px;">
-                          <span v-for="(v,k) in scope.row.goods_info.specifications" :key="k"> {{k}}：<font>{{v}}</font></span>
+                          <span v-for="(v,k) in scope.row.goods_info.specifications" :key="k"> 
+                            <span style="color: #606266">{{k}}：</span>
+                            <font class="bold-text">{{v}}</font>
+                            <br/>
+                          </span>
                         </p>
-                        <div><span>{{$t('order.price3')}}：</span><template v-if="scope.row.type === 3">{{scope.row.goods_info.price}}</template><template v-else>{{scope.row.goods_info.price | price}}</template></div>
+                        <div>
+                          <span>{{$t('order.price3')}}：</span>
+                          <template v-if="scope.row.type === 3">
+                            <span class="bold-text">{{scope.row.goods_info.price}}</span>
+                          </template>
+                          <template v-else>
+                            <span class="bold-text">{{scope.row.goods_info.price | price}}</span>
+                          </template>
+                        </div>
                       </div>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('order.number')" width="250">
+                <el-table-column :label="$t('order.number')" width="250" align="center">
                   <template slot-scope="scope" >
                     <span class="inputNumberStyle">
                       <el-input-number v-model="scope.row.goods_info.count" :step="1" :min="1" :max="copyRefundOnly[scope.$index].goods_info.count"></el-input-number>
@@ -960,15 +1186,26 @@
                 </el-table-column>
               </el-table>
             </el-form-item>
-            <el-form-item :label="$t('order.price')">
-              <price-input v-model="goodsRefundOnlyForm.amount"></price-input>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="2" class="label">{{$t('order.price')}}:</el-col>
+                <el-col :span="22">
+                  <price-input v-model="goodsRefundOnlyForm.amount"></price-input>
+                </el-col>
+              </el-row>
             </el-form-item>
-            <el-form-item :label="$t('order.note')">
-              <el-input type="textarea" :rows="2"  v-model="goodsRefundOnlyForm.comment" clearable :placeholder="$t('order.note')"></el-input>
+            <el-form-item>
+              <el-row type="flex" class="row-bg" justify="space-between">
+                <el-col :span="2" class="label">{{$t('order.note')}}:</el-col>
+                <el-col :span="22">
+                  <el-input type="textarea" :rows="3"  v-model="goodsRefundOnlyForm.comment" clearable :placeholder="$t('order.note')"></el-input>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button size="small" type="primary" @click="confirmRefundOnly">{{$t('tools.confirm')}}</el-button>
+            <el-button size="small" type="success" @click="confirmRefundOnly">{{$t('tools.confirm')}}</el-button>
+            <el-button @click="goodsDeliveryDialog = false" size="small" style="margin-right:5px; margin-left:10px;">{{$t('tools.cancel')}}</el-button>
           </div>
         </el-dialog>
       </div>
@@ -985,8 +1222,10 @@
   import serverConfig from '@/utils/serverConfig'
   import areaInfo from '@/utils/areaInfo'
   import store from '@/store'
+import Panicbuys from '../operation/panicbuys.vue'
   export default {
     components: {
+        Panicbuys
     },
     data() {
       const pz = 10
@@ -1001,6 +1240,8 @@
         optArr: { 2: this.$t('order.opt2'), 4: this.$t('order.opt4'), 5: this.$t('order.opt5'), 6: this.$t('order.opt6'), 7: this.$t('order.opt7'), 8: this.$t('order.opt8'), 9: this.$t('order.opt9') },
         orderStatus: ['tools.all', 'order.status1', 'order.status2', 'order.status3', 'order.status4', 'order.status5',
           'order.status6', 'order.status7', 'order.status8', '', 'order.status10'],
+        orderStatusColor: ['primary', 'primary', 'primary', 'primary', 'success', 'warning',
+          'primary', 'danger', 'success', 'primary', 'primary'],
         orderStatusTab: [{ value: '0', label: this.$t('tools.all') }, { value: '17', label: this.$t('order.status1') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
           { value: '10', label: this.$t('order.status10') }, { value: '7', label: this.$t('order.status7') }],
         orderStatusTabList: [{ value: '0', label: this.$t('tools.all') }, { value: '17', label: this.$t('order.status1') }, { value: '2', label: this.$t('order.status2') }, { value: '5', label: this.$t('order.status5') }, { value: '4', label: this.$t('order.status4') }, { value: '8', label: this.$t('order.status8') },
@@ -1323,6 +1564,18 @@
       }
     },
     methods: {
+      handleSearchOrder(value) {
+        var newString = "";
+        for (var i = 0; i < value.length; i++) {
+          if (value.charCodeAt(i) >= 48 && value.charCodeAt(i) <= 57) {
+            newString += value[i];
+          }
+          else {
+            break;
+          }
+        }
+        this.searchForm.no = newString;
+      },
       tableRowClassName({ row }) {
         return this.orderStatus[row.status].split('.')[1]
       },
@@ -1395,7 +1648,7 @@
         this.refundOnlyGoods = JSON.parse(JSON.stringify(array))
         this.copyRefundOnly = JSON.parse(JSON.stringify(array))
         this.refundOnlyObj = data
-        this.saleAfterText = this.$t('order.afterSale') + '(NO:' + data.no + '--' + data.user_nick_name + '--' + data.user_mobile + ')'
+        this.saleAfterText = this.$t('order.afterSale') + ' (NO: ' + data.no + '--' + data.user_nick_name + '--' + data.user_mobile + ')'
         this.goodsDeliveryDialog = true
       },
       chooseRefundOnlyFunc(val) {
@@ -1818,7 +2071,7 @@
         // data为商品数据 ot为一个值根据传过来不同的值做不同的操作
         this.expressOrder = data
         this.optType = ot
-        console.log(data);
+        console.log("showExpressEditor: ", data);
         const array = this.expressOrder.merchant_item.goods_items
         // console.log(ot);
         if (ot === 1) {
@@ -2012,10 +2265,10 @@
       },
       // 取消订单
       cancelOrder(data) {
-        this.$confirm(this.$t('order.confirmCancelOrderTip'), this.$t('tools.prompt'), {
+        this.$confirm(this.$t('order.confirmCancelOrderTip'), this.$t('order.opt7'), {
           confirmButtonText: this.$t('tools.confirm'),
           cancelButtonText: this.$t('tools.cancel'),
-          type: 'error '
+          type: 'info'
         }).then(() => {
           cancelGoods(data.id).then(res => {
             if (res.meta === 0) {
@@ -2164,19 +2417,19 @@
 </script>
 
 <style>
-  .el-table .status7 td:nth-child(-n+3){
+  /* .el-table .status7{
     background: #ff9090;
   }
-  .el-table .status5 td:nth-child(-n+3){
-    background: #ffe600;
-  }
-  .el-table .status8 td:nth-child(-n+3),
-  .el-table .status4 td:nth-child(-n+3){
-      background: #00da0b;
-  }
-  .el-table .status2 td:nth-child(-n+3){
-    background: #00f0e4;
-  }
+  .el-table .status5{
+    background: #fff59a;
+  } */
+  /* .el-table .status8,
+    .el-table .status4 {
+      background: #afffb3;
+  } */
+  /* .el-table .status2{
+    background: #96fffa;
+  } */
 </style>
 
 <style lang="scss" scoped>
@@ -2198,7 +2451,9 @@
   color: #606266;
   font-size: 14px;
   >span{
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
   }
 }
   .rate-item{
@@ -2231,12 +2486,14 @@
       text-align: left;
       padding-left: 10px!important;
       p{
-        margin: 0px;
+        margin: 0px !important;
         padding: 3px 0px;
         line-height: 20px;
         span{
+          margin: 0px !important;
           color: #8c939d;
           font{
+            margin: 0px !important;
             color: #606266;
           }
         }
@@ -2256,7 +2513,7 @@
     span{
       display: inline-block;
       padding-right: 5px;
-      color: #8c939d;
+      // color: #8c939d;
     }
     a{
       color: #1E88E5;
@@ -2338,6 +2595,17 @@
   }
   .el-icon-arrow-down {
     font-size: 12px;
+  }
+
+  .bold-text {
+    color: black !important; 
+    font-weight: bold
+  }
+
+  .label {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
   }
 
   #app .el-icon-arrow-down:before {

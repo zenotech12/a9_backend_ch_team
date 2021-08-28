@@ -1,21 +1,57 @@
 <template>
   <div>
-    <el-dialog :title="$t('warehouse.Info')" :visible.sync="dialogVisible" width="70%">
+    <el-dialog :visible.sync="dialogVisible" width="85%">
+      <span slot="title" style="font-weight: bold; font-size: 15px">{{
+        $t("warehouse.Info")
+      }}</span>
       <el-table :data="tableData" style="width: 100%" border stripe>
         <el-table-column label="#" width="60px" fixed="left">
-          <template slot-scope="scope">{{scope.$index + numinfofrom.skip + 1}}</template>
+          <template slot-scope="scope">{{
+            scope.$index + numinfofrom.skip + 1
+          }}</template>
         </el-table-column>
-        <el-table-column prop="name" :label="$t('warehouse.name2')"></el-table-column>
-        <el-table-column prop="origin" :label="$t('warehouse.PlaceofOrigin')"></el-table-column>
-        <el-table-column prop="barcode" :label="$t('warehouse.barCode')"></el-table-column>
-        <el-table-column prop="specification" :label="$t('warehouse.pecifications')">
-          <template slot-scope="scope">{{textFilter(scope.row.specification)}}</template>
+        <el-table-column
+          prop="name"
+          :label="$t('warehouse.name2')"
+          width="350px"
+        >
+          <template slot-scope="scope">
+            <div style="padding: 10px">{{ scope.row.name }}</div>
+          </template>
         </el-table-column>
-        <el-table-column prop="count" :label="$t('warehouse.num')"></el-table-column>
-        <el-table-column prop="position" :label="$t('warehouse.position')"></el-table-column>
-        <el-table-column prop="warehouse_name" :label="$t('warehouse.name')"></el-table-column>
+        <el-table-column
+          prop="origin"
+          :label="$t('warehouse.PlaceofOrigin')"
+        ></el-table-column>
+        <el-table-column
+          prop="barcode"
+          :label="$t('warehouse.barCode')"
+        ></el-table-column>
+        <el-table-column
+          prop="specification"
+          :label="$t('warehouse.pecifications')"
+          width="350"
+        >
+          <template slot-scope="scope">{{
+            textFilter(scope.row.specification)
+          }}</template>
+        </el-table-column>
+        <el-table-column
+          prop="count"
+          :label="$t('warehouse.num')"
+          width="100px"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="position"
+          :label="$t('warehouse.position')"
+        ></el-table-column>
+        <el-table-column
+          prop="warehouse_name"
+          :label="$t('warehouse.name')"
+        ></el-table-column>
       </el-table>
-      <div style="text-align: right;margin-top: 10px">
+      <div style="text-align: right; margin-top: 10px">
         <el-pagination
           :current-page.sync="currentPage_info"
           :page-size="pageSize_info"

@@ -328,7 +328,7 @@
     /*height: 340px;*/
   }
   .ql-editor{
-    min-height: 300px;
+    min-height: 150px;
     img{
       display: block;
       margin: 0 auto;

@@ -32,5 +32,6 @@ export default {
   totalTrans: '总额',
   distributionDeduction: '分销扣减',
   cash: '现金',
-  nonCash: '非现金'
+  nonCash: '非现金',
+  withdraw: '提现'
 }

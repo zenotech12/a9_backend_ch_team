@@ -1,11 +1,11 @@
 <template>
-  <el-button :type="btnType" @click="deleteInfro()" size="small">
+  <el-button type="text" @click="deleteInfro()" size="small">
     {{ btnName }}
   </el-button>
 </template>
 <script>
 export default {
-  name: "DeleteButton",
+  name: "DeleteButtonText",
   data() {
     return {};
   },
@@ -33,8 +33,8 @@ export default {
     // 删除按钮
     deleteInfro() {
       this.$confirm(this.promptInfor, this.$t("tools.prompt"), {
-        confirmButtonText: this.$t("tools.confirm"),
         cancelButtonText: this.$t("tools.cancel"),
+        confirmButtonText: this.$t("tools.confirm"),
         type: "warning"
       })
         .then(() => {
